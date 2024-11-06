@@ -6,8 +6,7 @@ USE foodjoa;
 -- member ------------------------------------------------------------------------------
 DROP TABLE IF EXISTS member;
 CREATE TABLE member(
-	no 			int primary key auto_increment,
-    id 			varchar(20) not null,
+    id 			varchar(20) primary key not null,
     name 		varchar(10) not null,
     nickname 	varchar(10) not null,
     phone 		varchar(15) not null,
@@ -41,7 +40,9 @@ CREATE TABLE recipe(
     ingredient_amount 	varchar(10),
     orders 				varchar(20),
     empathy 			int,
-    post_date			timestamp
+    post_date			timestamp,
+    
+    FOREIGN KEY (id) REFERENCES member(id)
 );
 
 desc recipe;

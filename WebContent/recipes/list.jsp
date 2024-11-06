@@ -7,13 +7,10 @@
 
 <%
 	request.setCharacterEncoding("UTF-8");
+	response.setContentType("text/html; charset=utf-8");
+
+	String contextPath = request.getContextPath();
 %>
-
-<c:set var="center" value="${requestScope.center}"/>
-
-<c:if test="${center == null}">
-	<c:set var="center" value="includes/center.jsp"/>
-</c:if>
 
 <!DOCTYPE html>
 <html>
@@ -24,19 +21,7 @@
 </head>
 
 <body>
-	<center>
-		<table width="100%" border="1">
-			<tr>
-				<td><jsp:include page="includes/top.jsp"/></td>
-			</tr>
-			<tr>
-				<td width="1000px"><jsp:include page="${center}"/></td>
-			</tr>
-			<tr>
-				<td><jsp:include page="includes/bottom.jsp"/></td>
-			</tr>
-		</table>
-	</center>
+	리스트 뷰
 </body>
 
 </html>
