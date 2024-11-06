@@ -1,0 +1,13 @@
+<Context>	
+	<Resource 
+		name="jdbc/FoodJoa"
+		auth="Container"
+		type="javax.sql.DataSource"
+		driverClassName="com.mysql.jdbc.Driver"
+		url="jdbc:mysql://localhost:3306/FoodJoa"
+		username="root"
+		password="1234"
+		maxActive="50" 
+		maxWait="-1" 
+	/>
+</Context>
