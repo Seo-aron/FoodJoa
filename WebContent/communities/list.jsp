@@ -7,7 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-  민석작성
-  혜원 작성
+	이것은 list.jsp입니다.
 </body>
 </html>
