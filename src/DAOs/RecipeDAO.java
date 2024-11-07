@@ -1,45 +1,58 @@
 package DAOs;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.sql.DataSource;
+import Common.DBConnector;
+import VOs.RecipeVO;
 
 public class RecipeDAO {
 
-	private DataSource dataSource;
-	
-	private Connection connection;
-	private PreparedStatement statement;
-	private ResultSet resultSet;
-
+	private DBConnector dbConnector;
 	
 	public RecipeDAO() {
-		try {
-			Context context = new InitialContext();
-			dataSource = (DataSource) context.lookup("java:/comp/env/jdbc/FoodJoa");
-		}
-		catch (Exception e) {
-			System.out.println("DB 연결 실패");
-			e.printStackTrace();
-		}
-
+		dbConnector = new DBConnector();
 	}
 	
-	private void Release() {
+	public ArrayList<RecipeVO> selectRecipes() {
+		
+		ArrayList<RecipeVO> recipes = new ArrayList<RecipeVO>();
+		
+		String sql = "SELECT * FROM recipe";
+		
+		ResultSet resultSet = dbConnector.executeQuery(sql);
 		
 		try {
-			if (resultSet != null) resultSet.close();
-			if (statement != null) statement.close();
-			if (connection != null) connection.close();
+			while (resultSet.next()) {
+				
+				RecipeVO recipe = new RecipeVO(
+						resultSet.getInt("no"),
+						resultSet.getString("id"),
+						resultSet.getString("title"),
+						resultSet.getString("thumbnail"),
+						resultSet.getString("description"),
+						resultSet.getString("contents"),
+						resultSet.getInt("category"),
+						resultSet.getInt("views"),
+						resultSet.getFloat("rating"),
+						resultSet.getString("ingredient"),
+						resultSet.getString("ingredient_amount"),
+						resultSet.getString("orders"),
+						resultSet.getInt("empathy"),
+						resultSet.getTimestamp("post_date"));
+				
+				recipes.add(recipe);
+			}
 		}
-		catch (Exception e) {
-			System.out.println("자원 해제 실패");
+		catch (SQLException e) {
 			e.printStackTrace();
+			System.out.println("selectRecipes() SQLException 발생");
 		}
+				
+		dbConnector.Release();
+		
+		return recipes;
 	}
 
 } 
