@@ -1,20 +1,20 @@
 package VOs;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 public class MealkitOrderVO {
 	private int no;
-	private String id;
-	private int mealkitNo;
-	private int amount;
-	private String address;
-	private int delivered;
-	private int refund;
-	private Date postDate;
+    private String id;
+    private int mealkitNo;
+    private int amount;
+    private String address;
+    private int delivered;
+    private int refund;
+    private Timestamp postDate;
+    
+    // postDate없는 생성자  
+	public MealkitOrderVO(int no, String id, int mealkitNo, int amount, String address, int delivered, int refund) {
 
-	// postDate없는 생성자
-	public MealkitOrderVO(int no, String id, int mealkitNo, int amount,
-			String address, int delivered, int refund) {
 		this.no = no;
 		this.id = id;
 		this.mealkitNo = mealkitNo;
@@ -24,8 +24,8 @@ public class MealkitOrderVO {
 		this.refund = refund;
 	}
 
-	public MealkitOrderVO(int no, String id, int mealkitNo, int amount,
-			String address, int delivered, int refund, Date postDate) {
+	public MealkitOrderVO(int no, String id, int mealkitNo, int amount, String address, int delivered, int refund,
+			Timestamp postDate) {
 
 		this(no, id, mealkitNo, amount, address, delivered, refund);
 		this.postDate = postDate;
@@ -87,11 +87,11 @@ public class MealkitOrderVO {
 		this.refund = refund;
 	}
 
-	public Date getPostDate() {
+	public Timestamp getPostDate() {
 		return postDate;
 	}
 
-	public void setPostDate(Date postDate) {
+	public void setPostDate(Timestamp postDate) {
 		this.postDate = postDate;
 	}
 

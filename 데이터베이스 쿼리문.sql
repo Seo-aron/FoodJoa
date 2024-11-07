@@ -103,7 +103,7 @@ CREATE TABLE mealkit(
 	category      tinyint not null,
 	price         varchar(10) not null,
 	pictures      text not null,
-	orders        varchar(20) not null,
+	orders        varchar(255) not null,
 	origin        varchar(255) not null,
 	rating        float not null,
 	views         int not null,
