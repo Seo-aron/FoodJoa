@@ -3,6 +3,7 @@ package VOs;
 import java.sql.Date;
 
 public class MealkitVO {
+	
 	private int no;
     private String id;
     private String title;
@@ -36,18 +37,8 @@ public class MealkitVO {
 
 	public MealkitVO(int no, String id, String title, String content, int category, String price, String pictures,
 			String orders, String origin, float rating, int views, int soldout, Date postDate) {
-		this.no = no;
-		this.id = id;
-		this.title = title;
-		this.content = content;
-		this.category = category;
-		this.price = price;
-		this.pictures = pictures;
-		this.orders = orders;
-		this.origin = origin;
-		this.rating = rating;
-		this.views = views;
-		this.soldout = soldout;
+
+		this(no, id, title, content, category, price, pictures, orders, origin, rating, views, soldout);
 		this.postDate = postDate;
 	}
 
