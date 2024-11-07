@@ -10,4 +10,4 @@ public class RecipeService {
 		
 		recipeDAO = new RecipeDAO();
 	}
-}
+} 

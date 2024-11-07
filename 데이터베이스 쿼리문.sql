@@ -6,8 +6,7 @@ USE foodjoa;
 -- member ------------------------------------------------------------------------------
 DROP TABLE IF EXISTS member;
 CREATE TABLE member(
-	no 			int primary key auto_increment,
-    id 			varchar(20) not null,
+    id 			varchar(20) primary key not null,
     name 		varchar(10) not null,
     nickname 	varchar(10) not null,
     phone 		varchar(15) not null,
