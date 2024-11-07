@@ -1,6 +1,6 @@
 package VOs;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 public class MealkitReviewVO {
     
@@ -11,7 +11,7 @@ public class MealkitReviewVO {
 	private String contents;
 	private float rating;
 	private int empathy;
-	private Date postDate;
+	private Timestamp postDate;
 	
 	public MealkitReviewVO(int no, String id, int mealkitNo, String pictures, 
 			String contents, float rating, int empathy) {
@@ -25,7 +25,7 @@ public class MealkitReviewVO {
 	}
 
 	public MealkitReviewVO(int no, String id, int mealkitNo, String pictures, 
-			String contents, float rating, int empathy, Date postDate) {
+			String contents, float rating, int empathy, Timestamp postDate) {
 		this(no, id, mealkitNo, pictures, contents, rating, empathy);
 		this.postDate = postDate;
 	}
@@ -86,11 +86,11 @@ public class MealkitReviewVO {
 		this.empathy = empathy;
 	}
 
-	public Date getPostDate() {
+	public Timestamp getPostDate() {
 		return postDate;
 	}
 
-	public void setPostDate(Date postDate) {
+	public void setPostDate(Timestamp postDate) {
 		this.postDate = postDate;
 	}
 	
