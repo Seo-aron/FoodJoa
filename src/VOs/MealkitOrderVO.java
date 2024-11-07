@@ -25,13 +25,7 @@ public class MealkitOrderVO {
 
 	public MealkitOrderVO(int no, String id, int mealkitNo, int amount, String address, int delivered, int refund,
 			Date postDate) {
-		this.no = no;
-		this.id = id;
-		this.mealkitNo = mealkitNo;
-		this.amount = amount;
-		this.address = address;
-		this.delivered = delivered;
-		this.refund = refund;
+		this(no, id, mealkitNo, amount, address, delivered, refund);
 		this.postDate = postDate;
 	}
 
