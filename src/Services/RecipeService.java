@@ -13,7 +13,7 @@ public class RecipeService {
 		
 		recipeDAO = new RecipeDAO();
 	}
-	
+  
 	public ArrayList<RecipeVO> getRecipesList() {
 		
 		return recipeDAO.selectRecipes();
