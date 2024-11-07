@@ -30,7 +30,7 @@
 				<td><jsp:include page="includes/top.jsp"/></td>
 			</tr>
 			<tr>
-				<td width="1000px"><jsp:include page="${center}"/></td>
+				<td width="1200px"><jsp:include page="${center}"/></td>
 			</tr>
 			<tr>
 				<td><jsp:include page="includes/bottom.jsp"/></td>
