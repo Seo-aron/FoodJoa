@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	민석작성
-	혜원 작성
+
+	
 </body>
 </html>
