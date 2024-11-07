@@ -55,4 +55,40 @@ public class RecipeDAO {
 		return recipes;
 	}
 
+	public RecipeVO selectRecipe(String id) {
+		
+		String sql = "select * from recipe where id=?";
+		
+		ResultSet resultSet = dbConnector.executeQuery(sql, Integer.parseInt(id));
+		
+		RecipeVO recipe = null;
+		
+		try {
+			if (resultSet.next()) {
+				recipe = new RecipeVO(
+						resultSet.getInt("no"),
+						resultSet.getString("id"),
+						resultSet.getString("title"),
+						resultSet.getString("thumbnail"),
+						resultSet.getString("description"),
+						resultSet.getString("contents"),
+						resultSet.getInt("category"),
+						resultSet.getInt("views"),
+						resultSet.getFloat("rating"),
+						resultSet.getString("ingredient"),
+						resultSet.getString("ingredient_amount"),
+						resultSet.getString("orders"),
+						resultSet.getInt("empathy"),
+						resultSet.getTimestamp("post_date"));
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("selectRecipe() SQLException 발생");
+		}		
+		
+		dbConnector.Release();
+		
+		return recipe;
+	}
 } 

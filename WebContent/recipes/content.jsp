@@ -1,3 +1,4 @@
+<%@page import="VOs.RecipeVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
@@ -7,13 +8,12 @@
 
 <%
 	request.setCharacterEncoding("UTF-8");
+	response.setContentType("text/html; charset=utf-8");
+
+	String contextPath = request.getContextPath();
+	
+	RecipeVO recipe = (RecipeVO) request.getAttribute("recipe"); 
 %>
-
-<c:set var="center" value="${requestScope.center}"/>
-
-<c:if test="${center == null}">
-	<c:set var="center" value="includes/center.jsp"/>
-</c:if>
 
 <!DOCTYPE html>
 <html>
@@ -24,19 +24,7 @@
 </head>
 
 <body>
-	<center>
-		<table width="100%" border="1">
-			<tr>
-				<td><jsp:include page="includes/top.jsp"/></td>
-			</tr>
-			<tr>
-				<td width="1200px"><jsp:include page="${center}"/></td>
-			</tr>
-			<tr>
-				<td><jsp:include page="includes/bottom.jsp"/></td>
-			</tr>
-		</table>
-	</center>
+	asdfasdfsdafasdfasdfsd
 </body>
 
 </html>

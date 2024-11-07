@@ -63,10 +63,10 @@ public class DBConnector {
 			
 			statement = connection.prepareStatement(sql);
 			for (int i = 0; i < params.length; i++) {
-				if (params[i] instanceof String) statement.setString(i+1, (String) params[i]);
-				else if (params[i] instanceof Integer) statement.setInt(i+1, (int) params[i]);
-				else if (params[i] instanceof Float) statement.setFloat(i+1, (float) params[i]);
-				else if (params[i] instanceof Timestamp) statement.setTimestamp(i+1, (Timestamp) params[i]);
+				if (params[i] instanceof String) statement.setString(i + 1, (String) params[i]);
+				else if (params[i] instanceof Integer) statement.setInt(i + 1, (int) params[i]);
+				else if (params[i] instanceof Float) statement.setFloat(i + 1, (float) params[i]);
+				else if (params[i] instanceof Timestamp) statement.setTimestamp(i + 1, (Timestamp) params[i]);
 			}
 		}
 		catch (SQLException e) {

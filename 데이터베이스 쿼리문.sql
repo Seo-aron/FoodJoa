@@ -47,9 +47,14 @@ CREATE TABLE recipe(
     FOREIGN KEY (id) REFERENCES member(id)
 );
 
-insert into recipe(id, title, thumbnail, description, contents, category, views, rating, ingredient, ingredient_amount, orders, empathy, post_date)
-values ('admin', '레시피 제목', 'thumbnailImage.png', '레시피 간단 설명', '레시피 설명', 0, 0, 5.0, '물@멸치액젓@고춧가루', '500ml@0.5 큰술@1 큰술', '물을 끓인다@스프와 멸치액젓, 고춧가루를 넣는다@물이 끓으면 면을 넣는다', 5, CURRENT_TIMESTAMP);
-
+insert into recipe(id, title, thumbnail, 
+	description, contents, category, views, 
+	rating, ingredient, ingredient_amount, 
+	orders, empathy, post_date) 
+values('admin', '레시피 제목', 'thumbnailImage.png',
+	'레시피 간단 설명', '레시피 설명', 0, 0,
+    4.5, '물@멸치액젓@고춧가루', '500ml@0.5 큰술@1 큰술', 
+	'물을 끓인다@스프와 멸치액젓, 고춧가루를 넣는다@물이 끓으면 면을 넣는다', 3, CURRENT_TIMESTAMP);
 
 desc recipe;
 select * from recipe;

@@ -14,6 +14,7 @@ public class MealkitOrderVO {
     
     // postDate없는 생성자  
 	public MealkitOrderVO(int no, String id, int mealkitNo, int amount, String address, int delivered, int refund) {
+
 		this.no = no;
 		this.id = id;
 		this.mealkitNo = mealkitNo;
@@ -25,6 +26,7 @@ public class MealkitOrderVO {
 
 	public MealkitOrderVO(int no, String id, int mealkitNo, int amount, String address, int delivered, int refund,
 			Timestamp postDate) {
+
 		this(no, id, mealkitNo, amount, address, delivered, refund);
 		this.postDate = postDate;
 	}
@@ -92,5 +94,5 @@ public class MealkitOrderVO {
 	public void setPostDate(Timestamp postDate) {
 		this.postDate = postDate;
 	}
-    
+
 }

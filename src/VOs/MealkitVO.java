@@ -3,6 +3,7 @@ package VOs;
 import java.sql.Timestamp;
 
 public class MealkitVO {
+	
 	private int no;
     private String id;
     private String title;
@@ -36,6 +37,7 @@ public class MealkitVO {
 
 	public MealkitVO(int no, String id, String title, String content, int category, String price, String pictures,
 			String orders, String origin, float rating, int views, int soldout, Timestamp postDate) {
+
 		this(no, id, title, content, category, price, pictures, orders, origin, rating, views, soldout);
 		this.postDate = postDate;
 	}
