@@ -36,7 +36,7 @@
 			</td>
 			<!-- 레시피 -->
 			<td align="center" bgcolor="lightgreen" width="20%">
-				<a href="#">
+				<a href="<%= contextPath %>/Recipe/list">
 					<div style="font-size: 2.5rem; color: white;">레시피 공유</div>
 				</a>
 			</td>
