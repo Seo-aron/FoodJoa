@@ -15,6 +15,7 @@ public class MealkitReviewVO {
 	
 	public MealkitReviewVO(int no, String id, int mealkitNo, String pictures, 
 			String contents, float rating, int empathy) {
+		
 		this.no = no;
 		this.id = id;
 		this.mealkitNo = mealkitNo;
@@ -26,6 +27,7 @@ public class MealkitReviewVO {
 
 	public MealkitReviewVO(int no, String id, int mealkitNo, String pictures, 
 			String contents, float rating, int empathy, Timestamp postDate) {
+		
 		this(no, id, mealkitNo, pictures, contents, rating, empathy);
 		this.postDate = postDate;
 	}

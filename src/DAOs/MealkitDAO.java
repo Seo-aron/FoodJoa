@@ -59,8 +59,7 @@ public class MealkitDAO {
 		
 		ResultSet rs = dbConnector.executeQuery(sql, no);
 		
-		try {
-			
+		try {			
 			if(rs.next()) {
 				mealkit = new MealkitVO(
 						rs.getInt("no"), 
@@ -86,6 +85,5 @@ public class MealkitDAO {
 		dbConnector.Release();
 		
 		return mealkit;
-	}
-	
+	}	
 }

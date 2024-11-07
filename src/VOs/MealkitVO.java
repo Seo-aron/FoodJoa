@@ -21,6 +21,7 @@ public class MealkitVO {
     // postDate 없는 생성자 
 	public MealkitVO(int no, String id, String title, String content, int category, String price, String pictures,
 			String orders, String origin, float rating, int views, int soldout) {
+		
 		this.no = no;
 		this.id = id;
 		this.title = title;
