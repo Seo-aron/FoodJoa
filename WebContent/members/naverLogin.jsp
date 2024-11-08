@@ -34,38 +34,6 @@
 <body>
 
     <div class="container">
-        <!-- 카카오 로그인 버튼 -->
-        <a href="javascript:kakaoLogin();"><img src="../images/kakaologin.png"></a>
-
-        <!-- 카카오 SDK 초기화 및 로그인 설정 -->
-        <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
-        <script>
-            Kakao.init("43f813206dcc04574e03df4d3ccafec3");
-
-            function kakaoLogin() {
-                Kakao.Auth.login({
-                    scope: 'profile_image, profile_nickname',
-                    success: function(authObj) {
-                        console.log("카카오 로그인 성공!", authObj);
-
-                        Kakao.API.request({
-                            url: '/v2/user/me',
-                            success: function(res) {
-                                const kakao_account = res.kakao_account;
-                                console.log("카카오 사용자 정보:", kakao_account);
-                                window.location.href = "/FoodJoa/index.jsp";
-                            },
-                            fail: function(error) {
-                                console.log("카카오 사용자 정보 요청 실패:", error);
-                            }
-                        });
-                    },
-                    fail: function(error) {
-                        console.log("카카오 로그인 실패:", error);
-                    }
-                });
-            }
-        </script>
 
         <!-- 네이버 로그인 버튼 노출 영역 -->
         <div id="naver_id_login"></div>
@@ -76,7 +44,7 @@
             var state = naver_id_login.getUniqState();
 
             naver_id_login.setButton("white", 2, 40);
-            naver_id_login.setDomain("http://localhost:8090/FoodJoa/login.jsp");
+            naver_id_login.setDomain("http://localhost:8090/FoodJoa/join.jsp");
             naver_id_login.setState(state);
             naver_id_login.init_naver_id_login();
 
@@ -92,7 +60,7 @@
                     console.log("네이버 사용자 이름:", naver_username);
 
                     // 로그인 성공 시 페이지 이동
-                    window.location.href = "/FoodJoa/index.jsp";
+                    window.location.href = "/main.jsp";
                 } else {
                     console.log("네이버 로그인 실패");
                 }

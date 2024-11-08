@@ -74,7 +74,7 @@ public class DBConnector {
 			System.out.println("DBConnector SQLException 발생");
 		}
 	}
-	
+
 	/**
 	 * SELECT 구문을 실행하기 위한 함수<br>
 	 * 두 번째 매개변수 부터 차례로 SQL에 set<br>
