@@ -9,9 +9,9 @@ public class MemberVO {
 	private String phone;
 	private String address;
 	private String profile;
-	private Timestamp joinDate;
+	private Timestamp join_date;
 
-	// joinDate 없는 생성자
+	// join_date 없는 생성자
 	public MemberVO(String id, String name, String nickname, String phone, String address, String profile) {
 		this.id = id;
 		this.name = name;
@@ -21,16 +21,16 @@ public class MemberVO {
 		this.profile = profile;
 	}
 
-	// joinDate 포함된 생성자
+	// join_date 포함된 생성자
 	public MemberVO(String id, String name, String nickname, String phone, String address, String profile,
-			Timestamp joinDate) {
+			Timestamp join_date) {
 		this.id = id;
 		this.name = name;
 		this.nickname = nickname;
 		this.phone = phone;
 		this.address = address;
 		this.profile = profile;
-		this.joinDate = joinDate;
+		this.join_date = join_date;
 	}
 
 	// Getters and Setters
@@ -82,11 +82,13 @@ public class MemberVO {
 		this.profile = profile;
 	}
 
-	public Timestamp getJoinDate() {
-		return joinDate;
+	public Timestamp getJoin_date() {
+		return join_date;
 	}
 
-	public void setJoinDate(Timestamp joinDate) {
-		this.joinDate = joinDate;
+	public void setJoin_date(Timestamp join_date) {
+		this.join_date = join_date;
 	}
+
+
 }

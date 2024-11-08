@@ -1,7 +1,12 @@
 package Services;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import com.oreilly.servlet.MultipartRequest;
 
 import DAOs.MemberDAO;
 import VOs.MemberVO;
@@ -24,15 +29,29 @@ public class MemberService {
 	}
 
 	public void serviceInsertMember(HttpServletRequest request) {
-		String user_id = request.getParameter("id");
-		String user_name = request.getParameter("name");
-		String user_nickname = request.getParameter("nickname");
-		String user_phone = request.getParameter("phone");
-		String user_address = request.getParameter("address");
-		String user_profile = request.getParameter("profile");
 
-		MemberVO vo = new MemberVO(user_id, user_name, user_nickname, user_phone, user_address, user_profile);
-		memberDAO.insertMember(vo);
+		try {
+			String saveDir = "";
+			MultipartRequest multipartRequest = new MultipartRequest(request, saveDir);
+
+			String user_id = multipartRequest.getParameter("id");
+			String user_name = multipartRequest.getParameter("name");
+			String user_nickname = multipartRequest.getParameter("nickname");
+			String user_phone = multipartRequest.getParameter("phone");
+			String user_address = multipartRequest.getParameter("address");
+			String user_profile = multipartRequest.getParameter("profile");
+			
+			System.out.println(user_id + "/" + user_name + "/" + user_nickname + "/" + user_phone  + "/" + user_address + "/" + user_profile );
+
+			
+			MemberVO vo = new MemberVO(user_id, user_name, user_nickname, user_phone, user_address, user_profile);
+			memberDAO.insertMember(vo);
+		}
+		
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public String serviceLoginMember() {

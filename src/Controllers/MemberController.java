@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.oreilly.servlet.MultipartRequest;
+
 import Services.MemberService;
 import VOs.MemberVO;
 
@@ -41,7 +43,7 @@ public class MemberController extends HttpServlet {
 
     protected void doHandle(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+    	
         request.setCharacterEncoding("utf-8");
         response.setContentType("text/html; charset=utf-8");
 
@@ -54,7 +56,7 @@ public class MemberController extends HttpServlet {
                 // 회원 가입 페이지 처리
                 nextPage = memberService.serviceJoinName(request); // 회원 가입 처리 로직
                 request.setAttribute("center", nextPage);
-                nextPage = contextPath + "/members/join.jsp"; // 경로 설정
+                nextPage = "/members/join.jsp"; // 경로 설정
                 break;
 
             case "/joinIdCheck.me":
@@ -72,7 +74,7 @@ public class MemberController extends HttpServlet {
                 // 로그인 페이지 처리
                 nextPage = memberService.serviceLoginMember(); // 로그인 서비스 처리
                 request.setAttribute("center", nextPage);
-                nextPage = contextPath + "/members/login.jsp"; // 경로 설정
+                nextPage = "/members/login.jsp"; // 경로 설정
                 break;
 
             case "/loginPro.me":
@@ -118,7 +120,7 @@ public class MemberController extends HttpServlet {
             out.println(" history.go(-1);");
             out.println("</script>");
         } else {
-            nextPage = request.getContextPath() + "/main.jsp"; // 로그인 성공 후 이동할 페이지
+            nextPage = "/main.jsp"; // 로그인 성공 후 이동할 페이지
         }
     }
 }
