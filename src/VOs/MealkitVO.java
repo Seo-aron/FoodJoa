@@ -10,6 +10,7 @@ public class MealkitVO {
     private String content;
     private int category;
     private String price;
+    private int amount;
     private String pictures;
     private String orders;
     private String origin;
@@ -19,8 +20,8 @@ public class MealkitVO {
     private Timestamp postDate;
     
     // postDate 없는 생성자 
-	public MealkitVO(int no, String id, String title, String content, int category, String price, String pictures,
-			String orders, String origin, float rating, int views, int soldout) {
+	public MealkitVO(int no, String id, String title, String content, int category, String price, int amount,
+			String pictures, String orders, String origin, float rating, int views, int soldout) {
 		
 		this.no = no;
 		this.id = id;
@@ -28,6 +29,7 @@ public class MealkitVO {
 		this.content = content;
 		this.category = category;
 		this.price = price;
+		this.amount = amount;
 		this.pictures = pictures;
 		this.orders = orders;
 		this.origin = origin;
@@ -36,10 +38,10 @@ public class MealkitVO {
 		this.soldout = soldout;
 	}
 
-	public MealkitVO(int no, String id, String title, String content, int category, String price, String pictures,
-			String orders, String origin, float rating, int views, int soldout, Timestamp postDate) {
+	public MealkitVO(int no, String id, String title, String content, int category, String price, int amount, 
+			String pictures, String orders, String origin, float rating, int views, int soldout, Timestamp postDate) {
 
-		this(no, id, title, content, category, price, pictures, orders, origin, rating, views, soldout);
+		this(no, id, title, content, category, price, amount, pictures, orders, origin, rating, views, soldout);
 		this.postDate = postDate;
 	}
 
@@ -89,6 +91,14 @@ public class MealkitVO {
 
 	public void setPrice(String price) {
 		this.price = price;
+	}
+
+	public int getAmount() {
+		return amount;
+	}
+
+	public void setAmount(int amount) {
+		this.amount = amount;
 	}
 
 	public String getPictures() {
