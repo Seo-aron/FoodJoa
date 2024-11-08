@@ -1,15 +1,21 @@
 package Services;
 
+import java.io.File;
 import java.io.IOException;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FileUtils;
+
 import com.oreilly.servlet.MultipartRequest;
+import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
 import DAOs.MemberDAO;
 import VOs.MemberVO;
+
 
 public class MemberService {
 
@@ -28,29 +34,45 @@ public class MemberService {
 		return memberDAO.overlappedId(id);
 	}
 
-	public void serviceInsertMember(HttpServletRequest request) {
-
-		try {
-			String saveDir = "";
-			MultipartRequest multipartRequest = new MultipartRequest(request, saveDir);
-
-			String user_id = multipartRequest.getParameter("id");
-			String user_name = multipartRequest.getParameter("name");
-			String user_nickname = multipartRequest.getParameter("nickname");
-			String user_phone = multipartRequest.getParameter("phone");
-			String user_address = multipartRequest.getParameter("address");
-			String user_profile = multipartRequest.getParameter("profile");
-			
-			System.out.println(user_id + "/" + user_name + "/" + user_nickname + "/" + user_phone  + "/" + user_address + "/" + user_profile );
-
-			
-			MemberVO vo = new MemberVO(user_id, user_name, user_nickname, user_phone, user_address, user_profile);
-			memberDAO.insertMember(vo);
-		}
+	public void serviceInsertMember(HttpServletRequest request) 
+			throws ServletException, IOException  {
 		
-		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		ServletContext application = request.getServletContext();
+		
+		String path = application.getRealPath("/images/");
+		int maxSize = 1024 * 1024 * 1024;
+		
+		MultipartRequest multipartRequest = new MultipartRequest(request, path + "temp/", maxSize, "UTF-8",
+				new DefaultFileRenamePolicy());
+
+		String id = multipartRequest.getParameter("id");
+		String fileName = multipartRequest.getParameter("profile");
+		
+		MemberVO vo = new MemberVO(
+				id, 
+				multipartRequest.getParameter("name"), 
+				multipartRequest.getParameter("nickname"), 
+				multipartRequest.getParameter("phone"), 
+				multipartRequest.getParameter("address"), 
+				fileName);
+		
+		memberDAO.insertMember(vo);
+		
+		moveProfile(path, id, fileName);
+	}
+	
+	private synchronized void moveProfile(String path, String id, String fileName) throws IOException {
+		
+		synchronized (this) {
+			if (fileName != null && fileName.length() != 0) {
+				File srcFile = new File(path + "\\temp\\" + fileName);
+				File destDir = new File(path + "\\member\\userProfiles\\" + id);
+				
+				if (!destDir.exists())
+					destDir.mkdirs();
+				
+				FileUtils.moveToDirectory(srcFile, destDir, true);
+			}
 		}
 	}
 
@@ -67,5 +89,4 @@ public class MemberService {
 
 		return memberDAO.userCheck(login_id, login_name);
 	}
-
 }

@@ -55,7 +55,6 @@ public class DBConnector {
 	}
 	
 	private void prepareQuery(String sql, Object... params) {
-<<<<<<< HEAD
 		
 		Release();		// 사용 중인 자원이 남아 있으면 메모리 할당 해제
 		
@@ -74,34 +73,8 @@ public class DBConnector {
 			e.printStackTrace();
 			System.out.println("DBConnector SQLException 발생");
 		}
-=======
-	    // 디버깅 코드 추가: 실제 실행될 SQL을 출력
-	    System.out.println("Preparing SQL: " + sql + " with " + params.length + " parameters.");
-
-	    
-	    Release(); // 사용 중인 자원 해제
-
-	    try {
-	        connection = dataSource.getConnection();
-	        statement = connection.prepareStatement(sql);
-	        for (int i = 0; i < params.length; i++) {
-	            System.out.println("Setting parameter " + (i + 1) + ": " + params[i]);
-	            if (params[i] instanceof String) statement.setString(i + 1, (String) params[i]);
-	            else if (params[i] instanceof Integer) statement.setInt(i + 1, (int) params[i]);
-	            else if (params[i] instanceof Float) statement.setFloat(i + 1, (float) params[i]);
-	            else if (params[i] instanceof Timestamp) statement.setTimestamp(i + 1, (Timestamp) params[i]);
-	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        System.out.println("DBConnector SQLException 발생");
-	    }
->>>>>>> 2a4a4fa65eac4b9d5f54b9626696e65ba418cab3
 	}
-	
-	            
 
-
-	
 	/**
 	 * SELECT 구문을 실행하기 위한 함수<br>
 	 * 두 번째 매개변수 부터 차례로 SQL에 set<br>

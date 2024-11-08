@@ -67,7 +67,8 @@ public class MemberDAO {
 
     // 회원 정보 삽입
     public void insertMember(MemberVO vo) {
-        String sql = "INSERT INTO member(id, name, nickname, phone, address, profile, join_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO member(id, name, nickname, phone, address, profile, join_date) "
+        		+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try {
             Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
