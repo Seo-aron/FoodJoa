@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 
 import DAOs.MealkitDAO;
+import VOs.MealkitOrderVO;
 import VOs.MealkitVO;
 
 public class MealkitService {
@@ -26,6 +27,11 @@ public class MealkitService {
 		int no = Integer.parseInt(request.getParameter("no"));
 		
 		return mealkitDAO.InfoMealkit(no);
+	}
+
+	public MealkitOrderVO setMyMealkits() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

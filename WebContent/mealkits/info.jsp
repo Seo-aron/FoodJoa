@@ -31,10 +31,10 @@
 				<td><jsp:include page="board.jsp" flush="true"/></td>
 			</tr>
 			<tr>
-				<td><jsp:include page="review.jsp" /></td>
+				<%-- <td><jsp:include page="review.jsp" /></td> --%>
 			</tr>
 			<tr>
-				<td><jsp:include page="recent.jsp" /></td>
+				<%-- <td><jsp:include page="recent.jsp" /></td> --%>
 			</tr>
 		</table>
 	</div>	
