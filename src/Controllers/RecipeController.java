@@ -49,6 +49,7 @@ public class RecipeController extends HttpServlet {
 
 		switch (action) {
 		case "/list": openRecipeListView(request, response); break;
+		case "/write": openRecipeWriteView(request, response); break;
 		case "/content": openRecipeReadView(request, response); break;
 
 		default:
@@ -69,6 +70,14 @@ public class RecipeController extends HttpServlet {
 		nextPage = "/main.jsp";
 	}
 	
+	private void openRecipeWriteView(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		request.setAttribute("center", "recipes/write.jsp");
+		
+		nextPage = "/main.jsp";
+	}
+	
 	private void openRecipeReadView(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
@@ -77,6 +86,6 @@ public class RecipeController extends HttpServlet {
 		request.setAttribute("recipe", recipe);
 		request.setAttribute("center", "recipes/content.jsp");
 		
-		nextPage = "/main.jsp";		
+		nextPage = "/main.jsp";
 	}
 }

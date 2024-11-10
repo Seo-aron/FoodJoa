@@ -5,6 +5,10 @@
 	border: 2px solid black;
 }
 
+.header{
+	width: 100%;
+}
+
 .list_table {
 	margin: 0 auto;
 	border-collapse: separate;
@@ -15,13 +19,34 @@
 	text-align: center;
 	width: 260px;
 	height: 400px;
+	padding: 0;
 	
 	border: 1px solid black;
 }
 
+.cell-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: 10px;
+}
+
+.cell-link > span:not(.rating, .views) {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.rating {
+    display: inline-block;
+}
+
+.views {
+    display: inline-block;
+}
+
 .review_star {
-	width: 32px;
-	height: 32px;
+    width: 20px;
+    height: 20px;
 }
 
 .thumbnail {
