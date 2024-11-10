@@ -46,7 +46,6 @@ String contextPath = request.getContextPath();
 
 				<!-- 나머지 사용자 정보 입력 -->
 				<div class="input-container">
-					<input type="text" id="id" name="id" class="form-control" placeholder="아이디를 입력해주세요" required />
 					<input type="text" id="name" name="name" class="form-control" placeholder="이름을 입력해주세요" required />
 					<input type="text" id="nickname" name="nickname" class="form-control" placeholder="닉네임을 입력해주세요" required />
 					<input type="text" id="phone" name="phone" class="form-control" placeholder="휴대폰번호 입력해주세요" required />
