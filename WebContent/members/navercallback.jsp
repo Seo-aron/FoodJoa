@@ -15,7 +15,7 @@
     String clientSecret = "v0d16oISwA"; // 애플리케이션 클라이언트 시크릿값
     String code = request.getParameter("code");
     String state = request.getParameter("state");
-    String redirectURI = "http://localhost:8090/FoodJoa/members/join.jsp"; // 인코딩하지 않음
+    String redirectURI = "http://localhost:8090/FoodJoa/members/navercallback.jsp"; // 인코딩하지 않음
     
     String apiURL = "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code"
         + "&client_id=" + clientId
@@ -56,8 +56,37 @@
       session.setAttribute("access_token", accessToken);
       session.setAttribute("refresh_token", refreshToken);
       
-      // 액세스 토큰을 이용해 사용자 정보를 요청하거나 리디렉션 처리
-      response.sendRedirect("/FoodJoa/successPage.jsp"); // 로그인 성공 후 리디렉션
+      // 사용자 정보 요청
+      String userInfoAPI = "https://openapi.naver.com/v1/nid/me";
+      URL userInfoUrl = new URL(userInfoAPI);
+      HttpURLConnection userInfoCon = (HttpURLConnection) userInfoUrl.openConnection();
+      userInfoCon.setRequestMethod("GET");
+      userInfoCon.setRequestProperty("Authorization", "Bearer " + accessToken);
+      
+      BufferedReader userInfoBr;
+      int userInfoResponseCode = userInfoCon.getResponseCode();
+      if (userInfoResponseCode == 200) {
+        userInfoBr = new BufferedReader(new InputStreamReader(userInfoCon.getInputStream()));
+      } else {
+        userInfoBr = new BufferedReader(new InputStreamReader(userInfoCon.getErrorStream()));
+      }
+      
+      StringBuilder userInfoRes = new StringBuilder();
+      while ((inputLine = userInfoBr.readLine()) != null) {
+        userInfoRes.append(inputLine);
+      }
+      userInfoBr.close();
+      
+      // JSON 응답에서 사용자 id 추출
+      JSONObject userInfoJsonResponse = (JSONObject) new org.json.simple.parser.JSONParser().parse(userInfoRes.toString());
+      JSONObject responseObj = (JSONObject) userInfoJsonResponse.get("response");
+      String userId = (String) responseObj.get("id");
+      
+      // id를 세션에 저장
+      session.setAttribute("userId", userId);
+      
+      // 로그인 성공 후 join.jsp로 리디렉션 (id 전달)
+      response.sendRedirect(request.getContextPath() + "/members/join.jsp"); 
       
     } catch (Exception e) {
       e.printStackTrace(); // 예외 발생 시 로그

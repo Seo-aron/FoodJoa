@@ -64,16 +64,32 @@ public class MemberDAO {
         }
         return result;
     }
-
-    // 회원 정보 삽입
+    
+    
     public void insertMember(MemberVO vo) {
         String sql = "INSERT INTO member(id, name, nickname, phone, address, profile, join_date) "
-        		+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try {
+            // 값 확인
+            System.out.println("id: " + vo.getId());
+            System.out.println("name: " + vo.getName());
+            System.out.println("nickname: " + vo.getNickname());
+            System.out.println("phone: " + vo.getPhone());
+            System.out.println("address: " + vo.getAddress());
+            System.out.println("profile: " + vo.getProfile());
+
             Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-            int result = dbConnector.executeUpdate(sql, vo.getId(), vo.getName(), vo.getNickname(),
-                                                   vo.getPhone(), vo.getAddress(), vo.getProfile(), currentTimestamp);
+            int result = dbConnector.executeUpdate(sql, 
+                vo.getId(), 
+                vo.getName(), 
+                vo.getNickname(),
+                vo.getPhone(), 
+                vo.getAddress(), 
+                vo.getProfile(), 
+                currentTimestamp
+            );
+
             if (result > 0) {
                 System.out.println("회원이 성공적으로 등록되었습니다.");
             } else {
@@ -86,6 +102,8 @@ public class MemberDAO {
             dbConnector.Release();
         }
     }
+
+
 
 
 
