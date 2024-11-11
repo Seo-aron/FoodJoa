@@ -4,7 +4,13 @@
 <%
     // 세션에서 userId 값 가져오기
     String userId = (String) session.getAttribute("userId");
+
+	request.setCharacterEncoding("UTF-8");
+	response.setContentType("text/html; charset=utf-8");
+	
+	String contextPath = request.getContextPath();
 %>
+
 <!DOCTYPE html>
 <html>
 <head>
