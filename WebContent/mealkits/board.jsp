@@ -21,106 +21,8 @@
 	<meta charset="UTF-8">
 	<title>Insert title here</title>
 	
-	<style type="text/css">
-		#container {
-			width: 1000px;
-			display: flex;
-			margin: 20px auto;
-		}
-		.info_image, .info_text {
-			padding: 20px;
-		}
-		.info_image {
-			width: 450px;
-			text-align: center;
-			margin-right: 20px;
-		}
-		.bxslider img {
-			width: 400px;
-			height: 400px;
-			border-radius: 5px;
-		}
-		<!-- 상품 수량 정하는 부분 -->
-		.amount_count {
-			position: relative;
-			width: 120px;
-			display: flex;
-			border: 1px solid #ccc;
-			border-radius: 4px;
-			overflow: hidden;
-		}
-		
-		.amount_count input {
-			position: relative;
-			width: 80px;
-			height: 40px;
-			text-align: center;
-			border: 1px solid;
-			font-size: 18px;
-			outline: none;
-			padding-right: 20px;
-		}
-		
-		.amount_controls {
-			position: relative;
-	    	right: 0; 
-			width: 20px;
-			display: flex;
-			flex-direction: column;
-   			justify-content: space-between;
-		}
-		
-		.amount_plus, .amount_minus {
-			width: 100%;
-			height: 20px;
-			background-color: #f0f0f0;
-			border: none;
-			font-size: 14px;
-			cursor: pointer;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-		}
-		
-		.amount_plus {
-			border-bottom: 1px solid #ccc;
-		}
-		.amount_minus {
-			border-top: 1px solid #ccc;
-		}
-		<!-- 구매, 장바구니, 찜하기 버튼 -->
-		.button_row {
-			display: flex;
-			gap: 10px;
-			margin-top: 10px;
-		}
-		
-		.button_row button {
-			width: 100px;
-			height: 40px;
-			border: none;
-			border-radius: 5px;
-			font-size: 16px;
-			font-weight: bold;
-			cursor: pointer;
-		}
-		
-		.buy_button {
-			background-color: #48d1cc;
-			color: white;
-		}
-		
-		.cart_button {
-			background-color: white;
-			color: black;
-			border: 1px solid #ccc;
-		}
-		
-		.wishlist_button {
-			background-color: #ffd700;
-			color: black;
-		}
-	</style>
+	<link rel="stylesheet" href="<%=contextPath%>/css/mealkit/board.css">
+	
 </head>
 <body>
 	<script type="text/javascript">
@@ -133,11 +35,10 @@
 		    adaptiveHeight: true,
 		});
 	});
-	// 수량 증가 감소 버튼 
+	// 수량 증가 감소 버튼
 	$(document).ready(function() {
 		let $amountInput = $('input[name="amount"]');
 		let maxAmount = ${mealkit.amount};
-		console.log(maxAmount);
 		let minAmount = 1;
 
 		$('.amount_plus').click(function() {
@@ -178,7 +79,7 @@
 	            error: function(xhr, status, error) {
 	                alert("정상적으로 처리되지 않았습니다. " + error);
 	            }
-
+	        });
 		});
 	
 		$(".wishlist_button").click(function() {
