@@ -29,57 +29,62 @@
 
 <body>
 	<div id="container">
-		<table border="1">
-			<tr>
-				<td colspan="2">
-					<input type="button" class="write" value="레시피 작성">
-				</td>
-			</tr>
-			<tr>
-				<td rowspan="2">
-					<div class="input-container">
-						<input type="text" id="thumbnail" name="thumbnail" class="thumbnail-control" placeholder="썸네일 사진을 넣어주세요" required readonly />
-						<input type="file" name="thumbnailFile" class="thumbnail-input" id="thumbnailFile" onchange="updateFileName()" />
-						<label for="thumbnailFile" class="thumbnail-button">파일 선택</label>
-					</div>
-				</td>
-				<td>
-					<input type="text" id="title" name="title" placeholder="제목 입력" required>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<input type="text" id="description" name="description" placeholder="간단 소개글 입력" required>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<textarea id="contentsArea"></textarea>
-					<input type="hidden" name="contents" required>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<p>사용한 재료 작성</p>
-					<div class="ingredients-container">
-        			</div>
-					<p><input type="button" class="add-ingredient" value="재료 추가하기"></p>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<p>간단 조리 순서 작성</p>
-					<div class="orders-container">
-        			</div>
-					<p><input type="button" class="add-orders" value="순서 추가하기"></p>					
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<input type="button" class="write" value="레시피 작성">
-				</td>
-			</tr>
-		</table>
+		<form action="<%= contextPath %>/Recipe/writePro" method="post" id="frmWrite" enctype="multipart/form-data">
+			<table border="1">
+				<tr>
+					<td colspan="2">
+						<input type="button" class="write" value="레시피 작성" onclick="onSubmit(event)">
+					</td>
+				</tr>
+				<tr>
+					<td rowspan="2">
+						<div class="input-container">
+							<input type="text" id="thumbnail" name="thumbnail" class="thumbnail-control" placeholder="썸네일 사진을 넣어주세요" required readonly />
+							<input type="file" name="thumbnailFile" class="thumbnail-input" id="thumbnailFile" onchange="updateFileName()" />
+							<label for="thumbnailFile" class="thumbnail-button">파일 선택</label>
+						</div>
+					</td>
+					<td>
+						<input type="text" id="title" name="title" placeholder="제목 입력" required>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input type="text" id="description" name="description" placeholder="간단 소개글 입력" required>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<textarea id="contentsArea"></textarea>
+						<input type="hidden" name="contents" required>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<p>사용한 재료 작성</p>
+						<div class="ingredients-container">
+	        			</div>
+						<p><input type="button" class="add-ingredient" value="재료 추가하기"></p>
+						<input type="hidden" id="ingredient" name="ingredient">
+						<input type="hidden" id="ingredient_amount" name="ingredient_amount">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<p>간단 조리 순서 작성</p>
+						<div class="orders-container">
+	        			</div>
+						<p><input type="button" class="add-orders" value="순서 추가하기"></p>
+						<input type="hidden" id="orders" name="orders">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<input type="button" class="write" value="레시피 작성" onclick="onSubmit(event)">
+					</td>
+				</tr>
+			</table>
+		</form>
 	</div>
 	
 	
@@ -90,19 +95,63 @@
 	
 			// 파일명이 있을 경우 input에 파일명 표시
 			if (thumbnailInput.files.length > 0) {
-				profileInput.value = thumbnailInput.files[0].name;
+				thumbnailInput.value = fileInput.files[0].name;
 			}
 		}
 	
 		function onSubmit(e) {
 		    e.preventDefault();
-
+		    
+		    setIngredientString();
+		    setOrdersString();
+		    
 		    const editorContent = tinymce.get('contentsArea').getContent();
 			const base64Compressed = compressContent(editorContent);
  
 			document.getElementsByName('contents')[0].value = base64Compressed;
  	
 		    document.getElementById('frmWrite').submit();
+		}
+		
+		function setIngredientString() {
+			
+			let str = "";
+			
+			let ingredients = $(".added-ingredient-name");
+			
+			ingredients.each(function(index, element) {
+				console.log($(element).text());
+				
+				str += $(element).text() + '@';
+			});		
+
+			document.getElementsByName('ingredient')[0].value = str;
+			
+			let ingredientAmounts = $(".added-ingredient-amount");
+			
+			ingredients.each(function(index, element) {
+				console.log($(element).text());
+				
+				str += $(element).text() + '@';
+			});
+			
+
+			document.getElementsByName('ingredient_amount')[0].value = str;
+		}
+		
+		function setOrdersString() {
+			
+			let str = "";
+			
+			let ingredients = $(".added-order");
+			
+			ingredients.each(function(index, element) {
+				console.log($(element).text());
+				
+				str += $(element).text() + '@';
+			});		
+
+			document.getElementsByName('orders')[0].value = str;
 		}
 		
 		function compressContent(editorContent) {
@@ -132,7 +181,8 @@
 	        plugins: "paste image imagetools advlist lists", // 'paste', 'image', 'imagetools' 플러그인 추가
 	        menubar: false,
 	        advlist_bullet_styles: 'square',
-	        advlist_number_styles: 'lower-alpha,lower-roman,upper-alpha,upper-roman'
+	        advlist_number_styles: 'lower-alpha,lower-roman,upper-alpha,upper-roman',
+	        
 	        
 	        
 	        /*	        
