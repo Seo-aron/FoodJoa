@@ -7,6 +7,8 @@
 
 <%
 	request.setCharacterEncoding("UTF-8");
+	
+	String pageTitle = (String) request.getAttribute("pageTitle");
 %>
 
 <c:set var="center" value="${requestScope.center}"/>
@@ -20,7 +22,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Insert title here</title>
+	<title><%= pageTitle %></title>
 </head>
 
 <body>

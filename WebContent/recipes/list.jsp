@@ -32,7 +32,7 @@
 	
 		function openRecipeContent(recipeNo) {
 			console.log(recipeNo);
-			document.frmOpen.action = '<%= contextPath %>/Recipe/content';
+			document.frmOpen.action = '<%= contextPath %>/Recipe/read';
 			document.frmOpen.no.value = recipeNo;
 			document.frmOpen.submit();
 		}

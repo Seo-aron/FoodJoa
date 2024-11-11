@@ -16,6 +16,10 @@ import javax.servlet.http.HttpSession;
 import Services.RecipeService;
 import VOs.RecipeVO;
 
+enum RecipeType {
+	None, Korean, japanese, Chinese, Western, Homecooking, RecipeTypeEnd
+}
+
 @WebServlet("/Recipe/*")
 public class RecipeController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -55,7 +59,7 @@ public class RecipeController extends HttpServlet {
 		switch (action) {
 		case "/list": openRecipeListView(request, response); break;
 		case "/write": openRecipeWriteView(request, response); break;
-		case "/content": openRecipeReadView(request, response); break;
+		case "/read": openRecipeReadView(request, response); break;
 		case "/writePro": processRecipeWrite(request, response); break;
 
 		default:
@@ -71,6 +75,7 @@ public class RecipeController extends HttpServlet {
 		ArrayList<RecipeVO> recipes = recipeService.getRecipesList();
 		
 		request.setAttribute("recipes", recipes);
+		request.setAttribute("pageTitle", "나만의 레시피");
 		request.setAttribute("center", "recipes/list.jsp");
 		
 		nextPage = "/main.jsp";
@@ -79,6 +84,7 @@ public class RecipeController extends HttpServlet {
 	private void openRecipeWriteView(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+		request.setAttribute("pageTitle", "나만의 레시피 작성하기");
 		request.setAttribute("center", "recipes/write.jsp");
 		
 		nextPage = "/main.jsp";
@@ -90,7 +96,8 @@ public class RecipeController extends HttpServlet {
 		RecipeVO recipe = recipeService.getRecipe(request);
 
 		request.setAttribute("recipe", recipe);
-		request.setAttribute("center", "recipes/content.jsp");
+		request.setAttribute("pageTitle", recipe.getTitle());
+		request.setAttribute("center", "recipes/read.jsp");
 		
 		nextPage = "/main.jsp";
 	}
@@ -98,6 +105,14 @@ public class RecipeController extends HttpServlet {
 	private void processRecipeWrite(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		boolean result = recipeService.processRecipeWrite(request);
+		int recipeNo = recipeService.processRecipeWrite(request);
+		
+		RecipeVO recipe = recipeService.getRecipe(recipeNo);
+		
+		request.setAttribute("recipe", recipe);
+		request.setAttribute("pageTitle", recipe.getTitle());
+		request.setAttribute("center", "recipes/read.jsp");
+		
+		nextPage = "/main.jsp";
 	}
 }

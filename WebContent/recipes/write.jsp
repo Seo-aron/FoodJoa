@@ -24,6 +24,10 @@
 		input[type=button] {
 			float: right !important;
 		}
+		
+		select option[value=""] {
+			display: none;
+		}
 	</style>
 </head>
 
@@ -37,7 +41,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td rowspan="2">
+					<td rowspan="3">
 						<div class="input-container">
 							<input type="file" name="file">
 						</div>
@@ -50,6 +54,18 @@
 					<td>
 						<input type="text" id="description" name="description" placeholder="간단 소개글 입력" required>
 					</td>
+				</tr>
+				<tr>
+					<td>
+						<select name="category">
+							<option value="" disabled hidden selected>음식 종류를 선택하세요.</option>
+							<option value="1">한식</option>
+							<option value="2">일식</option>
+							<option value="3">중식</option>
+							<option value="4">양식</option>
+							<option value="5">자취요리</option>
+						</select>
+					</td>					
 				</tr>
 				<tr>
 					<td colspan="2">

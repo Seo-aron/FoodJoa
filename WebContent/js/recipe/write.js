@@ -125,30 +125,6 @@ function setIngredientString() {
 
 	document.getElementsByName('ingredient_amount')[0].value = combinedAmountString;
 	
-	/*
-	let str = "";
-	
-	let ingredients = $(".added-ingredient-name");
-	
-	ingredients.each(function(index, element) {
-		console.log($(element).text());
-		
-		str += $(element).text() + '@';
-	});		
-
-	document.getElementsByName('ingredient')[0].value = str;
-	
-	let ingredientAmounts = $(".added-ingredient-amount");
-	
-	ingredientAmounts.each(function(index, element) {
-		console.log($(element).text());
-		
-		str += $(element).text() + '@';
-	});
-	
-
-	document.getElementsByName('ingredient_amount')[0].value = str;
-	*/
 }
 
 function setOrdersString() {
@@ -162,21 +138,7 @@ function setOrdersString() {
 	
 	let combinedOrderString = combineStrings(ordersString);
 
-	document.getElementsByName('orders')[0].value = combinedOrderString;
-	
-	/*
-	let str = "";
-	
-	let ingredients = $(".added-order");
-	
-	ingredients.each(function(index, element) {
-		console.log($(element).text());
-		
-		str += $(element).text() + '@';
-	});		
-
-	document.getElementsByName('orders')[0].value = str;
-	*/
+	document.getElementsByName('orders')[0].value = combinedOrderString;	
 }
 
 function compressContent(editorContent) {
