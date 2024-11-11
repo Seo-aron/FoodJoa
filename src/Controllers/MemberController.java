@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.servlet.RequestDispatcher;
+
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -46,7 +49,17 @@ public class MemberController extends HttpServlet {
 
         String action = request.getPathInfo(); // 요청 경로 정보 가져오기
         String contextPath = request.getContextPath(); // contextPath 가져오기
-        System.out.println("action : " + action);
+        System.out.println("action : " + action);      
+      
+         //웹브라우저로 출력할 출력 스트림 생성
+   		PrintWriter out = response.getWriter();
+   	
+   		
+   		//조건에 따라서 포워딩 또는 보여줄 VIEW주소 경로를 저장할 변수
+   		String nextPage = null;
+   		
+   		//요청한 중앙화면 뷰 주소를 저장할 변수
+   		String center = null;
 
         switch (action) {
             case "/join.me":
@@ -78,6 +91,17 @@ public class MemberController extends HttpServlet {
                 // 로그인 처리
                 handleLoginPro(request, response);
                 return; // 로그인 처리 후 바로 리턴해서 다른 처리가 진행되지 않게 한다.
+            
+            case "/mypagemain.me": //정보수정 페이지 요청
+        	   center = MemberService.profileupdate(request);
+				//"members/profileupdate.jsp"
+				
+				//request객체에 "members/join.jsp" 중앙화면 뷰 주소 바인딩
+				request.setAttribute("center", center);
+				
+				nextPage = "/CarMain.jsp";
+				
+				break;
 
             default:
                 // 잘못된 요청에 대한 기본 처리

@@ -2,6 +2,8 @@ package DAOs;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import Common.DBConnector;

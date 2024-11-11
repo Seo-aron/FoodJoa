@@ -3,6 +3,7 @@ package VOs;
 import java.sql.Timestamp;
 
 public class MemberVO {
+  
 	private String id;
 	private String name;
 	private String nickname;
@@ -89,6 +90,4 @@ public class MemberVO {
 	public void setJoin_date(Timestamp join_date) {
 		this.join_date = join_date;
 	}
-
-
 }
