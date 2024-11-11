@@ -117,4 +117,9 @@ public class MemberService {
 
 		return memberDAO.userCheck(login_id, login_name);
 	}
+
+	public String profileupdate(HttpServletRequest request) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
