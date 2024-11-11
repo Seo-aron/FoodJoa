@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -87,6 +86,7 @@
             background-color: #0069d9;
         }
     </style>
+
     <script>
     /* 이미지 미리보기 구현 */
     document.getElementById('fileInput').addEventListener('change', function(event) {
@@ -162,7 +162,6 @@ profile -->
         <div class="btn-container">
             <button type="submit" class="btn btn-submit">제출</button>
             <button type="button" class="btn btn-update">수정완료</button>
-             
         </div>
     </form>
 </div>

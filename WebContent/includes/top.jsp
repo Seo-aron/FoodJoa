@@ -42,7 +42,7 @@
 			</td>
 			<!-- 밀키트 -->
 			<td align="center" bgcolor="lightgreen" width="20%">
-				<a href="#">
+				<a href="<%= contextPath %>/Mealkit/list">
 					<div style="font-size: 2.5rem; color: white;">나만의 음식 판매</div>
 				</a>
 			</td>

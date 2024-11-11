@@ -53,7 +53,9 @@ public class RecipeController extends HttpServlet {
 		System.out.println("action : " + action);
 
 		switch (action) {
-		case "/list": openRecipeView(request, response); break;
+		case "/list": openRecipeListView(request, response); break;
+		case "/write": openRecipeWriteView(request, response); break;
+		case "/content": openRecipeReadView(request, response); break;
 
 		default:
 		}
@@ -62,17 +64,32 @@ public class RecipeController extends HttpServlet {
 		dispatcher.forward(request, response);
 	}
 	
-	private void openRecipeView(HttpServletRequest request, HttpServletResponse response)
+	private void openRecipeListView(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
 		ArrayList<RecipeVO> recipes = recipeService.getRecipesList();
 		
-		for(RecipeVO recipe : recipes) {
-			
-			System.out.println(recipe.getNo());
-		}
-		
+		request.setAttribute("recipes", recipes);
 		request.setAttribute("center", "recipes/list.jsp");
+		
+		nextPage = "/main.jsp";
+	}
+	
+	private void openRecipeWriteView(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		request.setAttribute("center", "recipes/write.jsp");
+		
+		nextPage = "/main.jsp";
+	}
+	
+	private void openRecipeReadView(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		RecipeVO recipe = recipeService.getRecipe(request);
+
+		request.setAttribute("recipe", recipe);
+		request.setAttribute("center", "recipes/content.jsp");
 		
 		nextPage = "/main.jsp";
 	}

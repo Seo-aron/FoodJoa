@@ -63,10 +63,10 @@ public class DBConnector {
 			
 			statement = connection.prepareStatement(sql);
 			for (int i = 0; i < params.length; i++) {
-				if (params[i] instanceof String) statement.setString(i+1, (String) params[i]);
-				else if (params[i] instanceof Integer) statement.setInt(i, (int) params[i]);
-				else if (params[i] instanceof Float) statement.setFloat(i, (float) params[i]);
-				else if (params[i] instanceof Timestamp) statement.setTimestamp(i, (Timestamp) params[i]);
+				if (params[i] instanceof String) statement.setString(i + 1, (String) params[i]);
+				else if (params[i] instanceof Integer) statement.setInt(i + 1, (int) params[i]);
+				else if (params[i] instanceof Float) statement.setFloat(i + 1, (float) params[i]);
+				else if (params[i] instanceof Timestamp) statement.setTimestamp(i + 1, (Timestamp) params[i]);
 			}
 		}
 		catch (SQLException e) {
@@ -74,7 +74,7 @@ public class DBConnector {
 			System.out.println("DBConnector SQLException 발생");
 		}
 	}
-	
+
 	/**
 	 * SELECT 구문을 실행하기 위한 함수<br>
 	 * 두 번째 매개변수 부터 차례로 SQL에 set<br>

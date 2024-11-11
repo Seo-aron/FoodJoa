@@ -34,7 +34,7 @@ CREATE TABLE recipe(
     title 				varchar(50) not null,
     thumbnail 			varchar(50) not null,
     description			varchar(100) not null,
-    contents 			text not null,
+    contents 			longtext not null,
     category 			tinyint not null,
     views 				int not null,
     rating 				float not null,
@@ -47,9 +47,14 @@ CREATE TABLE recipe(
     FOREIGN KEY (id) REFERENCES member(id)
 );
 
-insert into recipe(id, title, thumbnail, description, contents, category, views, rating, ingredient, ingredient_amount, orders, empathy, post_date)
-values ('admin', '레시피 제목', 'thumbnailImage.png', '레시피 간단 설명', '레시피 설명', 0, 0, 5.0, '물@멸치액젓@고춧가루', '500ml@0.5 큰술@1 큰술', '물을 끓인다@스프와 멸치액젓, 고춧가루를 넣는다@물이 끓으면 면을 넣는다', 5, CURRENT_TIMESTAMP);
-
+insert into recipe(id, title, thumbnail, 
+	description, contents, category, views, 
+	rating, ingredient, ingredient_amount, 
+	orders, empathy, post_date) 
+values('admin', '레시피 제목', 'thumbnailImage.png',
+	'레시피 간단 설명', '레시피 설명', 0, 0,
+    4.5, '물@멸치액젓@고춧가루', '500ml@0.5 큰술@1 큰술', 
+	'물을 끓인다@스프와 멸치액젓, 고춧가루를 넣는다@물이 끓으면 면을 넣는다', 3, CURRENT_TIMESTAMP);
 
 desc recipe;
 select * from recipe;
@@ -97,8 +102,9 @@ CREATE TABLE mealkit(
 	content       text not null,
 	category      tinyint not null,
 	price         varchar(10) not null,
+    amount		int not null,
 	pictures      text not null,
-	orders        varchar(20) not null,
+	orders        varchar(255) not null,
 	origin        varchar(255) not null,
 	rating        float not null,
 	views         int not null,
@@ -117,7 +123,6 @@ CREATE TABLE mealkit_order(
 	no			int primary key auto_increment,
     id			varchar(20) not null,
     mealkit_no	int not null,
-    amount		int not null,
     address		varchar(5) not null,
     delivered	tinyint not null,
     refund		tinyint not null,
