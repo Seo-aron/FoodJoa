@@ -5,6 +5,12 @@
 <%@ page import="java.io.BufferedReader" %>
 <%@ page import="java.io.InputStreamReader" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+	request.setCharacterEncoding("UTF-8");
+	response.setContentType("text/html; charset=utf-8");
+	
+	String contextPath = request.getContextPath();
+%>
 <html>
   <head>
     <title>네이버 로그인</title>

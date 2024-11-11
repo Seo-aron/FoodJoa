@@ -2,6 +2,13 @@
 <%@ page import="java.security.SecureRandom" %>
 <%@ page import="java.math.BigInteger" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<%
+	request.setCharacterEncoding("UTF-8");
+	response.setContentType("text/html; charset=utf-8");
+	
+	String contextPath = request.getContextPath();
+%>
 <html>
   <head>
     <title>네이버로그인</title>
