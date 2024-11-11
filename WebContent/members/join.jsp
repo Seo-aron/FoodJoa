@@ -1,7 +1,9 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.Enumeration" %>
+<%@ page import="javax.servlet.http.HttpSession" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-request.setCharacterEncoding("UTF-8");
-String contextPath = request.getContextPath();
+    // 세션에서 userId 값 가져오기
+    String userId = (String) session.getAttribute("userId");
 %>
 <!DOCTYPE html>
 <html>
@@ -46,12 +48,14 @@ String contextPath = request.getContextPath();
 
 				<!-- 나머지 사용자 정보 입력 -->
 				<div class="input-container">
-					<input type="text" id="id" name="id" class="form-control" placeholder="아이디를 입력해주세요" required />
 					<input type="text" id="name" name="name" class="form-control" placeholder="이름을 입력해주세요" required />
 					<input type="text" id="nickname" name="nickname" class="form-control" placeholder="닉네임을 입력해주세요" required />
 					<input type="text" id="phone" name="phone" class="form-control" placeholder="휴대폰번호 입력해주세요" required />
 					<input type="text" id="address" name="address" class="form-control" placeholder="주소를 입력해주세요" required />
 				</div>
+
+				<!-- 숨겨진 필드로 userId 전달 -->
+				<input type="hidden" name="userId" value="<%= userId %>" />
 
 				<button class="joinButton" type="submit">회원가입</button>
 			</div>
