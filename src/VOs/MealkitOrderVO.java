@@ -7,25 +7,27 @@ public class MealkitOrderVO {
     private String id;
     private int mealkitNo;
     private String address;
+    private int amount;
     private int delivered;
     private int refund;
     private Timestamp postDate;
     
     // postDate없는 생성자  
-	public MealkitOrderVO(int no, String id, int mealkitNo, String address, int delivered, int refund) {
+	public MealkitOrderVO(int no, String id, int mealkitNo, String address,int amount, int delivered, int refund) {
 
 		this.no = no;
 		this.id = id;
 		this.mealkitNo = mealkitNo;
 		this.address = address;
+		this.amount = amount;
 		this.delivered = delivered;
 		this.refund = refund;
 	}
 
-	public MealkitOrderVO(int no, String id, int mealkitNo, int amount, String address, int delivered, int refund,
-			Timestamp postDate) {
+	public MealkitOrderVO(int no, String id, int mealkitNo, String address, int amount, 
+			int delivered, int refund, Timestamp postDate) {
 
-		this(no, id, mealkitNo, address, delivered, refund);
+		this(no, id, mealkitNo, address, amount, delivered, refund);
 		this.postDate = postDate;
 	}
 
@@ -61,6 +63,14 @@ public class MealkitOrderVO {
 		this.address = address;
 	}
 
+	public int getAmount() {
+		return amount;
+	}
+
+	public void setAmount(int amount) {
+		this.amount = amount;
+	}
+	
 	public int getDelivered() {
 		return delivered;
 	}
