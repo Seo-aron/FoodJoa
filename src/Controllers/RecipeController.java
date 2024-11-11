@@ -56,6 +56,7 @@ public class RecipeController extends HttpServlet {
 		case "/list": openRecipeListView(request, response); break;
 		case "/write": openRecipeWriteView(request, response); break;
 		case "/content": openRecipeReadView(request, response); break;
+		case "/writePro": processRecipeWrite(request, response); break;
 
 		default:
 		}
@@ -92,5 +93,11 @@ public class RecipeController extends HttpServlet {
 		request.setAttribute("center", "recipes/content.jsp");
 		
 		nextPage = "/main.jsp";
+	}
+	
+	private void processRecipeWrite(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		boolean result = recipeService.processRecipeWrite(request);
 	}
 }

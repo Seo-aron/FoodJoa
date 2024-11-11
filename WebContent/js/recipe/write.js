@@ -25,7 +25,8 @@ $(function() {
         if (name && amount) {
         	var newIngredientHtml = 
                 '<p class="added-ingredient">' +
-                name + ' : ' + amount +
+				'<span class="added-ingredient-name">' + name + '</span>' + 
+				'<span class="added-ingredient-amount">' + amount + '</span>' +
                 '<button type="button" class="remove-ingredient">삭제</button>' +
                 '</p>';
             
@@ -65,7 +66,7 @@ $(function() {
 	    if (name) {
 	    	var newIngredientHtml = 
 	            '<p class="added-orders">' +
-	            name +
+				'<span class="added-order">' + name + '</span>' + 
 	            '<button type="button" class="remove-orders">삭제</button>' +
 	            '</p>';
 	        
