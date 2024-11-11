@@ -63,7 +63,7 @@ public class DBConnector {
 			
 			statement = connection.prepareStatement(sql);
 			for (int i = 0; i < params.length; i++) {
-				if (params[i] instanceof String) statement.setString(i, (String) params[i]);
+				if (params[i] instanceof String) statement.setString(i+1, (String) params[i]);
 				else if (params[i] instanceof Integer) statement.setInt(i, (int) params[i]);
 				else if (params[i] instanceof Float) statement.setFloat(i, (float) params[i]);
 				else if (params[i] instanceof Timestamp) statement.setTimestamp(i, (Timestamp) params[i]);

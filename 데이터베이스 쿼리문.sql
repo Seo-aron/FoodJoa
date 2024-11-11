@@ -168,6 +168,16 @@ SELECT * FROM mealkit_wishlist;
 DESC mealkit_wishlist;
 
 
+INSERT INTO mealkit (id, title, content, category, price, pictures, orders, origin, rating, views, soldout, post_date)
+VALUES
+('user1', 'Spicy Chicken Stir-fry', 'A delicious spicy chicken stir-fry with fresh vegetables.', 1, '15.99', 'chicken_stirfry.jpg', 'user1, user3', 'Korea', 4.5, 120, 0, NOW()),
+('user2', 'Beef Bulgogi', 'Tender beef bulgogi marinated in a savory sauce.', 2, '18.99', 'beef_bulgogi.jpg', 'user2, user4', 'Korea', 4.7, 250, 0, NOW()),
+('user3', 'Kimchi Stew', 'Traditional kimchi stew with pork and tofu.', 3, '12.50', 'kimchi_stew.jpg', 'user5, user7', 'Korea', 4.2, 95, 0, NOW()),
+('user4', 'Fried Dumplings', 'Crispy fried dumplings filled with a savory pork filling.', 1, '8.99', 'fried_dumplings.jpg', 'user6, user8', 'China', 4.0, 50, 0, NOW()),
+('user5', 'Japchae', 'Sweet potato noodles stir-fried with vegetables and beef.', 2, '13.50', 'japchae.jpg', 'user2, user4', 'Korea', 4.6, 110, 0, NOW());
+
+
+
 -- -------------------------------------------------------------------------------------
 
 
