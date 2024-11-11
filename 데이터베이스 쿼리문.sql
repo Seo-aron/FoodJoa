@@ -34,7 +34,7 @@ CREATE TABLE recipe(
     title 				varchar(50) not null,
     thumbnail 			varchar(50) not null,
     description			varchar(100) not null,
-    contents 			text not null,
+    contents 			longtext not null,
     category 			tinyint not null,
     views 				int not null,
     rating 				float not null,
