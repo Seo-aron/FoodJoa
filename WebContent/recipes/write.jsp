@@ -39,9 +39,7 @@
 				<tr>
 					<td rowspan="2">
 						<div class="input-container">
-							<input type="text" id="thumbnail" name="thumbnail" class="thumbnail-control" placeholder="썸네일 사진을 넣어주세요" required readonly />
-							<input type="file" name="thumbnailFile" class="thumbnail-input" id="thumbnailFile" onchange="updateFileName()" />
-							<label for="thumbnailFile" class="thumbnail-button">파일 선택</label>
+							<input type="file" name="file">
 						</div>
 					</td>
 					<td>
@@ -89,16 +87,6 @@
 	
 	
 	<script>
-		function updateFileName() {
-			var fileInput = document.getElementById("thumbnailFile");
-			var thumbnailInput = document.getElementById("thumbnail");
-	
-			// 파일명이 있을 경우 input에 파일명 표시
-			if (thumbnailInput.files.length > 0) {
-				thumbnailInput.value = fileInput.files[0].name;
-			}
-		}
-	
 		function onSubmit(e) {
 		    e.preventDefault();
 		    
@@ -111,64 +99,6 @@
 			document.getElementsByName('contents')[0].value = base64Compressed;
  	
 		    document.getElementById('frmWrite').submit();
-		}
-		
-		function setIngredientString() {
-			
-			let str = "";
-			
-			let ingredients = $(".added-ingredient-name");
-			
-			ingredients.each(function(index, element) {
-				console.log($(element).text());
-				
-				str += $(element).text() + '@';
-			});		
-
-			document.getElementsByName('ingredient')[0].value = str;
-			
-			let ingredientAmounts = $(".added-ingredient-amount");
-			
-			ingredients.each(function(index, element) {
-				console.log($(element).text());
-				
-				str += $(element).text() + '@';
-			});
-			
-
-			document.getElementsByName('ingredient_amount')[0].value = str;
-		}
-		
-		function setOrdersString() {
-			
-			let str = "";
-			
-			let ingredients = $(".added-order");
-			
-			ingredients.each(function(index, element) {
-				console.log($(element).text());
-				
-				str += $(element).text() + '@';
-			});		
-
-			document.getElementsByName('orders')[0].value = str;
-		}
-		
-		function compressContent(editorContent) {
-		    const contentBytes = new TextEncoder().encode(editorContent);
-		    const compressedContent = pako.deflate(contentBytes);
-		    
-		    // 배열을 문자열로 변환하는 함수
-		    function arrayToBase64(array) {
-		        const chunk = 0xffff; // 최대 청크 크기
-		        let result = '';
-		        for (let i = 0; i < array.length; i += chunk) {
-		            result += String.fromCharCode.apply(null, array.subarray(i, i + chunk));
-		        }
-		        return btoa(result);
-		    }
-
-		    return arrayToBase64(compressedContent);
 		}
 	
 		tinymce.init({
