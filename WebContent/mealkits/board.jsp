@@ -18,11 +18,10 @@
 	<script src="https://code.jquery.com/jquery-latest.min.js"></script>
   	<script src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
   	<link rel="stylesheet" href="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css">
+  	<link rel="stylesheet" href="<%=contextPath%>/css/mealkit/board.css">
+  	
 	<meta charset="UTF-8">
 	<title>Insert title here</title>
-	
-	<link rel="stylesheet" href="<%=contextPath%>/css/mealkit/board.css">
-	
 </head>
 <body>
 	<script type="text/javascript">
@@ -37,21 +36,21 @@
 	});
 	// 수량 증가 감소 버튼
 	$(document).ready(function() {
-		let $amountInput = $('input[name="amount"]');
-		let maxAmount = ${mealkit.amount};
-		let minAmount = 1;
+		let $stockInput = $('input[name="stock"]');
+		let maxStock = ${mealkit.stock};
+		let minStock = 1;
 
-		$('.amount_plus').click(function() {
-			let currentValue = parseInt($amountInput.val());
-			if (currentValue < maxAmount) {
-				$amountInput.val(currentValue + 1);
+		$('.stock_plus').click(function() {
+			let currentValue = parseInt($stockInput.val());
+			if (currentValue < maxStock) {
+				$stockInput.val(currentValue + 1);
 			}
 		});
 
-		$('.amount_minus').click(function() {
-			let currentValue = parseInt($amountInput.val());
-			if (currentValue > minAmount) {
-				$amountInput.val(currentValue - 1);
+		$('.stock_minus').click(function() {
+			let currentValue = parseInt($stockInput.val());
+			if (currentValue > minStock) {
+				$stockInput.val(currentValue - 1);
 			}
 		});
 	});
@@ -74,16 +73,27 @@
 	                type: 1
 	            },
 	            success: function(response) {
-	                alert("장바구니에 추가되었습니다.");
-	            },
-	            error: function(xhr, status, error) {
-	                alert("정상적으로 처리되지 않았습니다. " + error);
+	                if(response === "1") alert("장바구니에 추가되었습니다.");
+	                else alert("장바구니에 추가를 못 했습니다.");
 	            }
 	        });
 		});
 	
 		$(".wishlist_button").click(function() {
 			// 찜하기 type = 0
+			$.ajax({
+	            url: "<%= contextPath %>/Mealkit/mypage.pro",
+	            type: "POST",
+	            async: true,
+	            data: {
+	                no: mealkitNo,
+	                type: 0
+	            },
+	            success: function(response) {
+	                if(response === "1") alert("찜목록에 추가되었습니다.");
+	                else alert("찜목록에 추가를 못 했습니다.");
+	            }
+	        });
 		});
 	});
 	</script>
@@ -94,6 +104,22 @@
 	  			<li><img src="<%= contextPath %>/images/recipe/test_thumbnail.png" title="image2" /></li>
 	  			<li><img src="<%= contextPath %>/images/recipe/test_thumbnail.png" title="image3" /></li>
 			</ul>
+			
+			<div class="orders_text">
+			    <h3>조리 순서</h3>
+			    <p id="orders">${mealkit.orders }</p> <!-- id="orders" 추가 -->
+			    <script>
+			        var orders = document.getElementById("orders").innerText;
+			        var formattedOrders = orders.replace(/,/g, '<br>'); // ','를 <br>로 교체
+			        document.getElementById("orders").innerHTML = formattedOrders;
+			    </script>
+			</div>
+
+				
+			<div class="origin_text">
+			   	<h3>원산지</h3> 
+			   	<p>${mealkit.origin }</p>
+		    </div>
 		</div>
 		
 		<div class="info_text">
@@ -105,12 +131,13 @@
 				<strong>평점: ${mealkit.rating }</strong><hr>
 			</span>
 			<h2>가격: ${mealkit.price }</h2><hr><br>
+			
 			<!-- 수량 정하는 박스 -->
-			<div class="amount_count">
-				<input type="text" name="amount" id="amount" value="1" readonly>
-				<div class="amount_controls">
-					<button class="amount_plus" type="button">&#9650;</button>
-					<button class="amount_minus" type="button">&#9660;</button>
+			<div class="stock_count">
+				<input type="text" name="stock" id="stock" value="1" readonly>
+				<div class="stock_controls">
+					<button class="stock_plus" type="button">&#9650;</button>
+					<button class="stock_minus" type="button">&#9660;</button>
 				</div>
 			</div>
 			<br>

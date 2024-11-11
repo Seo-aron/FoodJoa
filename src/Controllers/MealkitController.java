@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import Services.MealkitService;
 import VOs.MealkitOrderVO;
 import VOs.MealkitVO;
-import VOs.RecipeVO;
 
 @WebServlet("/Mealkit/*")
 public class MealkitController extends HttpServlet {
@@ -49,19 +48,11 @@ public class MealkitController extends HttpServlet {
 		String action = request.getPathInfo();
 
 		switch (action) {
-		case "/list":
-			openMealkitView(request, response);
-			break;
-		case "/info":
-			openMealkitInfoView(request, response);
-			break;
-		case "/mypage.pro":
-			processMealkitMyPage(request, response);
-			return;
-			
+		case "/list": openMealkitView(request, response); break;
+		case "/info": openMealkitInfoView(request, response); break;
+		case "/mypage.pro": processMealkitMyPage(request, response); return;
 
-		default:
-			break;
+		default: break;
 		}
 
 		RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
@@ -70,10 +61,9 @@ public class MealkitController extends HttpServlet {
 
 	private void processMealkitMyPage(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException{
-		// 장바구니, 찜목록 눌렀을 때 데이터베이스로 정보 추가하는거 요청
-		MealkitOrderVO mealkitordervo = mealkitService.setMyMealkits();
+		mealkitService.setMyMealkit(request, response);
 	}
-
+	
 	private void openMealkitInfoView(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
