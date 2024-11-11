@@ -54,8 +54,24 @@ insert into recipe(id, title, thumbnail,
 values('admin', '레시피 제목', 'thumbnailImage.png',
 	'레시피 간단 설명', '레시피 설명', 0, 0,
     4.5, '물@멸치액젓@고춧가루', '500ml@0.5 큰술@1 큰술', 
+	'물을 끓인다@스프와 멸치액젓, 고춧가루를 넣는다@물이 끓으면 면을 넣는다', 3, CURRENT_TIMESTAMP),
+    ('admin', '레시피 제목', 'thumbnailImage.png',
+	'레시피 간단 설명', '레시피 설명', 0, 0,
+    1.5, '물@멸치액젓@고춧가루', '500ml@0.5 큰술@1 큰술', 
+	'물을 끓인다@스프와 멸치액젓, 고춧가루를 넣는다@물이 끓으면 면을 넣는다', 3, CURRENT_TIMESTAMP),
+    ('admin', '레시피 제목', 'thumbnailImage.png',
+	'레시피 간단 설명', '레시피 설명', 0, 0,
+    4.8, '물@멸치액젓@고춧가루', '500ml@0.5 큰술@1 큰술', 
+	'물을 끓인다@스프와 멸치액젓, 고춧가루를 넣는다@물이 끓으면 면을 넣는다', 3, CURRENT_TIMESTAMP),
+    ('admin', '레시피 제목', 'thumbnailImage.png',
+	'레시피 간단 설명', '레시피 설명', 0, 0,
+    5.0, '물@멸치액젓@고춧가루', '500ml@0.5 큰술@1 큰술', 
+	'물을 끓인다@스프와 멸치액젓, 고춧가루를 넣는다@물이 끓으면 면을 넣는다', 3, CURRENT_TIMESTAMP),
+    ('admin', '레시피 제목', 'thumbnailImage.png',
+	'레시피 간단 설명', '레시피 설명', 0, 0,
+    3.2, '물@멸치액젓@고춧가루', '500ml@0.5 큰술@1 큰술', 
 	'물을 끓인다@스프와 멸치액젓, 고춧가루를 넣는다@물이 끓으면 면을 넣는다', 3, CURRENT_TIMESTAMP);
-
+    
 desc recipe;
 select * from recipe;
 
@@ -66,13 +82,26 @@ create table recipe_review(
     recipe_no 		int not null,
     pictures 		text not null,
     contents 		text not null,
-    ration 			float not null,
+    rating 			float not null,
     empathy 		int not null,
     post_date		timestamp,
     
     FOREIGN KEY (id) REFERENCES member(id),
     FOREIGN KEY (recipe_no) REFERENCES recipe(no)
 );
+
+insert into recipe_review(id, recipe_no, pictures, 
+	contents, rating, empathy, post_date)
+values('admin', '1', 'thumbnailImage.png',
+	'리뷰 내용', '5.0', 0, CURRENT_TIMESTAMP),
+    ('admin', '2', 'thumbnailImage.png',
+	'리뷰 내용', '5.0', 0, CURRENT_TIMESTAMP),
+    ('admin', '3', 'thumbnailImage.png',
+	'리뷰 내용', '5.0', 0, CURRENT_TIMESTAMP),
+    ('admin', '4', 'thumbnailImage.png',
+	'리뷰 내용', '5.0', 0, CURRENT_TIMESTAMP),
+    ('admin', '5', 'thumbnailImage.png',
+	'리뷰 내용', '5.0', 0, CURRENT_TIMESTAMP);
 
 desc recipe_review;
 select * from recipe_review;
@@ -83,9 +112,14 @@ create table recipe_wishlist(
     id 			varchar(20) not null,
     recipe_no 	int not null, 
     
-    FOREIGN KEY (id) REFERENCES recipe_reviewrecipe_reviewrecipe_wishlistrecipe_wishlistmember(id),
+    FOREIGN KEY (id) REFERENCES member(id),
     FOREIGN KEY (recipe_no) REFERENCES recipe(no)
 );
+
+insert into recipe_wishlist(id, recipe_no) 
+values('admin', 1),
+	('admin', 2),
+    ('admin', 3);
 
 desc recipe_wishlist;
 select * from recipe_wishlist;
