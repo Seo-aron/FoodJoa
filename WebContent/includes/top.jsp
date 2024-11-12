@@ -15,7 +15,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Insert title here</title>
+	<title>top</title>
 	
 	<style type="text/css">
 		* {
@@ -185,9 +185,7 @@
                 <li><a href="#">마이페이지</a></li>
             </ul>
         </nav>
-	
 	</div>
-
 
 </body>
 

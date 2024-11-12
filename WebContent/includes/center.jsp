@@ -16,13 +16,105 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Insert title here</title>
+	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bxslider@4.2.17/dist/jquery.bxslider.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bxslider@4.2.17/dist/jquery.bxslider.min.js"></script>
+	
+	<style>
+	
+		* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        a {
+            text-decoration: none;
+        }
+        
+        #center>table{
+        	margin : 0 auto;
+        }
+        
+		.rank {
+            margin: 0 auto;
+            padding: 20px;
+            width: 1200px;
+        }
+
+        .rank table {
+            border-spacing: 50px;
+            margin: 0 auto;
+        }
+
+        td {
+            vertical-align: top;
+            width: 300px;
+        }
+	
+	</style>
+	
+	<!-- BX slider -->
+	<script>
+        $(function() {
+            $('.rank_slider').bxSlider({
+                auto: true,
+                pager: true
+            });
+
+            $('.market_slider').bxSlider({
+                auto: true,
+                pager: true
+            });
+        });
+    </script>
+    
 </head>
 
 <body>
-	center area
-	<a href="#">
-		<img src="" width="1000" border="0">
-	</a>
+	<div id="center">
+		<table>
+            <tr>
+                <!-- 오늘의 레시피 랭킹 -->
+                <td>
+                	<img alt="" src="">
+                    <오늘의 레시피 랭킹>
+                    <ul class="rank_slider">
+                        <li><img src="${contextPath}/images/mainpage/foodrank1.jpg" alt="레시피랭킹1"></li>
+                        <li><img src="${contextPath}/images/mainpage/foodrank2.jpg" alt="레시피랭킹2"></li>
+                        <li><img src="${contextPath}/images/mainpage/foodrank3.jpg" alt="레시피랭킹3"></li>
+                    </ul>
+                </td>
+
+                <!-- 오늘 뭐 먹지? 데일리 추천 -->
+                <td>
+                	<img alt="" src="">
+                    <오늘 뭐 먹지? 데일리 알고리즘 추천>
+                    <a><img src="${contextPath}/images/mainpage//marketrank1.jpg" alt="첫번째 오른쪽" width="300px"></a>
+                </td>
+            </tr>
+            <tr>
+                <!-- 오늘의 마켓 랭킹 -->
+                <td>
+                	<img alt="" src="">
+                    <오늘의 마켓 랭킹>
+                    <ul class="market_slider">
+                        <li><img src="${contextPath}/images/mainpage/marketrank1.jpg" alt="마켓랭킹1"></li>
+                        <li><img src="${contextPath}/images/mainpage/marketrank2.jpg" alt="마켓랭킹2"></li>
+                        <li><img src="${contextPath}/images/mainpage/marketrank3.jpg" alt="마켓랭킹3"></li>
+                    </ul>
+                </td>
+
+                <!-- 오늘의 웰빙 요리 -->
+                <td>
+                	<img alt="" src=""> 
+                    <오늘의 웰빙 요리>
+                    <a><img src="${contextPath}/images/mainpage/wellbeing.jpg" alt="두번째 오른쪽" width="300px"></a>
+                </td>
+            </tr>
+        </table>
+	</div>
 </body>
 
 </html>
