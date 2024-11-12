@@ -21,6 +21,12 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 	
 	<style>
+		#container {			
+			margin: 0 auto;
+			border: 2px solid black;
+			width: 1200px;
+		}
+	
 		input[type=button] {
 			float: right !important;
 		}
@@ -28,13 +34,17 @@
 		select option[value=""] {
 			display: none;
 		}
+		
+		.tox-toolbar-overlord {
+			width: 100%;
+		}
 	</style>
 </head>
 
 <body>
 	<div id="container">
 		<form action="<%= contextPath %>/Recipe/writePro" method="post" id="frmWrite" enctype="multipart/form-data">
-			<table border="1">
+			<table border="1" width="100%">
 				<tr>
 					<td colspan="2">
 						<input type="button" class="write" value="레시피 작성" onclick="onSubmit(event)">
@@ -69,7 +79,7 @@
 				</tr>
 				<tr>
 					<td colspan="2">
-						<textarea id="contentsArea"></textarea>
+						<textarea id="contentsArea" width="100%"></textarea>
 						<input type="hidden" name="contents" required>
 					</td>
 				</tr>
@@ -121,7 +131,6 @@
 	        selector: "#contentsArea", // TinyMCE를 적용할 textarea 요소의 선택자를 지정
 	        statusbar: false,
 	        height: 500,
-	        width: 900,
 	        toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | bullist numlist",
 	        paste_data_images: true, // 이미지 붙여넣기 설정 활성화
 	        plugins: "paste image imagetools advlist lists", // 'paste', 'image', 'imagetools' 플러그인 추가

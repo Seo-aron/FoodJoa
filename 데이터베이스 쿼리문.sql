@@ -22,6 +22,12 @@ DESC member;
 insert into member
 values('admin', '관리자', '고나리자', '01012345678', '부산시 부산진구', 'admin_image.png', CURRENT_TIMESTAMP);
 
+insert into member
+values ('review1', '리뷰자1', '리1', '01012345678', '부산시 부산진구', 'admin_image.png', CURRENT_TIMESTAMP),
+    ('review2', '리뷰자2', '리2', '01012345678', '부산시 부산진구', 'admin_image.png', CURRENT_TIMESTAMP),
+    ('review3', '리뷰자3', '리3', '01012345678', '부산시 부산진구', 'admin_image.png', CURRENT_TIMESTAMP),
+    ('review4', '리뷰자4', '리4', '01012345678', '부산시 부산진구', 'admin_image.png', CURRENT_TIMESTAMP);
+
 
 -- -------------------------------------------------------------------------------------
 
@@ -37,7 +43,6 @@ CREATE TABLE recipe(
     contents 			longtext not null,
     category 			tinyint not null,
     views 				int not null,
-    rating 				float not null,
     ingredient 			varchar(255) not null,
     ingredient_amount 	varchar(255) not null,
     orders 				varchar(255) not null,
@@ -49,29 +54,15 @@ CREATE TABLE recipe(
 
 insert into recipe(id, title, thumbnail, 
 	description, contents, category, views, 
-	rating, ingredient, ingredient_amount, 
+	ingredient, ingredient_amount, 
 	orders, empathy, post_date) 
-values('admin', '레시피 제목', 'thumbnailImage.png',
-	'레시피 간단 설명', '레시피 설명', 1, 0,
-    4.5, '물@멸치액젓@고춧가루', '500ml@0.5 큰술@1 큰술', 
-	'물을 끓인다@스프와 멸치액젓, 고춧가루를 넣는다@물이 끓으면 면을 넣는다', 3, CURRENT_TIMESTAMP),
-    ('admin', '레시피 제목', 'thumbnailImage.png',
-	'레시피 간단 설명', '레시피 설명', 2, 0,
-    1.5, '물@멸치액젓@고춧가루', '500ml@0.5 큰술@1 큰술', 
-	'물을 끓인다@스프와 멸치액젓, 고춧가루를 넣는다@물이 끓으면 면을 넣는다', 3, CURRENT_TIMESTAMP),
-    ('admin', '레시피 제목', 'thumbnailImage.png',
-	'레시피 간단 설명', '레시피 설명', 3, 0,
-    4.8, '물@멸치액젓@고춧가루', '500ml@0.5 큰술@1 큰술', 
-	'물을 끓인다@스프와 멸치액젓, 고춧가루를 넣는다@물이 끓으면 면을 넣는다', 3, CURRENT_TIMESTAMP),
-    ('admin', '레시피 제목', 'thumbnailImage.png',
-	'레시피 간단 설명', '레시피 설명', 4, 0,
-    5.0, '물@멸치액젓@고춧가루', '500ml@0.5 큰술@1 큰술', 
-	'물을 끓인다@스프와 멸치액젓, 고춧가루를 넣는다@물이 끓으면 면을 넣는다', 3, CURRENT_TIMESTAMP),
-    ('admin', '레시피 제목', 'thumbnailImage.png',
-	'레시피 간단 설명', '레시피 설명', 5, 0,
-    3.2, '물@멸치액젓@고춧가루', '500ml@0.5 큰술@1 큰술', 
-	'물을 끓인다@스프와 멸치액젓, 고춧가루를 넣는다@물이 끓으면 면을 넣는다', 3, CURRENT_TIMESTAMP);
-    
+select id, title, thumbnail, 
+	description, contents, category, views, 
+	ingredient, ingredient_amount, 
+	orders, empathy, CURRENT_TIMESTAMP
+from recipe;
+
+
 desc recipe;
 select * from recipe;
 
@@ -84,7 +75,7 @@ create table recipe_review(
     recipe_no 		int not null,
     pictures 		text not null,
     contents 		text not null,
-    rating 			float not null,
+    rating 			int not null,
     empathy 		int not null,
     post_date		timestamp,
     
@@ -92,18 +83,16 @@ create table recipe_review(
     FOREIGN KEY (recipe_no) REFERENCES recipe(no)
 );
 
-insert into recipe_review(id, recipe_no, pictures, 
-	contents, rating, empathy, post_date)
-values('admin', '1', 'thumbnailImage.png',
-	'리뷰 내용', '5.0', 0, CURRENT_TIMESTAMP),
-    ('admin', '2', 'thumbnailImage.png',
-	'리뷰 내용', '5.0', 0, CURRENT_TIMESTAMP),
-    ('admin', '3', 'thumbnailImage.png',
-	'리뷰 내용', '5.0', 0, CURRENT_TIMESTAMP),
-    ('admin', '4', 'thumbnailImage.png',
-	'리뷰 내용', '5.0', 0, CURRENT_TIMESTAMP),
-    ('admin', '5', 'thumbnailImage.png',
-	'리뷰 내용', '5.0', 0, CURRENT_TIMESTAMP);
+insert into recipe_review(id, recipe_no, pictures, contents, rating, empathy, post_date)
+values('review1', '1', 'thumbnailImage.png', '리뷰 내용', 3, 0, CURRENT_TIMESTAMP),
+    ('review2', '1', 'thumbnailImage.png', '리뷰 내용', 1, 0, CURRENT_TIMESTAMP),
+    ('review3', '1', 'thumbnailImage.png', '리뷰 내용', 5, 0, CURRENT_TIMESTAMP),
+    ('review1', '2', 'thumbnailImage.png', '리뷰 내용', 4, 0, CURRENT_TIMESTAMP),
+    ('review2', '2', 'thumbnailImage.png', '리뷰 내용', 5, 0, CURRENT_TIMESTAMP),
+    ('review1', '3', 'thumbnailImage.png', '리뷰 내용', 3, 0, CURRENT_TIMESTAMP),
+    ('review2', '3', 'thumbnailImage.png', '리뷰 내용', 2, 0, CURRENT_TIMESTAMP),
+    ('review3', '3', 'thumbnailImage.png', '리뷰 내용', 1, 0, CURRENT_TIMESTAMP),
+    ('review4', '3', 'thumbnailImage.png', '리뷰 내용', 5, 0, CURRENT_TIMESTAMP);
 
 desc recipe_review;
 select * from recipe_review;

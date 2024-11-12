@@ -3,6 +3,7 @@ package Controllers;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import Services.RecipeService;
+import VOs.RecipeReviewVO;
 import VOs.RecipeVO;
 
 enum RecipeType {
@@ -61,6 +63,7 @@ public class RecipeController extends HttpServlet {
 		case "/write": openRecipeWriteView(request, response); break;
 		case "/read": openRecipeReadView(request, response); break;
 		case "/writePro": processRecipeWrite(request, response); break;
+		case "/wishlist": processRecipeWishlist(request, response); return;
 
 		default:
 		}
@@ -72,7 +75,7 @@ public class RecipeController extends HttpServlet {
 	private void openRecipeListView(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		ArrayList<RecipeVO> recipes = recipeService.getRecipesList();
+		ArrayList<HashMap<String, Object>> recipes = recipeService.getRecipesWithAvgList();
 		
 		request.setAttribute("recipes", recipes);
 		request.setAttribute("pageTitle", "나만의 레시피");
@@ -94,9 +97,11 @@ public class RecipeController extends HttpServlet {
 			throws ServletException, IOException {
 		
 		RecipeVO recipe = recipeService.getRecipe(request);
+		String ratingAvg = request.getParameter("ratingAvg");
 
 		request.setAttribute("recipe", recipe);
 		request.setAttribute("pageTitle", recipe.getTitle());
+		request.setAttribute("ratingAvg", ratingAvg);
 		request.setAttribute("center", "recipes/read.jsp");
 		
 		nextPage = "/main.jsp";
@@ -108,11 +113,26 @@ public class RecipeController extends HttpServlet {
 		int recipeNo = recipeService.processRecipeWrite(request);
 		
 		RecipeVO recipe = recipeService.getRecipe(recipeNo);
+		ArrayList<RecipeReviewVO> reviewes = recipeService.getRecipeReviewes(request);
 		
 		request.setAttribute("recipe", recipe);
+		request.setAttribute("reviewes", reviewes);
 		request.setAttribute("pageTitle", recipe.getTitle());
 		request.setAttribute("center", "recipes/read.jsp");
 		
 		nextPage = "/main.jsp";
+	}
+	
+	private void processRecipeWishlist(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		int result = recipeService.processRecipeWishlist(request);
+		
+		printWriter = response.getWriter();
+		
+		printWriter.print(result);
+		
+		printWriter.close();
+		printWriter = null;
 	}
 }

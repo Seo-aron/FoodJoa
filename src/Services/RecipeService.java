@@ -3,6 +3,7 @@ package Services;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -17,6 +18,7 @@ import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
 import Common.StringParser;
 import DAOs.RecipeDAO;
+import VOs.RecipeReviewVO;
 import VOs.RecipeVO;
 
 public class RecipeService {
@@ -48,6 +50,11 @@ public class RecipeService {
 	            FileUtils.moveToDirectory(srcFile, destDir, true);
 	        }
 	    }
+	}
+	
+	public ArrayList<HashMap<String, Object>> getRecipesWithAvgList() {
+		
+		return recipeDAO.selectRecipesWithRating();
 	}
   
 	public ArrayList<RecipeVO> getRecipesList() {
@@ -102,5 +109,19 @@ public class RecipeService {
 		moveProfile(path, String.valueOf(recipeNo), fileName);
 		
 		return recipeNo;
+	}
+	
+	public int processRecipeWishlist(HttpServletRequest request) {
+		
+		return recipeDAO.insertRecipeWishlist(
+				request.getParameter("id"),
+				request.getParameter("recipeNo"));
+	}
+	
+	public ArrayList<RecipeReviewVO> getRecipeReviewes(HttpServletRequest request) {
+		
+		String recipeNo = request.getParameter("recipeNo");
+		
+		return recipeDAO.selectRecipeReviewes(recipeNo);
 	}
 }
