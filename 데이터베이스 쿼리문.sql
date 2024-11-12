@@ -189,7 +189,16 @@ VALUES
 
 -- community ------------------------------------------------------------------------------
 
+create table community(
+	no 			int primary key auto_increment,
+    id 			varchar(20) not null, 
+	title 		varchar(50) not null,
+    contents	text not null,
+    views		int not null
+);
 
+select * from community;
 
+desc community;
 
 -- -------------------------------------------------------------------------------------
