@@ -105,8 +105,11 @@
 	  			<li><img src="<%= contextPath %>/images/recipe/test_thumbnail.png" title="image3" /></li>
 			</ul>
 			
+			<!--간단 소개글 추가 해야함 -->
+			
 			<div class="orders_text">
 			    <h3>조리 순서</h3>
+			    <!-- 나중에 갈아엎어야함 StringParser.java 이용해서 값 불러와야댐  -->
 			    <p id="orders">${mealkit.orders }</p> <!-- id="orders" 추가 -->
 			    <script>
 			        var orders = document.getElementById("orders").innerText;
@@ -128,7 +131,8 @@
 				<hr>
 				<strong>글쓴이: ${mealkit.id }</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<strong>게시일: ${mealkit.postDate }</strong><br>
-				<strong>평점: ${mealkit.rating }</strong><hr>
+				<!-- 나중에 평점 수정 -->
+				<strong>평점: </strong><hr>
 			</span>
 			<h2>가격: ${mealkit.price }</h2><hr><br>
 			

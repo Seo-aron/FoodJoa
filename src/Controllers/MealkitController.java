@@ -51,12 +51,26 @@ public class MealkitController extends HttpServlet {
 		case "/list": openMealkitView(request, response); break;
 		case "/info": openMealkitInfoView(request, response); break;
 		case "/mypage.pro": processMealkitMyPage(request, response); return;
+		case "/write": openAddMealkit(request, response); break;
+		case "/write.pro": processAddMealkit(request, response); return;
 
 		default: break;
 		}
 
 		RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
 		dispatcher.forward(request, response);
+	}
+
+	private void processAddMealkit(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		mealkitService.setWriteMealkit(request, response);
+	}
+
+	private void openAddMealkit(HttpServletRequest request, HttpServletResponse response) {
+		// 추후 membervo에서 멤버 아이디 받아와야 할 거임 
+		request.setAttribute("center", "mealkits/write.jsp");
+		
+		nextPage = "/main.jsp";
 	}
 
 	private void processMealkitMyPage(HttpServletRequest request, HttpServletResponse response) 
