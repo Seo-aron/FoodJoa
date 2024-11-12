@@ -29,14 +29,13 @@ public class MealkitDAO {
 						rs.getInt("no"), 
 						rs.getString("id"),
 						rs.getString("title"),
-						rs.getString("content"),
+						rs.getString("contents"),
 						rs.getInt("category"),
 						rs.getString("price"),
 						rs.getInt("stock"),
 						rs.getString("pictures"),
 						rs.getString("orders"),
 						rs.getString("origin"),
-						rs.getFloat("rating"),
 						rs.getInt("views"),
 						rs.getInt("soldout"),
 						rs.getTimestamp("post_date"));
@@ -68,14 +67,13 @@ public class MealkitDAO {
 						rs.getInt("no"), 
 						rs.getString("id"),
 						rs.getString("title"),
-						rs.getString("content"),
+						rs.getString("contents"),
 						rs.getInt("category"),
 						rs.getString("price"),
 						rs.getInt("stock"),
 						rs.getString("pictures"),
 						rs.getString("orders"),
 						rs.getString("origin"),
-						rs.getFloat("rating"),
 						rs.getInt("views"),
 						rs.getInt("soldout"),
 						rs.getTimestamp("post_date"));
@@ -107,7 +105,7 @@ public class MealkitDAO {
 			
 			rs.close();
 		} catch (Exception e) {
-			System.out.println("MealkitDAO - addMyMealkit");
+			System.out.println("MealkitDAO - addMyMealkit 예외발생 ");
 			e.printStackTrace();
 		}
 		
@@ -118,6 +116,21 @@ public class MealkitDAO {
 			System.out.println("일치하는 ID가 없습니다.");
 		}
 		
+		return result;
+	}
+
+	public int insertNewContent(MealkitVO vo) {
+		int result = 0;
+		
+		String sql = "INSERT INTO mealkit(id, title, contents, category, price, stock, pictures, orders, origin, "
+				+ "views, soldout, post_date) VALUES(?,?,?,?,?,?,?,?,?,0,0,NOW())";
+	
+		try {
+			result = dbConnector.executeUpdate(sql, vo.getId(), vo.getTitle(), vo.getContents(), vo.getCategory(), 
+					vo.getPrice(), vo.getStock(), vo.getPictures(), vo.getOrders(), vo.getOrigin());
+		} catch (Exception e) {
+			System.out.println("MealkitDAO - insertNewContent 예외발생 ");
+		}
 		return result;
 	}
 }
