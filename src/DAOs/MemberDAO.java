@@ -2,8 +2,6 @@ package DAOs;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import Common.DBConnector;
@@ -66,11 +64,33 @@ public class MemberDAO {
         }
         return result;
     }
-    
-    
+
+    public void insertNaverMember(String naverId) {
+        String sql = "INSERT INTO member (id) VALUES (?)";
+
+        try {
+            int result = dbConnector.executeUpdate(sql, naverId);
+
+            if (result > 0) {
+                System.out.println("네이버 아이디가 성공적으로 등록되었습니다.");
+            } else {
+                System.out.println("네이버 아이디 등록에 실패했습니다.");
+            }
+        } catch (Exception e) {
+            System.out.println("네이버 아이디 등록 중 오류 발생: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            dbConnector.Release();
+        }
+    }
+
+
+    // 회원 등록
     public void insertMember(MemberVO vo) {
-        String sql = "INSERT INTO member(id, name, nickname, phone, address, profile, join_date) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+    	// 네이버 아이디를 기존 id 필드에 저장
+    	String sql = "INSERT INTO member(id, name, nickname, phone, address, profile, join_date) "
+    	            + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
 
         try {
             // 값 확인
@@ -104,11 +124,6 @@ public class MemberDAO {
             dbConnector.Release();
         }
     }
-
-
-
-
-
 
     // 사용자 확인 (로그인용)
     public int userCheck(String login_id, String login_name) {
