@@ -70,7 +70,7 @@ public class RecipeDAO {
 			System.out.println("selectRecipes() SQLException 발생");
 		}
 		
-		dbConnector.Release();
+		dbConnector.release();
 		
 		return recipes;
 	}
@@ -109,7 +109,7 @@ public class RecipeDAO {
 			System.out.println("selectRecipes() SQLException 발생");
 		}
 				
-		dbConnector.Release();
+		dbConnector.release();
 		
 		return recipes;
 	}
@@ -145,7 +145,7 @@ public class RecipeDAO {
 			System.out.println("selectRecipe() SQLException 발생");
 		}		
 		
-		dbConnector.Release();
+		dbConnector.release();
 		
 		return recipe;
 	}
@@ -201,7 +201,7 @@ public class RecipeDAO {
 			System.out.println("selectInsertedRecipeNo() SQLException 발생");
 		}
 		
-		dbConnector.Release();
+		dbConnector.release();
 		
 		return result;
 	}
@@ -222,7 +222,7 @@ public class RecipeDAO {
 			e.printStackTrace();
 		}
 		
-		dbConnector.Release();
+		dbConnector.release();
 
 		int result = 0;
 		
@@ -230,7 +230,7 @@ public class RecipeDAO {
 		
 		result = dbConnector.executeUpdate(sql, id, recipeNo);
 		
-		dbConnector.Release();
+		dbConnector.release();
 		
 		return result;
 	}
@@ -264,6 +264,27 @@ public class RecipeDAO {
 		}
 		
 		return reviewes;
+	}
+	
+	public boolean isExistRecipeReview(String id, String recipeNo) {
+		
+		String sql = "SELECT * FROM recipe_review WHERE id=? and recipe_no=?";
+		
+		ResultSet resultSet = dbConnector.executeQuery(sql, id, Integer.parseInt(recipeNo));
+		
+		boolean result = false;
+		
+		try {
+			result = resultSet.next();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("isExistRecipeReview SQLException 예외 발생");
+		}
+		
+		dbConnector.release();
+		
+		return result;
 	}
 } 
 

@@ -69,10 +69,8 @@ public class RecipeService {
 		return recipeDAO.selectRecipe(no);
 	}
 	
-	public RecipeVO getRecipe(int no) {
-		
-		return recipeDAO.selectRecipe(String.valueOf(no));
-	}
+	public RecipeVO getRecipe(int no) { return recipeDAO.selectRecipe(String.valueOf(no)); }
+	public RecipeVO getRecipe(String no) { return recipeDAO.selectRecipe(no); }
 	
 	public int processRecipeWrite(HttpServletRequest request) throws ServletException, IOException {
 		
@@ -123,5 +121,16 @@ public class RecipeService {
 		String recipeNo = request.getParameter("recipeNo");
 		
 		return recipeDAO.selectRecipeReviewes(recipeNo);
+	}
+	
+	public boolean checkRecipeReview(HttpServletRequest request) {
+		
+		/* 로그인 완성 되면 구현
+			HttpSession session = request.getSession();
+			String id = session.getAttribute("id");
+		*/
+		String id = "admin";
+	
+		return recipeDAO.isExistRecipeReview(id, request.getParameter("recipe_no"));
 	}
 }
