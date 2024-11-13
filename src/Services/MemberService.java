@@ -41,7 +41,7 @@ public class MemberService {
 	            System.out.println("File already exists: " + destFile.getAbsolutePath());
 	        } 
 	        else {
-	            FileUtils.moveToDirectory(srcFile, destDir, true);
+	        //    FileUtils.moveToDirectory(srcFile, destDir, true);
 	        }
 	    }
 	}
@@ -65,7 +65,7 @@ public class MemberService {
         if (!dir.exists()) {
             dir.mkdirs(); // 디렉토리 생성
         }
-        
+          
         // 파일 업로드 처리
         int maxSize = 1024 * 1024 * 1024; // 최대 파일 크기 설정 (1GB)
 		MultipartRequest multipartRequest = new MultipartRequest(request, path + "temp/", maxSize, "UTF-8",
@@ -109,8 +109,6 @@ public class MemberService {
         return null;
     }
     
-	//정보수정 사진 추가
-	public void addProfile(HttpServletRequest request){	
-        
-	}
+
+	
 }

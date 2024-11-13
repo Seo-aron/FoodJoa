@@ -79,11 +79,12 @@
 <div class="form-container">
     <h2>정보 수정</h2>
     <!-- 이미지 미리보기가 표시될 컨테이너 -->
-    <div class="preview-container" id="previewContainer" value=>
+    <div class="preview-container" id="previewContainer">
+    	<img alt="프로필 이미지" src=".profile-image">
     </div>
 
     <!-- 파일 선택 버튼 -->
-    <input type="file" accept="image/*" class="file-input" id="fileInput">
+    <input type="file" accept="image/*" class="file-input" id="fileInput" action="$(.profile-image)">
 
     <!-- JavaScript로 미리보기 기능 구현 -->
     <form action="mypagemain.jsp" method="post"><br><br>

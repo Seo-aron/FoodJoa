@@ -65,35 +65,13 @@ public class MemberController extends HttpServlet {
             case "/kakaologin.me" : return;
             case "/login.me": openLoginView(request, response); break;
             case "/loginPro.me": processMemberLogin(request, response); break;
-            
-            case "/profileupdate.me": //정보수정 페이지 요청
-        	   //center = memberService.profileupdate(request);
-				//"members/profileupdate.jsp"
-				
-				//request객체에 "members/join.jsp" 중앙화면 뷰 주소 바인딩
-				//request.setAttribute("center", center);
-				
-				nextPage = "/Main.jsp";
-				 
-				break;
-				
-				
-            case "/viewprofile.me": //프로필 사진 요청
-            //	center = memberService.view
-            	break;
-                
-            case "/mypagemain.me":
-                // 정보 수정 페이지 요청
-                String center = memberService.profileupdate(request);
-                request.setAttribute("center", center);
-                nextPage = "/CarMain.jsp";
-                break;
-
             case "/getUserProfile.me":
-                // 사용자 프로필 정보 요청
             	NaverLoginAPI.handleNaverLogin(request, response);
                 return;
-                
+            case "/getPro.me": getProfile(request, response); break;
+            case "/uploadPro.me": uploadProfile(request, response); break;
+            case "/updatePro.me": modifyProfile(request, response); break;
+
             default:
                 nextPage = "/main.jsp";
         }
@@ -103,11 +81,22 @@ public class MemberController extends HttpServlet {
             dispatcher.forward(request, response);
         }
     }
-    
+ 
+
+	private void getProfile(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void uploadProfile(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	private void openMemberJoinView(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
     	
-        request.setAttribute("center", "/members/join.jsp");
+        request.setAttribute("center", "members/join.jsp");
         
         nextPage = "/main.jsp";
     }
@@ -147,7 +136,7 @@ public class MemberController extends HttpServlet {
     	 // 회원 가입 처리
         memberService.insertMember(request);
         
-        request.setAttribute("center", "/includes/center.jsp");
+        request.setAttribute("center", "includes/center.jsp");
         
         nextPage = "/main.jsp";
     }
@@ -155,7 +144,7 @@ public class MemberController extends HttpServlet {
     private void openLoginView(HttpServletRequest request, HttpServletResponse response)
     		throws ServletException, IOException {
     	
-        request.setAttribute("center", "/members/login.jsp");
+        request.setAttribute("center", "members/login.jsp");
         
         nextPage = "/login.jsp";
     }
@@ -163,7 +152,7 @@ public class MemberController extends HttpServlet {
     private void processMemberLogin(HttpServletRequest request, HttpServletResponse response)
     		throws ServletException, IOException {
 
-        request.setAttribute("center", "/includes/center.jsp");
+        request.setAttribute("center", "includes/center.jsp");
         
         nextPage = "/login.jsp";
     }

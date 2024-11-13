@@ -1,5 +1,7 @@
 package DAOs;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -14,7 +16,7 @@ public class MemberDAO {
     public MemberDAO() {
         dbConnector = new DBConnector();
     }
- 
+
     // 전체 회원 조회
     public ArrayList<MemberVO> selectMembers() {
         ArrayList<MemberVO> members = new ArrayList<>();
@@ -65,6 +67,7 @@ public class MemberDAO {
         return result;
     }
 
+    // 네이버 아이디 등록
     public void insertNaverMember(String naverId) {
         String sql = "INSERT INTO member (id) VALUES (?)";
 
@@ -84,13 +87,10 @@ public class MemberDAO {
         }
     }
 
-
     // 회원 등록
     public void insertMember(MemberVO vo) {
-    	// 네이버 아이디를 기존 id 필드에 저장
-    	String sql = "INSERT INTO member(id, name, nickname, phone, address, profile, join_date) "
-    	            + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-
+        String sql = "INSERT INTO member(id, name, nickname, phone, address, profile, join_date) "
+                   + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try {
             // 값 확인
@@ -150,25 +150,17 @@ public class MemberDAO {
         }
         return check;
     }
-    
-    //회원정보 수정
-    public String profileUpdate(String id){
-    
-    	
-    	try {
-			
-		} catch (Exception e) {
-			// TODO: handle exception
-		}finally{
-			
-		}
-		return id;
-    	
-    };
-    
-    //사진 첨부하기
-    public String viewProfile(String profile){
-		return profile;
-    	
+
+    // 회원정보 수정
+    public String profileUpdate(String id) {
+        try {
+            // 회원정보 수정 로직을 여기에 추가
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("profileUpdate 메소드에서 오류 발생");
+        } finally {
+            dbConnector.Release();
+        }
+        return id;
     }
 }
