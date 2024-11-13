@@ -85,3 +85,75 @@ $(function() {
 	    $(this).closest('.added-orders').remove();
 	});
 });
+
+// 문자열을 합치는 함수
+function combineStrings(strings) {
+    let result = '';
+    for (let str of strings) {
+        // 문자열 길이를 2바이트로 변환
+        let length = str.length;
+        let lengthBytes = String.fromCharCode(length >> 8, length & 0xFF);
+        // 길이 + 문자열 추가
+        result += lengthBytes + str;
+    }
+    return result;
+}
+
+function setIngredientString() {
+	
+	let ingredients = $(".added-ingredient-name");
+	let ingredientsString = [];
+	
+	ingredients.each(function(index, element) {
+		ingredientsString.push($(element).text());
+	});
+	
+	let combinedIngredientsString = combineStrings(ingredientsString);
+	
+	document.getElementsByName('ingredient')[0].value = combinedIngredientsString ;
+	
+	
+		
+	let amounts = $(".added-ingredient-amount");
+	let amountsString = [];
+		
+	amounts.each(function(index, element) {
+		amountsString.push($(element).text());
+	});
+	
+	let combinedAmountString = combineStrings(amountsString);
+
+	document.getElementsByName('ingredient_amount')[0].value = combinedAmountString;
+	
+}
+
+function setOrdersString() {
+
+	let orders = $(".added-order");
+	let ordersString = [];
+		
+	orders.each(function(index, element) {
+		ordersString.push($(element).text());
+	});
+	
+	let combinedOrderString = combineStrings(ordersString);
+
+	document.getElementsByName('orders')[0].value = combinedOrderString;	
+}
+
+function compressContent(editorContent) {
+    const contentBytes = new TextEncoder().encode(editorContent);
+    const compressedContent = pako.deflate(contentBytes);
+    
+    // 배열을 문자열로 변환하는 함수
+    function arrayToBase64(array) {
+        const chunk = 0xffff; // 최대 청크 크기
+        let result = '';
+        for (let i = 0; i < array.length; i += chunk) {
+            result += String.fromCharCode.apply(null, array.subarray(i, i + chunk));
+        }
+        return btoa(result);
+    }
+
+    return arrayToBase64(compressedContent);
+}
