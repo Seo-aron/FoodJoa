@@ -33,7 +33,7 @@
                     // 선택된 이미지로 미리보기 업데이트
                     previewContainer.innerHTML = `<img src="${member.profile}" alt="미리보기 이미지">`;
                 };
-                
+                 
                 reader.readAsDataURL(file);
             } else {
                 previewContainer.innerHTML = '<span>유효한 이미지 파일을 선택하세요.</span>';

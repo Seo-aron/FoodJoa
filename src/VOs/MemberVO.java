@@ -17,7 +17,7 @@ public class MemberVO {
 		this.id = id;
 		this.name = name;
 		this.nickname = nickname;
-		this.phone = phone;
+		this.phone = phone; 
 		this.address = address;
 		this.profile = profile;
 	}

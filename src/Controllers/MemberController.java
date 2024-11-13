@@ -100,7 +100,7 @@ public class MemberController extends HttpServlet {
 				request.setAttribute("center", center);
 				
 				nextPage = "/Main.jsp";
-				
+				 
 				break;
 				
 				

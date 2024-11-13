@@ -16,7 +16,7 @@ public class MemberDAO {
     public MemberDAO() {
         dbConnector = new DBConnector();
     }
-
+ 
     // 전체 회원 조회
     public ArrayList<MemberVO> selectMembers() {
         ArrayList<MemberVO> members = new ArrayList<>();
