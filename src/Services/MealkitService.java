@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -79,6 +80,9 @@ public class MealkitService {
 		int result = mealkitDAO.insertNewContent(vo);
 		
 		request.setAttribute("result", result);
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/write.pro");
+		dispatcher.forward(request, response);
 	}
 
 }

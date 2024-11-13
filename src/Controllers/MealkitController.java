@@ -53,6 +53,8 @@ public class MealkitController extends HttpServlet {
 		case "/mypage.pro": processMealkitMyPage(request, response); return;
 		case "/write": openAddMealkit(request, response); break;
 		case "/write.pro": processAddMealkit(request, response); return;
+		case "/reviewwrite": break;
+		case "/reviewwrite.pro": return;
 
 		default: break;
 		}
