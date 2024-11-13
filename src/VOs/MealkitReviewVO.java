@@ -9,12 +9,12 @@ public class MealkitReviewVO {
 	private int mealkitNo;
 	private String pictures;
 	private String contents;
-	private float rating;
+	private int rating;
 	private int empathy;
 	private Timestamp postDate;
 	
 	public MealkitReviewVO(int no, String id, int mealkitNo, String pictures, 
-			String contents, float rating, int empathy) {
+			String contents, int rating, int empathy) {
 		
 		this.no = no;
 		this.id = id;
@@ -26,7 +26,7 @@ public class MealkitReviewVO {
 	}
 
 	public MealkitReviewVO(int no, String id, int mealkitNo, String pictures, 
-			String contents, float rating, int empathy, Timestamp postDate) {
+			String contents, int rating, int empathy, Timestamp postDate) {
 		
 		this(no, id, mealkitNo, pictures, contents, rating, empathy);
 		this.postDate = postDate;
@@ -76,7 +76,7 @@ public class MealkitReviewVO {
 		return rating;
 	}
 
-	public void setRating(float rating) {
+	public void setRating(int rating) {
 		this.rating = rating;
 	}
 
