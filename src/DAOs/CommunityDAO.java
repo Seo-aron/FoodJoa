@@ -1,20 +1,38 @@
 package DAOs;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
-import javax.sql.DataSource;
+import Common.DBConnector;
 
 public class CommunityDAO {
 
-	Connection connection;
-	PreparedStatement statement;
-	ResultSet rs;
-	DataSource datasource;
+	private DBConnector dbConnecter;
 	
 	public CommunityDAO() {
+		dbConnecter = new DBConnector();
 		
 	}
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }
