@@ -21,8 +21,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bxslider@4.2.17/dist/jquery.bxslider.min.js"></script>
 	
-	<style>
-	
+	<style>	
 		* {
             margin: 0;
             padding: 0;
@@ -51,8 +50,7 @@
         td {
             vertical-align: top;
             width: 300px;
-        }
-	
+        }	
 	</style>
 	
 	<!-- BX slider -->

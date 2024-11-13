@@ -15,7 +15,6 @@ import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
 import DAOs.MemberDAO;
 import VOs.MemberVO;
-import jdk.incubator.http.HttpRequest;
 
 public class MemberService {
 
@@ -24,14 +23,32 @@ public class MemberService {
     public MemberService() {
         memberDAO = new MemberDAO();
     }
+	
+	private synchronized void moveProfile(String path, String id, String fileName) throws IOException {
+		
+	    if (fileName == null || fileName.isEmpty()) return;
 
-    public String serviceJoinName(HttpServletRequest request) {
-        return request.getParameter("center");
-    }
+	    synchronized (this) {
+	        File srcFile = new File(path + "\\temp\\" + fileName);
+	        File destDir = new File(path + "\\member\\userProfiles\\" + id);
 
-    public boolean serviceOverLappedId(HttpServletRequest request) {
+	        if (!destDir.exists()) {
+	            destDir.mkdirs();
+	        }
+
+	        File destFile = new File(destDir, fileName);
+	        if (destFile.exists()) {
+	            System.out.println("File already exists: " + destFile.getAbsolutePath());
+	        } 
+	        else {
+	            FileUtils.moveToDirectory(srcFile, destDir, true);
+	        }
+	    }
+	}
+
+    public boolean checkMemberId(HttpServletRequest request) {
         String id = request.getParameter("id");
-        return memberDAO.overlappedId(id);
+        return memberDAO.isExistMemberId(id);
     }
     
     public void serviceInsertNaverMember(HttpServletRequest request) {
@@ -39,9 +56,9 @@ public class MemberService {
 		
 	}
 
-    public void serviceInsertMember(HttpServletRequest request) throws ServletException, IOException {
+    public void insertMember(HttpServletRequest request) throws ServletException, IOException {
         // 새로운 경로 설정: images/member/userProfiles 디렉토리
-        String path = request.getServletContext().getRealPath("/images/member/userProfiles/");
+		String path = request.getServletContext().getRealPath("/images/");
         
         // 디렉토리 확인 후 없으면 생성
         File dir = new File(path);
@@ -51,7 +68,8 @@ public class MemberService {
         
         // 파일 업로드 처리
         int maxSize = 1024 * 1024 * 1024; // 최대 파일 크기 설정 (1GB)
-        MultipartRequest multipartRequest = new MultipartRequest(request, path, maxSize, "UTF-8", new DefaultFileRenamePolicy());
+		MultipartRequest multipartRequest = new MultipartRequest(request, path + "temp/", maxSize, "UTF-8",
+				new DefaultFileRenamePolicy());
         
         // 로그로 확인
         String id = multipartRequest.getParameter("id");
@@ -72,41 +90,11 @@ public class MemberService {
         
         // 회원 DB에 정보 저장
         memberDAO.insertMember(vo);
+        
+        moveProfile(path, id, profileFileName);
     }
-
-
-    private synchronized void moveProfile(String path, String id, String fileName) throws IOException {
-        if (fileName == null || fileName.isEmpty()) {
-            // fileName이 null이거나 빈 값인 경우 처리
-            System.out.println("Profile image file name is missing. Skipping file move.");
-            return;  // 파일 이동을 하지 않고 메소드를 종료
-        }
-
-        synchronized (this) {
-            File srcFile = new File(path + "\\" + fileName);
-            File destDir = new File(path + "\\" + id);
-
-            // 디렉토리가 없으면 생성
-            if (!destDir.exists()) {
-                destDir.mkdirs();
-            }
-
-            // 파일이 이미 존재하는지 확인
-            File destFile = new File(destDir, fileName);
-            if (destFile.exists()) {
-                // 파일이 이미 존재하는 경우 처리
-                System.out.println("File already exists: " + destFile.getAbsolutePath());
-            } else {
-                // 파일 이동
-                FileUtils.moveToDirectory(srcFile, destDir, true);
-            }
-        }
-    }
-
-    public String serviceLoginMember() {
-        return "members/login.jsp";
-    }
-
+    
+    
     public int serviceUserCheck(HttpServletRequest request) {
         String login_id = request.getParameter("id");
         String login_name = request.getParameter("name");
@@ -122,7 +110,7 @@ public class MemberService {
     }
     
 	//정보수정 사진 추가
-	public void addProfile(HttpRequest request){	
+	public void addProfile(HttpServletRequest request){	
         
 	}
 }

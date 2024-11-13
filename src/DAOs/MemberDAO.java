@@ -45,7 +45,7 @@ public class MemberDAO {
     }
 
     // ID 중복 확인
-    public boolean overlappedId(String id) {
+    public boolean isExistMemberId(String id) {
         boolean result = false;
         String sql = "SELECT COUNT(*) AS count FROM member WHERE id = ?";
         ResultSet resultSet = null;
@@ -57,7 +57,7 @@ public class MemberDAO {
                 result = (count > 0);
             }
         } catch (Exception e) {
-            System.out.println("overlappedId 메소드에서 예외 발생");
+            System.out.println("isExistMemberId 메소드에서 예외 발생");
             e.printStackTrace();
         } finally {
             dbConnector.Release();

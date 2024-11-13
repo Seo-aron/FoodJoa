@@ -86,8 +86,8 @@ public class RecipeService {
 		
 		String fileName = multipartRequest.getOriginalFileName("file");
 		/* 로그인 완성 되면 구현
-		HttpSession session = request.getSession();
-		String id = session.getAttribute("id");
+			HttpSession session = request.getSession();
+			String id = session.getAttribute("id");
 		*/
 		String id = "admin";
 		
