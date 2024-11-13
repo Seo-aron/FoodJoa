@@ -45,17 +45,22 @@
 									<!--<img src="${mealkit.pictures}" alt="${mealkit.title}">-->
 									작성자: ${mealkit.id } &nbsp;&nbsp;&nbsp;&nbsp;
 									작성일: ${mealkit.postDate} &nbsp;&nbsp;&nbsp;&nbsp;
-									평점: ${mealkit.rating} &nbsp;&nbsp;&nbsp;&nbsp;
+									<!--나중에 수정 -->
+									평점:  &nbsp;&nbsp;&nbsp;&nbsp;
 									조회수: ${mealkit.views}
 								</sapn>
 								<h3>${mealkit.title}</h3>
 								<p>가격: ${mealkit.price}</p>
-								<p>${mealkit.content}</p>
+								<p>${mealkit.contents}</p>
 							</a>
 						</td>
 					</tr>
 			</c:forEach>
 		</table>
+		
+		<input type="button" id="newContent" value="글쓰기" 
+		onclick="location.href='<%=contextPath%>/Mealkit/write'"/>
+		
 	</div>
 
 </body>

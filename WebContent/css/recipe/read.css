@@ -1,0 +1,77 @@
+@charset "UTF-8";
+
+#container {
+	margin: 0 auto;
+	border: 2px solid black;
+	width: 1200px;
+}
+
+.recipe-list {
+	display: flex;
+	width: 100%;
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+	align-items: center;
+}
+
+.recipe-list li {
+	display: flex;
+	align-items: center;
+	box-sizing: border-box;
+	padding: 10px;
+}
+
+.profile-img {
+	width: 10%;
+}
+
+.recipe-title {
+	width: 50%;
+}
+
+.recipe-id {
+	width: 20%;
+}
+
+.recipe-info {
+	width: 20%;
+	flex-direction: column; /* recipe-info의 내용을 세로로 정렬합니다 */
+    justify-content: center; /* 세로 정렬 시 중앙에 위치하도록 합니다 */
+}
+
+.rating-star {
+	vertical-align: middle;
+}
+
+.rating-star {
+	width: 32px;
+	height: 32px;
+}
+
+#thumbnail {
+    position: relative;
+    width: 1000px;
+    height: 600px;
+	overflow: hidden;
+}
+
+#thumbnail img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+#wishlist {
+    position: absolute;
+    bottom: 10px; /* 하단에서의 거리 */
+    right: 10px; /* 우측에서의 거리 */
+}
+
+#wishlist-button {
+    padding: 5px 10px;
+    background-color: rgba(255, 255, 255, 0.8); /* 반투명 흰색 배경 */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
