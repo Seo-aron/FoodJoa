@@ -1,5 +1,5 @@
 package Services;
-
+ 
 import java.io.File;
 import java.io.IOException;
 
@@ -15,6 +15,7 @@ import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
 import DAOs.MemberDAO;
 import VOs.MemberVO;
+import jdk.incubator.http.HttpRequest;
 
 public class MemberService {
 
@@ -116,9 +117,12 @@ public class MemberService {
     }
 
     public String profileupdate(HttpServletRequest request) {
-        // TODO Auto-generated method stub
+       
         return null;
     }
-
-	
+    
+	//정보수정 사진 추가
+	public void addProfile(HttpRequest request){	
+        
+	}
 }

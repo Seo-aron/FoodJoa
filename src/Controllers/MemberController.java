@@ -88,6 +88,26 @@ public class MemberController extends HttpServlet {
                 nextPage = "/login.jsp";
                 break;
 
+            case "/loginPro.me":
+                // 로그인 처리
+                handleLoginPro(request, response);
+                return; // 로그인 처리 후 바로 리턴해서 다른 처리가 진행되지 않게 한다.
+            
+            case "/profileupdate.me": //정보수정 페이지 요청
+        	   center = memberService.profileupdate(request);
+				//"members/profileupdate.jsp"
+				
+				//request객체에 "members/join.jsp" 중앙화면 뷰 주소 바인딩
+				request.setAttribute("center", center);
+				
+				nextPage = "/Main.jsp";
+				 
+				break;
+				
+				
+            case "/viewprofile.me": //프로필 사진 요청
+            //	center = memberService.view
+                
             case "/mypagemain.me":
                 // 정보 수정 페이지 요청
                 String center = memberService.profileupdate(request);
@@ -99,7 +119,7 @@ public class MemberController extends HttpServlet {
                 // 사용자 프로필 정보 요청
             	handleNaverLogin(request, response);
                 return;
-
+                
             default:
                 nextPage = "/main.jsp";
         }
@@ -192,4 +212,7 @@ public class MemberController extends HttpServlet {
         JSONObject userProfile = new JSONObject(responseContent.toString()).getJSONObject("response");
        System.out.println(userProfile);
     }
+    
+
+    
 }

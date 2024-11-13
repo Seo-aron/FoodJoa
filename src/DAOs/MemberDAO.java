@@ -14,7 +14,7 @@ public class MemberDAO {
     public MemberDAO() {
         dbConnector = new DBConnector();
     }
-
+ 
     // 전체 회원 조회
     public ArrayList<MemberVO> selectMembers() {
         ArrayList<MemberVO> members = new ArrayList<>();
@@ -149,5 +149,26 @@ public class MemberDAO {
             dbConnector.Release();
         }
         return check;
+    }
+    
+    //회원정보 수정
+    public String profileUpdate(String id){
+    
+    	
+    	try {
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}finally{
+			
+		}
+		return id;
+    	
+    };
+    
+    //사진 첨부하기
+    public String viewProfile(String profile){
+		return profile;
+    	
     }
 }
