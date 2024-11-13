@@ -26,6 +26,17 @@
 </head>
 
 <body>
+
+
+		<!-- 로그인 -->
+			<a href="<%= contextPath %>/members/login.jsp">
+				<button style="font-size: 2.5rem; color: black;">로그인</button>
+			</a>
+		<!-- 회원가입 -->
+			<a href="<%= contextPath %>/members/snsjoin.jsp">
+				<button style="font-size: 2.5rem; color: black;">회원가입</button>
+			</a>
+	
 	<table width="100%" height="5">
 		<tr>
 			<!-- 홈 -->

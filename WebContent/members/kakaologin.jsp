@@ -2,16 +2,16 @@
     pageEncoding="UTF-8"%>
     
 <%
-	request.setCharacterEncoding("UTF-8");
-	response.setContentType("text/html; charset=utf-8");
-	
-	String contextPath = request.getContextPath();
+   request.setCharacterEncoding("UTF-8");
+   response.setContentType("text/html; charset=utf-8");
+   
+   String contextPath = request.getContextPath();
 %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>카카오 로그인</title>
 </head>
 <body>
     <!-- 이미지가 버튼처럼 클릭되도록 a 태그로 감싸기 -->
