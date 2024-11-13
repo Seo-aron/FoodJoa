@@ -7,6 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-	이것은 list.jsp입니다.
+
 </body>
 </html>
