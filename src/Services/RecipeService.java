@@ -1,16 +1,24 @@
 package Services;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.io.FileUtils;
 
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
+import Common.StringParser;
 import DAOs.RecipeDAO;
+import VOs.RecipeReviewVO;
 import VOs.RecipeVO;
 
 public class RecipeService {
@@ -20,6 +28,33 @@ public class RecipeService {
 	public RecipeService() {
 		
 		recipeDAO = new RecipeDAO();
+	}
+	
+	private synchronized void moveProfile(String path, String no, String fileName) throws IOException {
+		
+	    if (fileName == null || fileName.isEmpty()) return;
+
+	    synchronized (this) {
+	        File srcFile = new File(path + "\\temp\\" + fileName);
+	        File destDir = new File(path + "\\recipe\\thumbnails\\" + no);
+
+	        if (!destDir.exists()) {
+	            destDir.mkdirs();
+	        }
+
+	        File destFile = new File(destDir, fileName);
+	        if (destFile.exists()) {
+	            System.out.println("File already exists: " + destFile.getAbsolutePath());
+	        } 
+	        else {
+	            FileUtils.moveToDirectory(srcFile, destDir, true);
+	        }
+	    }
+	}
+	
+	public ArrayList<HashMap<String, Object>> getRecipesWithAvgList() {
+		
+		return recipeDAO.selectRecipesWithRating();
 	}
   
 	public ArrayList<RecipeVO> getRecipesList() {
@@ -34,7 +69,12 @@ public class RecipeService {
 		return recipeDAO.selectRecipe(no);
 	}
 	
-	public boolean processRecipeWrite(HttpServletRequest request) throws ServletException, IOException {
+	public RecipeVO getRecipe(int no) {
+		
+		return recipeDAO.selectRecipe(String.valueOf(no));
+	}
+	
+	public int processRecipeWrite(HttpServletRequest request) throws ServletException, IOException {
 		
 		ServletContext application = request.getServletContext();
 		
@@ -43,18 +83,45 @@ public class RecipeService {
 		
 		MultipartRequest multipartRequest = new MultipartRequest(request, path + "temp/", maxSize, "UTF-8",
 				new DefaultFileRenamePolicy());
-		/*
-		String id = multipartRequest.getParameter("id");
-		String fileName = multipartRequest.getParameter("profile");
-		*/
-		System.out.println(multipartRequest.getFilesystemName("thumbnail"));
-		System.out.println(multipartRequest.getParameter("title"));
-		System.out.println(multipartRequest.getParameter("description"));
-		System.out.println(multipartRequest.getParameter("contents").length());
-		System.out.println(multipartRequest.getParameter("ingredient"));
-		System.out.println(multipartRequest.getParameter("ingredient_amount"));
-		System.out.println(multipartRequest.getParameter("orders"));
 		
-		return false;
+		String fileName = multipartRequest.getOriginalFileName("file");
+		/* 로그인 완성 되면 구현
+		HttpSession session = request.getSession();
+		String id = session.getAttribute("id");
+		*/
+		String id = "admin";
+		
+		RecipeVO recipe = new RecipeVO();
+		recipe.setId(id);
+		recipe.setTitle(multipartRequest.getParameter("title"));
+		recipe.setThumbnail(fileName);
+		recipe.setDescription(multipartRequest.getParameter("description"));
+		recipe.setContents(multipartRequest.getParameter("contents"));
+		recipe.setCategory(Integer.parseInt(multipartRequest.getParameter("category")));
+		recipe.setIngredient(multipartRequest.getParameter("ingredient"));
+		recipe.setIngredientAmount(multipartRequest.getParameter("ingredient_amount"));
+		recipe.setOrders(multipartRequest.getParameter("orders"));
+		
+		int recipeNo = recipeDAO.selectInsertedRecipeNo(recipe);
+		
+		System.out.println("result : " + recipeNo);
+		
+		moveProfile(path, String.valueOf(recipeNo), fileName);
+		
+		return recipeNo;
+	}
+	
+	public int processRecipeWishlist(HttpServletRequest request) {
+		
+		return recipeDAO.insertRecipeWishlist(
+				request.getParameter("id"),
+				request.getParameter("recipeNo"));
+	}
+	
+	public ArrayList<RecipeReviewVO> getRecipeReviewes(HttpServletRequest request) {
+		
+		String recipeNo = request.getParameter("recipeNo");
+		
+		return recipeDAO.selectRecipeReviewes(recipeNo);
 	}
 }

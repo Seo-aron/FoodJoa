@@ -12,7 +12,7 @@
 
 .info_image {
 	width: 450px;
-	text-align: center;
+	text-align: left;
 	margin-right: 20px;
 }
 
@@ -22,7 +22,7 @@
 	border-radius: 5px;
 }
 
-.amount_count {
+.stock_count {
 	position: relative;
 	width: 120px;
 	height: 44px;
@@ -32,7 +32,7 @@
 	overflow: hidden;
 }
 
-.amount_count input {
+.stock_count input {
 	position: relative;
 	width: 80px;
 	height: 40px;
@@ -43,7 +43,7 @@
 	padding-right: 20px;
 }
 
-.amount_controls {
+.stock_controls {
 	position: relative;
 	right: 0;
 	width: 20px;
@@ -52,7 +52,7 @@
 	justify-content: space-between;
 }
 
-.amount_plus, .amount_minus {
+.stock_plus, .stock_minus {
 	width: 100%;
 	height: 20px;
 	background-color: #f0f0f0;
@@ -64,11 +64,11 @@
 	justify-content: center;
 }
 
-.amount_plus {
+.stock_plus {
 	border-bottom: 1px solid #ccc;
 }
 
-.amount_minus {
+.stock_minus {
 	border-top: 1px solid #ccc;
 }
 
@@ -102,4 +102,11 @@
 .wishlist_button {
 	background-color: #ffd700;
 	color: black;
+}
+
+.origin_text {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #333;
+    text-align: "left";
 }

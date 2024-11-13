@@ -185,8 +185,7 @@
                 <li><a href="#">마이페이지</a></li>
             </ul>
         </nav>
-	</div>
-
+  </div>
 </body>
 
 </html>

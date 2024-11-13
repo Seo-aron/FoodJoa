@@ -9,14 +9,14 @@ public class RecipeReviewVO {
 	private int recipeNo;
 	private String pictures;
 	private String contents;
-	private float rating;
+	private int rating;
 	private int empathy;
 	private Timestamp postDate;
 
 	public RecipeReviewVO() {
 	}
 	
-	public RecipeReviewVO(int no, String id, int recipeNo, String pictures, String contents, float rating,
+	public RecipeReviewVO(int no, String id, int recipeNo, String pictures, String contents, int rating,
 			int empathy) {
 		
 		this.no = no;
@@ -28,7 +28,7 @@ public class RecipeReviewVO {
 		this.empathy = empathy;
 	}
 
-	public RecipeReviewVO(int no, String id, int recipeNo, String pictures, String contents, float rating, int empathy,
+	public RecipeReviewVO(int no, String id, int recipeNo, String pictures, String contents, int rating, int empathy,
 			Timestamp postDate) {
 
 		this(no, id, recipeNo, pictures, contents, rating, empathy);
@@ -75,11 +75,11 @@ public class RecipeReviewVO {
 		this.contents = contents;
 	}
 
-	public float getRating() {
+	public int getRating() {
 		return rating;
 	}
 
-	public void setRating(float rating) {
+	public void setRating(int rating) {
 		this.rating = rating;
 	}
 

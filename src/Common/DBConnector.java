@@ -56,7 +56,7 @@ public class DBConnector {
 	
 	private void prepareQuery(String sql, Object... params) {
 		
-		Release();		// 사용 중인 자원이 남아 있으면 메모리 할당 해제
+		Release();
 		
 		try {
 			connection = dataSource.getConnection();
@@ -124,5 +124,37 @@ public class DBConnector {
 		
 		
 		return result;
+	}
+	
+	public ResultSet executeUpdateQuery(String updateSql, String selectSql, Object... params) {
+		
+		try {
+			int updateParamCount = (int) updateSql.chars().filter(ch -> ch == '?').count();
+			System.out.println("updateParamCount : " + updateParamCount);
+			int selectParamCount = params.length - updateParamCount;
+			System.out.println("selectParamCount : " + selectParamCount);
+			
+			Object[] updateParams = new Object[updateParamCount];
+			for (int i = 0; i < updateParamCount; i++)
+				updateParams[i] = params[i];
+			Object[] selectParams = new Object[selectParamCount];
+			for (int i = 0; i < selectParamCount; i++)
+				selectParams[i] = params[updateParamCount + i];
+			
+			prepareQuery(updateSql, updateParams);
+			
+			statement.executeUpdate();
+			
+			prepareQuery(selectSql, selectParams);
+			
+			resultSet = statement.executeQuery();			
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("DBConnector SQLException 발생");
+		}
+		
+		
+		return resultSet;
 	}
 }

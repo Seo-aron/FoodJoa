@@ -21,8 +21,22 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 	
 	<style>
+		#container {			
+			margin: 0 auto;
+			border: 2px solid black;
+			width: 1200px;
+		}
+	
 		input[type=button] {
 			float: right !important;
+		}
+		
+		select option[value=""] {
+			display: none;
+		}
+		
+		.tox-toolbar-overlord {
+			width: 100%;
 		}
 	</style>
 </head>
@@ -30,18 +44,16 @@
 <body>
 	<div id="container">
 		<form action="<%= contextPath %>/Recipe/writePro" method="post" id="frmWrite" enctype="multipart/form-data">
-			<table border="1">
+			<table border="1" width="100%">
 				<tr>
 					<td colspan="2">
 						<input type="button" class="write" value="레시피 작성" onclick="onSubmit(event)">
 					</td>
 				</tr>
 				<tr>
-					<td rowspan="2">
+					<td rowspan="3">
 						<div class="input-container">
-							<input type="text" id="thumbnail" name="thumbnail" class="thumbnail-control" placeholder="썸네일 사진을 넣어주세요" required readonly />
-							<input type="file" name="thumbnailFile" class="thumbnail-input" id="thumbnailFile" onchange="updateFileName()" />
-							<label for="thumbnailFile" class="thumbnail-button">파일 선택</label>
+							<input type="file" name="file">
 						</div>
 					</td>
 					<td>
@@ -54,8 +66,20 @@
 					</td>
 				</tr>
 				<tr>
+					<td>
+						<select name="category">
+							<option value="" disabled hidden selected>음식 종류를 선택하세요.</option>
+							<option value="1">한식</option>
+							<option value="2">일식</option>
+							<option value="3">중식</option>
+							<option value="4">양식</option>
+							<option value="5">자취요리</option>
+						</select>
+					</td>					
+				</tr>
+				<tr>
 					<td colspan="2">
-						<textarea id="contentsArea"></textarea>
+						<textarea id="contentsArea" width="100%"></textarea>
 						<input type="hidden" name="contents" required>
 					</td>
 				</tr>
@@ -89,16 +113,6 @@
 	
 	
 	<script>
-		function updateFileName() {
-			var fileInput = document.getElementById("thumbnailFile");
-			var thumbnailInput = document.getElementById("thumbnail");
-	
-			// 파일명이 있을 경우 input에 파일명 표시
-			if (thumbnailInput.files.length > 0) {
-				thumbnailInput.value = fileInput.files[0].name;
-			}
-		}
-	
 		function onSubmit(e) {
 		    e.preventDefault();
 		    
@@ -112,70 +126,11 @@
  	
 		    document.getElementById('frmWrite').submit();
 		}
-		
-		function setIngredientString() {
-			
-			let str = "";
-			
-			let ingredients = $(".added-ingredient-name");
-			
-			ingredients.each(function(index, element) {
-				console.log($(element).text());
-				
-				str += $(element).text() + '@';
-			});		
-
-			document.getElementsByName('ingredient')[0].value = str;
-			
-			let ingredientAmounts = $(".added-ingredient-amount");
-			
-			ingredients.each(function(index, element) {
-				console.log($(element).text());
-				
-				str += $(element).text() + '@';
-			});
-			
-
-			document.getElementsByName('ingredient_amount')[0].value = str;
-		}
-		
-		function setOrdersString() {
-			
-			let str = "";
-			
-			let ingredients = $(".added-order");
-			
-			ingredients.each(function(index, element) {
-				console.log($(element).text());
-				
-				str += $(element).text() + '@';
-			});		
-
-			document.getElementsByName('orders')[0].value = str;
-		}
-		
-		function compressContent(editorContent) {
-		    const contentBytes = new TextEncoder().encode(editorContent);
-		    const compressedContent = pako.deflate(contentBytes);
-		    
-		    // 배열을 문자열로 변환하는 함수
-		    function arrayToBase64(array) {
-		        const chunk = 0xffff; // 최대 청크 크기
-		        let result = '';
-		        for (let i = 0; i < array.length; i += chunk) {
-		            result += String.fromCharCode.apply(null, array.subarray(i, i + chunk));
-		        }
-		        return btoa(result);
-		    }
-
-		    return arrayToBase64(compressedContent);
-		}
 	
 		tinymce.init({
 	        selector: "#contentsArea", // TinyMCE를 적용할 textarea 요소의 선택자를 지정
 	        statusbar: false,
 	        height: 500,
-	        width: 900,
 	        toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | bullist numlist",
 	        paste_data_images: true, // 이미지 붙여넣기 설정 활성화
 	        plugins: "paste image imagetools advlist lists", // 'paste', 'image', 'imagetools' 플러그인 추가

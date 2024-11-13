@@ -1,3 +1,4 @@
+<%@page import="java.util.HashMap"%>
 <%@page import="VOs.RecipeVO"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -9,7 +10,7 @@
 
 	String contextPath = request.getContextPath();
 	
-	ArrayList<RecipeVO> recipes = (ArrayList<RecipeVO>) request.getAttribute("recipes");
+	ArrayList<HashMap<String, Object>> recipes = (ArrayList<HashMap<String, Object>>) request.getAttribute("recipes");
 	final int columnCount = 4;
 %>
 
@@ -20,9 +21,7 @@
 	<meta charset="UTF-8">
 	<title>나만의 레시피 공유</title>
 	
-	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
-	<link rel="stylesheet" href="<%=contextPath%>/css/recipe/list.css">
-	
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>	
 	<script type="text/javascript">
 		$(function() {			
 			$("#write").click(function() {
@@ -30,13 +29,15 @@
 			});
 		});
 	
-		function openRecipeContent(recipeNo) {
-			console.log(recipeNo);
-			document.frmOpen.action = '<%= contextPath %>/Recipe/content';
+		function openRecipeContent(recipeNo, ratingAvg) {
+			document.frmOpen.action = '<%= contextPath %>/Recipe/read';
 			document.frmOpen.no.value = recipeNo;
+			document.frmOpen.ratingAvg.value = ratingAvg;
 			document.frmOpen.submit();
 		}
 	</script>
+	
+	<link rel="stylesheet" href="<%=contextPath%>/css/recipe/list.css">
 </head>
 
 <body>
@@ -65,15 +66,14 @@
 			else {
 				for (int i = 0; i < recipes.size(); i++) {
 					
-					RecipeVO recipe = recipes.get(i);
-					
 					if (i % columnCount == 0) { %> <tr> <% }
-					
-					float rating = recipe.getRating();
+
+					RecipeVO recipe = (RecipeVO) recipes.get(i).get("recipe");					
+					double rating = (double) recipes.get(i).get("average");
 					
 					%>
 					<td class="list_cell">
-					    <a href="javascript:openRecipeContent('<%= recipe.getNo() %>')" class="cell-link">
+					    <a href="javascript:openRecipeContent(<%= recipe.getNo() %>, <%= rating %>)" class="cell-link">
 					        <span class="thumbnail">
 					            <img src="<%= contextPath %>/images/recipe/test_thumbnail.png" alt="레시피 썸네일">
 					        </span>
@@ -106,6 +106,7 @@
 	
 	<form name="frmOpen">
 		<input type="hidden" name="no">
+		<input type="hidden" name="ratingAvg">
 	</form>
 </body>
 

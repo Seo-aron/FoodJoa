@@ -12,7 +12,6 @@ public class RecipeVO {
 	private String contents;
 	private int category;
 	private int views;
-	private float rating;
 	private String ingredient;
 	private String ingredientAmount;
 	private String orders;
@@ -23,7 +22,7 @@ public class RecipeVO {
 	}
 
 	public RecipeVO(int no, String id, String title, String thumbnail, String description, String contents,
-			int category, int views, float rating, String ingredient, String ingredientAmount, String orders,
+			int category, int views, String ingredient, String ingredientAmount, String orders,
 			int empathy) {
 
 		this.no = no;
@@ -34,7 +33,6 @@ public class RecipeVO {
 		this.contents = contents;
 		this.category = category;
 		this.views = views;
-		this.rating = rating;
 		this.ingredient = ingredient;
 		this.ingredientAmount = ingredientAmount;
 		this.orders = orders;
@@ -42,11 +40,11 @@ public class RecipeVO {
 	}
 
 	public RecipeVO(int no, String id, String title, String thumbnail, String description, String contents,
-			int category, int views, float rating, String ingredient, String ingredientAmount, String orders,
+			int category, int views, String ingredient, String ingredientAmount, String orders,
 			int empathy, Timestamp postDate) {
 
 		this(no, id, title, thumbnail, description, contents, category, 
-				views, rating, ingredient, ingredientAmount, orders, empathy);
+				views, ingredient, ingredientAmount, orders, empathy);
 		this.postDate = postDate;
 	}
 
@@ -112,14 +110,6 @@ public class RecipeVO {
 
 	public void setViews(int views) {
 		this.views = views;
-	}
-
-	public float getRating() {
-		return rating;
-	}
-
-	public void setRating(float rating) {
-		this.rating = rating;
 	}
 
 	public String getIngredient() {

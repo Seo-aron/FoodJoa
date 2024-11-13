@@ -7,41 +7,41 @@ public class MealkitVO {
 	private int no;
     private String id;
     private String title;
-    private String content;
+    private String contents;
     private int category;
     private String price;
     private int stock;
     private String pictures;
     private String orders;
     private String origin;
-    private float rating;
     private int views;
     private int soldout;
     private Timestamp postDate;
     
+    public MealkitVO() {}
+    
     // postDate 없는 생성자 
-	public MealkitVO(int no, String id, String title, String content, int category, String price, int stock,
-			String pictures, String orders, String origin, float rating, int views, int soldout) {
+	public MealkitVO(int no, String id, String title, String contents, int category, String price, int stock,
+			String pictures, String orders, String origin, int views, int soldout) {
 		
 		this.no = no;
 		this.id = id;
 		this.title = title;
-		this.content = content;
+		this.contents = contents;
 		this.category = category;
 		this.price = price;
 		this.stock = stock;
 		this.pictures = pictures;
 		this.orders = orders;
 		this.origin = origin;
-		this.rating = rating;
 		this.views = views;
 		this.soldout = soldout;
 	}
 
-	public MealkitVO(int no, String id, String title, String content, int category, String price, int stock, 
-			String pictures, String orders, String origin, float rating, int views, int soldout, Timestamp postDate) {
+	public MealkitVO(int no, String id, String title, String contents, int category, String price, int stock, 
+			String pictures, String orders, String origin, int views, int soldout, Timestamp postDate) {
 
-		this(no, id, title, content, category, price, stock, pictures, orders, origin, rating, views, soldout);
+		this(no, id, title, contents, category, price, stock, pictures, orders, origin, views, soldout);
 		this.postDate = postDate;
 	}
 
@@ -69,12 +69,12 @@ public class MealkitVO {
 		this.title = title;
 	}
 
-	public String getContent() {
-		return content;
+	public String getContents() {
+		return contents;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
+	public void setContents(String contents) {
+		this.contents = contents;
 	}
 
 	public int getCategory() {
@@ -123,14 +123,6 @@ public class MealkitVO {
 
 	public void setOrigin(String origin) {
 		this.origin = origin;
-	}
-
-	public float getRating() {
-		return rating;
-	}
-
-	public void setRating(float rating) {
-		this.rating = rating;
 	}
 
 	public int getViews() {

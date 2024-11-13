@@ -1,58 +1,33 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+ 
+<%
+	request.setCharacterEncoding("UTF-8");
+	response.setContentType("text/html; charset=utf-8");
+	
+	String contextPath = request.getContextPath();
+%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+  	<script src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
+  	<link rel="stylesheet" href="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css">
+    <link rel="stylesheet" href="<%=contextPath%>/css/member/myreview.css">
     <title>리뷰 관리</title>
-    <style>
-        /* 스타일을 추가하여 가독성을 높일 수 있습니다 */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .container {
-            width: 60%;
-            margin: 0 auto;
-            border: 1px solid #ddd;
-            padding: 20px;
-            border-radius: 8px;
-        }
-        .header {
-            font-size: 1.5em;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        .item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-        .item div {
-            width: 25%;
-            text-align: center;
-        }
-    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">내 리뷰 관리</div>
-        <div class="item">
-            <div><b>제목</b></div>
-            <div><b>사진 설명</b></div>
-            <div><button>수정</button></div>
-            <div><button>삭제</button></div>
-        </div>
-        <div class="item">
-            <div>리뷰 제목</div>
-            <div>사진 설명 텍스트</div>
-            
-        </div>
-        <div class="item">
-            <div><b>공감수</b></div>
-            <div>공감 수 데이터</div>
-            <div></div>
-            <div></div>
-        </div>
-    </div>
+   <div class="container">
+    <!-- Header Section -->
+   <div class="header">
+    <h1>마이페이지</h1>
+    <a href="<%=contextPath%>/main.jsp">
+    <input type="button" class="logout-btn" value="로그아웃">
+    </a>
+	</div>
+</div>
 </body>
 </html>
