@@ -41,7 +41,7 @@
 		<table width="100%">
 			<tr>
 				<td>
-					<input type="button" value="리뷰 쓰기" onclick="">
+					<input type="button" value="리뷰 쓰기" onclick="onReviewButton()">
 					<input type="button" value="목록" onclick="onListButton()">
 				</td>
 			</tr>
@@ -146,6 +146,10 @@
 	<script>
 		function onListButton() {
 			location.href = '<%= contextPath %>/Recipe/list';
+		}
+		
+		function onReviewButton() {
+			location.href = '<%= contextPath %>/Recipe/review?recipe_no=<%= recipe.getNo() %>';
 		}
 	
 		/* id 파라미터 부분 로그인 완성 되면 수정 필요 */
