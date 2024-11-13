@@ -50,7 +50,12 @@
         td {
             vertical-align: top;
             width: 300px;
-        }	
+        }
+        
+        .bx-wrapper .bx-controls-direction a {
+			z-index: 500;
+		} 
+        
 	</style>
 	
 	<!-- BX slider -->
