@@ -33,6 +33,14 @@ public class MemberVO {
 		this.profile = profile;
 		this.join_date = join_date;
 	}
+	
+	// join_date, id 없는 대신 profile 포함된 정보수정 양식 생성자
+		public MemberVO(String profile,  String name, String nickname, String phone, String address) {
+			this.profile = profile;
+			this.name = name;
+			this.nickname = nickname;
+			this.phone = phone;
+			this.address = address;}
 
 	// Getters and Setters
 	public String getId() {
@@ -90,4 +98,6 @@ public class MemberVO {
 	public void setJoin_date(Timestamp join_date) {
 		this.join_date = join_date;
 	}
+	
+	
 }

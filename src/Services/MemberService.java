@@ -15,6 +15,7 @@ import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
 import DAOs.MemberDAO;
 import VOs.MemberVO;
+import jdk.incubator.http.HttpRequest;
 
 
 public class MemberService {
@@ -122,4 +123,12 @@ public class MemberService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	//정보수정 사진 추가
+	public void addProfile(HttpRequest request){
+		
+		
+		
+	}
+	
 }

@@ -105,11 +105,6 @@ public class MemberDAO {
         }
     }
 
-
-
-
-
-
     // 사용자 확인 (로그인용)
     public int userCheck(String login_id, String login_name) {
         int check = -1;
@@ -134,5 +129,26 @@ public class MemberDAO {
             dbConnector.Release();
         }
         return check;
+    }
+    
+    //회원정보 수정
+    public String profileUpdate(String id){
+    
+    	
+    	try {
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}finally{
+			
+		}
+		return id;
+    	
+    };
+    
+    //사진 첨부하기
+    public String viewProfile(String profile){
+		return profile;
+    	
     }
 }
