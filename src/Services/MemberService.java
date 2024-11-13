@@ -9,10 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
+import org.json.JSONObject;
 
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
+import Common.NaverLoginAPI;
 import DAOs.MemberDAO;
 import VOs.MemberVO;
 
@@ -52,9 +54,24 @@ public class MemberService {
     }
     
     public void serviceInsertNaverMember(HttpServletRequest request) {
-		//코드 넣을 곳
-		
-	}
+        try {
+            // 액세스 토큰 추출
+            String accessToken = request.getParameter("accessToken");
+
+            // 네이버 사용자 정보 요청
+            JSONObject userProfile = NaverLoginAPI.handleUserProfile(accessToken);
+
+            // 사용자 id 가져오기
+            String naverId = userProfile.getString("id");
+
+            // DAO 메소드 호출로 id 값만 DB에 저장
+            memberDAO.insertNaverMember(naverId);
+
+        } catch (Exception e) {
+            System.out.println("네이버 회원 정보 저장 중 오류 발생: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     public void insertMember(HttpServletRequest request) throws ServletException, IOException {
         // 새로운 경로 설정: images/member/userProfiles 디렉토리
@@ -74,13 +91,11 @@ public class MemberService {
         // 로그로 확인
         String id = multipartRequest.getParameter("id");
         String profileFileName = multipartRequest.getFilesystemName("profileFile");
-        
-        // id와 profile 값 확인
-        System.out.println("id: " + id);
+
 
         // 회원 정보 처리
-        MemberVO vo = new MemberVO(
-            id,
+        MemberVO vo = new MemberVO( 
+        	id, 
             multipartRequest.getParameter("name"),
             multipartRequest.getParameter("nickname"),
             multipartRequest.getParameter("phone"),

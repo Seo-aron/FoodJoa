@@ -14,48 +14,60 @@ import org.json.JSONObject;
 public class NaverLoginAPI {
 
 	public static void handleNaverLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	    String code = request.getParameter("code");
+	    String state = request.getParameter("state");
 
-		String code = request.getParameter("code");
-		String state = request.getParameter("state");
+	    // 인증 코드가 있으면 액세스 토큰 요청
+	    if (code != null) {
+	    	String clientId = "XhLz64aZjKhLJHJUdga6"; // 발급받은 Client ID
+	        String clientSecret = "SIITGJFkea"; // 발급받은 Client Secre
 
-		// 인증 코드가 있으면 액세스 토큰 요청
-		if (code != null) {
-			String clientId = "XhLz64aZjKhLJHJUdga6"; // 발급받은 Client ID
-			String clientSecret = "SIITGJFkea"; // 발급받은 Client Secret
+	        String apiURL = "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&" 
+	                + "client_id=" + clientId 
+	                + "&client_secret=" + clientSecret 
+	                + "&code=" + code 
+	                + "&state=" + state;
 
-			String apiURL = "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&" + "client_id="
-					+ clientId + "&client_secret=" + clientSecret + "&code=" + code + "&state=" + state;
+	        // URL 연결 및 응답 코드 확인
+	        URL url = new URL(apiURL);
+	        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+	        con.setRequestMethod("GET");
 
-			// URL 연결 및 응답 코드 확인
-			URL url = new URL(apiURL);
-			HttpURLConnection con = (HttpURLConnection) url.openConnection();
-			con.setRequestMethod("GET");
+	        int responseCode = con.getResponseCode();
+	        BufferedReader br = (responseCode == 200) ?
+	                new BufferedReader(new InputStreamReader(con.getInputStream())) :
+	                new BufferedReader(new InputStreamReader(con.getErrorStream()));
 
-			int responseCode = con.getResponseCode();
-			BufferedReader br = (responseCode == 200) ? 
-					new BufferedReader(new InputStreamReader(con.getInputStream())) : 
-					new BufferedReader(new InputStreamReader(con.getErrorStream()));
+	        String inputLine;
+	        StringBuilder responseContent = new StringBuilder();
+	        while ((inputLine = br.readLine()) != null) {
+	            responseContent.append(inputLine);
+	        }
+	        br.close();
 
-			String inputLine;
-			StringBuffer responseContent = new StringBuffer();
-			while ((inputLine = br.readLine()) != null) {
-				responseContent.append(inputLine);
-			}
-			br.close();
+	        JSONObject jsonResponse = new JSONObject(responseContent.toString());
+	        String accessToken = jsonResponse.getString("access_token");
 
-			JSONObject jsonResponse = new JSONObject(responseContent.toString());
-
-			String accessToken = jsonResponse.getString("access_token");
-			handleUserProfile(accessToken);
-			// Access Token 저장 후, 사용자 프로필 정보 요청
-		}
-		else {
-			response.getWriter().write("인증 실패!");
-		}
+	        // 네이버 사용자 정보 요청
+	        try {
+	            JSONObject userProfile = NaverLoginAPI.handleUserProfile(accessToken);
+	            
+	            // id 값을 추출하고 콘솔에 출력
+	            String naverId = userProfile.getString("id");
+	            System.out.println("네이버 아이디: " + naverId);  // 콘솔에 아이디 출력
+	            
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	            response.getWriter().write("프로필 정보를 가져오는 데 실패했습니다.");
+	        }
+	    } else {
+	        response.getWriter().write("인증 실패!");
+	    }
 	}
 
+
 	// 사용자 프로필 정보 요청
-	public static void handleUserProfile(String accessToken) throws IOException {
+	public static JSONObject handleUserProfile(String accessToken) throws IOException {
 
 		// 인증 헤더 생성
 		String header = "Bearer " + accessToken;
@@ -78,8 +90,8 @@ public class NaverLoginAPI {
 		}
 		br.close();
 
-		// 사용자 프로필 정보 파싱
-		JSONObject userProfile = new JSONObject(responseContent.toString()).getJSONObject("response");
-		System.out.println(userProfile);
+		// JSON 객체로 사용자 프로필 정보 반환
+        return new JSONObject(responseContent.toString()).getJSONObject("response");
+
 	}
 }

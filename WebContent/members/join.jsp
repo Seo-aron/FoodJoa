@@ -34,9 +34,10 @@
 </style>
 </head>
 <body>
-	<div class="container">
+	<div id="container">
+
 		<!-- 회원가입 폼 -->
-		<form class="login" action="<%= request.getContextPath() %>/Member/joinPro.me" method="post" enctype="multipart/form-data">
+		<form action="joinPro.me" class="login" action="<%= request.getContextPath() %>/Member/joinPro.me" method="post" enctype="multipart/form-data">
 			<h2 class="loginHeading">푸드조아 회원 가입</h2>
 
 			<div class="add">

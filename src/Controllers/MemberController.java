@@ -55,8 +55,6 @@ public class MemberController extends HttpServlet {
         String action = request.getPathInfo();
         System.out.println("action : " + action);      
       
-        String nextPage = null;
-
         switch (action) {
             case "/join.me": openMemberJoinView(request, response); break;
             case "/joinPro.me": processMemberJoin(request, response); break; 
@@ -98,16 +96,14 @@ public class MemberController extends HttpServlet {
                 nextPage = "/main.jsp";
         }
 
-        if (nextPage != null) {
-            RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
-            dispatcher.forward(request, response);
-        }
+        RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
+        dispatcher.forward(request, response);
     }
     
-	private void openMemberJoinView(HttpServletRequest request, HttpServletResponse response)
+    private void openMemberJoinView(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
     	
-        request.setAttribute("center", "/members/join.jsp");
+        request.setAttribute("center", "members/snsjoin.jsp");
         
         nextPage = "/main.jsp";
     }
@@ -126,13 +122,22 @@ public class MemberController extends HttpServlet {
     }
     
     private void processNaverLogin(HttpServletRequest request, HttpServletResponse response) 
-    		throws ServletException, IOException  {
-    	
-    	// 네이버 인증 후 콜백 처리
-		/* handleNaverLogin(request, response); */
-    	NaverLoginAPI.handleNaverLogin(request, response);
-    	
-    	// 네이버 로그인 처리 이후 로직 작성
+            throws ServletException, IOException  {
+
+        // 네이버 인증 후 콜백 처리
+        NaverLoginAPI.handleNaverLogin(request, response);
+        
+        // 네이버 로그인 후, 세션에 저장된 네이버 아이디를 가져옴
+        String naverId = (String) request.getSession().getAttribute("naverId");
+        
+        // 네이버 아이디가 존재하면 추가 정보 입력 페이지로 리다이렉트
+        if (naverId != null) {
+            // 추가 정보 입력 페이지로 리다이렉트
+            response.sendRedirect(request.getContextPath() + "/Member/joinPom.me");
+        } else {
+            // 네이버 로그인 실패 시, 다시 네이버 로그인 페이지로 리다이렉트
+            response.sendRedirect(request.getContextPath() + "/Member/join.me");
+        }
     }
     
     private void processKakaoLogin(HttpServletRequest request, HttpServletResponse response) 
@@ -147,7 +152,10 @@ public class MemberController extends HttpServlet {
     	 // 회원 가입 처리
         memberService.insertMember(request);
         
-        request.setAttribute("center", "/includes/center.jsp");
+        request.setAttribute("center", "join.jsp");
+        
+        // 회원 가입 처리
+        memberService.insertMember(request);
         
         nextPage = "/main.jsp";
     }
@@ -155,7 +163,7 @@ public class MemberController extends HttpServlet {
     private void openLoginView(HttpServletRequest request, HttpServletResponse response)
     		throws ServletException, IOException {
     	
-        request.setAttribute("center", "/members/login.jsp");
+        request.setAttribute("center", "members/login.jsp");
         
         nextPage = "/login.jsp";
     }
@@ -163,7 +171,7 @@ public class MemberController extends HttpServlet {
     private void processMemberLogin(HttpServletRequest request, HttpServletResponse response)
     		throws ServletException, IOException {
 
-        request.setAttribute("center", "/includes/center.jsp");
+        request.setAttribute("center", "includes/center.jsp");
         
         nextPage = "/login.jsp";
     }
