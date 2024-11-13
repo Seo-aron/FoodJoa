@@ -41,7 +41,7 @@ public class DBConnector {
 	/**
 	 * 사용이 끝난 자원 일괄적으로 할당 해제
 	 */
-	public void Release() {
+	public void release() {
 		
 		try {
 			if (resultSet != null) resultSet.close();
@@ -56,7 +56,7 @@ public class DBConnector {
 	
 	private void prepareQuery(String sql, Object... params) {
 		
-		Release();
+		release();
 		
 		try {
 			connection = dataSource.getConnection();

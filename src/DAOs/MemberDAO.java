@@ -39,7 +39,7 @@ public class MemberDAO {
             e.printStackTrace();
             System.out.println("selectMembers() SQLException 발생");
         } finally {
-            dbConnector.Release();  // 자원 해제
+            dbConnector.release();  // 자원 해제
         }
         return members;
     }
@@ -60,7 +60,7 @@ public class MemberDAO {
             System.out.println("isExistMemberId 메소드에서 예외 발생");
             e.printStackTrace();
         } finally {
-            dbConnector.Release();
+            dbConnector.release();
         }
         return result;
     }
@@ -80,7 +80,7 @@ public class MemberDAO {
             System.out.println("네이버 아이디 등록 중 오류 발생: " + e.getMessage());
             e.printStackTrace();
         } finally {
-            dbConnector.Release();
+            dbConnector.release();
         }
     }
 
@@ -121,7 +121,7 @@ public class MemberDAO {
             System.out.println("회원 등록 중 오류 발생: " + e.getMessage());
             e.printStackTrace();
         } finally {
-            dbConnector.Release();
+            dbConnector.release();
         }
     }
 
@@ -146,7 +146,7 @@ public class MemberDAO {
             System.out.println("MemberDAO의 userCheck 메소드에서 오류");
             e.printStackTrace();
         } finally {
-            dbConnector.Release();
+            dbConnector.release();
         }
         return check;
     }

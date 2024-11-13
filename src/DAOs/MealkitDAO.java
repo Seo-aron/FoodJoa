@@ -48,7 +48,7 @@ public class MealkitDAO {
 			e.printStackTrace();
 		}
 		
-		dbConnector.Release();
+		dbConnector.release();
 		
 		return mealkits;
 	}
@@ -84,7 +84,7 @@ public class MealkitDAO {
 			e.printStackTrace();
 		}
 		
-		dbConnector.Release();
+		dbConnector.release();
 		
 		return mealkit;
 	}
