@@ -25,7 +25,35 @@
 			width: 1200px;
 			margin: 0 auto;
 		}
+		
+		#thumbnail {
+			width: 64px;
+			height: 64px;
+		}
+		
+		#pictureFiles {
+		    color: transparent;
+		    width: 128px;
+		    height: 128px;
 
+			background-image: url('../images/recipe/file_select_button.png');
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: cover;
+			
+			cursor: pointer;
+		}
+		
+		#pictureFiles::-webkit-file-upload-button {
+		    visibility: hidden;
+		}
+		
+		.preview_image {
+			width: 128px;
+			height: 128px;
+			border: 1px solid black;
+		}
+        
 		li {
 			list-style-type: none;
 			margin-left: 0;
@@ -36,14 +64,14 @@
 		}
 		
 		.star-button {
-		  background-image: url('../images/recipe/full_star.png');
-		  background-repeat: no-repeat;
-		  background-position: center;
-		  background-size: cover;
-		  width: 32px;  /* 이미지 크기에 맞게 조정 */
-		  height: 32px;  /* 이미지 크기에 맞게 조정 */
-		  border: none;  /* 필요에 따라 테두리 제거 */
-		  cursor: pointer;
+			background-image: url('../images/recipe/full_star.png');
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: cover;
+			width: 32px;
+			height: 32px;
+			border: none;
+			cursor: pointer;
 		}
 		
 		#contents {
@@ -55,11 +83,12 @@
 
 <body>
 	<div id="container">
-		<form action="#" method="post" enctype="multipart/form-data">
+		<form action="<%= contextPath %>/Recipe/reviewWrite" method="post" enctype="multipart/form-data">
 			<table width="100%" border="1">
 				<tr>
 					<td>
-						<img src="<%= contextPath %>/images/recipe/thumbnails/<%= recipe.getNo() %>/<%= recipe.getThumbnail() %>">
+						<img id="thumbnail"
+							src="<%= contextPath %>/images/recipe/thumbnails/<%= recipe.getNo() %>/<%= recipe.getThumbnail() %>">
 						<%= recipe.getTitle() %>
 					</td>
 				</tr>
@@ -78,8 +107,11 @@
 				<tr>
 					<td>
 						리뷰 사진 업로드<br>
-						<input type="file" name="pictureFiles"
-							accept=".jpg,.jpeg,.png" multiple onchange="setPicturesString(this.files)">
+						<ul>
+						</ul>
+    					<div id="imagePreview"></div>
+   						<input type="file" id="pictureFiles" name="pictureFiles" 
+							accept=".jpg,.jpeg,.png" multiple onchange="handleFileSelect(this.files)">
 						<input type="hidden" id="pictures" name="pictures">
 					</td>
 				</tr>
@@ -87,7 +119,7 @@
 					<td>
 						<textarea id="contents" name="contents"></textarea>
 					</td>
-				</tr>				
+				</tr>
 				<tr>
 					<td>
 						<input type="submit" value="리뷰 쓰기">
@@ -112,18 +144,48 @@
 		    }
 		    return result;
 		}
-		
+
+        function handleFileSelect(files) {
+            const imagePreview = document.getElementById('imagePreview');
+            
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    
+                    reader.readAsDataURL(file);
+                    
+                    reader.onload = function(e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        
+                        img.dataset.filename = file.name;
+                        img.classList.add('preview_image');
+                        
+                        img.addEventListener('click', function() {
+                            imagePreview.removeChild(img);
+                            //document.getElementById('pictureFiles').value = '';
+                        });
+                        
+                        img.style.cursor = 'pointer';
+                        
+                        imagePreview.appendChild(img);
+                    }
+                }
+            });
+            
+            setPicturesString(files);
+            
+            //document.getElementById('pictureFiles').value = '';
+        }
+        
 		function setPicturesString(files) {
 			let strings = [];
 			
 			for (let i = 0; i < files.length; i++) {
-				console.log("File name: " + files[i].name);
-		        console.log("File size: " + files[i].size + " bytes");
 		        strings.push(files[i].name);
 		    }
 			
 			let pictures = combineStrings(strings);
-			console.log("pictures : " + pictures);
 			
 			document.getElementsByName('pictures')[0].value = pictures;
 		}

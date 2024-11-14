@@ -3,6 +3,7 @@ package Services;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 
@@ -132,5 +133,23 @@ public class RecipeService {
 		String id = "admin";
 	
 		return recipeDAO.isExistRecipeReview(id, request.getParameter("recipe_no"));
+	}
+	
+	public int processReviewWrite(HttpServletRequest request) throws ServletException, IOException {
+		
+		ServletContext application = request.getServletContext();
+		
+		String path = application.getRealPath("/images/");
+		int maxSize = 1024 * 1024 * 1024;
+		
+		MultipartRequest multipartRequest = new MultipartRequest(request, path + "temp/", maxSize, "UTF-8",
+				new DefaultFileRenamePolicy());
+
+		String fileName = multipartRequest.getOriginalFileName("file");
+		System.out.println("fileName : " + fileName);
+		
+		int result = 0;
+		
+		return result;
 	}
 }

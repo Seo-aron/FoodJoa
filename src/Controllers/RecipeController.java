@@ -65,6 +65,7 @@ public class RecipeController extends HttpServlet {
 		case "/writePro": processRecipeWrite(request, response); break;
 		case "/wishlist": processRecipeWishlist(request, response); return;
 		case "/review": if (openRecipeReviewView(request, response)) return ; break;
+		case "/reviewWrite": processReviewWrite(request, response); return;
 
 		default:
 		}
@@ -162,5 +163,14 @@ public class RecipeController extends HttpServlet {
 		}
 		
 		return result;
+	}
+	
+	private void processReviewWrite(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		recipeService.processReviewWrite(request);
+		
+		
+		//openRecipeReadView(request, response);
 	}
 }
