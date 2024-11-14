@@ -65,42 +65,25 @@ public class MemberDAO {
         return result;
     }
 
-    public void insertNaverMember(String naverId) {
+    // 네이버 아이디 저장
+    public void insertNaverMember(String naverId) throws SQLException {
         String sql = "INSERT INTO member (id) VALUES (?)";
-
         try {
             int result = dbConnector.executeUpdate(sql, naverId);
-
             if (result > 0) {
                 System.out.println("네이버 아이디가 성공적으로 등록되었습니다.");
             } else {
                 System.out.println("네이버 아이디 등록에 실패했습니다.");
             }
-        } catch (Exception e) {
-            System.out.println("네이버 아이디 등록 중 오류 발생: " + e.getMessage());
-            e.printStackTrace();
         } finally {
             dbConnector.Release();
         }
     }
 
-
-    // 회원 등록
-    public void insertMember(MemberVO vo) {
-    	// 네이버 아이디를 기존 id 필드에 저장
-    	String sql = "INSERT INTO member(id, name, nickname, phone, address, profile, join_date) "
-    	            + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-
-
+    // 회원가입 처리 (추가 정보 포함)
+    public void insertMember(MemberVO vo) throws SQLException {
+        String sql = "INSERT INTO member (id, name, nickname, phone, address, profile, join_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
-            // 값 확인
-            System.out.println("id: " + vo.getId());
-            System.out.println("name: " + vo.getName());
-            System.out.println("nickname: " + vo.getNickname());
-            System.out.println("phone: " + vo.getPhone());
-            System.out.println("address: " + vo.getAddress());
-            System.out.println("profile: " + vo.getProfile());
-
             Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
             int result = dbConnector.executeUpdate(sql, 
                 vo.getId(), 
@@ -111,15 +94,11 @@ public class MemberDAO {
                 vo.getProfile(), 
                 currentTimestamp
             );
-
             if (result > 0) {
                 System.out.println("회원이 성공적으로 등록되었습니다.");
             } else {
                 System.out.println("회원 등록에 실패했습니다.");
             }
-        } catch (Exception e) {
-            System.out.println("회원 등록 중 오류 발생: " + e.getMessage());
-            e.printStackTrace();
         } finally {
             dbConnector.Release();
         }

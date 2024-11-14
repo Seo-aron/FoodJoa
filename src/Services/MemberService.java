@@ -2,10 +2,12 @@ package Services;
  
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
@@ -26,88 +28,118 @@ public class MemberService {
         memberDAO = new MemberDAO();
     }
 	
-	private synchronized void moveProfile(String path, String id, String fileName) throws IOException {
-		
-	    if (fileName == null || fileName.isEmpty()) return;
+    private void moveProfile(String path, String id, String profileFileName) {
+        if (profileFileName != null) {
+            File oldFile = new File(path + "temp/" + profileFileName);
+            File newFile = new File(path + profileFileName);  // 최종 위치 (userProfiles/ID_파일명)
 
-	    synchronized (this) {
-	        File srcFile = new File(path + "\\temp\\" + fileName);
-	        File destDir = new File(path + "\\member\\userProfiles\\" + id);
-
-	        if (!destDir.exists()) {
-	            destDir.mkdirs();
-	        }
-
-	        File destFile = new File(destDir, fileName);
-	        if (destFile.exists()) {
-	            System.out.println("File already exists: " + destFile.getAbsolutePath());
-	        } 
-	        else {
-	            FileUtils.moveToDirectory(srcFile, destDir, true);
-	        }
-	    }
-	}
+            if (!oldFile.exists()) return;
+            
+            // 새 위치로 파일 이동
+            oldFile.renameTo(newFile);
+        }
+    }
 
     public boolean checkMemberId(HttpServletRequest request) {
         String id = request.getParameter("id");
         return memberDAO.isExistMemberId(id);
     }
     
-    public void serviceInsertNaverMember(HttpServletRequest request) {
+    public  String serviceInsertNaverMember(HttpServletRequest request, HttpServletResponse response)throws IOException {
+    	
+    	String naverId = null;
         try {
-            // 액세스 토큰 추출
-            String accessToken = request.getParameter("accessToken");
-
-            // 네이버 사용자 정보 요청
-            JSONObject userProfile = NaverLoginAPI.handleUserProfile(accessToken);
-
-            // 사용자 id 가져오기
-            String naverId = userProfile.getString("id");
-
+        	
+        	   // 네이버 인증 후 콜백 처리
+        	 naverId =  NaverLoginAPI.handleNaverLogin(request, response);
+//        	
+//	            System.out.println("네이버 아이디: " + naverId);  // 콘솔에 아이디 출력
+//
+//	            request.getSession().setAttribute("userId", naverId);
+	            
+	            
+	            
+//            // 액세스 토큰 추출
+//            String accessToken = request.getParameter("accessToken");
+//
+//            // 네이버 사용자 정보 요청
+//            JSONObject userProfile = NaverLoginAPI.handleUserProfile(accessToken);
+//            
+//            System.out.println(userProfile);
+//       
+//            // 사용자 id 가져오기
+//            String naverId = userProfile.getString("id");
+           
             // DAO 메소드 호출로 id 값만 DB에 저장
-            memberDAO.insertNaverMember(naverId);
-
+             // memberDAO.insertNaverMember(vo);
+           
         } catch (Exception e) {
             System.out.println("네이버 회원 정보 저장 중 오류 발생: " + e.getMessage());
             e.printStackTrace();
         }
+        return naverId;
     }
 
     public void insertMember(HttpServletRequest request) throws ServletException, IOException {
-        // 새로운 경로 설정: images/member/userProfiles 디렉토리
-		String path = request.getServletContext().getRealPath("/images/");
+        // 이미지 업로드 디렉토리 설정
+        String path = request.getServletContext().getRealPath("/images/member/userProfiles/");
         
-        // 디렉토리 확인 후 없으면 생성
+        // 디렉토리 존재 확인 후 없으면 생성
         File dir = new File(path);
         if (!dir.exists()) {
-            dir.mkdirs(); // 디렉토리 생성
+            dir.mkdirs();  // 디렉토리 생성
         }
         
-        // 파일 업로드 처리
-        int maxSize = 1024 * 1024 * 1024; // 최대 파일 크기 설정 (1GB)
-		MultipartRequest multipartRequest = new MultipartRequest(request, path + "temp/", maxSize, "UTF-8",
-				new DefaultFileRenamePolicy());
-        
-        // 로그로 확인
-        String id = multipartRequest.getParameter("id");
-        String profileFileName = multipartRequest.getFilesystemName("profileFile");
-
-
-        // 회원 정보 처리
-        MemberVO vo = new MemberVO( 
-        	id, 
-            multipartRequest.getParameter("name"),
-            multipartRequest.getParameter("nickname"),
-            multipartRequest.getParameter("phone"),
-            multipartRequest.getParameter("address"),
-            profileFileName
+        // 최대 파일 크기 1GB로 설정
+        int maxSize = 1024 * 1024 * 1024;  // 1GB
+        MultipartRequest multipartRequest = new MultipartRequest(
+                request, 
+                path, 
+                maxSize, 
+                "UTF-8", 
+                new DefaultFileRenamePolicy()
         );
+
+        // 로그로 파일 정보 확인
+//       String userId = (String)request.getSession(true).getAttribute("userId");
         
+        
+        
+//        
+        String profileFileName = multipartRequest.getFilesystemName("profileFile");
+       String userId = multipartRequest.getParameter("userId");
+//        
+//        // 콘솔에 받아온 정보 출력
+        System.out.println("ID: " + multipartRequest.getParameter("userId"));
+
+
+        System.out.println("Name: " + multipartRequest.getParameter("name"));
+        System.out.println("Nickname: " + multipartRequest.getParameter("nickname"));
+        System.out.println("Phone: " + multipartRequest.getParameter("phone"));
+        System.out.println("Address: " + multipartRequest.getParameter("address"));
+        System.out.println("Profile File Name: " + profileFileName);
+
+        // 회원 정보 생성 (프로필 파일명 포함)
+        MemberVO vo = new MemberVO(
+        		userId, 
+                multipartRequest.getParameter("name"),
+                multipartRequest.getParameter("nickname"),
+                multipartRequest.getParameter("phone"),
+                multipartRequest.getParameter("address"),
+                profileFileName
+        );
+
         // 회원 DB에 정보 저장
-        memberDAO.insertMember(vo);
-        
-        moveProfile(path, id, profileFileName);
+        try {
+            memberDAO.insertMember(vo);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+//
+//        // 프로필 이미지 이동
+//        moveProfile(path, userId, profileFileName);
     }
+
     
     
     public int serviceUserCheck(HttpServletRequest request) {

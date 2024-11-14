@@ -11,12 +11,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import Services.MemberService;
+
 public class NaverLoginAPI {
 
-	public static void handleNaverLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public static String handleNaverLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
 	    String code = request.getParameter("code");
 	    String state = request.getParameter("state");
-
+	    String naverId = "";
+	    
+	    
 	    // 인증 코드가 있으면 액세스 토큰 요청
 	    if (code != null) {
 	    	String clientId = "XhLz64aZjKhLJHJUdga6"; // 발급받은 Client ID
@@ -50,11 +54,17 @@ public class NaverLoginAPI {
 
 	        // 네이버 사용자 정보 요청
 	        try {
+	        
 	            JSONObject userProfile = NaverLoginAPI.handleUserProfile(accessToken);
 	            
-	            // id 값을 추출하고 콘솔에 출력
-	            String naverId = userProfile.getString("id");
-	            System.out.println("네이버 아이디: " + naverId);  // 콘솔에 아이디 출력
+	            // id 값을 추출하고 세션에 저장
+	            naverId = userProfile.getString("id");
+	            System.out.println(naverId);
+
+	            request.getSession().setAttribute("naverId", naverId);
+	            
+	            
+	            
 	            
 	        } catch (IOException e) {
 	            e.printStackTrace();
@@ -63,6 +73,7 @@ public class NaverLoginAPI {
 	    } else {
 	        response.getWriter().write("인증 실패!");
 	    }
+	    return naverId; //네이버 아이디 리턴  (MemberService로 )
 	}
 
 
@@ -92,6 +103,6 @@ public class NaverLoginAPI {
 
 		// JSON 객체로 사용자 프로필 정보 반환
         return new JSONObject(responseContent.toString()).getJSONObject("response");
-
+        
 	}
 }

@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import Common.NaverLoginAPI;
 import Services.MemberService;
+import VOs.MemberVO;
 @WebServlet("/Member/*")
 @MultipartConfig(location = "/tmp")
 public class MemberController extends HttpServlet {
@@ -57,10 +58,25 @@ public class MemberController extends HttpServlet {
       
         switch (action) {
             case "/join.me": openMemberJoinView(request, response); break;
-            case "/joinPro.me": processMemberJoin(request, response); break; 
+           case "/joinProGo.me": processMemberJoin(request, response); break; 
+            case "/joinPro.me": 
+            	
+            	//request객체에 "members/join.jsp" 중앙화면 뷰 주소 바인딩
+				request.setAttribute("center", "members/join.jsp");		
+				nextPage = "/main.jsp";
+				break;
             case "/joinIdCheck.me": checkMemberId(request, response); return;                
-            case "/naverlogin.me" : processNaverLogin(request, response); return;
-            case "/kakaologin.me" : return;
+            case "/naverlogin.me" : 
+            	String naverId = processNaverLogin(request, response); 
+            	if (naverId != null) {
+            		request.getSession().setAttribute("userId", naverId);
+            		 // 추가 정보 입력 페이지로 리다이렉트
+                    response.sendRedirect(request.getContextPath() + "/Member/joinPro.me");
+
+				}
+            
+            return;
+            case "/kakaologin.me" : processKakaoLogin(request, response); return;
             case "/login.me": openLoginView(request, response); break;
             case "/loginPro.me": processMemberLogin(request, response); break;
             
@@ -71,7 +87,7 @@ public class MemberController extends HttpServlet {
 				//request객체에 "members/join.jsp" 중앙화면 뷰 주소 바인딩
 				//request.setAttribute("center", center);
 				
-				nextPage = "/Main.jsp";
+				nextPage = "/main.jsp";
 				 
 				break;
 				
@@ -106,6 +122,7 @@ public class MemberController extends HttpServlet {
         request.setAttribute("center", "members/snsjoin.jsp");
         
         nextPage = "/main.jsp";
+
     }
 
     // 아이디 중복 체크 처리
@@ -121,23 +138,28 @@ public class MemberController extends HttpServlet {
         out.close();
     }
     
-    private void processNaverLogin(HttpServletRequest request, HttpServletResponse response) 
+    private String processNaverLogin(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException  {
 
+    	
+    	
         // 네이버 인증 후 콜백 처리
-        NaverLoginAPI.handleNaverLogin(request, response);
-        
-        // 네이버 로그인 후, 세션에 저장된 네이버 아이디를 가져옴
-        String naverId = (String) request.getSession().getAttribute("naverId");
-        
         // 네이버 아이디가 존재하면 추가 정보 입력 페이지로 리다이렉트
-        if (naverId != null) {
-            // 추가 정보 입력 페이지로 리다이렉트
-            response.sendRedirect(request.getContextPath() + "/Member/joinPom.me");
-        } else {
+        // 네이버 아이디를 DB에 저장
+       String naverId  = memberService.serviceInsertNaverMember(request,response);
+        
+       
+
+        // 네이버 아이디가 세션에 저장되지 않았거나 빈 값일 경우 처리
+        if (naverId == null || naverId.trim().isEmpty()) {
             // 네이버 로그인 실패 시, 다시 네이버 로그인 페이지로 리다이렉트
             response.sendRedirect(request.getContextPath() + "/Member/join.me");
+            return null;
         }
+
+       return naverId;
+
+       
     }
     
     private void processKakaoLogin(HttpServletRequest request, HttpServletResponse response) 
@@ -147,18 +169,19 @@ public class MemberController extends HttpServlet {
     }
     
     private void processMemberJoin(HttpServletRequest request, HttpServletResponse response)
-    		throws ServletException, IOException {
-    	
-    	 // 회원 가입 처리
-        memberService.insertMember(request);
+            throws ServletException, IOException {
         
-        request.setAttribute("center", "join.jsp");
-        
+        System.out.println("processMemberJoin 호출됨");
+
         // 회원 가입 처리
         memberService.insertMember(request);
         
-        nextPage = "/main.jsp";
+      
+        
+        // 가입 후 메인 페이지로 리다이렉트
+        response.sendRedirect(request.getContextPath() + "/main.jsp");
     }
+
     
     private void openLoginView(HttpServletRequest request, HttpServletResponse response)
     		throws ServletException, IOException {

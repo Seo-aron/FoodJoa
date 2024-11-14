@@ -18,7 +18,7 @@ String contextPath = request.getContextPath();
 </style>
 </head>
 <body>
-	<h2> 찜 목록 </h2>
+	<h2> Wish List </h2>
 	
 	<div class="container">
 	
