@@ -1,16 +1,22 @@
 package DAOs;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+
 import java.util.ArrayList;
+
 import Common.DBConnector;
 import VOs.MemberVO;
 
+
 public class MemberDAO {
 
+	private static final String URL = "jdbc:mysql://localhost:3306/my_database";
+	private static final String USER = "root";
+	private static final String PASSWORD = "password123";
+	
+	
     private DBConnector dbConnector;
 
     public MemberDAO() {
@@ -44,6 +50,14 @@ public class MemberDAO {
             dbConnector.Release();  // 자원 해제
         }
         return members;
+    }
+    
+    public MemberVO selectMember(String id) {
+    	
+    	MemberVO vo = new MemberVO();
+    	
+    	return vo;
+    	
     }
 
     // ID 중복 확인
@@ -126,7 +140,7 @@ public class MemberDAO {
     }
 
     // 사용자 확인 (로그인용)
-    public int userCheck(String login_id, String login_name) {
+    public int checkMember(String login_id, String login_name) {
         int check = -1;
         String sql = "SELECT * FROM member WHERE id=?";
         ResultSet resultSet = null;
@@ -151,16 +165,54 @@ public class MemberDAO {
         return check;
     }
 
-    // 회원정보 수정
-    public String profileUpdate(String id) {
+    //개인정보수정 - id변경 불가
+    public int updateMember(MemberVO member) {
+    	
+    	int result = -1;
+    	
+    	// 1. memberVO를 통해 전달 받은 멤버가 DB에 존재하는지 확인
+        String checkSql = "SELECT COUNT(*) FROM member WHERE id = ?";
+        
+        ResultSet resultSet = dbConnector.executeQuery(checkSql, member.getId());
+        
         try {
-            // 회원정보 수정 로직을 여기에 추가
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("profileUpdate 메소드에서 오류 발생");
-        } finally {
-            dbConnector.Release();
-        }
-        return id;
+			if (resultSet.next()) {
+				// DB에 멤버가 존재 할 때
+				// 2. 존재하는 멤버의 DB정보를 수정
+				String updateSql = "UPDATE member SET profile = ?, name = ?, nickname = ?, phone = ?, address = ? WHERE id = ?";
+		        
+				result = dbConnector.executeUpdate(updateSql,
+						member.getProfile(),
+						member.getName(),
+						member.getNickname(),
+						member.getPhone(),
+						member.getAddress(),
+						member.getId());
+				
+				if (result == 1) {
+					// 정보 수정이 성공적으로 실행 했을 때
+				}
+				else {
+					// 정보 수정에 실패 했을 때
+				}
+			}
+			else {
+				result = -1;
+			}
+		}
+        catch (SQLException e) {
+			e.printStackTrace();
+			result = -1;
+		}
+        
+        dbConnector.Release();
+        
+        return result;
+    }
+    
+    //프로필 사진 불러오기
+    public String viewProfile(String profile){
+    	
+		return profile;
     }
 }

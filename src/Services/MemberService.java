@@ -3,12 +3,9 @@ package Services;
 import java.io.File;
 import java.io.IOException;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import org.apache.commons.io.FileUtils;
 
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
@@ -44,6 +41,16 @@ public class MemberService {
 	        //    FileUtils.moveToDirectory(srcFile, destDir, true);
 	        }
 	    }
+	}
+	
+	public MemberVO getMember(HttpServletRequest request) throws ServletException, IOException  {
+		
+		//HttpSession session = request.getSession();
+		
+		//String loginedId = (String) session.getAttribute("id");
+		
+		return memberDAO.selectMember(request.getParameter("id"));
+		//return memberDAO.selectMember(loginedId);
 	}
 
     public boolean checkMemberId(HttpServletRequest request) {
@@ -101,14 +108,11 @@ public class MemberService {
         HttpSession session = request.getSession();
         session.setAttribute("id", login_id);
 
-        return memberDAO.userCheck(login_id, login_name);
+        return memberDAO.checkMember(login_id, login_name);
     }
 
-    public String profileupdate(HttpServletRequest request) {
+    public String profileUpdate(HttpServletRequest request) {
        
         return null;
-    }
-    
-
-	
+    }	
 }

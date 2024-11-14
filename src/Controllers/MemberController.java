@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import Common.NaverLoginAPI;
 import Services.MemberService;
+import VOs.MemberVO;
 @WebServlet("/Member/*")
 @MultipartConfig(location = "/tmp")
 public class MemberController extends HttpServlet {
@@ -68,9 +69,10 @@ public class MemberController extends HttpServlet {
             case "/getUserProfile.me":
             	NaverLoginAPI.handleNaverLogin(request, response);
                 return;
-            case "/getPro.me": getProfile(request, response); break;
-            case "/uploadPro.me": uploadProfile(request, response); break;
-            case "/updatePro.me": modifyProfile(request, response); break;
+            case "/loadPro.me" : loadProfile(request, response); break;
+            	//사용자 프로필 사진 요청 
+            	
+            case "/updatePro.me" : updateProfile(request, response); break; 
 
             default:
                 nextPage = "/main.jsp";
@@ -81,16 +83,21 @@ public class MemberController extends HttpServlet {
             dispatcher.forward(request, response);
         }
     }
- 
-
-	private void getProfile(HttpServletRequest request, HttpServletResponse response) {
-		// TODO Auto-generated method stub
+    
+	private void loadProfile(HttpServletRequest request, HttpServletResponse response) {
+		
+		nextPage = "mypagemain.jsp";
 		
 	}
 
-	private void uploadProfile(HttpServletRequest request, HttpServletResponse response) {
-		// TODO Auto-generated method stub
+	private void updateProfile(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException{
 		
+		MemberVO vo = memberService.getMember(request);
+		
+		request.setAttribute("vO", vo);
+		
+		nextPage = "/members/mypagemain.jsp";
 	}
 
 	private void openMemberJoinView(HttpServletRequest request, HttpServletResponse response)

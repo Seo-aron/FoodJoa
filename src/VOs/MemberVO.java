@@ -12,6 +12,9 @@ public class MemberVO {
 	private String profile;
 	private Timestamp join_date;
 
+	public MemberVO() {
+	}
+	
 	// join_date 없는 생성자
 	public MemberVO(String id, String name, String nickname, String phone, String address, String profile) {
 		this.id = id;
