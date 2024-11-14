@@ -34,6 +34,8 @@
 <body>
 
 	<div id="container">
+		<input type="button" id="newContent" value="글쓰기" 
+			onclick="location.href='<%=contextPath%>/Mealkit/write'"/>
 		<table class="list">
 			<c:set var="i" value="0" />
 			<c:forEach var="mealkit" items="${mealkitList}" varStatus="status">		
@@ -57,10 +59,6 @@
 					</tr>
 			</c:forEach>
 		</table>
-		
-		<input type="button" id="newContent" value="글쓰기" 
-		onclick="location.href='<%=contextPath%>/Mealkit/write'"/>
-		
 	</div>
 
 </body>
