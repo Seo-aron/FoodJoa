@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import Common.NaverLoginAPI;
 import Services.MemberService;
+import VOs.MemberVO;
 @WebServlet("/Member/*")
 @MultipartConfig(location = "/tmp")
 public class MemberController extends HttpServlet {
@@ -65,34 +66,19 @@ public class MemberController extends HttpServlet {
             case "/kakaologin.me" : return;
             case "/login.me": openLoginView(request, response); break;
             case "/loginPro.me": processMemberLogin(request, response); break;
-            
-            case "/profileupdate.me": //정보수정 페이지 요청
-        	   //center = memberService.profileupdate(request);
-				//"members/profileupdate.jsp"
-				
-				//request객체에 "members/join.jsp" 중앙화면 뷰 주소 바인딩
-				//request.setAttribute("center", center);
-				
-				nextPage = "/Main.jsp";
-				 
-				break;
-				
-				
-            case "/viewprofile.me": //프로필 사진 요청
-            //	center = memberService.view
-            	break;
-                
-            case "/mypagemain.me":
-                // 정보 수정 페이지 요청
-                String center = memberService.profileupdate(request);
-                request.setAttribute("center", center);
-                nextPage = "/CarMain.jsp";
-                break;
-
             case "/getUserProfile.me":
                 // 사용자 프로필 정보 요청
             	NaverLoginAPI.handleNaverLogin(request, response);
                 return;
+                
+            case "/loadPro.me" : loadProfile(request, response); break;
+            	//사용자 프로필 사진 요청 
+            	
+            case "/updatePro.me" : updateProfile(request, response); break; 
+            	
+            
+            	
+            
                 
             default:
                 nextPage = "/main.jsp";
@@ -104,6 +90,23 @@ public class MemberController extends HttpServlet {
         }
     }
     
+	private void loadProfile(HttpServletRequest request, HttpServletResponse response) {
+		
+		nextPage = "mypagemain.jsp";
+		
+	}
+
+	private void updateProfile(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException{
+		
+		MemberVO vo = memberService.getMember(request);
+		
+		request.setAttribute("vO", vo);
+		
+		nextPage = "/members/mypagemain.jsp";
+		
+	}
+
 	private void openMemberJoinView(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
     	

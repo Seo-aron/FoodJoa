@@ -1,5 +1,8 @@
 package DAOs;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -7,8 +10,14 @@ import java.util.ArrayList;
 import Common.DBConnector;
 import VOs.MemberVO;
 
+
 public class MemberDAO {
 
+	private static final String URL = "jdbc:mysql://localhost:3306/my_database";
+	private static final String USER = "root";
+	private static final String PASSWORD = "password123";
+	
+	
     private DBConnector dbConnector;
 
     public MemberDAO() {
@@ -42,6 +51,14 @@ public class MemberDAO {
             dbConnector.Release();  // 자원 해제
         }
         return members;
+    }
+    
+    public MemberVO selectMember(String id) {
+    	
+    	MemberVO vo = new MemberVO();
+    	
+    	return vo;
+    	
     }
 
     // ID 중복 확인
@@ -151,22 +168,42 @@ public class MemberDAO {
         return check;
     }
     
-    //회원정보 수정
-    public String profileUpdate(String id){
+    //개인정보수정 - id변경 불가
+    public void profileUpdate(MemberVO member) {
+        String checkSql = "SELECT COUNT(*) FROM member WHERE id = ?";
+        String updateSql = "UPDATE member SET profile = ?, name = ?, nickname = ?, phone = ?, address = ? WHERE id = ?";
+        int updateCount = 0;
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement checkStmt = conn.prepareStatement(checkSql);
+             PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
+
+            // 1. 아이디 존재 여부 확인
+            checkStmt.setString(1, member.getId());
+            ResultSet rs = checkStmt.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                // 아이디가 존재할 경우 업데이트 수행
+                updateStmt.setString(1, member.getProfile());
+                updateStmt.setString(2, member.getName());
+                updateStmt.setString(3, member.getNickname());
+                updateStmt.setString(4, member.getPhone());
+                updateStmt.setString(5, member.getAddress());
+
+                updateCount = updateStmt.executeUpdate();
+                System.out.println("회원 정보가 성공적으로 업데이트되었습니다.");
+            } else {
+                System.out.println("해당 아이디가 존재하지 않습니다.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("profileUpdate 메서드에서 오류 발생: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+     
+    }
     
-    	
-    	try {
-			
-		} catch (Exception e) {
-			// TODO: handle exception
-		}finally{
-			
-		}
-		return id;
-    	
-    };
-    
-    //사진 첨부하기
+    //프로필 사진 불러오기
     public String viewProfile(String profile){
 		return profile;
     	

@@ -45,6 +45,16 @@ public class MemberService {
 	        }
 	    }
 	}
+	
+	public MemberVO getMember(HttpServletRequest request) throws ServletException, IOException  {
+		
+		//HttpSession session = request.getSession();
+		
+		//String loginedId = (String) session.getAttribute("id");
+		
+		return memberDAO.selectMember(request.getParameter("id"));
+		//return memberDAO.selectMember(loginedId);
+	}
 
     public boolean checkMemberId(HttpServletRequest request) {
         String id = request.getParameter("id");
@@ -104,13 +114,10 @@ public class MemberService {
         return memberDAO.userCheck(login_id, login_name);
     }
 
-    public String profileupdate(HttpServletRequest request) {
+    public String profileUpdate(HttpServletRequest request) {
        
         return null;
     }
     
-	//정보수정 사진 추가
-	public void addProfile(HttpServletRequest request){	
-        
-	}
+	
 }

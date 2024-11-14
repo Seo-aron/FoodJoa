@@ -1,3 +1,4 @@
+<%@page import="VOs.MemberVO"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -6,8 +7,15 @@
 <%
 	request.setCharacterEncoding("UTF-8");
 	response.setContentType("text/html; charset=utf-8");
-	
 	String contextPath = request.getContextPath();
+	
+	MemberVO vo = (MemberVO) request.getAttribute("vo");
+	
+	String profile = vo.getProfile();
+	String name = vo.getName();
+	String nickname = vo.getNickname();
+	String phone = vo.getPhone();
+	String address = vo.getAddress();
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -79,7 +87,7 @@
 <div class="form-container">
     <h2>정보 수정</h2>
     <!-- 이미지 미리보기가 표시될 컨테이너 -->
-    <div class="preview-container" id="previewContainer" value=>
+    <div class="preview-container" id="previewContainer" value="">
     </div>
 
     <!-- 파일 선택 버튼 -->

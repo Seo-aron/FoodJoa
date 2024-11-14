@@ -1,3 +1,4 @@
+<%@page import="VOs.MemberVO"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -6,8 +7,13 @@
 <%
 	request.setCharacterEncoding("UTF-8");
 	response.setContentType("text/html; charset=utf-8");
-
+	
 	String contextPath = request.getContextPath();
+	
+	MemberVO vo = (MemberVO) request.getAttribute("vo");
+	
+	//String loginedid = (String) session.getAttribute("id");	
+	String id = "admin";
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -29,7 +35,7 @@
 	<div class="profile-wrapper">
 		<div class="profile-section">
 			<div class="profile-image">
-				<img id="profilePreview" src="path/to/your/profile-image.jpg">
+				${member.profile}
 			</div>
 			<div class="profile-info">
 				<h2>김보노님!</h2>
