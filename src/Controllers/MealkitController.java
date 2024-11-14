@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import Services.MealkitService;
 import VOs.MealkitOrderVO;
+import VOs.MealkitReviewVO;
 import VOs.MealkitVO;
 
 @WebServlet("/Mealkit/*")
@@ -53,14 +54,30 @@ public class MealkitController extends HttpServlet {
 		case "/mypage.pro": processMealkitMyPage(request, response); return;
 		case "/write": openAddMealkit(request, response); break;
 		case "/write.pro": processAddMealkit(request, response); return;
-		case "/reviewwrite": break;
-		case "/reviewwrite.pro": return;
+		case "/reviewwrite": openAddReview(request, response); break;
+		case "/reviewwrite.pro": processAddReview(request, response); return;
 
 		default: break;
 		}
 
 		RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
 		dispatcher.forward(request, response);
+	}
+
+	private void openAddReview(HttpServletRequest request, HttpServletResponse response) {
+		
+		String mealkit_no = request.getParameter("mealkit_no");
+	    
+	    request.setAttribute("mealkit_no", mealkit_no);
+		request.setAttribute("center", "mealkits/reviewWrite.jsp");
+		
+		nextPage = "/main.jsp";
+	}
+
+	private void processAddReview(HttpServletRequest request, HttpServletResponse response) 
+			throws IOException {
+		
+		mealkitService.setWriteReview(request, response);
 	}
 
 	private void processAddMealkit(HttpServletRequest request, HttpServletResponse response) 
@@ -84,8 +101,11 @@ public class MealkitController extends HttpServlet {
 			throws ServletException, IOException {
 
 		MealkitVO mealkitvo = mealkitService.getMealkitInfo(request);
+		ArrayList<MealkitReviewVO> reviewvo = mealkitService.getReviewInfo(request);
 
 		request.setAttribute("mealkitvo", mealkitvo);
+		request.setAttribute("reviewvo", reviewvo);
+		
 		request.setAttribute("center", "mealkits/info.jsp");
 
 		nextPage = "/main.jsp";

@@ -11,7 +11,7 @@
 	// 작성자 명 
     String nickname = (String) session.getAttribute("nickname");
 %>
-
+<c:set var="mealkit" value="${requestScope.mealkitvo}" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,7 +21,6 @@
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
     <script>
 		let ratingValue = 0;
-       	let empathValue = 0;
        	
 		// 평점 
         function setRating(value) {
@@ -32,20 +31,15 @@
                 $('#rating' + i).addClass('selected');
             }
         }
-		
         // 작성 취소 버튼 
         function confirmCancel() {
             if (confirm("정말 취소하겠습니까?")) {
                 history.back();
             }
         }
-        // 공감 
-        function empathyCount() {
-			
-		}
     </script>
     <style>
-        .rating-button {
+        .rating_button {
             display: inline-block;
             width: 30px;
             height: 30px;
@@ -55,7 +49,7 @@
             cursor: pointer;
             margin-right: 5px;
         }
-        .rating-button.selected {
+        .rating_button.selected {
             background-color: gold;
         }
     </style>
@@ -69,6 +63,7 @@
                     <th>작성자</th>
                     <td>
                         <input type="text" name="id" value="user2" readonly>
+                        <input type="hidden" name="mealkit_no" value="${mealkit_no }">
                     </td>
                     <td>
                         평점:
@@ -80,9 +75,6 @@
                             <div class="rating_button" id="rating5" onclick="setRating(5)">5</div>
                         </div>
                         <input type="hidden" name="rating" value="" id="ratingInput">
-                    </td>
-                    <td>
-                        <button type="button" onclick="empathyCount()">공감</button>
                     </td>
                 </tr>
                 <tr>

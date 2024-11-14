@@ -13,6 +13,8 @@ public class MealkitReviewVO {
 	private int empathy;
 	private Timestamp postDate;
 	
+	public MealkitReviewVO() {}
+	
 	public MealkitReviewVO(int no, String id, int mealkitNo, String pictures, 
 			String contents, int rating, int empathy) {
 		

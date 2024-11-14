@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import DAOs.MealkitDAO;
 import VOs.MealkitOrderVO;
+import VOs.MealkitReviewVO;
 import VOs.MealkitVO;
 
 public class MealkitService {
@@ -33,6 +34,13 @@ public class MealkitService {
 		int no = Integer.parseInt(request.getParameter("no"));
 		
 		return mealkitDAO.InfoMealkit(no);
+	}
+
+	public ArrayList<MealkitReviewVO> getReviewInfo(HttpServletRequest request) {
+		
+		int no = Integer.parseInt(request.getParameter("no"));
+		
+		return mealkitDAO.InfoReview(no);
 	}
 
 	public void setMyMealkit(HttpServletRequest request, HttpServletResponse response) 
@@ -83,6 +91,33 @@ public class MealkitService {
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/write.pro");
 		dispatcher.forward(request, response);
+	}
+
+	public void setWriteReview(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		
+		String id = request.getParameter("id");
+		int mealkit_no =  Integer.parseInt(request.getParameter("mealkit_no"));
+		String contents = request.getParameter("contents");	
+		String pictures = request.getParameter("pictures");
+		int rating = Integer.parseInt(request.getParameter("rating"));
+		
+		MealkitReviewVO vo = new MealkitReviewVO();
+		vo.setId(id);
+		vo.setMealkitNo(mealkit_no);
+		vo.setContents(contents);
+		vo.setPictures(pictures);
+		vo.setRating(rating);
+		
+		int result = mealkitDAO.insertNewReview(vo);
+		System.out.println(result);
+		if(result == 1) {
+			printWriter = response.getWriter();
+			printWriter.println("<script>");
+			printWriter.println("alert('리뷰가 작성되었습니다.');");
+			printWriter.println("location.href='/FoodJoa/Mealkit/info?no=" + mealkit_no + "';");
+			printWriter.println("</script>");
+			printWriter.close();
+		}
 	}
 
 }
