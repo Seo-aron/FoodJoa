@@ -67,6 +67,8 @@ public class CommunityController extends HttpServlet {
 				
 				break;
 				
+			case "/write.jsp":	
+				
 			default:
 		}
 		
