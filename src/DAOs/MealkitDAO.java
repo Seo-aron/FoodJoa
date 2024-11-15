@@ -1,10 +1,12 @@
 package DAOs;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import Common.DBConnector;
 import VOs.MealkitOrderVO;
+import VOs.MealkitReviewVO;
 import VOs.MealkitVO;
 import VOs.MealkitWishListVO;
 
@@ -88,6 +90,39 @@ public class MealkitDAO {
 		
 		return mealkit;
 	}
+	
+	public ArrayList<MealkitReviewVO> InfoReview(int no) {
+		
+		ArrayList<MealkitReviewVO> reviews = new ArrayList<MealkitReviewVO>();
+		
+		String sql = "SELECT * FROM mealkit_review WHERE mealkit_no = ?";
+		
+		ResultSet rs = dbConnector.executeQuery(sql, no);
+		
+		try {
+			while(rs.next()) {
+				MealkitReviewVO review = new MealkitReviewVO(
+						rs.getInt("no"), 
+						rs.getString("id"),
+						rs.getInt("mealkit_no"),
+						rs.getString("pictures"),
+						rs.getString("contents"),
+						rs.getInt("rating"),
+						rs.getInt("empathy"),
+						rs.getTimestamp("post_date"));
+				
+				reviews.add(review);
+						
+			}
+		} catch (Exception e) {
+			System.out.println("MealkitDAO - InfoReview 예외발생 ");
+			e.printStackTrace();
+		}
+		
+		dbConnector.Release();
+		
+		return reviews;
+	}
 
 	public int addMyMealkit(int no, int type) {
 		// 장바구니 1, 찜목록 0
@@ -116,6 +151,8 @@ public class MealkitDAO {
 			System.out.println("일치하는 ID가 없습니다.");
 		}
 		
+		dbConnector.Release();
+		
 		return result;
 	}
 
@@ -131,6 +168,48 @@ public class MealkitDAO {
 		} catch (Exception e) {
 			System.out.println("MealkitDAO - insertNewContent 예외발생 ");
 		}
+		
+		dbConnector.Release();
+		
 		return result;
 	}
+
+	public int insertNewReview(MealkitReviewVO vo) {
+		int mealkit_no = 0;
+		
+		String sql = "SELECT no FROM mealkit WHERE no = ?";
+		
+		ResultSet rs = dbConnector.executeQuery(sql, vo.getMealkitNo());
+		
+		try {
+			if(rs.next()) {
+				mealkit_no = rs.getInt("no");
+			}
+		} catch (SQLException e) {
+			System.out.println("MealkitDAO - insertNewReview 예외발생 ");
+			e.printStackTrace();
+		}
+		
+		sql = "INSERT INTO mealkit_review(id, mealkit_no, pictures, contents, rating, empathy, post_date) "
+				+ "VALUES(?,?,?,?,?,0,NOW())";
+
+		int result = dbConnector.executeUpdate(sql, vo.getId(), mealkit_no, vo.getPictures(), 
+				vo.getContents(),vo.getRating());
+		
+		dbConnector.Release();
+		
+		return result;
+	}
+
+	public int updateEmpathy(int empathyCount, int mealkit_no, int no) {
+		
+		String sql = "UPDATE mealkit_review SET empathy = ? + 1 WHERE mealkit_no = ? AND no = ?";
+		
+		int result = dbConnector.executeUpdate(sql, empathyCount, mealkit_no, no);
+		
+		dbConnector.Release();
+		
+		return result;
+	}
+
 }

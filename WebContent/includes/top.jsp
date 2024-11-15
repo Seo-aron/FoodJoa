@@ -166,7 +166,7 @@
 					</ul></li>
 				<li><a href="#">나만의 음식 판매<span> ▼ </span></a>
 					<ul>
-						<li><a href="#">1</a></li>
+						<li><a href="<%=contextPath%>/Mealkit/list">1</a></li>
 						<li><a href="#">2</a></li>
 						<li><a href="#">3</a></li>
 						<li><a href="#">4</a></li>
