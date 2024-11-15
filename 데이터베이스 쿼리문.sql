@@ -46,7 +46,6 @@ CREATE TABLE recipe(
     ingredient 			varchar(255) not null,
     ingredient_amount 	varchar(255) not null,
     orders 				varchar(255) not null,
-    empathy 			int not null,
     post_date			timestamp not null,
     
     FOREIGN KEY (id) REFERENCES member(id)
@@ -55,11 +54,11 @@ CREATE TABLE recipe(
 insert into recipe(id, title, thumbnail, 
 	description, contents, category, views, 
 	ingredient, ingredient_amount, 
-	orders, empathy, post_date) 
+	orders, post_date) 
 select id, title, thumbnail, 
 	description, contents, category, views, 
 	ingredient, ingredient_amount, 
-	orders, empathy, CURRENT_TIMESTAMP
+	orders, CURRENT_TIMESTAMP
 from recipe;
 
 
@@ -76,23 +75,22 @@ create table recipe_review(
     pictures 		text not null,
     contents 		text not null,
     rating 			int not null,
-    empathy 		int not null,
     post_date		timestamp,
     
     FOREIGN KEY (id) REFERENCES member(id),
     FOREIGN KEY (recipe_no) REFERENCES recipe(no)
 );
 
-insert into recipe_review(id, recipe_no, pictures, contents, rating, empathy, post_date)
-values('review1', '1', 'thumbnailImage.png', '리뷰 내용', 3, 0, CURRENT_TIMESTAMP),
-    ('review2', '1', 'thumbnailImage.png', '리뷰 내용', 1, 0, CURRENT_TIMESTAMP),
-    ('review3', '1', 'thumbnailImage.png', '리뷰 내용', 5, 0, CURRENT_TIMESTAMP),
-    ('review1', '2', 'thumbnailImage.png', '리뷰 내용', 4, 0, CURRENT_TIMESTAMP),
-    ('review2', '2', 'thumbnailImage.png', '리뷰 내용', 5, 0, CURRENT_TIMESTAMP),
-    ('review1', '3', 'thumbnailImage.png', '리뷰 내용', 3, 0, CURRENT_TIMESTAMP),
-    ('review2', '3', 'thumbnailImage.png', '리뷰 내용', 2, 0, CURRENT_TIMESTAMP),
-    ('review3', '3', 'thumbnailImage.png', '리뷰 내용', 1, 0, CURRENT_TIMESTAMP),
-    ('review4', '3', 'thumbnailImage.png', '리뷰 내용', 5, 0, CURRENT_TIMESTAMP);
+insert into recipe_review(id, recipe_no, pictures, contents, rating, post_date)
+values('review1', '1', 'thumbnailImage.png', '리뷰 내용', 3, CURRENT_TIMESTAMP),
+    ('review2', '1', 'thumbnailImage.png', '리뷰 내용', 1, CURRENT_TIMESTAMP),
+    ('review3', '1', 'thumbnailImage.png', '리뷰 내용', 5, CURRENT_TIMESTAMP),
+    ('review1', '2', 'thumbnailImage.png', '리뷰 내용', 4, CURRENT_TIMESTAMP),
+    ('review2', '2', 'thumbnailImage.png', '리뷰 내용', 5, CURRENT_TIMESTAMP),
+    ('review1', '3', 'thumbnailImage.png', '리뷰 내용', 3, CURRENT_TIMESTAMP),
+    ('review2', '3', 'thumbnailImage.png', '리뷰 내용', 2, CURRENT_TIMESTAMP),
+    ('review3', '3', 'thumbnailImage.png', '리뷰 내용', 1, CURRENT_TIMESTAMP),
+    ('review4', '3', 'thumbnailImage.png', '리뷰 내용', 5, CURRENT_TIMESTAMP);
 
 desc recipe_review;
 select * from recipe_review;
@@ -108,9 +106,7 @@ create table recipe_wishlist(
 );
 
 insert into recipe_wishlist(id, recipe_no) 
-values('admin', 1),
-	('admin', 2),
-    ('admin', 3);
+values('admin', 1);
 
 desc recipe_wishlist;
 select * from recipe_wishlist;

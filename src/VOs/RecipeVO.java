@@ -15,15 +15,13 @@ public class RecipeVO {
 	private String ingredient;
 	private String ingredientAmount;
 	private String orders;
-	private int empathy;
 	private Timestamp postDate;
 
 	public RecipeVO() {
 	}
 
 	public RecipeVO(int no, String id, String title, String thumbnail, String description, String contents,
-			int category, int views, String ingredient, String ingredientAmount, String orders,
-			int empathy) {
+			int category, int views, String ingredient, String ingredientAmount, String orders) {
 
 		this.no = no;
 		this.id = id;
@@ -36,15 +34,13 @@ public class RecipeVO {
 		this.ingredient = ingredient;
 		this.ingredientAmount = ingredientAmount;
 		this.orders = orders;
-		this.empathy = empathy;
 	}
 
 	public RecipeVO(int no, String id, String title, String thumbnail, String description, String contents,
-			int category, int views, String ingredient, String ingredientAmount, String orders,
-			int empathy, Timestamp postDate) {
+			int category, int views, String ingredient, String ingredientAmount, String orders, Timestamp postDate) {
 
 		this(no, id, title, thumbnail, description, contents, category, 
-				views, ingredient, ingredientAmount, orders, empathy);
+				views, ingredient, ingredientAmount, orders);
 		this.postDate = postDate;
 	}
 
@@ -134,14 +130,6 @@ public class RecipeVO {
 
 	public void setOrders(String orders) {
 		this.orders = orders;
-	}
-
-	public int getEmpathy() {
-		return empathy;
-	}
-
-	public void setEmpathy(int empathy) {
-		this.empathy = empathy;
 	}
 
 	public Timestamp getPostDate() {

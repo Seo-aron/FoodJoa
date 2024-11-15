@@ -53,7 +53,6 @@ public class RecipeDAO {
 						resultSet.getString("ingredient"),
 						resultSet.getString("ingredient_amount"),
 						resultSet.getString("orders"),
-						resultSet.getInt("empathy"),
 						resultSet.getTimestamp("post_date"));
 				
 				double avgReview = resultSet.getDouble("average_rating");
@@ -98,7 +97,6 @@ public class RecipeDAO {
 						resultSet.getString("ingredient"),
 						resultSet.getString("ingredient_amount"),
 						resultSet.getString("orders"),
-						resultSet.getInt("empathy"),
 						resultSet.getTimestamp("post_date"));
 				
 				recipes.add(recipe);
@@ -136,7 +134,6 @@ public class RecipeDAO {
 						resultSet.getString("ingredient"),
 						resultSet.getString("ingredient_amount"),
 						resultSet.getString("orders"),
-						resultSet.getInt("empathy"),
 						resultSet.getTimestamp("post_date"));
 			}
 		}
@@ -173,8 +170,8 @@ public class RecipeDAO {
 		
 		String updateSql = "INSERT INTO recipe(id, title, thumbnail, description, "
 				+ "contents, category, views, "
-				+ "ingredient, ingredient_amount, orders, empathy, post_date) "
-				+ "values(?, ?, ?, ?, ?, ?, 0, ?, ?, ?, 0, CURRENT_TIMESTAMP)";
+				+ "ingredient, ingredient_amount, orders, post_date) "
+				+ "values(?, ?, ?, ?, ?, ?, 0, ?, ?, ?, CURRENT_TIMESTAMP)";
 		
 		String selectSql = "SELECT no FROM recipe ORDER BY no DESC LIMIT 1"; 
 		
@@ -193,7 +190,7 @@ public class RecipeDAO {
 		
 		try {
 			if (resultSet.next()) {
-				result = resultSet.getInt(1);
+				result = resultSet.getInt("no");
 			}
 		} 
 		catch (SQLException e) {
@@ -235,16 +232,17 @@ public class RecipeDAO {
 		return result;
 	}
 	
-	public ArrayList<RecipeReviewVO> selectRecipeReviewes(String recipeNo) {
+	public ArrayList<RecipeReviewVO> selectRecipeReviews(int recipeNo) {
 		
-		ArrayList<RecipeReviewVO> reviewes = new ArrayList<RecipeReviewVO>();
+		ArrayList<RecipeReviewVO> reviews = new ArrayList<RecipeReviewVO>();
 		
 		String sql = "SELECT * FROM recipe_review WHERE recipe_no=?";
 		
-		ResultSet resultSet = dbConnector.executeQuery(sql, recipeNo);
+		ResultSet resultSet = dbConnector.executeQuery(sql, String.valueOf(recipeNo));
 		
 		try {
 			while (resultSet.next()) {
+				
 				RecipeReviewVO review = new RecipeReviewVO(
 						resultSet.getInt("no"),
 						resultSet.getString("id"),
@@ -252,10 +250,9 @@ public class RecipeDAO {
 						resultSet.getString("pictures"),
 						resultSet.getString("contents"),
 						resultSet.getInt("rating"),
-						resultSet.getInt("empathy"),
 						resultSet.getTimestamp("post_date"));
 				
-				reviewes.add(review);
+				reviews.add(review);
 			}
 		}
 		catch (SQLException e) {
@@ -263,7 +260,9 @@ public class RecipeDAO {
 			System.out.println("selectRecipeReviewes() SQLException 발생");
 		}
 		
-		return reviewes;
+		dbConnector.release();
+		
+		return reviews;
 	}
 	
 	public boolean isExistRecipeReview(String id, String recipeNo) {
@@ -281,6 +280,25 @@ public class RecipeDAO {
 			e.printStackTrace();
 			System.out.println("isExistRecipeReview SQLException 예외 발생");
 		}
+		
+		dbConnector.release();
+		
+		return result;
+	}
+	
+	public int insertRecipeReivew(RecipeReviewVO review) {
+		
+		int result = 0;
+		
+		String sql = "INSERT INTO recipe_review(id, recipe_no, pictures, contents, rating, post_date) "
+				+ "VALUES(?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
+		
+		result = dbConnector.executeUpdate(sql,
+				review.getId(),
+				review.getRecipeNo(),
+				review.getPictures(),
+				review.getContents(),
+				review.getRating());
 		
 		dbConnector.release();
 		

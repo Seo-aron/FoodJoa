@@ -115,10 +115,10 @@ public class RecipeController extends HttpServlet {
 		int recipeNo = recipeService.processRecipeWrite(request);
 		
 		RecipeVO recipe = recipeService.getRecipe(recipeNo);
-		ArrayList<RecipeReviewVO> reviewes = recipeService.getRecipeReviewes(request);
+		ArrayList<RecipeReviewVO> reviews = recipeService.getRecipeReviewes(recipeNo);
 		
 		request.setAttribute("recipe", recipe);
-		request.setAttribute("reviewes", reviewes);
+		request.setAttribute("reviews", reviews);
 		request.setAttribute("pageTitle", recipe.getTitle());
 		request.setAttribute("center", "recipes/read.jsp");
 		
@@ -168,9 +168,8 @@ public class RecipeController extends HttpServlet {
 	private void processReviewWrite(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		recipeService.processReviewWrite(request);
+		recipeService.processReviewWrite(request);	
 		
-		
-		//openRecipeReadView(request, response);
+		openRecipeReadView(request, response);
 	}
 }

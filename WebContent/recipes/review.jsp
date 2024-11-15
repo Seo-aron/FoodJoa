@@ -83,7 +83,9 @@
 
 <body>
 	<div id="container">
-		<form action="<%= contextPath %>/Recipe/reviewWrite" method="post" enctype="multipart/form-data">
+		<form id="frmReview" action="<%= contextPath %>/Recipe/reviewWrite" method="post" enctype="multipart/form-data">
+			<input type="hidden" id="recipe_no" name="recipe_no" value="<%= recipe.getNo() %>">
+			
 			<table width="100%" border="1">
 				<tr>
 					<td>
@@ -101,7 +103,7 @@
 							<li><button class="star-button" onclick="setRating(event, 4)"></button></li>
 							<li><button class="star-button" onclick="setRating(event, 5)"></button></li>
 						</ul>
-						<input type="hidden" name="rating" value="5">
+						<input type="hidden" id="rating" name="rating" value="5">
 					</td>
 				</tr>
 				<tr>
@@ -112,6 +114,7 @@
     					<div id="imagePreview"></div>
    						<input type="file" id="pictureFiles" name="pictureFiles" 
 							accept=".jpg,.jpeg,.png" multiple onchange="handleFileSelect(this.files)">
+							
 						<input type="hidden" id="pictures" name="pictures">
 					</td>
 				</tr>
@@ -122,7 +125,7 @@
 				</tr>
 				<tr>
 					<td>
-						<input type="submit" value="리뷰 쓰기">
+						<input type="button" value="리뷰 쓰기" onclick="onSubmit(event,'<%= contextPath %>')">
 						<input type="button" value="취소" onclick="onCancleButton(event)">
 					</td>
 				</tr>
@@ -131,85 +134,22 @@
 	</div>
 	
 	
+	<script src="<%= contextPath %>/js/recipe/review.js"></script>
 	<script>
-		// 문자열을 합치는 함수
-		function combineStrings(strings) {
-		    let result = '';
-		    for (let str of strings) {
-		        // 문자열 길이를 2바이트로 변환
-		        let length = str.length;
-		        let lengthBytes = String.fromCharCode(length >> 8, length & 0xFF);
-		        // 길이 + 문자열 추가
-		        result += lengthBytes + str;
-		    }
-		    return result;
-		}
-
-        function handleFileSelect(files) {
-            const imagePreview = document.getElementById('imagePreview');
-            
-            Array.from(files).forEach(file => {
-                if (file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    
-                    reader.readAsDataURL(file);
-                    
-                    reader.onload = function(e) {
-                        const img = document.createElement('img');
-                        img.src = e.target.result;
-                        
-                        img.dataset.filename = file.name;
-                        img.classList.add('preview_image');
-                        
-                        img.addEventListener('click', function() {
-                            imagePreview.removeChild(img);
-                            //document.getElementById('pictureFiles').value = '';
-                        });
-                        
-                        img.style.cursor = 'pointer';
-                        
-                        imagePreview.appendChild(img);
-                    }
-                }
-            });
-            
-            setPicturesString(files);
-            
-            //document.getElementById('pictureFiles').value = '';
-        }
-        
-		function setPicturesString(files) {
-			let strings = [];
-			
-			for (let i = 0; i < files.length; i++) {
-		        strings.push(files[i].name);
-		    }
-			
-			let pictures = combineStrings(strings);
-			
-			document.getElementsByName('pictures')[0].value = pictures;
-		}
-		
 		function setRating(event, ratingValue) {
 			event.preventDefault();
-			
+	
 			let emptyStarPath = '<%= contextPath %>/images/recipe/empty_star.png';
 			let fullStarPath = '<%= contextPath %>/images/recipe/full_star.png';
-			
+	
 			let startButtons = $(".star-button");
 			startButtons.each(function(index, element) {
-				
+	
 				let path = (index < ratingValue) ? fullStarPath : emptyStarPath;
 				$(element).css('background-image', 'url(' + path + ')');
-			});			
-
+			});
+	
 			document.getElementsByName('rating')[0].value = ratingValue;
-		}
-		
-		function onCancleButton(event) {
-			event.preventDefault();
-			
-			history.back();
 		}
 	</script>
 </body>
