@@ -176,7 +176,7 @@
 						<li><a href="#">함께 재료 나눠요</a></li>
 						<li><a href="#">같이 먹어요</a></li>
 					</ul></li>
-				<li><a href="#">마이페이지</a></li>
+				<li><a href="<%= contextPath %>/Member/mypagemain.me">마이페이지</a></li>
 			</ul>
 		</nav>
 	</div>

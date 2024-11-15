@@ -45,7 +45,8 @@ public class MemberService {
         return memberDAO.isExistMemberId(id);
     }
     
-    public  String serviceInsertNaverMember(HttpServletRequest request, HttpServletResponse response)throws IOException {
+    //네이버 아이디 받아오기
+    public  String insertNaverMember(HttpServletRequest request, HttpServletResponse response)throws IOException {
     	
     	String naverId = null;
         try {
@@ -79,7 +80,14 @@ public class MemberService {
         }
         return naverId;
     }
+    
+    //카카오 아이디 받아오기
+    public String insertkakaoMember(HttpServletRequest request, HttpServletResponse response) {
+    	String kakaoId = null;
+		return kakaoId;
+	}
 
+    //추가정보
     public void insertMember(HttpServletRequest request) throws ServletException, IOException {
         // 이미지 업로드 디렉토리 설정
         String path = request.getServletContext().getRealPath("/images/member/userProfiles/");
@@ -160,4 +168,6 @@ public class MemberService {
 	public void addProfile(HttpServletRequest request){	
         
 	}
+
+	
 }

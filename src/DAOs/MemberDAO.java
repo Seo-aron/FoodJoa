@@ -5,11 +5,14 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import Common.DBConnector;
+import VOs.MealkitWishListVO;
 import VOs.MemberVO;
+import VOs.RecipeWishListVO;
 
 public class MemberDAO {
 
     private DBConnector dbConnector;
+	private Object type;
 
     public MemberDAO() {
         dbConnector = new DBConnector();
@@ -150,4 +153,104 @@ public class MemberDAO {
 		return profile;
     	
     }
+    
+
+
+    // 사용자 레시피 위시리스트 조회
+    public ArrayList<RecipeWishListVO> selectUserRecipeWishlist(String id) {
+        ArrayList<RecipeWishListVO> wishlist = new ArrayList<>();
+        String sql = "SELECT * FROM recipe_wishlist WHERE id = ?";
+        ResultSet resultSet = null;
+
+        try {
+            resultSet = dbConnector.executeQuery(sql, id);
+            while (resultSet.next()) {
+                RecipeWishListVO recipeWishlist = new RecipeWishListVO(
+                        resultSet.getInt("no"),
+                        resultSet.getString("id"),
+                        resultSet.getInt("recipe_no")
+                );
+                wishlist.add(recipeWishlist);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("selectUserRecipeWishlist() SQLException 발생");
+        } finally {
+            dbConnector.Release();  // 자원 해제
+        }
+        return wishlist;
+    }
+
+    // 사용자 상품 위시리스트 조회
+    public ArrayList<MealkitWishListVO> selectUserProductWishlist(String id) {
+        ArrayList<MealkitWishListVO> wishlist = new ArrayList<>();
+        String sql = "SELECT * FROM mealkit_wishlist WHERE id = ?";
+        ResultSet resultSet = null;
+
+        try {
+            resultSet = dbConnector.executeQuery(sql, id);
+            while (resultSet.next()) {
+            	MealkitWishListVO mealkitwishlist = new MealkitWishListVO(
+                        resultSet.getInt("no"),
+                        resultSet.getString("id"),
+                        resultSet.getInt("product_no"),
+                        resultSet.getInt("type")
+                );
+                wishlist.add(mealkitwishlist);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("selectUserMealkitWishListVO() SQLException 발생");
+        } finally {
+            dbConnector.Release();  // 자원 해제
+        }
+        return wishlist;
+    }
+
+    // 레시피 위시리스트에 레시피 추가
+    public boolean addRecipeToWishlist(String id, int recipeNo) throws SQLException {
+        String sql = "INSERT INTO recipe_wishlist (id, recipe_no) VALUES (?, ?)";
+        try {
+            int result = dbConnector.executeUpdate(sql, id, recipeNo);
+            return result > 0;  // 성공하면 true, 실패하면 false
+        } finally {
+            dbConnector.Release();  // 자원 해제
+        }
+    }
+
+    // 상품 위시리스트에 상품 추가
+    public boolean addMealkitToWishlist(String id, int mealkit_no) throws SQLException {
+        String sql = "INSERT INTO mealkit_wishlist (id, mealkit_no, type) VALUES (?, ?, ?)";
+        try {
+            int result = dbConnector.executeUpdate(sql, id, mealkit_no, type);
+            return result > 0;  // 성공하면 true, 실패하면 false
+        } finally {
+            dbConnector.Release();  // 자원 해제
+        }
+    }
+
+    // 레시피 위시리스트에서 레시피 삭제
+    public boolean removeRecipeFromWishlist(String id, int recipeNo) throws SQLException {
+        String sql = "DELETE FROM recipe_wishlist WHERE id = ? AND recipe_no = ?";
+        try {
+            int result = dbConnector.executeUpdate(sql, id, recipeNo);
+            return result > 0;  // 성공하면 true, 실패하면 false
+        } finally {
+            dbConnector.Release();  // 자원 해제
+        }
+    }
+
+    // 상품 위시리스트에서 상품 삭제
+    public boolean removeProductFromWishlist(String id, int mealkit_no) throws SQLException {
+        String sql = "DELETE FROM mealkit_wishlist WHERE id = ? AND product_no = ?";
+        try {
+            int result = dbConnector.executeUpdate(sql, id, mealkit_no);
+            return result > 0;  // 성공하면 true, 실패하면 false
+        } finally {
+            dbConnector.Release();  // 자원 해제
+        }
+    }
+    
+    
+   
 }

@@ -72,11 +72,20 @@ public class MemberController extends HttpServlet {
             		request.getSession().setAttribute("userId", naverId);
             		 // 추가 정보 입력 페이지로 리다이렉트
                     response.sendRedirect(request.getContextPath() + "/Member/joinPro.me");
+            		}return;
+            		
+            		
+            case "/kakaologin.me" : processKakaoLogin(request, response); 
+            Object kakaoId = null;
+			if (kakaoId != null) {
+        		request.getSession().setAttribute("userId", kakaoId);
+        		 // 추가 정보 입력 페이지로 리다이렉트
+                response.sendRedirect(request.getContextPath() + "/Member/joinPro.me");
 
-				}
-            
+			}
             return;
-            case "/kakaologin.me" : processKakaoLogin(request, response); return;
+            
+            
             case "/login.me": openLoginView(request, response); break;
             case "/loginPro.me": processMemberLogin(request, response); break;
             
@@ -99,8 +108,8 @@ public class MemberController extends HttpServlet {
             case "/mypagemain.me":
                 // 정보 수정 페이지 요청
                 String center = memberService.profileupdate(request);
-                request.setAttribute("center", center);
-                nextPage = "/CarMain.jsp";
+                request.setAttribute("center", "mypagemain.jsp");
+                nextPage = "/main.jsp";
                 break;
 
             case "/getUserProfile.me":
@@ -110,6 +119,13 @@ public class MemberController extends HttpServlet {
                 
             default:
                 nextPage = "/main.jsp";
+                
+            case "/wishlist.me":
+            	request.setAttribute("center", "members/wishlist.jsp");		
+				nextPage = "/main.jsp";
+				break;
+                
+                
         }
 
         RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
@@ -146,7 +162,7 @@ public class MemberController extends HttpServlet {
         // 네이버 인증 후 콜백 처리
         // 네이버 아이디가 존재하면 추가 정보 입력 페이지로 리다이렉트
         // 네이버 아이디를 DB에 저장
-       String naverId  = memberService.serviceInsertNaverMember(request,response);
+       String naverId  = memberService.insertNaverMember(request,response);
         
        
 
@@ -166,6 +182,20 @@ public class MemberController extends HttpServlet {
     		throws ServletException, IOException {
     	
     	// 카카오 로그인 처리 이후 로직 작성
+
+        
+       String kakaoId  = memberService.insertkakaoMember(request,response);
+        
+       
+
+        // 카카오 아이디가 세션에 저장되지 않았거나 빈 값일 경우 처리
+        if (kakaoId == null || kakaoId.trim().isEmpty()) {
+            // 카카오 로그인 실패 시, 다시 로그인 페이지로 리다이렉트
+            response.sendRedirect(request.getContextPath() + "/Member/join.me");
+            return;
+        }
+
+       return;
     }
     
     private void processMemberJoin(HttpServletRequest request, HttpServletResponse response)

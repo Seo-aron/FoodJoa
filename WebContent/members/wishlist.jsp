@@ -1,35 +1,25 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%
+    pageEncoding="UTF-8"%>
+    
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>     
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>     
+    
+<% 
 request.setCharacterEncoding("UTF-8");
-response.setContentType("text/html; charset=utf-8");
-
 String contextPath = request.getContextPath();
+request.setAttribute("contextPath", contextPath);
+
 %>
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
-<style>
-    
-    .container { width: 1000px; margin: 0 auto; padding: 20px; }
-    
-</style>
+<title>Wish List</title>
 </head>
 <body>
-	<h2> Wish List </h2>
-	
-	<div class="container">
-	
-	
-	
-	
-	
-	
-	
-	
-	</div>
-
+     
+        	<h1>Wish List</h1>
+        	
 </body>
 </html>
