@@ -4,14 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.apache.commons.io.FileUtils;
-import org.json.JSONObject;
 
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
@@ -22,7 +18,7 @@ import VOs.MemberVO;
 
 public class MemberService {
 
-    private MemberDAO memberDAO;
+	private MemberDAO memberDAO;
 
     public MemberService() {
         memberDAO = new MemberDAO();
@@ -49,31 +45,31 @@ public class MemberService {
     public  String insertNaverMember(HttpServletRequest request, HttpServletResponse response)throws IOException {
     	
     	String naverId = null;
-        try {
-        	
-        	   // 네이버 인증 후 콜백 처리
-        	 naverId =  NaverLoginAPI.handleNaverLogin(request, response);
-//        	
-//	            System.out.println("네이버 아이디: " + naverId);  // 콘솔에 아이디 출력
-//
-//	            request.getSession().setAttribute("userId", naverId);
-	            
-	            
-	            
-//            // 액세스 토큰 추출
-//            String accessToken = request.getParameter("accessToken");
-//
-//            // 네이버 사용자 정보 요청
-//            JSONObject userProfile = NaverLoginAPI.handleUserProfile(accessToken);
-//            
-//            System.out.println(userProfile);
-//       
-//            // 사용자 id 가져오기
-//            String naverId = userProfile.getString("id");
-           
-            // DAO 메소드 호출로 id 값만 DB에 저장
-             // memberDAO.insertNaverMember(vo);
-           
+		try {
+
+			// 네이버 인증 후 콜백 처리
+			naverId = NaverLoginAPI.handleNaverLogin(request, response);
+			
+			/*
+			System.out.println("네이버 아이디: " + naverId); // 콘솔에 아이디 출력
+
+			request.getSession().setAttribute("userId", naverId);
+
+			// 액세스 토큰 추출
+			String accessToken = request.getParameter("accessToken");
+
+			// 네이버 사용자 정보 요청
+			JSONObject userProfile = NaverLoginAPI.handleUserProfile(accessToken);
+
+			System.out.println(userProfile);
+
+			// 사용자 id 가져오기
+			String naverId = userProfile.getString("id");
+
+			// DAO 메소드 호출로 id 값만 DB에 저장
+			memberDAO.insertNaverMember(vo);
+			*/
+
         } catch (Exception e) {
             System.out.println("네이버 회원 정보 저장 중 오류 발생: " + e.getMessage());
             e.printStackTrace();
@@ -109,15 +105,15 @@ public class MemberService {
         );
 
         // 로그로 파일 정보 확인
-//       String userId = (String)request.getSession(true).getAttribute("userId");
+        // String userId = (String)request.getSession(true).getAttribute("userId");
         
         
         
-//        
+       
         String profileFileName = multipartRequest.getFilesystemName("profileFile");
-       String userId = multipartRequest.getParameter("userId");
-//        
-//        // 콘솔에 받아온 정보 출력
+        String userId = multipartRequest.getParameter("userId");
+       
+        // 콘솔에 받아온 정보 출력
         System.out.println("ID: " + multipartRequest.getParameter("userId"));
 
 
@@ -143,9 +139,9 @@ public class MemberService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-//
-//        // 프로필 이미지 이동
-//        moveProfile(path, userId, profileFileName);
+
+        // 프로필 이미지 이동
+        moveProfile(path, userId, profileFileName);
     }
 
     
@@ -168,6 +164,19 @@ public class MemberService {
 	public void addProfile(HttpServletRequest request){	
         
 	}
-
 	
+	public MemberVO getMember(HttpServletRequest request) throws ServletException, IOException  {
+		
+		//HttpSession session = request.getSession();
+		
+		//String loginedId = (String) session.getAttribute("id");
+		
+		String login_id = request.getParameter("id");
+		String login_name = request.getParameter("name");
+		
+		
+		return memberDAO.selectMember(request.getParameter("id"));
+		//return memberDAO.selectMember(loginedId);
+		
+	}
 }

@@ -3,7 +3,9 @@ package DAOs;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+
 import java.util.ArrayList;
+
 import Common.DBConnector;
 import VOs.MealkitWishListVO;
 import VOs.MemberVO;
@@ -13,17 +15,14 @@ public class MemberDAO {
 
     private DBConnector dbConnector;
 	private Object type;
-
-    public MemberDAO() {
-        dbConnector = new DBConnector();
-    }
- 
-    // 전체 회원 조회
-    public ArrayList<MemberVO> selectMembers() {
-        ArrayList<MemberVO> members = new ArrayList<>();
-        String sql = "SELECT * FROM member";
-        ResultSet resultSet = null;
-
+	public MemberDAO() {
+		dbConnector = new DBConnector();
+	}
+	
+	public ArrayList<MemberVO> selectMembers() {
+		ArrayList<MemberVO> members = new ArrayList<>();
+		String sql = "SELECT * FROM member";
+		ResultSet resultSet = null;
         try {
             resultSet = dbConnector.executeQuery(sql);
             while (resultSet.next()) {
@@ -134,28 +133,19 @@ public class MemberDAO {
     }
     
     //회원정보 수정
-    public String profileUpdate(String id){
-    
-    	
-    	try {
-			
-		} catch (Exception e) {
-			// TODO: handle exception
-		}finally{
-			
-		}
-		return id;
-    	
-    };
-    
-    //사진 첨부하기
-    public String viewProfile(String profile){
-		return profile;
-    	
+    public String profileUpdate(String id){    
+
+    	return null;
     }
     
-
-
+	public MemberVO selectMember(String id) {
+    	
+    	MemberVO vo = new MemberVO();
+    //	vo.getId()
+    	return vo;
+    	
+    }
+	
     // 사용자 레시피 위시리스트 조회
     public ArrayList<RecipeWishListVO> selectUserRecipeWishlist(String id) {
         ArrayList<RecipeWishListVO> wishlist = new ArrayList<>();
@@ -251,6 +241,71 @@ public class MemberDAO {
         }
     }
     
-    
-   
+	// 사용자 확인 (로그인용)
+	public int checkMember(String login_id, String login_name) {
+		int check = -1;
+		String sql = "SELECT * FROM member WHERE id=?";
+		ResultSet resultSet = null;
+
+		try {
+			resultSet = dbConnector.executeQuery(sql, login_id);
+			if (resultSet.next()) {
+				if (login_name.equals(resultSet.getString("name"))) {
+					check = 1; // 이름 일치
+				} else {
+					check = 0; // 이름 불일치
+				}
+			} else {
+				check = -1; // ID 없음
+			}
+		} catch (Exception e) {
+			System.out.println("MemberDAO의 userCheck 메소드에서 오류");
+			e.printStackTrace();
+		} finally {
+			dbConnector.release();
+		}
+		return check;
+	}
+
+	// 개인정보수정 - id변경 불가
+	public int updateMember(MemberVO member) {
+
+		int result = -1;
+
+		// 1. memberVO를 통해 전달 받은 멤버가 DB에 존재하는지 확인
+		String checkSql = "SELECT COUNT(*) FROM member WHERE id = ?";
+		ResultSet resultSet = dbConnector.executeQuery(checkSql, member.getId());
+
+		try {
+			if (resultSet.next()) {
+				// DB에 멤버가 존재 할 때
+				// 2. 존재하는 멤버의 DB정보를 수정
+				String updateSql = "UPDATE member SET profile = ?, name = ?, nickname = ?, phone = ?, address = ? WHERE id = ?";
+
+				result = dbConnector.executeUpdate(updateSql, member.getProfile(), member.getName(),
+						member.getNickname(), member.getPhone(), member.getAddress(), member.getId());
+
+				if (result == 1) {
+					// 정보 수정이 성공적으로 실행 했을 때
+				} else {
+					// 정보 수정에 실패 했을 때
+				}
+			} else {
+				result = -1;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			result = -1;
+		}
+
+		dbConnector.release();
+
+		return result;
+	}
+
+	// 프로필 사진 불러오기
+	public String viewProfile(String profile) {
+
+		return profile;
+	}
 }

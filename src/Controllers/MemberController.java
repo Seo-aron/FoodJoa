@@ -88,7 +88,6 @@ public class MemberController extends HttpServlet {
             
             case "/login.me": openLoginView(request, response); break;
             case "/loginPro.me": processMemberLogin(request, response); break;
-            
             case "/profileupdate.me": //정보수정 페이지 요청
         	   //center = memberService.profileupdate(request);
 				//"members/profileupdate.jsp"
@@ -113,17 +112,17 @@ public class MemberController extends HttpServlet {
                 break;
 
             case "/getUserProfile.me":
-                // 사용자 프로필 정보 요청
             	NaverLoginAPI.handleNaverLogin(request, response);
                 return;
-                
-            default:
-                nextPage = "/main.jsp";
-                
+            case "/updatePro.me" : updateProfile(request, response); break; 
+
             case "/wishlist.me":
             	request.setAttribute("center", "members/wishlist.jsp");		
 				nextPage = "/main.jsp";
 				break;
+
+            default:
+                nextPage = "/main.jsp";
                 
                 
         }
@@ -132,10 +131,19 @@ public class MemberController extends HttpServlet {
         dispatcher.forward(request, response);
     }
     
-    private void openMemberJoinView(HttpServletRequest request, HttpServletResponse response)
+	private void updateProfile(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException{
+		
+		String pwd = request.getParameter("pwd");
+		String id =request.getParameter("id");
+	//	String pwd = request.getParameter("pwd");
+	//	String pwd = request.getParameter("pwd");
+	}
+
+	private void openMemberJoinView(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
     	
-        request.setAttribute("center", "members/snsjoin.jsp");
+        request.setAttribute("center", "members/join.jsp");
         
         nextPage = "/main.jsp";
 
@@ -206,7 +214,7 @@ public class MemberController extends HttpServlet {
         // 회원 가입 처리
         memberService.insertMember(request);
         
-      
+        request.setAttribute("center", "includes/center.jsp");
         
         // 가입 후 메인 페이지로 리다이렉트
         response.sendRedirect(request.getContextPath() + "/main.jsp");
@@ -228,4 +236,6 @@ public class MemberController extends HttpServlet {
         
         nextPage = "/login.jsp";
     }
+    
+   
 }

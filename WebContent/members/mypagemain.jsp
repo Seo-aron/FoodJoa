@@ -1,3 +1,4 @@
+<%@page import="VOs.MemberVO"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -6,8 +7,13 @@
 <%
 	request.setCharacterEncoding("UTF-8");
 	response.setContentType("text/html; charset=utf-8");
-
+	
 	String contextPath = request.getContextPath();
+	
+	MemberVO vo = (MemberVO) request.getAttribute("vo");
+	
+	//String loginedid = (String) session.getAttribute("id");	
+	String id = "admin";
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -29,7 +35,7 @@
 	<div class="profile-wrapper">
 		<div class="profile-section">
 			<div class="profile-image">
-				<img id="profilePreview" src="path/to/your/profile-image.jpg">
+				<img alt="없음" src="../images/member/admin.png">
 			</div>
 			<div class="profile-info">
 				<h2>김보노님!</h2>
@@ -69,8 +75,8 @@
 			<div>주문/배송조회</div>
 			<div>
 				<span>주문건수: 0</span> | <span>배송준비중: 1</span> | <span>배송중: 2</span> |
-				<span>배송완료: 0</span> <br> <input type="button" class="more-btn"
-					value="더보기">
+				<span>배송완료: 0</span> <br><a href="<%=contextPath%>/members/vieworder.jsp">
+				<input type="button" class="more-btn" value="더보기">
 			</div>
 		</div>
 
@@ -84,7 +90,7 @@
 		</div>
 
 		<div class="info-section">
-			<div>※ 개인정보처리방침</div>
+			<div><a href="<%=contextPath%>/members/processingpolicy.jsp">※ 개인정보처리방침</a></div>
 		</div>
 
 		<input type="button" class="more-btn" value="탈퇴"
