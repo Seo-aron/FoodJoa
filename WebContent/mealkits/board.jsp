@@ -25,13 +25,12 @@
 </head>
 <body>
 	<script type="text/javascript">
-	// bx슬라이더 
-	$(function(){
+	$(document).ready(function(){
 		$('.bxslider').bxSlider({
 			mode: 'fade',
-		    captions: true,
-		    slideWidth: 400,
-		    adaptiveHeight: true,
+			captions: true,
+			slideWidth: 400,
+			adaptiveHeight: true
 		});
 	});
 	// 수량 증가 감소 버튼
@@ -104,7 +103,6 @@
 	  			<li><img src="<%= contextPath %>/images/recipe/test_thumbnail.png" title="image2" /></li>
 	  			<li><img src="<%= contextPath %>/images/recipe/test_thumbnail.png" title="image3" /></li>
 			</ul>
-			
 			<!--간단 소개글 추가 해야함 -->
 			
 			<div class="orders_text">

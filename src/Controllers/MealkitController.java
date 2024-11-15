@@ -56,12 +56,18 @@ public class MealkitController extends HttpServlet {
 		case "/write.pro": processAddMealkit(request, response); return;
 		case "/reviewwrite": openAddReview(request, response); break;
 		case "/reviewwrite.pro": processAddReview(request, response); return;
+		case "/empathy.pro": processEmpathy(request, response); return;
 
 		default: break;
 		}
 
 		RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
 		dispatcher.forward(request, response);
+	}
+
+	private void processEmpathy(HttpServletRequest request, HttpServletResponse response) 
+			throws IOException {
+		mealkitService.setPlusEmpathy(request, response);
 	}
 
 	private void openAddReview(HttpServletRequest request, HttpServletResponse response) {
@@ -102,7 +108,7 @@ public class MealkitController extends HttpServlet {
 
 		MealkitVO mealkitvo = mealkitService.getMealkitInfo(request);
 		ArrayList<MealkitReviewVO> reviewvo = mealkitService.getReviewInfo(request);
-
+		
 		request.setAttribute("mealkitvo", mealkitvo);
 		request.setAttribute("reviewvo", reviewvo);
 		

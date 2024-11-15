@@ -201,4 +201,15 @@ public class MealkitDAO {
 		return result;
 	}
 
+	public int updateEmpathy(int empathyCount, int mealkit_no, int no) {
+		
+		String sql = "UPDATE mealkit_review SET empathy = ? + 1 WHERE mealkit_no = ? AND no = ?";
+		
+		int result = dbConnector.executeUpdate(sql, empathyCount, mealkit_no, no);
+		
+		dbConnector.Release();
+		
+		return result;
+	}
+
 }

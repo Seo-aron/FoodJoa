@@ -120,4 +120,20 @@ public class MealkitService {
 		}
 	}
 
+	public void setPlusEmpathy(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		int empathyCount = Integer.parseInt(request.getParameter("empathyCount"));
+		int mealkit_no = Integer.parseInt(request.getParameter("mealkit_no"));
+		int no = Integer.parseInt(request.getParameter("no"));
+			
+		int result = mealkitDAO.updateEmpathy(empathyCount, mealkit_no, no);
+
+		printWriter = response.getWriter();
+
+		String go = String.valueOf(result);
+		
+		printWriter.print(go);
+
+	}
+
 }
