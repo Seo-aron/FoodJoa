@@ -23,7 +23,7 @@
    <div class="container">
     <!-- Header Section -->
    <div class="header">
-    <h1>마이페이지</h1>
+    <h1>내 리뷰 관리</h1>
     <a href="<%=contextPath%>/main.jsp">
     <input type="button" class="logout-btn" value="로그아웃">
     </a>

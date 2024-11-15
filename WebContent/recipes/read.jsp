@@ -1,3 +1,4 @@
+<%@page import="java.util.ArrayList"%>
 <%@page import="VOs.RecipeReviewVO"%>
 <%@page import="java.util.List"%>
 <%@page import="Common.StringParser"%>
@@ -15,11 +16,11 @@
 	String ratingAvg = (String) request.getAttribute("ratingAvg");
 			
 	String compressedContents = recipe.getContents();
-	List<String> parsedIngredient = StringParser.parseStringWithLength(recipe.getIngredient());
-	List<String> parsedIngredientAmount = StringParser.parseStringWithLength(recipe.getIngredientAmount());
-	List<String> parsedOrders = StringParser.parseStringWithLength(recipe.getOrders());
+	List<String> parsedIngredient = StringParser.splitString(recipe.getIngredient());
+	List<String> parsedIngredientAmount = StringParser.splitString(recipe.getIngredientAmount());
+	List<String> parsedOrders = StringParser.splitString(recipe.getOrders());
 	
-	List<RecipeReviewVO> reviewes = (List<RecipeReviewVO>) request.getAttribute("reviewes");
+	ArrayList<RecipeReviewVO> reviews = (ArrayList<RecipeReviewVO>) request.getAttribute("reviews");
 %>
     
     
@@ -41,7 +42,7 @@
 		<table width="100%">
 			<tr>
 				<td>
-					<input type="button" value="리뷰 쓰기" onclick="">
+					<input type="button" value="리뷰 쓰기" onclick="onReviewButton()">
 					<input type="button" value="목록" onclick="onListButton()">
 				</td>
 			</tr>
@@ -128,7 +129,7 @@
 			<tr>
 				<td align="center">
 					<%
-					if (reviewes == null || reviewes.size() == 0) {
+					if (reviews == null || reviews.size() == 0) {
 						%>
 						등록된 리뷰가 없습니다.
 						<%
@@ -146,6 +147,10 @@
 	<script>
 		function onListButton() {
 			location.href = '<%= contextPath %>/Recipe/list';
+		}
+		
+		function onReviewButton() {
+			location.href = '<%= contextPath %>/Recipe/review?recipe_no=<%= recipe.getNo() %>';
 		}
 	
 		/* id 파라미터 부분 로그인 완성 되면 수정 필요 */

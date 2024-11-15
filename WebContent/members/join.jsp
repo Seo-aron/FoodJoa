@@ -34,9 +34,10 @@
 </style>
 </head>
 <body>
-	<div class="container">
+	<div id="container">
+
 		<!-- 회원가입 폼 -->
-		<form class="login" action="<%= request.getContextPath() %>/Member/joinPro.me" method="post" enctype="multipart/form-data">
+		<form action="<%= request.getContextPath() %>/Member/joinProGo.me" class="login" action="<%= request.getContextPath() %>/Member/joinPro.me" method="post" enctype="multipart/form-data">
 			<h2 class="loginHeading">푸드조아 회원 가입</h2>
 
 			<div class="add">
@@ -61,7 +62,7 @@
 				</div>
 
 				<!-- 숨겨진 필드로 userId 전달 -->
-				<input type="hidden" name="userId" value="<%= userId %>" />
+				<input type="hidden" name="userId" value="<%= userId %>" /> 
 
 				<button class="joinButton" type="submit">회원가입</button>
 			</div>

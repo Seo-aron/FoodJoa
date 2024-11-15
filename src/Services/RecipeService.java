@@ -3,6 +3,7 @@ package Services;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import org.apache.commons.io.FileUtils;
 
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
+import com.oreilly.servlet.multipart.Part;
 
 import Common.StringParser;
 import DAOs.RecipeDAO;
@@ -30,13 +32,13 @@ public class RecipeService {
 		recipeDAO = new RecipeDAO();
 	}
 	
-	private synchronized void moveProfile(String path, String no, String fileName) throws IOException {
+	private synchronized void moveProfile(String srcPath, String destinationPath, String fileName) throws IOException {
 		
 	    if (fileName == null || fileName.isEmpty()) return;
 
 	    synchronized (this) {
-	        File srcFile = new File(path + "\\temp\\" + fileName);
-	        File destDir = new File(path + "\\recipe\\thumbnails\\" + no);
+	        File srcFile = new File(srcPath + "\\" + fileName);
+	        File destDir = new File(destinationPath);
 
 	        if (!destDir.exists()) {
 	            destDir.mkdirs();
@@ -69,10 +71,8 @@ public class RecipeService {
 		return recipeDAO.selectRecipe(no);
 	}
 	
-	public RecipeVO getRecipe(int no) {
-		
-		return recipeDAO.selectRecipe(String.valueOf(no));
-	}
+	public RecipeVO getRecipe(int no) { return recipeDAO.selectRecipe(String.valueOf(no)); }
+	public RecipeVO getRecipe(String no) { return recipeDAO.selectRecipe(no); }
 	
 	public int processRecipeWrite(HttpServletRequest request) throws ServletException, IOException {
 		
@@ -104,9 +104,10 @@ public class RecipeService {
 		
 		int recipeNo = recipeDAO.selectInsertedRecipeNo(recipe);
 		
-		System.out.println("result : " + recipeNo);
+		String srcPath = path + "\\temp\\";
+		String destinationPath = path + "\\recipe\\thumbnails\\" + String.valueOf(recipeNo);
 		
-		moveProfile(path, String.valueOf(recipeNo), fileName);
+		moveProfile(srcPath, destinationPath, fileName);
 		
 		return recipeNo;
 	}
@@ -118,10 +119,58 @@ public class RecipeService {
 				request.getParameter("recipeNo"));
 	}
 	
-	public ArrayList<RecipeReviewVO> getRecipeReviewes(HttpServletRequest request) {
+	public ArrayList<RecipeReviewVO> getRecipeReviewes(int recipeNo) {
 		
-		String recipeNo = request.getParameter("recipeNo");
+		return recipeDAO.selectRecipeReviews(recipeNo);
+	}
+	
+	public boolean checkRecipeReview(HttpServletRequest request) {
 		
-		return recipeDAO.selectRecipeReviewes(recipeNo);
+		/* 로그인 완성 되면 구현
+			HttpSession session = request.getSession();
+			String id = session.getAttribute("id");
+		*/
+		String id = "admin";
+	
+		return recipeDAO.isExistRecipeReview(id, request.getParameter("recipe_no"));
+	}
+	
+	public int processReviewWrite(HttpServletRequest request) throws ServletException, IOException {
+		
+		String id = "admin";
+		
+		ServletContext application = request.getServletContext();
+		
+		String path = application.getRealPath("/images/");
+		int maxSize = 1024 * 1024 * 1024;
+		
+		MultipartRequest multipartRequest = new MultipartRequest(request, path + "temp/", maxSize, "UTF-8",
+				new DefaultFileRenamePolicy());
+
+		String recipeNo = multipartRequest.getParameter("recipe_no");
+        String pictures = multipartRequest.getParameter("pictures");
+        String contents = multipartRequest.getParameter("contents");
+        String rating = multipartRequest.getParameter("rating");
+        
+        System.out.println("pictures : " + pictures);
+        
+        List<String> fileNames = StringParser.splitString(pictures);
+        
+        for(String fileName : fileNames) {
+    		
+    		String srcPath = path + "\\temp\\";
+    		String destinationPath = path + "\\recipe\\reviews\\" + String.valueOf(recipeNo) + "\\" + id;
+    		
+    		moveProfile(srcPath, destinationPath, fileName);
+        }
+        
+        RecipeReviewVO review = new RecipeReviewVO();
+        review.setId(id);
+        review.setRecipeNo(Integer.parseInt(recipeNo));
+        review.setPictures(pictures);
+        review.setContents(contents);
+        review.setRating(Integer.parseInt(rating));
+        
+		return recipeDAO.insertRecipeReivew(review);
 	}
 }

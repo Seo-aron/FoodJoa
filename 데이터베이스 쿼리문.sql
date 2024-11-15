@@ -6,8 +6,8 @@ USE foodjoa;
 -- member ------------------------------------------------------------------------------
 DROP TABLE IF EXISTS member;
 CREATE TABLE member(
-    id 			varchar(20) primary key not null,
-    name 		varchar(10) not null,
+    id 			varchar(50) primary key not null,
+    name 		varchar(20) not null,
     nickname 	varchar(10) not null,
     phone 		varchar(15) not null,
     address 	varchar(50) not null,
@@ -36,7 +36,7 @@ values ('review1', '리뷰자1', '리1', '01012345678', '부산시 부산진구'
 DROP TABLE IF EXISTS recipe;
 CREATE TABLE recipe(
 	no 					int primary key auto_increment,
-    id 					varchar(20) not null,
+    id 					varchar(50) not null,
     title 				varchar(50) not null,
     thumbnail 			varchar(50) not null,
     description			varchar(100) not null,
@@ -46,7 +46,6 @@ CREATE TABLE recipe(
     ingredient 			varchar(255) not null,
     ingredient_amount 	varchar(255) not null,
     orders 				varchar(255) not null,
-    empathy 			int not null,
     post_date			timestamp not null,
     
     FOREIGN KEY (id) REFERENCES member(id)
@@ -55,11 +54,11 @@ CREATE TABLE recipe(
 insert into recipe(id, title, thumbnail, 
 	description, contents, category, views, 
 	ingredient, ingredient_amount, 
-	orders, empathy, post_date) 
+	orders, post_date) 
 select id, title, thumbnail, 
 	description, contents, category, views, 
 	ingredient, ingredient_amount, 
-	orders, empathy, CURRENT_TIMESTAMP
+	orders, CURRENT_TIMESTAMP
 from recipe;
 
 
@@ -71,28 +70,27 @@ SELECT no FROM recipe ORDER BY no DESC LIMIT 1;
 drop table if exists recipe_review;
 create table recipe_review(
 	no 				int primary key auto_increment,
-    id 				varchar(20) not null,
+    id 				varchar(50) not null,
     recipe_no 		int not null,
     pictures 		text not null,
     contents 		text not null,
     rating 			int not null,
-    empathy 		int not null,
     post_date		timestamp,
     
     FOREIGN KEY (id) REFERENCES member(id),
     FOREIGN KEY (recipe_no) REFERENCES recipe(no)
 );
 
-insert into recipe_review(id, recipe_no, pictures, contents, rating, empathy, post_date)
-values('review1', '1', 'thumbnailImage.png', '리뷰 내용', 3, 0, CURRENT_TIMESTAMP),
-    ('review2', '1', 'thumbnailImage.png', '리뷰 내용', 1, 0, CURRENT_TIMESTAMP),
-    ('review3', '1', 'thumbnailImage.png', '리뷰 내용', 5, 0, CURRENT_TIMESTAMP),
-    ('review1', '2', 'thumbnailImage.png', '리뷰 내용', 4, 0, CURRENT_TIMESTAMP),
-    ('review2', '2', 'thumbnailImage.png', '리뷰 내용', 5, 0, CURRENT_TIMESTAMP),
-    ('review1', '3', 'thumbnailImage.png', '리뷰 내용', 3, 0, CURRENT_TIMESTAMP),
-    ('review2', '3', 'thumbnailImage.png', '리뷰 내용', 2, 0, CURRENT_TIMESTAMP),
-    ('review3', '3', 'thumbnailImage.png', '리뷰 내용', 1, 0, CURRENT_TIMESTAMP),
-    ('review4', '3', 'thumbnailImage.png', '리뷰 내용', 5, 0, CURRENT_TIMESTAMP);
+insert into recipe_review(id, recipe_no, pictures, contents, rating, post_date)
+values('review1', '1', 'thumbnailImage.png', '리뷰 내용', 3, CURRENT_TIMESTAMP),
+    ('review2', '1', 'thumbnailImage.png', '리뷰 내용', 1, CURRENT_TIMESTAMP),
+    ('review3', '1', 'thumbnailImage.png', '리뷰 내용', 5, CURRENT_TIMESTAMP),
+    ('review1', '2', 'thumbnailImage.png', '리뷰 내용', 4, CURRENT_TIMESTAMP),
+    ('review2', '2', 'thumbnailImage.png', '리뷰 내용', 5, CURRENT_TIMESTAMP),
+    ('review1', '3', 'thumbnailImage.png', '리뷰 내용', 3, CURRENT_TIMESTAMP),
+    ('review2', '3', 'thumbnailImage.png', '리뷰 내용', 2, CURRENT_TIMESTAMP),
+    ('review3', '3', 'thumbnailImage.png', '리뷰 내용', 1, CURRENT_TIMESTAMP),
+    ('review4', '3', 'thumbnailImage.png', '리뷰 내용', 5, CURRENT_TIMESTAMP);
 
 desc recipe_review;
 select * from recipe_review;
@@ -100,7 +98,7 @@ select * from recipe_review;
 drop table if exists recipe_wishlist;
 create table recipe_wishlist(
 	no 			int primary key auto_increment,
-    id 			varchar(20) not null,
+    id 			varchar(50) not null,
     recipe_no 	int not null, 
     
     FOREIGN KEY (id) REFERENCES member(id),
@@ -108,9 +106,7 @@ create table recipe_wishlist(
 );
 
 insert into recipe_wishlist(id, recipe_no) 
-values('admin', 1),
-	('admin', 2),
-    ('admin', 3);
+values('admin', 1);
 
 desc recipe_wishlist;
 select * from recipe_wishlist;
@@ -122,7 +118,7 @@ select * from recipe_wishlist;
 DROP TABLE IF EXISTS mealkit;
 CREATE TABLE mealkit(
     no            int primary key auto_increment,
-	id            varchar(20) not null,
+	id            varchar(50) not null,
 	title         varchar(50) not null,
 	contents       text not null,
 	category      tinyint not null,
@@ -145,7 +141,7 @@ DESC mealkit;
 DROP TABLE IF EXISTS mealkit_order;
 CREATE TABLE mealkit_order(
 	no			int primary key auto_increment,
-    id			varchar(20) not null,
+    id			varchar(50) not null,
     mealkit_no	int not null,
     address		varchar(5) not null,
     amount		int not null,
@@ -165,7 +161,7 @@ DESC mealkit_order;
 DROP TABLE IF EXISTS mealkit_review;
 CREATE TABLE mealkit_review(
 	no			int primary key auto_increment,
-    id			varchar(20) not null,
+    id			varchar(50) not null,
     mealkit_no	int not null,
     pictures	text not null,
     contents	text not null,
@@ -185,7 +181,7 @@ DESC mealkit_review;
 DROP TABLE IF EXISTS mealkit_wishlist;
 CREATE TABLE mealkit_wishlist(
 	no			int primary key auto_increment,
-    id			varchar(20) not null,
+    id			varchar(50) not null,
     mealkit_no	int not null,
     type		tinyint not null,
     
@@ -215,7 +211,7 @@ VALUES
 
 create table community(
 	no 			int primary key auto_increment,
-    id 			varchar(20) not null, 
+    id 			varchar(50) not null, 
 	title 		varchar(50) not null,
     contents	text not null,
     views		int not null

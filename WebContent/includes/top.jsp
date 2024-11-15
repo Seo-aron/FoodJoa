@@ -119,6 +119,7 @@
 			list-style: none;
 			padding: 10px 0;
 			width: 160px;
+			z-index: 1000;
 		}
 		
 		#topMenu>li>ul>li>a {
@@ -131,6 +132,7 @@
 		#topMenu>li:hover>ul {
 			display: block;
 		}
+		
 	</style>
 </head>
 
@@ -156,16 +158,17 @@
 		<nav>
 			<ul id="topMenu">
 				<li><a href="#">홈</a></li>
-				<li><a href="#">레시피 공유<span> ▼ </span></a>
+				<li><a href="<%= contextPath %>/Recipe/list">레시피 공유<span> ▼ </span></a>
 					<ul>
-						<li><a href="#">간단 요리</a></li>
-						<li><a href="#">고급 요리</a></li>
+						<li><a href="#">한식 요리</a></li>
+						<li><a href="#">일식 요리</a></li>
+						<li><a href="#">중식 요리</a></li>
+						<li><a href="#">양식 요리</a></li>
 						<li><a href="#">자취 요리</a></li>
-						<li><a href="#">웰빙 요리</a></li>
 					</ul></li>
 				<li><a href="#">나만의 음식 판매<span> ▼ </span></a>
 					<ul>
-						<li><a href="#">1</a></li>
+						<li><a href="<%=contextPath%>/Mealkit/list">1</a></li>
 						<li><a href="#">2</a></li>
 						<li><a href="#">3</a></li>
 						<li><a href="#">4</a></li>
@@ -176,7 +179,7 @@
 						<li><a href="#">함께 재료 나눠요</a></li>
 						<li><a href="#">같이 먹어요</a></li>
 					</ul></li>
-				<li><a href="#">마이페이지</a></li>
+				<li><a href="<%= contextPath %>/Member/mypagemain.me">마이페이지</a></li>
 			</ul>
 		</nav>
 	</div>

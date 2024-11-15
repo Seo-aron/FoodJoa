@@ -9,8 +9,6 @@
     response.setContentType("text/html; charset=utf-8");
     
     String contextPath = request.getContextPath();
-    Object resultObj = request.getAttribute("result");
-    int result = Integer.parseInt(resultObj.toString());
 %>
 <!DOCTYPE html>
 <html>
@@ -166,14 +164,13 @@
 	    	    $(this).closest('.added-orders').remove();
 	    	});
 	    });
+	    
 		// 전송버튼 
 		function onSubmit(e) {
 		    e.preventDefault();
 		    
 		    setOrdersString();
-		    
-		    showResultMessage();
-		    
+
 		  	document.getElementById('frmWrite').submit();
 		};
 		// 받은 조리 순서를 하나의 배열로 만드는 함수 
@@ -205,21 +202,7 @@
 		    
 			return result;
 		}
-		
-		// 등록 되었는지 확인 알람 
-		function showResultMessage() {
-            var resultValue = <%= result %>;
-            
-            if (resultValue === 1) {
-                alert("등록 성공!");
-                history.back();
-            } else if (resultValue === 0) {
-                alert("등록 실패!");
-            } else {
-                alert("결과를 확인할 수 없습니다.");
-            }
-        }
-			 
+
     </script>
 </body>
 </html>

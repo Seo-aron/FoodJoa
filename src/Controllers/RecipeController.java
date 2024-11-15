@@ -64,6 +64,8 @@ public class RecipeController extends HttpServlet {
 		case "/read": openRecipeReadView(request, response); break;
 		case "/writePro": processRecipeWrite(request, response); break;
 		case "/wishlist": processRecipeWishlist(request, response); return;
+		case "/review": if (openRecipeReviewView(request, response)) return ; break;
+		case "/reviewWrite": processReviewWrite(request, response); return;
 
 		default:
 		}
@@ -113,10 +115,10 @@ public class RecipeController extends HttpServlet {
 		int recipeNo = recipeService.processRecipeWrite(request);
 		
 		RecipeVO recipe = recipeService.getRecipe(recipeNo);
-		ArrayList<RecipeReviewVO> reviewes = recipeService.getRecipeReviewes(request);
+		ArrayList<RecipeReviewVO> reviews = recipeService.getRecipeReviewes(recipeNo);
 		
 		request.setAttribute("recipe", recipe);
-		request.setAttribute("reviewes", reviewes);
+		request.setAttribute("reviews", reviews);
 		request.setAttribute("pageTitle", recipe.getTitle());
 		request.setAttribute("center", "recipes/read.jsp");
 		
@@ -134,5 +136,40 @@ public class RecipeController extends HttpServlet {
 		
 		printWriter.close();
 		printWriter = null;
+	}
+	
+	private boolean openRecipeReviewView(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		boolean result = recipeService.checkRecipeReview(request);
+
+		if (result) {
+			printWriter = response.getWriter();
+			
+			printWriter.print("<script>");
+			printWriter.print("alert('이미 리뷰를 작성 하셨습니다.');");
+			printWriter.print("</script>");
+			
+			printWriter.close();
+			printWriter = null;
+		}
+		else {
+			RecipeVO recipe = recipeService.getRecipe(request.getParameter("recipe_no"));
+			
+			request.setAttribute("recipe", recipe);
+			request.setAttribute("center", "recipes/review.jsp");
+			
+			nextPage = "/main.jsp";
+		}
+		
+		return result;
+	}
+	
+	private void processReviewWrite(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		recipeService.processReviewWrite(request);	
+		
+		openRecipeReadView(request, response);
 	}
 }

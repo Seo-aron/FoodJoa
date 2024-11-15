@@ -72,7 +72,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">내 리뷰 관리</div>
+        <div class="header">내 상품 관리</div>
         
         <!-- Header row -->
         <div class="item">
