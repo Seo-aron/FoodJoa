@@ -89,6 +89,8 @@ public class MealkitController extends HttpServlet {
 	private void processAddMealkit(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		mealkitService.setWriteMealkit(request, response);
+		
+		
 	}
 
 	private void openAddMealkit(HttpServletRequest request, HttpServletResponse response) {

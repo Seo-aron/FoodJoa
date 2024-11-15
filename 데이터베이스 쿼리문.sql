@@ -6,8 +6,8 @@ USE foodjoa;
 -- member ------------------------------------------------------------------------------
 DROP TABLE IF EXISTS member;
 CREATE TABLE member(
-    id 			varchar(20) primary key not null,
-    name 		varchar(10) not null,
+    id 			varchar(50) primary key not null,
+    name 		varchar(20) not null,
     nickname 	varchar(10) not null,
     phone 		varchar(15) not null,
     address 	varchar(50) not null,
@@ -36,7 +36,7 @@ values ('review1', '리뷰자1', '리1', '01012345678', '부산시 부산진구'
 DROP TABLE IF EXISTS recipe;
 CREATE TABLE recipe(
 	no 					int primary key auto_increment,
-    id 					varchar(20) not null,
+    id 					varchar(50) not null,
     title 				varchar(50) not null,
     thumbnail 			varchar(50) not null,
     description			varchar(100) not null,
@@ -70,7 +70,7 @@ SELECT no FROM recipe ORDER BY no DESC LIMIT 1;
 drop table if exists recipe_review;
 create table recipe_review(
 	no 				int primary key auto_increment,
-    id 				varchar(20) not null,
+    id 				varchar(50) not null,
     recipe_no 		int not null,
     pictures 		text not null,
     contents 		text not null,
@@ -98,7 +98,7 @@ select * from recipe_review;
 drop table if exists recipe_wishlist;
 create table recipe_wishlist(
 	no 			int primary key auto_increment,
-    id 			varchar(20) not null,
+    id 			varchar(50) not null,
     recipe_no 	int not null, 
     
     FOREIGN KEY (id) REFERENCES member(id),
@@ -118,7 +118,7 @@ select * from recipe_wishlist;
 DROP TABLE IF EXISTS mealkit;
 CREATE TABLE mealkit(
     no            int primary key auto_increment,
-	id            varchar(20) not null,
+	id            varchar(50) not null,
 	title         varchar(50) not null,
 	contents       text not null,
 	category      tinyint not null,
@@ -141,7 +141,7 @@ DESC mealkit;
 DROP TABLE IF EXISTS mealkit_order;
 CREATE TABLE mealkit_order(
 	no			int primary key auto_increment,
-    id			varchar(20) not null,
+    id			varchar(50) not null,
     mealkit_no	int not null,
     address		varchar(5) not null,
     amount		int not null,
@@ -161,7 +161,7 @@ DESC mealkit_order;
 DROP TABLE IF EXISTS mealkit_review;
 CREATE TABLE mealkit_review(
 	no			int primary key auto_increment,
-    id			varchar(20) not null,
+    id			varchar(50) not null,
     mealkit_no	int not null,
     pictures	text not null,
     contents	text not null,
@@ -181,7 +181,7 @@ DESC mealkit_review;
 DROP TABLE IF EXISTS mealkit_wishlist;
 CREATE TABLE mealkit_wishlist(
 	no			int primary key auto_increment,
-    id			varchar(20) not null,
+    id			varchar(50) not null,
     mealkit_no	int not null,
     type		tinyint not null,
     
@@ -211,7 +211,7 @@ VALUES
 
 create table community(
 	no 			int primary key auto_increment,
-    id 			varchar(20) not null, 
+    id 			varchar(50) not null, 
 	title 		varchar(50) not null,
     contents	text not null,
     views		int not null

@@ -107,7 +107,7 @@ public class MemberController extends HttpServlet {
             case "/mypagemain.me":
                 // 정보 수정 페이지 요청
                 String center = memberService.profileupdate(request);
-                request.setAttribute("center", "mypagemain.jsp");
+                request.setAttribute("center", "members/mypagemain.jsp");
                 nextPage = "/main.jsp";
                 break;
 
@@ -143,7 +143,7 @@ public class MemberController extends HttpServlet {
 	private void openMemberJoinView(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
     	
-        request.setAttribute("center", "members/join.jsp");
+        request.setAttribute("center", "members/snsjoin.jsp");
         
         nextPage = "/main.jsp";
 
