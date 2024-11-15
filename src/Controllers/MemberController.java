@@ -69,9 +69,6 @@ public class MemberController extends HttpServlet {
             case "/getUserProfile.me":
             	NaverLoginAPI.handleNaverLogin(request, response);
                 return;
-            case "/loadPro.me" : loadProfile(request, response); break;
-            	//사용자 프로필 사진 요청 
-            	
             case "/updatePro.me" : updateProfile(request, response); break; 
 
             default:
@@ -83,21 +80,14 @@ public class MemberController extends HttpServlet {
             dispatcher.forward(request, response);
         }
     }
-    
-	private void loadProfile(HttpServletRequest request, HttpServletResponse response) {
-		
-		nextPage = "mypagemain.jsp";
-		
-	}
 
 	private void updateProfile(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException{
 		
-		MemberVO vo = memberService.getMember(request);
-		
-		request.setAttribute("vO", vo);
-		
-		nextPage = "/members/mypagemain.jsp";
+		String pwd = request.getParameter("pwd");
+		String id =request.getParameter("id");
+	//	String pwd = request.getParameter("pwd");
+	//	String pwd = request.getParameter("pwd");
 	}
 
 	private void openMemberJoinView(HttpServletRequest request, HttpServletResponse response)
@@ -163,4 +153,6 @@ public class MemberController extends HttpServlet {
         
         nextPage = "/login.jsp";
     }
+    
+   
 }

@@ -49,8 +49,13 @@ public class MemberService {
 		
 		//String loginedId = (String) session.getAttribute("id");
 		
+		String login_id = request.getParameter("id");
+		String login_name = request.getParameter("name");
+		
+		
 		return memberDAO.selectMember(request.getParameter("id"));
 		//return memberDAO.selectMember(loginedId);
+		
 	}
 
     public boolean checkMemberId(HttpServletRequest request) {
@@ -108,11 +113,12 @@ public class MemberService {
         HttpSession session = request.getSession();
         session.setAttribute("id", login_id);
 
-        return memberDAO.checkMember(login_id, login_name);
+        return memberDAO.userCheck(login_id, login_name);
     }
 
-    public String profileUpdate(HttpServletRequest request) {
+    public String profileupdate(HttpServletRequest request) {
        
         return null;
-    }	
+    }
+    
 }
