@@ -1,5 +1,7 @@
 package VOs;
 
+import java.sql.Timestamp;
+
 public class CommunityVO {
 	
 	private int no;
@@ -7,18 +9,23 @@ public class CommunityVO {
 	private String title;
 	private String contents;
 	private int views;
+	private Timestamp postDate;
 	
 	public CommunityVO() {
 		
 	}
 
 	public CommunityVO(int no, String id, String title, String contents, int views) {
-		super();
 		this.no = no;
 		this.id = id;
 		this.title = title;
 		this.contents = contents;
 		this.views = views;
+	}
+
+	public CommunityVO(int no, String id, String title, String contents, int views, Timestamp postDate) {
+		this(no, id, title, contents, views);
+		this.postDate = postDate;
 	}
 
 	public int getNo() {
@@ -60,5 +67,14 @@ public class CommunityVO {
 	public void setViews(int views) {
 		this.views = views;
 	}
+
+	public Timestamp getPostDate() {
+		return postDate;
+	}
+
+	public void setPostDate(Timestamp postDate) {
+		this.postDate = postDate;
+	}
+	
 }
 

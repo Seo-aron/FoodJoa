@@ -1,14 +1,26 @@
 package Services;
 
+import java.util.ArrayList;
+
+import DAOs.CommunityDAO;
+import VOs.CommunityVO;
 
 public class CommunityService {
 
-	private CommunityService communityDAO;
+		CommunityDAO communitydao;
 	
 	public CommunityService() {
 		
-		communityDAO = new CommunityService();
+		communitydao = new CommunityDAO();
 		
 	}
 
+	public ArrayList<CommunityVO> getCommunityList() {
+		
+		return communitydao.communityListAll();
+	}
+	
+	
+	
+	
 }

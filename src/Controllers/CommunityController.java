@@ -1,6 +1,7 @@
 package Controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import Services.CommunityService;
+import VOs.CommunityVO;
 
 @WebServlet("/Community/*")
 public class CommunityController extends HttpServlet {
@@ -20,11 +22,9 @@ public class CommunityController extends HttpServlet {
 	private String nextPage;
 	private String printWriter;
 	
-	
 	public void init(ServletConfig config) throws ServletException {
 		
 		communityService = new CommunityService();
-		
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -43,16 +43,31 @@ public class CommunityController extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;charset=utf-8");
 
-		HttpSession session = request.getSession();
-		
 		String action = request.getPathInfo();
 		System.out.println("action : " + action);
 		
-		switch (action) {
-		case "/list": openCommunityList(request,response); break;
-
+		ArrayList list = null;
+		CommunityVO vo = null;
 		
-		default:
+		switch (action) {
+			case "/list.jsp": openCommunityList(request,response);
+			
+				HttpSession session = request.getSession();
+				String loginid = (String)session.getAttribute("id");
+			
+				list = communityService.getCommunityList();
+				
+				// String nowPage = request.getParameter("nowPage");
+				// String nowBlock = request.getParameter("nowBlock");
+
+				request.setAttribute("list", list);
+				request.setAttribute("center", "communities/list.jsp");
+				
+				nextPage = "/main.jsp";
+				
+				break;
+				
+			default:
 		}
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
