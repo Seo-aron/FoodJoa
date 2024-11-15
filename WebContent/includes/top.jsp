@@ -119,6 +119,7 @@
 			list-style: none;
 			padding: 10px 0;
 			width: 160px;
+			z-index: 1000;
 		}
 		
 		#topMenu>li>ul>li>a {
@@ -131,6 +132,7 @@
 		#topMenu>li:hover>ul {
 			display: block;
 		}
+		
 	</style>
 </head>
 
