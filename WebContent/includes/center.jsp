@@ -7,6 +7,7 @@
 
 <%
 	request.setCharacterEncoding("UTF-8");
+	String contextPath = request.getContextPath();
 %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
@@ -51,6 +52,49 @@
             vertical-align: top;
             width: 300px;
         }	
+        
+       
+          /* 사이드바 스타일 */
+        .sidebar {
+            position: absolute; /* 초기에는 고정 위치 */
+            top: 20px;
+            right: 20px;
+            width: 150px;
+            padding: 10px;
+            transition: top 0.3s ease; /* 부드러운 이동 효과 */
+        }
+
+        .sidebar h3 {
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        .sidebar .card {
+            background-color: #fff;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .sidebar .card a {
+            display: block;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .content-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .main-content {
+            flex: 1;
+        }
 	</style>
 	
 	<!-- BX slider -->
@@ -66,7 +110,50 @@
                 pager: true
             });
         });
+        
+        
+        // 사이드바 스크롤 효과
+        window.addEventListener("scroll", function () {
+            const sidebar = document.querySelector(".sidebar");
+            const center = document.getElementById("center");
+
+            // center 영역의 위치와 높이 가져오기
+            const centerTop = center.offsetTop;
+            const centerBottom = centerTop + center.offsetHeight;
+            const offset = 20; // 상단 여백
+
+            // 현재 스크롤 위치 계산
+            const scrollY = window.scrollY;
+
+            // 사이드바의 위치를 center 영역 내로 제한
+            if (scrollY + offset < centerTop) {
+                // center 위에 있을 때는 고정된 위치
+                sidebar.style.top = centerTop + "px";
+            } else if (scrollY + offset + sidebar.offsetHeight > centerBottom) {
+                // center 아래에 있을 때는 bottom에 고정
+                sidebar.style.top = (centerBottom - sidebar.offsetHeight) + "px";
+            } else {
+                // center 안에서 스크롤을 따라 움직일 때
+                sidebar.style.top = (scrollY + offset) + "px";
+            }
+        });
+        
+        
     </script>
+    
+    	<script type="text/javascript">
+		function onWishList() {
+			location.href = '<%= contextPath %>/Member/wishlist.me';
+		}
+		
+		function onRecently() {
+			location.href = '<%= contextPath %>/Member/recently.me';
+		}
+		
+		function onCart() {
+			location.href = '<%= contextPath %>/Member/cart.me';
+		}
+		</script>
     
 </head>
 
@@ -113,6 +200,14 @@
             </tr>
         </table>
 	</div>
+	
+	<!-- 사이드바 영역 -->
+		<div class="sidebar">
+	        <button class="button" onclick="onWishList()">위시리스트 <br> 레시피/상품</button>
+	        <button class="button" onclick="onRecently()">최근에 본 <br> 레시피/상품</button>
+	        <button class="button" onclick="onCart()">장바구니</button>
+	    </div>
 </body>
+
 
 </html>

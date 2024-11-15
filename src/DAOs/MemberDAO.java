@@ -5,11 +5,14 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import Common.DBConnector;
+import VOs.MealkitWishListVO;
 import VOs.MemberVO;
+import VOs.RecipeWishListVO;
 
 public class MemberDAO {
 
     private DBConnector dbConnector;
+	private Object type;
 
     public MemberDAO() {
         dbConnector = new DBConnector();
@@ -65,42 +68,25 @@ public class MemberDAO {
         return result;
     }
 
-    public void insertNaverMember(String naverId) {
+    // 네이버 아이디 저장
+    public void insertNaverMember(String naverId) throws SQLException {
         String sql = "INSERT INTO member (id) VALUES (?)";
-
         try {
             int result = dbConnector.executeUpdate(sql, naverId);
-
             if (result > 0) {
                 System.out.println("네이버 아이디가 성공적으로 등록되었습니다.");
             } else {
                 System.out.println("네이버 아이디 등록에 실패했습니다.");
             }
-        } catch (Exception e) {
-            System.out.println("네이버 아이디 등록 중 오류 발생: " + e.getMessage());
-            e.printStackTrace();
         } finally {
             dbConnector.release();
         }
     }
 
-
-    // 회원 등록
-    public void insertMember(MemberVO vo) {
-    	// 네이버 아이디를 기존 id 필드에 저장
-    	String sql = "INSERT INTO member(id, name, nickname, phone, address, profile, join_date) "
-    	            + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-
-
+    // 회원가입 처리 (추가 정보 포함)
+    public void insertMember(MemberVO vo) throws SQLException {
+        String sql = "INSERT INTO member (id, name, nickname, phone, address, profile, join_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
-            // 값 확인
-            System.out.println("id: " + vo.getId());
-            System.out.println("name: " + vo.getName());
-            System.out.println("nickname: " + vo.getNickname());
-            System.out.println("phone: " + vo.getPhone());
-            System.out.println("address: " + vo.getAddress());
-            System.out.println("profile: " + vo.getProfile());
-
             Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
             int result = dbConnector.executeUpdate(sql, 
                 vo.getId(), 
@@ -111,15 +97,11 @@ public class MemberDAO {
                 vo.getProfile(), 
                 currentTimestamp
             );
-
             if (result > 0) {
                 System.out.println("회원이 성공적으로 등록되었습니다.");
             } else {
                 System.out.println("회원 등록에 실패했습니다.");
             }
-        } catch (Exception e) {
-            System.out.println("회원 등록 중 오류 발생: " + e.getMessage());
-            e.printStackTrace();
         } finally {
             dbConnector.release();
         }
@@ -171,4 +153,104 @@ public class MemberDAO {
 		return profile;
     	
     }
+    
+
+
+    // 사용자 레시피 위시리스트 조회
+    public ArrayList<RecipeWishListVO> selectUserRecipeWishlist(String id) {
+        ArrayList<RecipeWishListVO> wishlist = new ArrayList<>();
+        String sql = "SELECT * FROM recipe_wishlist WHERE id = ?";
+        ResultSet resultSet = null;
+
+        try {
+            resultSet = dbConnector.executeQuery(sql, id);
+            while (resultSet.next()) {
+                RecipeWishListVO recipeWishlist = new RecipeWishListVO(
+                        resultSet.getInt("no"),
+                        resultSet.getString("id"),
+                        resultSet.getInt("recipe_no")
+                );
+                wishlist.add(recipeWishlist);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("selectUserRecipeWishlist() SQLException 발생");
+        } finally {
+            dbConnector.Release();  // 자원 해제
+        }
+        return wishlist;
+    }
+
+    // 사용자 상품 위시리스트 조회
+    public ArrayList<MealkitWishListVO> selectUserProductWishlist(String id) {
+        ArrayList<MealkitWishListVO> wishlist = new ArrayList<>();
+        String sql = "SELECT * FROM mealkit_wishlist WHERE id = ?";
+        ResultSet resultSet = null;
+
+        try {
+            resultSet = dbConnector.executeQuery(sql, id);
+            while (resultSet.next()) {
+            	MealkitWishListVO mealkitwishlist = new MealkitWishListVO(
+                        resultSet.getInt("no"),
+                        resultSet.getString("id"),
+                        resultSet.getInt("product_no"),
+                        resultSet.getInt("type")
+                );
+                wishlist.add(mealkitwishlist);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("selectUserMealkitWishListVO() SQLException 발생");
+        } finally {
+            dbConnector.Release();  // 자원 해제
+        }
+        return wishlist;
+    }
+
+    // 레시피 위시리스트에 레시피 추가
+    public boolean addRecipeToWishlist(String id, int recipeNo) throws SQLException {
+        String sql = "INSERT INTO recipe_wishlist (id, recipe_no) VALUES (?, ?)";
+        try {
+            int result = dbConnector.executeUpdate(sql, id, recipeNo);
+            return result > 0;  // 성공하면 true, 실패하면 false
+        } finally {
+            dbConnector.Release();  // 자원 해제
+        }
+    }
+
+    // 상품 위시리스트에 상품 추가
+    public boolean addMealkitToWishlist(String id, int mealkit_no) throws SQLException {
+        String sql = "INSERT INTO mealkit_wishlist (id, mealkit_no, type) VALUES (?, ?, ?)";
+        try {
+            int result = dbConnector.executeUpdate(sql, id, mealkit_no, type);
+            return result > 0;  // 성공하면 true, 실패하면 false
+        } finally {
+            dbConnector.Release();  // 자원 해제
+        }
+    }
+
+    // 레시피 위시리스트에서 레시피 삭제
+    public boolean removeRecipeFromWishlist(String id, int recipeNo) throws SQLException {
+        String sql = "DELETE FROM recipe_wishlist WHERE id = ? AND recipe_no = ?";
+        try {
+            int result = dbConnector.executeUpdate(sql, id, recipeNo);
+            return result > 0;  // 성공하면 true, 실패하면 false
+        } finally {
+            dbConnector.Release();  // 자원 해제
+        }
+    }
+
+    // 상품 위시리스트에서 상품 삭제
+    public boolean removeProductFromWishlist(String id, int mealkit_no) throws SQLException {
+        String sql = "DELETE FROM mealkit_wishlist WHERE id = ? AND product_no = ?";
+        try {
+            int result = dbConnector.executeUpdate(sql, id, mealkit_no);
+            return result > 0;  // 성공하면 true, 실패하면 false
+        } finally {
+            dbConnector.Release();  // 자원 해제
+        }
+    }
+    
+    
+   
 }
