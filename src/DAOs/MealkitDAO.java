@@ -119,7 +119,7 @@ public class MealkitDAO {
 			e.printStackTrace();
 		}
 		
-		dbConnector.Release();
+		dbConnector.release();
 		
 		return reviews;
 	}
@@ -151,7 +151,7 @@ public class MealkitDAO {
 			System.out.println("일치하는 ID가 없습니다.");
 		}
 		
-		dbConnector.Release();
+		dbConnector.release();
 		
 		return result;
 	}
@@ -169,7 +169,7 @@ public class MealkitDAO {
 			System.out.println("MealkitDAO - insertNewContent 예외발생 ");
 		}
 		
-		dbConnector.Release();
+		dbConnector.release();
 		
 		return result;
 	}
@@ -196,7 +196,7 @@ public class MealkitDAO {
 		int result = dbConnector.executeUpdate(sql, vo.getId(), mealkit_no, vo.getPictures(), 
 				vo.getContents(),vo.getRating());
 		
-		dbConnector.Release();
+		dbConnector.release();
 		
 		return result;
 	}
@@ -207,7 +207,7 @@ public class MealkitDAO {
 		
 		int result = dbConnector.executeUpdate(sql, empathyCount, mealkit_no, no);
 		
-		dbConnector.Release();
+		dbConnector.release();
 		
 		return result;
 	}

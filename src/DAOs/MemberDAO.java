@@ -176,7 +176,7 @@ public class MemberDAO {
             e.printStackTrace();
             System.out.println("selectUserRecipeWishlist() SQLException 발생");
         } finally {
-            dbConnector.Release();  // 자원 해제
+            dbConnector.release();  // 자원 해제
         }
         return wishlist;
     }
@@ -202,7 +202,7 @@ public class MemberDAO {
             e.printStackTrace();
             System.out.println("selectUserMealkitWishListVO() SQLException 발생");
         } finally {
-            dbConnector.Release();  // 자원 해제
+            dbConnector.release();  // 자원 해제
         }
         return wishlist;
     }
@@ -214,7 +214,7 @@ public class MemberDAO {
             int result = dbConnector.executeUpdate(sql, id, recipeNo);
             return result > 0;  // 성공하면 true, 실패하면 false
         } finally {
-            dbConnector.Release();  // 자원 해제
+            dbConnector.release();  // 자원 해제
         }
     }
 
@@ -225,7 +225,7 @@ public class MemberDAO {
             int result = dbConnector.executeUpdate(sql, id, mealkit_no, type);
             return result > 0;  // 성공하면 true, 실패하면 false
         } finally {
-            dbConnector.Release();  // 자원 해제
+            dbConnector.release();  // 자원 해제
         }
     }
 
@@ -236,7 +236,7 @@ public class MemberDAO {
             int result = dbConnector.executeUpdate(sql, id, recipeNo);
             return result > 0;  // 성공하면 true, 실패하면 false
         } finally {
-            dbConnector.Release();  // 자원 해제
+            dbConnector.release();  // 자원 해제
         }
     }
 
@@ -247,7 +247,7 @@ public class MemberDAO {
             int result = dbConnector.executeUpdate(sql, id, mealkit_no);
             return result > 0;  // 성공하면 true, 실패하면 false
         } finally {
-            dbConnector.Release();  // 자원 해제
+            dbConnector.release();  // 자원 해제
         }
     }
     
