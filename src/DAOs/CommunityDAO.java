@@ -42,7 +42,7 @@ public class CommunityDAO {
 			e.printStackTrace();
 		}
 		
-		dbConnecter.Release();
+		dbConnecter.release();
 		
 		return communities;
 	}
