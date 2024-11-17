@@ -3,6 +3,7 @@ package DAOs;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import Common.DBConnector;
 import VOs.MealkitOrderVO;
@@ -161,7 +162,7 @@ public class MealkitDAO {
 		
 		String sql = "INSERT INTO mealkit(id, title, contents, category, price, stock, pictures, orders, origin, "
 				+ "views, soldout, post_date) VALUES(?,?,?,?,?,?,?,?,?,0,0,NOW())";
-	
+		
 		try {
 			result = dbConnector.executeUpdate(sql, vo.getId(), vo.getTitle(), vo.getContents(), vo.getCategory(), 
 					vo.getPrice(), vo.getStock(), vo.getPictures(), vo.getOrders(), vo.getOrigin());

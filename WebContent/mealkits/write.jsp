@@ -27,7 +27,7 @@
                 if (pictureCount < maxPictures) {
                     const newInput = `
                         <div class="image-row">
-                            <input type="file" name="pictures" accept="image/*" class="additionalInput">
+                            <input type="file" name="pictures[]" accept="image/*" class="additionalInput">
                             <button type="button" class="removeImage">삭제</button>
                         </div>
                     `;
@@ -50,7 +50,7 @@
 <body>
     <div id="container">
         <h2>밀키트 게시글 작성</h2>
-        <form action="<%=contextPath%>/Mealkit/write.pro" method="post" id="frmWrite">
+        <form action="<%=contextPath%>/Mealkit/write.pro" method="post" id="frmWrite" enctype="multipart/form-data">
             <table border="1">
 	            <tr>
 				    <th>ID</th>
@@ -67,7 +67,7 @@
                 <tr>
 				    <th>사진 추가</th>
 				    <td>
-				        <input type="file" name="pictures" accept="image/*" required id="thumbnail"><br>
+				        <input type="file" name="pictures[]" accept="image/*" required id="thumbnail"><br>
 				        <div id="imageContainer"></div>
 				        <button type="button" id="addImage">추가 사진</button>
 				    </td>
@@ -168,11 +168,31 @@
 		// 전송버튼 
 		function onSubmit(e) {
 		    e.preventDefault();
-		    
+		  	
 		    setOrdersString();
+		    
+		    var formData = new FormData($("#frmWrite")[0]);
 
-		  	document.getElementById('frmWrite').submit();
-		};
+		    $.ajax({
+		        url: "<%= contextPath %>/Mealkit/write.pro",
+		        type: "POST",
+		        data: formData,
+		        processData: false, // jQuery가 데이터를 자동으로 변환하지 않도록 설정
+		        contentType: false, // Content-Type을 자동으로 설정하도록
+		        success: function(response) { 
+		            if (response === "1") {
+		                alert("글 작성이 성공적으로 완료되었습니다.");
+		                window.location.href = "<%= contextPath %>/Mealkit/list";
+		            } else {
+		                alert("글 작성에 실패했습니다. 다시 시도해주세요.");
+		            }
+		        },
+		        error: function() { 
+		            alert("서버 요청 중 에러가 발생했습니다.");
+		        }
+		    });
+		}
+		
 		// 받은 조리 순서를 하나의 배열로 만드는 함수 
 		function setOrdersString() {
 
@@ -190,16 +210,15 @@
 					
 		// 문자열을 합치는 함수
 		function combineStrings(strings) {
-			let result = '';
-			     
-		    for (let str of strings) {
-				// 문자열 길이를 2바이트로 변환
-			    let length = str.length;
-		        let lengthBytes = String.fromCharCode(length >> 8, length & 0xFF);	
-		        // 길이 + 문자열 추가
-		        result += lengthBytes + str;
-	        }
-		    
+			
+			let result = strings.map(str => {
+		        const length = str.length;
+		        // 길이를 4자리로 포맷하고 0으로 패딩
+		        const lengthStr = String(length).padStart(4, '0');
+		        return lengthStr + str; // 길이와 문자열을 합침
+		    }).join(''); // 모든 요소를 하나의 문자열로 결합
+			
+			console.log("result : " + result);
 			return result;
 		}
 
