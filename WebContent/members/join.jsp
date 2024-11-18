@@ -2,13 +2,13 @@
 <%@ page import="javax.servlet.http.HttpSession" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    // 세션에서 userId 값 가져오기
-    String userId = (String) session.getAttribute("userId");
+    // request에서 userId 값 가져오기
+     String userId = (String) request.getAttribute("userId");
 
-	request.setCharacterEncoding("UTF-8");
-	response.setContentType("text/html; charset=utf-8");
-	
-	String contextPath = request.getContextPath();
+    request.setCharacterEncoding("UTF-8");
+    response.setContentType("text/html; charset=utf-8");
+
+    String contextPath = request.getContextPath();
 %>
 
 <!DOCTYPE html>

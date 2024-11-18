@@ -48,7 +48,9 @@
 			<tr>
 				<td>
 					
-				     <a href="javascript:kakaoLogin()"><img src="<%= contextPath %>/images/member/kakaologin.png">" style="width: 200px"></a>
+				     <a href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=dfedef18f339b433884cc51b005f2b42&redirect_uri=http://localhost:8090/FoodJoa/Member/kakaologin.me">
+						<img src="<%= contextPath %>/images/member/kakaologin.png" style="width: 200px">
+					</a>
 				</td>
 			</tr>
 		</table>
@@ -56,25 +58,4 @@
 	</center>
   </body>
 </html>
-<script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.js"></script>
-<script type="text/javascript">
-    Kakao.init('dfedef18f339b433884cc51b005f2b42');
-    function kakaoLogin() {
-        Kakao.Auth.login({
-            success: function (response) {
-                Kakao.API.request({
-                    url: '/v2/user/me',
-                    success: function (response) {
-                        alert(JSON.stringify(response))
-                    },
-                    fail: function (error) {
-                        alert(JSON.stringify(error))
-                    },
-                })
-            },
-            fail: function (error) {
-                alert(JSON.stringify(error))
-            },
-        })
-    }
-</script>
+

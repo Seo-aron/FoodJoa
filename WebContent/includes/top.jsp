@@ -141,7 +141,7 @@
 		<div id="header">
 			<!-- 사용자 메뉴 (로그인, 회원가입, 검색 버튼) -->
 			<div id="userMenu">
-				<button>로그인</button>
+				<button onclick="onLoginButton()">로그인</button>
 				<button onclick="onJoinButton()">회원가입</button>
 				<button>검색</button>
 			</div>
@@ -189,6 +189,11 @@
 		function onJoinButton() {
 			location.href = '<%= contextPath %>/Member/join.me';
 		}
+		
+		function onLoginButton(){
+			location.href = '<%= contextPath %>/Member/login.me';
+		}
+		
 	</script>
 </body>
 

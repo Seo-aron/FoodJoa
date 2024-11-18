@@ -67,23 +67,34 @@ public class MemberDAO {
         return result;
     }
 
-    // 네이버 아이디 저장
-    public void insertNaverMember(String naverId) throws SQLException {
-        String sql = "INSERT INTO member (id) VALUES (?)";
-        try {
-            int result = dbConnector.executeUpdate(sql, naverId);
-            if (result > 0) {
-                System.out.println("네이버 아이디가 성공적으로 등록되었습니다.");
-            } else {
-                System.out.println("네이버 아이디 등록에 실패했습니다.");
-            }
-        } finally {
-            dbConnector.release();
-        }
-    }
+	/*
+	 * // 네이버 아이디 저장 public void insertNaverMember(String naverId) throws
+	 * SQLException { String sql = "INSERT INTO member (id) VALUES (?)"; try { int
+	 * result = dbConnector.executeUpdate(sql, naverId); if (result > 0) {
+	 * System.out.println("네이버 아이디가 성공적으로 등록되었습니다."); } else {
+	 * System.out.println("네이버 아이디 등록에 실패했습니다."); } } finally {
+	 * dbConnector.release(); } }
+	 */
+    
+ // 카카오 아이디 저장
+	/*
+	 * public void insertKakaoMember(String kakaoId) throws SQLException {
+	 * 
+	 * System.out.println("DAO에서" + kakaoId);
+	 * 
+	 * String sql = "INSERT INTO member (id) VALUES (?)"; try {
+	 * 
+	 * int result = dbConnector.executeUpdate(sql, kakaoId); if (result > 0) {
+	 * System.out.println("카카오 아이디가 성공적으로 등록되었습니다.");
+	 * 
+	 * } else { System.out.println("카카오 아이디 등록에 실패했습니다.");
+	 * 
+	 * } } finally { dbConnector.release(); } }
+	 */
+    
 
     // 회원가입 처리 (추가 정보 포함)
-    public void insertMember(MemberVO vo) throws SQLException {
+    public void insertMember(MemberVO vo) {
         String sql = "INSERT INTO member (id, name, nickname, phone, address, profile, join_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
             Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
@@ -105,6 +116,18 @@ public class MemberDAO {
             dbConnector.release();
         }
     }
+    
+    
+    public boolean isUserExists(String userId) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM member WHERE id = ?";
+        ResultSet rs = dbConnector.executeQuery(sql, userId);
+        if (rs.next()) {
+            return rs.getInt(1) > 0;  // 존재하면 true 반환
+        }
+        return false;
+    }
+
+    
 
     // 사용자 확인 (로그인용)
     public int userCheck(String login_id, String login_name) {
