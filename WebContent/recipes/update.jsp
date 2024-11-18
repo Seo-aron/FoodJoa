@@ -1,3 +1,5 @@
+<%@page import="java.util.List"%>
+<%@page import="Common.StringParser"%>
 <%@page import="VOs.RecipeVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -24,37 +26,6 @@
 	<script src="<%= contextPath %>/js/recipe/update.js"></script>
 	<script src="https://cdn.tiny.cloud/1/dvxu8ag2amp0f6jzdha1igxdgal2cpo0waqtixb0z64yirx7/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
-	
-	<script>
-		$(function() {
-			$("#title").val('<%= recipe.getTitle() %>');
-			$("#description").val('<%= recipe.getDescription() %>');
-			$("#category").val('<%= recipe.getCategory() %>');
-			
-			decompressAndDisplay();
-		});
-		
-		function decompressAndDisplay() {
-		    var compressedData = "<%= compressedContents %>";
-		    
-	        try {
-	            // Base64 디코딩
-	            const binaryString = atob(compressedData);
-	            const bytes = new Uint8Array(binaryString.length);
-	            for (let i = 0; i < binaryString.length; i++) {
-	                bytes[i] = binaryString.charCodeAt(i);
-	            }
-
-	            const decompressedBytes = pako.inflate(bytes);
-	            
-	            const decompressedText = new TextDecoder('utf-8').decode(decompressedBytes);
-	            
-	            tinymce.get('contentsArea').setContent(decompressedText);
-	        } catch (error) {
-	            console.error("압축 해제 중 오류 발생:", error);
-	        }
-	    }
-	</script>
 	
 	<style>
 		#container {			
@@ -140,14 +111,18 @@
 				</tr>
 				<tr>
 					<td colspan="2">
-						<input type="button" class="write" value="레시피 작성" onclick="onSubmit(event)">
+						<input type="button" class="write" value="레시피 수정" onclick="onSubmit(event)">
 					</td>
 				</tr>
 			</table>
 		</form>
 	</div>
 	
-	
+	<%
+	List<String> ingredients = StringParser.splitString(recipe.getIngredient());
+	List<String> amounts = StringParser.splitString(recipe.getIngredientAmount());
+	List<String> orders = StringParser.splitString(recipe.getOrders());
+	%>
 	<script>
 		function onSubmit(e) {
 		    e.preventDefault();
@@ -162,7 +137,63 @@
  	
 		    document.getElementById('frmWrite').submit();
 		}
-	
+		
+		let decompressedText;
+		
+		initialize();		
+		
+		function initialize() {
+			$("#title").val('<%= recipe.getTitle() %>');
+			$("#description").val('<%= recipe.getDescription() %>');
+			$("#category").val('<%= recipe.getCategory() %>');			
+			decompressContents();
+			<%
+			for (int i = 0; i < ingredients.size(); i++) {
+				%>
+				var newIngredientHtml = 
+	                '<p class="added-ingredient">' +
+					'<span class="added-ingredient-name"><%= ingredients.get(i) %></span>' + 
+					'<span class="added-ingredient-amount"><%= amounts.get(i) %></span>' +
+	                '<button type="button" class="remove-ingredient">삭제</button>' +
+	                '</p>';
+	                
+                $(".ingredients-container").append(newIngredientHtml);
+				<%
+			}
+			
+			for (int i = 0; i < orders.size(); i++) {
+				%>
+				var newOrderHtml = 
+		            '<p class="added-orders">' +
+					'<span class="added-order"><%= orders.get(i) %></span>' + 
+		            '<button type="button" class="remove-orders">삭제</button>' +
+		            '</p>';
+		            
+	            $(".orders-container").append(newOrderHtml);
+				<%
+			}
+			%>
+		}
+
+		function decompressContents() {
+		    var compressedData = "<%= compressedContents %>";
+		    
+	        try {
+	            // Base64 디코딩
+	            const binaryString = atob(compressedData);
+	            const bytes = new Uint8Array(binaryString.length);
+	            for (let i = 0; i < binaryString.length; i++) {
+	                bytes[i] = binaryString.charCodeAt(i);
+	            }
+
+	            const decompressedBytes = pako.inflate(bytes);
+	            
+	            decompressedText = new TextDecoder('utf-8').decode(decompressedBytes);
+	        } catch (error) {
+	            console.error("압축 해제 중 오류 발생:", error);
+	        }
+		}
+		
 		tinymce.init({
 	        selector: "#contentsArea", // TinyMCE를 적용할 textarea 요소의 선택자를 지정
 	        statusbar: false,
@@ -173,6 +204,12 @@
 	        menubar: false,
 	        advlist_bullet_styles: 'square',
 	        advlist_number_styles: 'lower-alpha,lower-roman,upper-alpha,upper-roman',
+			setup : function(editor) {
+				editor.on('init', function() {
+					// 에디터가 초기화된 후 실행될 코드
+					tinymce.get('contentsArea').setContent(decompressedText);
+				});
+			}
 	    });
 	</script>
 </body>

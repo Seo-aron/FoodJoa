@@ -48,7 +48,7 @@ $(function() {
 
 
 	$(".add-orders").click(function() {
-	    var newIngredientHtml = `
+	    var newOrderHtml = `
 	        <p class="orders-row">
 	            <input type="text" class="name-orders" placeholder="조리 순서를 간단히 적어주세요.">
 	            <button type="button" class="addrow-orders">추가</button>
@@ -56,7 +56,7 @@ $(function() {
 	        </p>
 	    `;
 	    
-	    $(this).parent().prev().append(newIngredientHtml);
+	    $(this).parent().prev().append(newOrderHtml);
 	});
 
 	$(document).on('click', '.addrow-orders', function() {
@@ -64,13 +64,13 @@ $(function() {
 	    var name = $row.find('.name-orders').val();
 	    
 	    if (name) {
-	    	var newIngredientHtml = 
+	    	var newOrderHtml = 
 	            '<p class="added-orders">' +
 				'<span class="added-order">' + name + '</span>' + 
 	            '<button type="button" class="remove-orders">삭제</button>' +
 	            '</p>';
 	        
-	        $row.replaceWith(newIngredientHtml);
+	        $row.replaceWith(newOrderHtml);
 	    }
 		else {
 	        alert("조리 순서를 입력 해주세요.");

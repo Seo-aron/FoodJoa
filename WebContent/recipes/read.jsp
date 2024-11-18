@@ -94,7 +94,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td align="center">
+				<td>
 					<div id="contents"></div>
 				</td>				
 			</tr>
