@@ -209,12 +209,14 @@ VALUES
 
 -- community ------------------------------------------------------------------------------
 
+DROP TABLE IF EXISTS community;
 create table community(
 	no 			int primary key auto_increment,
     id 			varchar(50) not null, 
 	title 		varchar(50) not null,
     contents	text not null,
-    views		int not null
+    views		int not null,
+    post_date	timestamp not null
 );
 
 select * from community;

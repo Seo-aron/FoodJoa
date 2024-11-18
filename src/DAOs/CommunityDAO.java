@@ -1,13 +1,22 @@
 package DAOs;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+
+import javax.sql.DataSource;
 
 import Common.DBConnector;
 import VOs.CommunityVO;
 
 public class CommunityDAO {
 
+	DataSource dataSource;
+	Connection connection;
+	PreparedStatement preparedStatement;
+	ResultSet resultSet;
+	
 	private DBConnector dbConnecter;
 	
 	public CommunityDAO() {
@@ -46,5 +55,12 @@ public class CommunityDAO {
 		
 		return communities;
 	}
+
+	public void insertCommunity(CommunityVO communityVO) {
 		
+	}
+	
+	
+	
+	
 }

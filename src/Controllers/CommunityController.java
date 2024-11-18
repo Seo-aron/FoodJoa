@@ -46,28 +46,11 @@ public class CommunityController extends HttpServlet {
 		String action = request.getPathInfo();
 		System.out.println("action : " + action);
 		
-		ArrayList list = null;
-		CommunityVO vo = null;
-		
 		switch (action) {
-			case "/list.jsp": openCommunityList(request,response);
-			
-				HttpSession session = request.getSession();
-				String loginid = (String)session.getAttribute("id");
-			
-				list = communityService.getCommunityList();
+			case "/list": openCommunityList(request,response);break;
+			case "/write": openCommunityWriteView(request,response);break;
+			case "/write.pro": processCommunityWrite(request,response);break;
 				
-				// String nowPage = request.getParameter("nowPage");
-				// String nowBlock = request.getParameter("nowBlock");
-
-				request.setAttribute("list", list);
-				request.setAttribute("center", "communities/list.jsp");
-				
-				nextPage = "/main.jsp";
-				
-				break;
-				
-			case "/write.jsp":	
 				
 			default:
 		}
@@ -80,8 +63,37 @@ public class CommunityController extends HttpServlet {
 	private void openCommunityList(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 	
+		HttpSession session = request.getSession();
+		String loginid = (String)session.getAttribute("id");
+	
+		ArrayList<CommunityVO> communities = communityService.getCommunityList();
 		
+		// String nowPage = request.getParameter("nowPage");
+		// String nowBlock = request.getParameter("nowBlock");
+
+		request.setAttribute("communities", communities);
+		request.setAttribute("center", "communities/list.jsp");
+		
+		nextPage = "/main.jsp";
 		
 	}
 
+	private void openCommunityWriteView(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException{
+	
+		request.setAttribute("center", "communities/write.jsp");
+		
+		nextPage = "/main.jsp";
+	}
+	
+	private void processCommunityWrite(HttpServletRequest request, HttpServletResponse response)
+		throws ServletException, IOException{
+
+		communityService.insertCommunity(request);
+		
+		request.setAttribute("center", "communities/list.jsp");
+		
+		nextPage = "/main.jsp";
+	}
+		
 }

@@ -6,6 +6,8 @@
 <% 
 	String contextPath = request.getContextPath();
 	ArrayList<CommunityVO> communities = (ArrayList<CommunityVO>)request.getAttribute("communities");
+	
+	String id = "admin";
 %>  
     
 <!DOCTYPE html>
@@ -19,18 +21,6 @@
 		width: 1200px;
 	}
 	
-	.col-no {
-		width: 5%;
-	}
-	
-	.col-title {
-		width: 30%;
-	}
-	
-	.col-views {
-		width: 5%;
-	}
-	
 </style>
 </head>
 <body>
@@ -39,7 +29,7 @@
 			<tr align="center" bgcolor="#99ff99">
 				<td class="col-no">글번호</td>
 				<td class="col-title">제목</td>
-				<td>작성자</td>
+				<td class="col-write">작성자</td>
 				<td class="col-views">조회수</td>
 				<td>작성날짜</td>
 			</tr>
@@ -68,28 +58,36 @@
 				}
 			}
 			%>
-			</table>
 				<tr>
-					<form action="<%=contextPath%>/communitied/searchlist"
-						  method="post"
+					<td colspan="5" align="center">&nbsp;&nbsp;&nbsp;&nbsp;
+						<form action="<%=contextPath%>/Community/list.jsp" method="post"
 						  name="frmSearch" onsubmit="fnSearch(); return false;">
-						<td colspan="2">
-							<div align="left">
-								<select>
-									<option value="titleContent">제목+내용</option>								
-									<option value="titleContent">작성자</option>								
-								</select>
-							</div>
-						<td width="50%">
-							<div align="center">
-								<input type="text" name="word" id="word" placeholder="검색어를 입력해주세요"/>
+							<select>
+								<option value="titleContent">제목+내용</option>								
+								<option value="titleContent">작성자</option>								
+							</select>
+								<input type="text" name="word" id="word" placeholder="검색어를 입력해주세요">
 								<input type="submit" value="검색"/>
-							</div>
-						</td>
-					</form>
+
+						<%	if(id != null && id.length()!= 0){
+							
+						%>
+							<input type="button" value="글쓰기" onclick="onWriteButton(event)">
+							
+						<%  } %>
 					
-					<td width="40%" style="text-align:left">
+						</form>
+					</td>
 				</tr>
+		</table>
+		<script>
+			function onWriteButton(event) {
+				event.preventDefault();
+				
+				location.href='<%=contextPath%>/Community/write';
+			}
+		</script>
+		
 </body>
 </html>
 
