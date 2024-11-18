@@ -10,6 +10,8 @@
 	response.setContentType("text/html;charset=utf-8");
 	
 	String contextPath = request.getContextPath();
+	// 검색 기능 
+	// 페이징 기법
 %>
 
 <!DOCTYPE html>

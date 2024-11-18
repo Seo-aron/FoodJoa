@@ -136,6 +136,7 @@
 	    	    
 	    	    $(this).parent().prev().append(newIngredientHtml);
 	    	});
+	    	
 			// 추가 버튼을 눌렀을 때 
 	    	$(document).on('click', '.addrow-orders', function() {
 	    	    var $row = $(this).closest('.orders-row');

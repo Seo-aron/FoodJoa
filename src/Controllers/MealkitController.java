@@ -57,12 +57,18 @@ public class MealkitController extends HttpServlet {
 		case "/reviewwrite": openAddReview(request, response); break;
 		case "/reviewwrite.pro": processAddReview(request, response); return;
 		case "/empathy.pro": processEmpathy(request, response); return;
+		case "/delete.pro": processDelete(request, response); return;
 
 		default: break;
 		}
 
 		RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
 		dispatcher.forward(request, response);
+	}
+
+	private void processDelete(HttpServletRequest request, HttpServletResponse response) 
+			throws IOException {
+		mealkitService.delMealkit(request, response);
 	}
 
 	private void processEmpathy(HttpServletRequest request, HttpServletResponse response) 

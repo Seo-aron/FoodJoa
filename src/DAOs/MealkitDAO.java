@@ -213,4 +213,19 @@ public class MealkitDAO {
 		return result;
 	}
 
+	public int deleteMealkit(int no) {
+		
+		String sql = "DELETE FROM mealkit_review WHERE mealkit_no = ?";
+		
+		dbConnector.executeUpdate(sql, no);
+		
+		sql = "DELETE FROM mealkit WHERE no = ?";
+		
+		int result = dbConnector.executeUpdate(sql, no);
+		
+		dbConnector.release();
+		
+		return result;
+	}
+
 }

@@ -206,4 +206,18 @@ public class MealkitService {
 
 	}
 
+	public void delMealkit(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		
+		int no = Integer.parseInt(request.getParameter("no"));
+		
+		int result = mealkitDAO.deleteMealkit(no);
+		
+	    PrintWriter printWriter = response.getWriter();
+	    if (result > 0) {
+	        printWriter.print("1");
+	    } else {
+	        printWriter.print("0");
+	    }
+	}
+
 }
