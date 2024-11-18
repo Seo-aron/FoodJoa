@@ -3,6 +3,7 @@ package Services;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -152,31 +153,21 @@ public class MemberService {
         HttpSession session = request.getSession();
         session.setAttribute("id", login_id);
 
-        return memberDAO.userCheck(login_id, login_name);
+        return memberDAO.checkMember(login_id, login_name);
     }
 
-    public String profileupdate(HttpServletRequest request) {
-       
-        return null;
-    }
-    
-	//정보수정 사진 추가
-	public void addProfile(HttpServletRequest request){	
-        
-	}
-	
 	public MemberVO getMember(HttpServletRequest request) throws ServletException, IOException  {
 		
-		//HttpSession session = request.getSession();
+		// HttpSession session = request.getSession();
+		// String id = (String) session.getAttribute("id");
+		String id = "admin";
 		
-		//String loginedId = (String) session.getAttribute("id");
-		
-		String login_id = request.getParameter("id");
-		String login_name = request.getParameter("name");
-		
-		
-		return memberDAO.selectMember(request.getParameter("id"));
-		//return memberDAO.selectMember(loginedId);
-		
+		return memberDAO.selectMember(id);
+	
+	}
+
+	public int updateProfile(HttpServletRequest request) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

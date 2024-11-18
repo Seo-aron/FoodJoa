@@ -40,9 +40,10 @@
 			<div class="profile-info">
 				<h2>김보노님!</h2>
 				<p>푸드조아와 함께한지 999일째♥</p>
-				<form action="profileupdate.jsp" method="get">
+				<button id="updateButton">정보수정</button>
+				<%-- <form action="<%=request.getContextPath()%>/Member/updatePro.me" method="get">
 					<button onclick="checkConditionAndProceed()">정보수정</button>
-				</form>
+				</form> --%>
 			</div>
 
 
@@ -51,19 +52,19 @@
 		<div class="manage-section">
 			<div>
 				<a href="<%=contextPath%>/members/myreceipe.jsp">
-					<p align="center">내 레시피 관리</p> <img src="../images/레시피.png"
+					<p align="center">내 레시피 관리</p> <img src="../images/member/레시피.png"
 					alt="레시피 이미지">
 				</a>
 			</div>
 			<div>
 				<a href="<%=contextPath%>/members/myproduct.jsp">
-					<p align="center">내 상품 관리</p> <img src="../images/상품사진.png"
+					<p align="center">내 상품 관리</p> <img src="../images/member/상품사진.png"
 					alt="상품 이미지">
 				</a>
 			</div>
 			<div>
 				<a href="<%=contextPath%>/members/myreview.jsp">
-					<p align="center">내 리뷰 관리</p> <img src="../images/손모양.png"
+					<p align="center">내 리뷰 관리</p> <img src="../images/member/손모양.png"
 					alt="리뷰 이미지">
 				</a>
 
@@ -101,6 +102,10 @@
 	</div>
 
 	<script>
+		document.getElementById('updateButton').onclick = function() {
+			location.href = '<%= contextPath %>/Member/update.me';
+		};
+
 		// 파일을 선택하면 미리보기 이미지를 표시
 		function previewImage(event) {
 			const reader = new FileReader();

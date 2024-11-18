@@ -27,7 +27,7 @@
     <!-- Header Section -->
    <div class="header">
     <h1>내 레시피 관리</h1>
-    <a href="<%=contextPath%>/main.jsp">
+    <a href="<%=contextPath%>/managerecipe.me">
     <input type="button" class="logout-btn" value="로그아웃">
     </a>
 	</div>
