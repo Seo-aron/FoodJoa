@@ -63,6 +63,9 @@ public class RecipeController extends HttpServlet {
 		case "/write": openRecipeWriteView(request, response); break;
 		case "/read": openRecipeReadView(request, response); break;
 		case "/writePro": processRecipeWrite(request, response); break;
+		case "/update": openRecipeUpdateView(request, response); break;
+		case "/updatePro": break;
+		case "/deletePro": break;
 		case "/wishlist": processRecipeWishlist(request, response); return;
 		case "/review": if (openRecipeReviewView(request, response)) return ; break;
 		case "/reviewWrite": processReviewWrite(request, response); return;
@@ -100,10 +103,13 @@ public class RecipeController extends HttpServlet {
 		
 		RecipeVO recipe = recipeService.getRecipe(request);
 		String ratingAvg = request.getParameter("ratingAvg");
+		
+		ArrayList<RecipeReviewVO> reviews = recipeService.getRecipeReviewes(request.getParameter("no"));
 
 		request.setAttribute("recipe", recipe);
-		request.setAttribute("pageTitle", recipe.getTitle());
 		request.setAttribute("ratingAvg", ratingAvg);
+		request.setAttribute("reviews", reviews);
+		request.setAttribute("pageTitle", recipe.getTitle());
 		request.setAttribute("center", "recipes/read.jsp");
 		
 		nextPage = "/main.jsp";
@@ -121,6 +127,18 @@ public class RecipeController extends HttpServlet {
 		request.setAttribute("reviews", reviews);
 		request.setAttribute("pageTitle", recipe.getTitle());
 		request.setAttribute("center", "recipes/read.jsp");
+		
+		nextPage = "/main.jsp";
+	}
+	
+	private void openRecipeUpdateView(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		RecipeVO recipe = recipeService.getRecipe(request);
+
+		request.setAttribute("recipe", recipe);
+		request.setAttribute("pageTitle", "게시글 수정하기");
+		request.setAttribute("center", "recipes/update.jsp");
 		
 		nextPage = "/main.jsp";
 	}

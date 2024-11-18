@@ -82,15 +82,15 @@ create table recipe_review(
 );
 
 insert into recipe_review(id, recipe_no, pictures, contents, rating, post_date)
-values('review1', '1', 'thumbnailImage.png', '리뷰 내용', 3, CURRENT_TIMESTAMP),
-    ('review2', '1', 'thumbnailImage.png', '리뷰 내용', 1, CURRENT_TIMESTAMP),
-    ('review3', '1', 'thumbnailImage.png', '리뷰 내용', 5, CURRENT_TIMESTAMP),
-    ('review1', '2', 'thumbnailImage.png', '리뷰 내용', 4, CURRENT_TIMESTAMP),
-    ('review2', '2', 'thumbnailImage.png', '리뷰 내용', 5, CURRENT_TIMESTAMP),
-    ('review1', '3', 'thumbnailImage.png', '리뷰 내용', 3, CURRENT_TIMESTAMP),
-    ('review2', '3', 'thumbnailImage.png', '리뷰 내용', 2, CURRENT_TIMESTAMP),
-    ('review3', '3', 'thumbnailImage.png', '리뷰 내용', 1, CURRENT_TIMESTAMP),
-    ('review4', '3', 'thumbnailImage.png', '리뷰 내용', 5, CURRENT_TIMESTAMP);
+values('review1', '1', '0018thumbnailImage.png', '리뷰 내용', 3, CURRENT_TIMESTAMP),
+    ('review2', '1', '0018thumbnailImage.png', '리뷰 내용', 1, CURRENT_TIMESTAMP),
+    ('review3', '1', '0018thumbnailImage.png', '리뷰 내용', 5, CURRENT_TIMESTAMP),
+    ('review1', '2', '0018thumbnailImage.png', '리뷰 내용', 4, CURRENT_TIMESTAMP),
+    ('review2', '2', '0018thumbnailImage.png', '리뷰 내용', 5, CURRENT_TIMESTAMP),
+    ('review1', '3', '0018thumbnailImage.png', '리뷰 내용', 3, CURRENT_TIMESTAMP),
+    ('review2', '3', '0018thumbnailImage.png', '리뷰 내용', 2, CURRENT_TIMESTAMP),
+    ('review3', '3', '0018thumbnailImage.png', '리뷰 내용', 1, CURRENT_TIMESTAMP),
+    ('review4', '3', '0018thumbnailImage.png', '리뷰 내용', 5, CURRENT_TIMESTAMP);
 
 desc recipe_review;
 select * from recipe_review;

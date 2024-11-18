@@ -119,6 +119,11 @@ public class RecipeService {
 				request.getParameter("recipeNo"));
 	}
 	
+	public ArrayList<RecipeReviewVO> getRecipeReviewes(String recipeNo) {
+		
+		return getRecipeReviewes(Integer.parseInt(recipeNo));
+	}
+	
 	public ArrayList<RecipeReviewVO> getRecipeReviewes(int recipeNo) {
 		
 		return recipeDAO.selectRecipeReviews(recipeNo);
