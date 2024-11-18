@@ -145,7 +145,7 @@ public class MemberService {
         moveProfile(path, userId, profileFileName);
     }
 
-    
+     
     
     public int serviceUserCheck(HttpServletRequest request) {
         String login_id = request.getParameter("id");

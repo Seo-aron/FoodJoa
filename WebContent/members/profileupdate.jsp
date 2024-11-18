@@ -73,7 +73,7 @@
 
     <div class="form-container">
         <h2>정보 수정</h2>
-
+  
         <!-- JavaScript로 미리보기 기능 구현 -->
         <form action="<%=request.getContextPath()%>/Member/updatePro.me" method="post">
             <br>

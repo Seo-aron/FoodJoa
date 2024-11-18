@@ -100,7 +100,7 @@
 
 		</script>
 	</div>
-
+ 
 	<script>
 		document.getElementById('updateButton').onclick = function() {
 			location.href = '<%= contextPath %>/Member/update.me';

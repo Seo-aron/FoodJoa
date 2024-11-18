@@ -109,7 +109,7 @@ public class MemberController extends HttpServlet {
 			request.setAttribute("center", "members/mypagemain.jsp");
 			nextPage = "/main.jsp";
 			break;
-
+ 
 		case "/getUserProfile.me":
 			NaverLoginAPI.handleNaverLogin(request, response);
 			return;

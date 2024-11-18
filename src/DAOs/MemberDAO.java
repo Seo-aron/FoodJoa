@@ -253,7 +253,7 @@ public class MemberDAO {
 
 		return viewProfile();
 	}
-
+ 
 	public MemberVO selectMember(String id) {
 	    MemberVO member = null;
 	    String sql = "SELECT * FROM member WHERE id=?";
