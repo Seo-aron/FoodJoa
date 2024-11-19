@@ -58,12 +58,28 @@ public class MealkitController extends HttpServlet {
 		case "/reviewwrite.pro": processAddReview(request, response); return;
 		case "/empathy.pro": processEmpathy(request, response); return;
 		case "/delete.pro": processDelete(request, response); return;
+		case "/update": openUpdateBoard(request, response); break;
+		case "/update.pro": processUpdate(request, response); return;
 
 		default: break;
 		}
 
 		RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
 		dispatcher.forward(request, response);
+	}
+
+	private void openUpdateBoard(HttpServletRequest request, HttpServletResponse response) {
+		MealkitVO mealkitvo = mealkitService.getMealkitInfo(request);
+		
+		request.setAttribute("mealkitvo", mealkitvo);
+		request.setAttribute("center", "mealkits/editBoard.jsp");
+		
+		nextPage = "/main.jsp";
+	}
+
+	private void processUpdate(HttpServletRequest request, HttpServletResponse response) 
+			throws IOException {
+		mealkitService.updateMealkit(request, response);
 	}
 
 	private void processDelete(HttpServletRequest request, HttpServletResponse response) 
@@ -88,19 +104,16 @@ public class MealkitController extends HttpServlet {
 
 	private void processAddReview(HttpServletRequest request, HttpServletResponse response) 
 			throws IOException {
-		
 		mealkitService.setWriteReview(request, response);
 	}
 
 	private void processAddMealkit(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		mealkitService.setWriteMealkit(request, response);
-		
-		
 	}
 
 	private void openAddMealkit(HttpServletRequest request, HttpServletResponse response) {
-		// 추후 membervo에서 멤버 아이디 받아와야 할 거임 
+		// 추후 membervo에서 멤버 아이디를 session으로 받아와야 할 거임 
 		request.setAttribute("center", "mealkits/write.jsp");
 		
 		nextPage = "/main.jsp";

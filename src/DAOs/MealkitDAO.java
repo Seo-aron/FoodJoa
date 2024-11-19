@@ -158,21 +158,26 @@ public class MealkitDAO {
 	}
 
 	public int insertNewContent(MealkitVO vo) {
-		int result = 0;
+		int no = 0;
 		
 		String sql = "INSERT INTO mealkit(id, title, contents, category, price, stock, pictures, orders, origin, "
 				+ "views, soldout, post_date) VALUES(?,?,?,?,?,?,?,?,?,0,0,NOW())";
 		
 		try {
-			result = dbConnector.executeUpdate(sql, vo.getId(), vo.getTitle(), vo.getContents(), vo.getCategory(), 
-					vo.getPrice(), vo.getStock(), vo.getPictures(), vo.getOrders(), vo.getOrigin());
+				ResultSet rs = dbConnector.executeInsertAndGetGeneratedKeys( sql,
+		            vo.getId(), vo.getTitle(), vo.getContents(), vo.getCategory(),
+		            vo.getPrice(), vo.getStock(), vo.getPictures(), vo.getOrders(), vo.getOrigin()
+		        );
+			 if (rs.next()) {
+			     no = rs.getInt(1);
+			 }
 		} catch (Exception e) {
 			System.out.println("MealkitDAO - insertNewContent 예외발생 ");
 		}
 		
 		dbConnector.release();
 		
-		return result;
+		return no;
 	}
 
 	public int insertNewReview(MealkitReviewVO vo) {
@@ -226,6 +231,32 @@ public class MealkitDAO {
 		dbConnector.release();
 		
 		return result;
+	}
+
+	public int updateMealkit(MealkitVO vo) {
+		
+		String sql = "UPDATE mealkit SET title = ?, contents = ?, price = ?, origin = ?, orders= ?, "
+				+ "stock = ?, pictures = ? WHERE no = ?";
+		
+		int result = dbConnector.executeUpdate(sql, vo.getTitle(), vo.getContents(), vo.getPrice(), 
+				vo.getOrigin(), vo.getOrders(), vo.getStock(), vo.getPictures(), vo.getNo());
+		
+		dbConnector.release();
+		
+		return result;
+	}
+
+	public MealkitVO getMealkitByNo(int no) {
+		return InfoMealkit(no);
+	}
+
+	public void incrementViewCount(int no) {
+		
+		String sql = "UPDATE mealkit SET views = views + 1 WHERE no = ?";
+		
+		dbConnector.executeUpdate(sql, no);
+		
+		dbConnector.release();
 	}
 
 }

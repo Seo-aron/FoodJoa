@@ -45,11 +45,10 @@
 						<td>
 							<a href="<%= contextPath %>/Mealkit/info?no=${mealkit.no}"> 
 								<sapn>
-								<img class="thumbnail" src="<%= contextPath %>/images/recipe/test_thumbnail.png">
+								<img class="thumbnail" src="<%= contextPath %>/images/mealkit/thumbnails/${mealkit.no}/${mealkit.pictures}">
 									<!--<img src="${mealkit.pictures}" alt="${mealkit.title}">-->
 									작성자: ${mealkit.id } &nbsp;&nbsp;&nbsp;&nbsp;
 									작성일: ${mealkit.postDate} &nbsp;&nbsp;&nbsp;&nbsp;
-									<!--나중에 수정 -->
 									평점:  &nbsp;&nbsp;&nbsp;&nbsp;
 									조회수: ${mealkit.views}
 								</sapn>
