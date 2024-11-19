@@ -13,7 +13,7 @@
 	String contextPath = request.getContextPath();
 	
 	RecipeVO recipe = (RecipeVO) request.getAttribute("recipe");
-	String ratingAvg = (String) request.getAttribute("ratingAvg");
+	double ratingAvg = (double) request.getAttribute("ratingAvg");
 	ArrayList<RecipeReviewVO> reviews = (ArrayList<RecipeReviewVO>) request.getAttribute("reviews");
 			
 	String compressedContents = recipe.getContents();

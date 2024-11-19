@@ -45,12 +45,33 @@
 		.tox-toolbar-overlord {
 			width: 100%;
 		}
+		
+		.thumbnail-container {
+			width: 256px;
+			height: 256px;
+		}
+		
+		.thumbnail-container div {
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+		
+		.thumbnail-container img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
 	</style>
 </head>
 
 <body>
 	<div id="container">
 		<form action="<%= contextPath %>/Recipe/updatePro" method="post" id="frmWrite" enctype="multipart/form-data">
+			<input type="hidden" id="no" name="no">
+			<input type="hidden" id="views" name="views">
+			<input type="hidden" id="thumbnail-origin" name="thumbnail-origin">
+			
 			<table border="1" width="100%">
 				<tr>
 					<td colspan="2">
@@ -58,9 +79,11 @@
 					</td>
 				</tr>
 				<tr>
-					<td rowspan="3">
-						<div class="input-container">
-							<input type="file" name="file">
+					<td rowspan="3" class="thumbnail-container">
+						<div>
+							<input type="file" name="file" id="imageInput" accept=".png,.jpeg,.jpg" style="display: none;">
+							<img id="imagePreview" src="<%= contextPath %>/images/recipe/file_select_button.png"
+							 style="cursor: pointer;">
 						</div>
 					</td>
 					<td>
@@ -143,9 +166,14 @@
 		initialize();		
 		
 		function initialize() {
+			$("#no").val('<%= recipe.getNo() %>');
+			$("#views").val('<%= recipe.getViews() %>');
+			$("#thumbnail-origin").val('<%= recipe.getThumbnail() %>');
+			
+			$("#imagePreview").attr('src','<%= contextPath %>/images/recipe/thumbnails/<%= recipe.getNo() %>/<%= recipe.getThumbnail() %>');
 			$("#title").val('<%= recipe.getTitle() %>');
 			$("#description").val('<%= recipe.getDescription() %>');
-			$("#category").val('<%= recipe.getCategory() %>');			
+			$("#category").val('<%= recipe.getCategory() %>');
 			decompressContents();
 			<%
 			for (int i = 0; i < ingredients.size(); i++) {
@@ -174,6 +202,24 @@
 			}
 			%>
 		}
+		
+		const imageInput = document.getElementById('imageInput');
+		const imagePreview = document.getElementById('imagePreview');
+
+		imagePreview.addEventListener('click', () => {
+		  imageInput.click();
+		});
+
+		imageInput.addEventListener('change', (event) => {
+		  const file = event.target.files[0];
+		  if (file) {
+		    const reader = new FileReader();
+		    reader.onload = (e) => {
+		      imagePreview.src = e.target.result;
+		    };
+		    reader.readAsDataURL(file);
+		  }
+		});
 
 		function decompressContents() {
 		    var compressedData = "<%= compressedContents %>";

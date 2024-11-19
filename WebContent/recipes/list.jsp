@@ -29,10 +29,9 @@
 			});
 		});
 	
-		function openRecipeContent(recipeNo, ratingAvg) {
+		function openRecipeContent(recipeNo) {
 			document.frmOpen.action = '<%= contextPath %>/Recipe/read';
 			document.frmOpen.no.value = recipeNo;
-			document.frmOpen.ratingAvg.value = ratingAvg;
 			document.frmOpen.submit();
 		}
 	</script>
@@ -73,9 +72,9 @@
 					
 					%>
 					<td class="list_cell">
-					    <a href="javascript:openRecipeContent(<%= recipe.getNo() %>, <%= rating %>)" class="cell-link">
+					    <a href="javascript:openRecipeContent(<%= recipe.getNo() %>)" class="cell-link">
 					        <span class="thumbnail">
-					            <img src="<%= contextPath %>/images/recipe/test_thumbnail.png" alt="레시피 썸네일">
+					            <img src="<%= contextPath %>/images/recipe/thumbnails/<%= recipe.getNo() %>/<%= recipe.getThumbnail() %>">
 					        </span>
 					        <span class="title"><%= recipe.getTitle() %></span>
 					        <span class="author"><%= recipe.getId() %></span>
@@ -106,7 +105,6 @@
 	
 	<form name="frmOpen">
 		<input type="hidden" name="no">
-		<input type="hidden" name="ratingAvg">
 	</form>
 </body>
 

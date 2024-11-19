@@ -38,6 +38,23 @@
 		.tox-toolbar-overlord {
 			width: 100%;
 		}
+		
+		.thumbnail-container {
+			width: 256px;
+			height: 256px;
+		}
+		
+		.thumbnail-container div {
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+		
+		.thumbnail-container img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
 	</style>
 </head>
 
@@ -51,9 +68,11 @@
 					</td>
 				</tr>
 				<tr>
-					<td rowspan="3">
-						<div class="input-container">
-							<input type="file" name="file">
+					<td rowspan="3" class="thumbnail-container">
+						<div>
+							<input type="file" name="file" id="imageInput" accept=".png,.jpeg,.jpg" style="display: none;">
+							<img id="imagePreview" src="<%= contextPath %>/images/recipe/file_select_button.png"
+							 style="cursor: pointer;">
 						</div>
 					</td>
 					<td>
@@ -126,6 +145,24 @@
  	
 		    document.getElementById('frmWrite').submit();
 		}
+		
+		const imageInput = document.getElementById('imageInput');
+		const imagePreview = document.getElementById('imagePreview');
+
+		imagePreview.addEventListener('click', () => {
+		  imageInput.click();
+		});
+
+		imageInput.addEventListener('change', (event) => {
+		  const file = event.target.files[0];
+		  if (file) {
+		    const reader = new FileReader();
+		    reader.onload = (e) => {
+		      imagePreview.src = e.target.result;
+		    };
+		    reader.readAsDataURL(file);
+		  }
+		});
 	
 		tinymce.init({
 	        selector: "#contentsArea", // TinyMCE를 적용할 textarea 요소의 선택자를 지정
