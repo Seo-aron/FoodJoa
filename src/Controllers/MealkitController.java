@@ -3,6 +3,7 @@ package Controllers;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -129,9 +130,11 @@ public class MealkitController extends HttpServlet {
 
 		MealkitVO mealkitvo = mealkitService.getMealkitInfo(request);
 		ArrayList<MealkitReviewVO> reviewvo = mealkitService.getReviewInfo(request);
+		float ratingAvr = mealkitService.getRatingAvr(mealkitvo);
 		
 		request.setAttribute("mealkitvo", mealkitvo);
 		request.setAttribute("reviewvo", reviewvo);
+		request.setAttribute("ratingAvr", ratingAvr);
 		
 		request.setAttribute("center", "mealkits/info.jsp");
 
@@ -142,8 +145,10 @@ public class MealkitController extends HttpServlet {
 			throws ServletException, IOException {
 
 		ArrayList<MealkitVO> mealkits = mealkitService.getMealkitsList();
+		Map<Integer, Float> ratingAvr = mealkitService.getAllRatingAvr(mealkits);
 
 		request.setAttribute("mealkitList", mealkits);
+		request.setAttribute("ratingAvr", ratingAvr);
 		request.setAttribute("center", "mealkits/list.jsp");
 
 		nextPage = "/main.jsp";

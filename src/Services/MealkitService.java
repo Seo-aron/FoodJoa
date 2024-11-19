@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -311,5 +313,25 @@ public class MealkitService {
 	            System.out.println("파일 이동 실패: " + fileName);
 	        }
 	    }
+	}
+
+	public Map<Integer, Float> getAllRatingAvr(ArrayList<MealkitVO> mealkits) {
+		Map<Integer, Float> ratingMap = new HashMap<>();
+		
+		for(MealkitVO mealkit : mealkits) {
+			int no = mealkit.getNo();
+			float ratingAvr = mealkitDAO.getRatingAvr(no);
+			
+			ratingMap.put(no, ratingAvr);
+		}
+		
+		return ratingMap;
+	}
+
+	public float getRatingAvr(MealkitVO mealkitvo) {
+		int no = mealkitvo.getNo();
+		float ratingAvr = mealkitDAO.getRatingAvr(no);
+		
+		return ratingAvr;
 	}
 }

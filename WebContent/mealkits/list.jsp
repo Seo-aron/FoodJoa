@@ -49,7 +49,7 @@
 									<!--<img src="${mealkit.pictures}" alt="${mealkit.title}">-->
 									작성자: ${mealkit.id } &nbsp;&nbsp;&nbsp;&nbsp;
 									작성일: ${mealkit.postDate} &nbsp;&nbsp;&nbsp;&nbsp;
-									평점:  &nbsp;&nbsp;&nbsp;&nbsp;
+									평점:  ${ratingAvr[mealkit.no] }&nbsp;&nbsp;&nbsp;&nbsp;
 									조회수: ${mealkit.views}
 								</sapn>
 								<h3>${mealkit.title}</h3>

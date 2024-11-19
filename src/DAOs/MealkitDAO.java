@@ -259,4 +259,26 @@ public class MealkitDAO {
 		dbConnector.release();
 	}
 
+	public float getRatingAvr(int no) {
+		float avr = 0;
+		
+		String sql = "select AVG(rating) rating_avr from mealkit_review "
+				+ "where mealkit_no = ?";
+		
+		ResultSet rs = dbConnector.executeQuery(sql, no);
+		
+		try {
+			if(rs.next()) {
+				avr = rs.getFloat("rating_avr");
+			}
+		} catch (SQLException e) {
+			System.out.println("MealkitDAAO - getRatingAvr 예외 발생");
+			e.printStackTrace();
+		}
+		
+		dbConnector.release();
+		
+		return avr;
+	}
+
 }
