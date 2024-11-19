@@ -47,7 +47,7 @@
 				for(int i=0; i<communities.size(); i++){
 					CommunityVO vo = communities.get(i); 
 			%>			
-				<tr>
+				<tr align="center">
 					<td><%= vo.getNo()%></td>
 					<td><%= vo.getTitle()%></td>
 					<td><%= vo.getContents()%></td>
@@ -90,19 +90,3 @@
 		
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -63,11 +63,11 @@
 				<div id="areaSelect">
 					<span>지역을 선택해 주세요</span>
 					<select>
-						<option value="1">선택</option>
-						<option value="2">서울</option>
-						<option value="3">경기</option>
-						<option value="4">광역시</option>
-						<option value="5">기타</option>
+						<option>선택</option>
+						<option>서울</option>
+						<option>경기</option>
+						<option>광역시</option>
+						<option>기타</option>
 					</select>
 				</div>
 				<div>

@@ -50,7 +50,7 @@ public class CommunityController extends HttpServlet {
 			case "/list": openCommunityList(request,response);break;
 			case "/write": openCommunityWriteView(request,response);break;
 			case "/write.pro": processCommunityWrite(request,response);break;
-				
+			case "/read": processCommunityUpdate(request,response);break;
 				
 			default:
 		}
@@ -73,6 +73,7 @@ public class CommunityController extends HttpServlet {
 
 		request.setAttribute("communities", communities);
 		request.setAttribute("center", "communities/list.jsp");
+		request.setAttribute("admin", loginid);
 		
 		nextPage = "/main.jsp";
 		
@@ -87,13 +88,19 @@ public class CommunityController extends HttpServlet {
 	}
 	
 	private void processCommunityWrite(HttpServletRequest request, HttpServletResponse response)
-		throws ServletException, IOException{
+			throws ServletException, IOException{
 
 		communityService.insertCommunity(request);
 		
-		request.setAttribute("center", "communities/list.jsp");
-		
-		nextPage = "/main.jsp";
+		nextPage = "/Community/list";
 	}
+	
+	private void processCommunityUpdate(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException{
 		
+		request.setAttribute("center", "communities/update.jsp");
+		
+		nextPage = "/Community/list";
+		
+	}
 }
