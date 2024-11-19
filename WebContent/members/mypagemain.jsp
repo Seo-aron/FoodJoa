@@ -3,15 +3,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
- 
+
 <%
 	request.setCharacterEncoding("UTF-8");
 	response.setContentType("text/html; charset=utf-8");
-	
+
 	String contextPath = request.getContextPath();
-	
+
 	MemberVO vo = (MemberVO) request.getAttribute("vo");
-	
+
 	//String loginedid = (String) session.getAttribute("id");	
 	String id = "admin";
 %>
@@ -35,10 +35,10 @@
 	<div class="profile-wrapper">
 		<div class="profile-section">
 			<div class="profile-image">
-				<img alt="없음" src="../images/member/admin.png">
+				<img alt="없음" src="../images/member/userProfiles/admin.png">
 			</div>
 			<div class="profile-info">
-				<h2>김보노님!</h2>
+				<h2>Admin님!</h2>
 				<p>푸드조아와 함께한지 999일째♥</p>
 				<button id="updateButton">정보수정</button>
 				<%-- <form action="<%=request.getContextPath()%>/Member/updatePro.me" method="get">
@@ -76,8 +76,9 @@
 			<div>주문/배송조회</div>
 			<div>
 				<span>주문건수: 0</span> | <span>배송준비중: 1</span> | <span>배송중: 2</span> |
-				<span>배송완료: 0</span> <br><a href="<%=contextPath%>/members/vieworder.jsp">
-				<input type="button" class="more-btn" value="더보기">
+				<span>배송완료: 0</span> <br> <a
+					href="<%=contextPath%>/members/vieworder.jsp"> <input
+					type="button" class="more-btn" value="더보기">
 			</div>
 		</div>
 
@@ -91,7 +92,10 @@
 		</div>
 
 		<div class="info-section">
-			<div><a href="<%=contextPath%>/members/processingpolicy.jsp">※ 개인정보처리방침</a></div>
+			<div>
+				<a href="<%=contextPath%>/members/processingpolicy.jsp">※
+					개인정보처리방침</a>
+			</div>
 		</div>
 
 		<input type="button" class="more-btn" value="탈퇴"
@@ -100,10 +104,10 @@
 
 		</script>
 	</div>
- 
+
 	<script>
 		document.getElementById('updateButton').onclick = function() {
-			location.href = '<%= contextPath %>/Member/update.me';
+			location.href = '<%=contextPath%>/Member/update.me';
 		};
 
 		// 파일을 선택하면 미리보기 이미지를 표시

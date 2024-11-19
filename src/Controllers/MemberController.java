@@ -149,8 +149,9 @@ public class MemberController extends HttpServlet {
 	private void processMemberUpdate(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		int result = memberService.updateProfile(request);
-
+	//int result = memberService.updateProfile(request);
+	//	MemberVO vo = memberService.updateProfile(request);
+		memberService.updateProfile(request);
 		request.setAttribute("center", "members/mypagemain.jsp");
 		nextPage = "/main.jsp";
 	}

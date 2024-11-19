@@ -75,7 +75,7 @@
         <h2>정보 수정</h2>
   
         <!-- JavaScript로 미리보기 기능 구현 -->
-        <form action="<%=request.getContextPath()%>/Member/updatePro.me" method="post">
+        <form action="<%=request.getContextPath()%>/Member/updatePro.me" method="post" enctype="multipart/form-data" >
             <br>
             <br>
             <!-- 이미지 미리보기가 표시될 컨테이너 -->

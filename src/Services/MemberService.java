@@ -2,6 +2,7 @@ package Services;
  
 import java.io.File;
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -108,9 +109,7 @@ public class MemberService {
         // 로그로 파일 정보 확인
         // String userId = (String)request.getSession(true).getAttribute("userId");
         
-        
-        
-       
+    
         String profileFileName = multipartRequest.getFilesystemName("profileFile");
         String userId = multipartRequest.getParameter("userId");
        
@@ -148,7 +147,7 @@ public class MemberService {
      
     
     public int serviceUserCheck(HttpServletRequest request) {
-        String login_id = request.getParameter("id");
+        String login_id = request.getParameter("id"); 
         String login_name = request.getParameter("name");
         HttpSession session = request.getSession();
         session.setAttribute("id", login_id);
@@ -161,13 +160,28 @@ public class MemberService {
 		// HttpSession session = request.getSession();
 		// String id = (String) session.getAttribute("id");
 		String id = "admin";
-		
 		return memberDAO.selectMember(id);
 	
 	}
 
-	public int updateProfile(HttpServletRequest request) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int updateProfile(HttpServletRequest request) throws ServletException, IOException{
+		
+		String profile = request.getParameter("profile");
+		String name = request.getParameter("name");
+		String nickname = request.getParameter("nickname");
+		String phone = request.getParameter("phone");
+		String address = request.getParameter("address");
+		
+		MemberVO member = new MemberVO();
+		member.setId("admin");
+		member.setProfile(profile);
+		member.setName(name);
+		member.setNickname(nickname);
+		member.setPhone(phone);
+		member.setAddress(address);
+		
+		int result = memberDAO.updateMember(member);
+		
+		return result;
 	}
 }

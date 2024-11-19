@@ -6,6 +6,8 @@ import java.sql.Timestamp;
 
 import java.util.ArrayList;
 
+import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
+
 import Common.DBConnector;
 import VOs.MealkitWishListVO;
 import VOs.MemberVO;
@@ -213,41 +215,24 @@ public class MemberDAO {
 		return check;
 	}
 
-	// 개인정보수정 - id변경 불가
+	
+	 // 개인정보수정 - id변경 불가 
 	public int updateMember(MemberVO member) {
 
-		int result = -1;
+		String sql = "UPDATE member SET profile=? name = ?, nickname = ?, phone = ?,"
+				+ ", address = ?,  WHERE id = ?";
 
-		// 1. memberVO를 통해 전달 받은 멤버가 DB에 존재하는지 확인
-		String checkSql = "SELECT COUNT(*) FROM member WHERE id = ?";
-		ResultSet resultSet = dbConnector.executeQuery(checkSql, member.getId());
-
-		try {
-			if (resultSet.next()) {
-				// DB에 멤버가 존재 할 때
-				// 2. 존재하는 멤버의 DB정보를 수정
-				String updateSql = "UPDATE member SET profile = ?, name = ?, nickname = ?, phone = ?, address = ? WHERE id = ?";
-
-				result = dbConnector.executeUpdate(updateSql, member.getProfile(), member.getName(),
-						member.getNickname(), member.getPhone(), member.getAddress());
-				if (result == 1) {
-					// 정보 수정이 성공적으로 실행 했을 때
-				} else {
-					// 정보 수정에 실패 했을 때
-				}
-			} else {
-				result = -1;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			result = -1;
-		}
-
-		dbConnector.release();
-
+		int result = dbConnector.executeUpdate(sql,
+				member.getProfile(),
+				member.getName(),
+				member.getNickname(),
+				member.getPhone(),
+				member.getAddress(),
+				member.getId());
+		
 		return result;
 	}
-
+	
 	// 프로필 사진 불러오기
 	public String viewProfile() {
 
