@@ -91,7 +91,7 @@ public class MemberService {
         String tokenUrl = "https://kauth.kakao.com/oauth/token";
         String tokenParams = "grant_type=authorization_code"
                 + "&client_id=dfedef18f339b433884cc51b005f2b42" // REST API 키
-                + "&redirect_uri=http://localhost:8090/FoodJoa/Member/kakaologin.me" // Redirect URI
+                + "&redirect_uri=http://localhost:8090/FoodJoa/Member/kakaojoin.me" // Redirect URI
                 + "&code=" + code;
 
         HttpURLConnection tokenConn = (HttpURLConnection) new URL(tokenUrl).openConnection();
@@ -178,6 +178,14 @@ public class MemberService {
             userId = multipartRequest.getParameter("userId"); // 파라미터로도 확인
         }
 
+     // 주소 파라미터 가져오기
+        String address1 = multipartRequest.getParameter("address1");
+        String address2 = multipartRequest.getParameter("address2");
+        String address3 = multipartRequest.getParameter("address3");
+ 
+
+        // 전체 주소 결합
+        String address = address1 + " " + address2 + " " + address3;
 
         String profileFileName = multipartRequest.getFilesystemName("profileFile");
         // 회원 정보 생성 (프로필 파일명 포함)
@@ -186,7 +194,7 @@ public class MemberService {
                 multipartRequest.getParameter("name"),
                 multipartRequest.getParameter("nickname"),
                 multipartRequest.getParameter("phone"),
-                multipartRequest.getParameter("address"),
+                address, // 결합된 주소
                 profileFileName
         );
 
@@ -198,12 +206,12 @@ public class MemberService {
     }
 
     
-    // 네이버 아이디 받기
     public String getNaverId(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String naverId = null;
         try {
             // 네이버 인증 후 콜백 처리
-            naverId = NaverLoginAPI.handleNaverLogin(request, response);  // 기존 코드 재사용
+            naverId = NaverLoginAPI.handleNaverLogin(request, response); // request와 response 전달
+
         } catch (Exception e) {
             System.out.println("네이버 회원 정보 저장 중 오류 발생: " + e.getMessage());
             e.printStackTrace();
@@ -212,61 +220,68 @@ public class MemberService {
     }
 
     
-    // 카카오 아이디 받기
     public String getKakaoId(String code) throws Exception {
         String kakaoId = null;
-        
-        // 1. 액세스 토큰 요청
-        String tokenUrl = "https://kauth.kakao.com/oauth/token";
-        String tokenParams = "grant_type=authorization_code"
-                + "&client_id=dfedef18f339b433884cc51b005f2b42"  // REST API 키
-                + "&redirect_uri=http://localhost:8090/FoodJoa/Member/kakaologin.me"  // Redirect URI
-                + "&code=" + code;
+        try {
+            // 1. 액세스 토큰 요청
+            String tokenUrl = "https://kauth.kakao.com/oauth/token";
+            String tokenParams = "grant_type=authorization_code"
+                    + "&client_id=dfedef18f339b433884cc51b005f2b42"  // REST API 키
+                    + "&redirect_uri=http://localhost:8090/FoodJoa/Member/kakaologin.me"  // Redirect URI
+                    + "&code=" + code;
 
-        HttpURLConnection tokenConn = (HttpURLConnection) new URL(tokenUrl).openConnection();
-        tokenConn.setRequestMethod("POST");
-        tokenConn.setDoOutput(true);
-        try (OutputStream os = tokenConn.getOutputStream()) {
-            os.write(tokenParams.getBytes());
-            os.flush();
+            HttpURLConnection tokenConn = (HttpURLConnection) new URL(tokenUrl).openConnection();
+            tokenConn.setRequestMethod("POST");
+            tokenConn.setDoOutput(true);
+            try (OutputStream os = tokenConn.getOutputStream()) {
+                os.write(tokenParams.getBytes());
+                os.flush();
+            }
+
+            // 응답 확인
+            BufferedReader tokenBr = new BufferedReader(new InputStreamReader(tokenConn.getInputStream()));
+            StringBuilder tokenResponse = new StringBuilder();
+            String line;
+            while ((line = tokenBr.readLine()) != null) {
+                tokenResponse.append(line);
+            }
+            tokenBr.close();
+
+            // JSON 파싱: 액세스 토큰 추출
+            JSONObject tokenJson = new JSONObject(tokenResponse.toString());
+            String accessToken = tokenJson.getString("access_token");
+
+            // 2. 사용자 정보 요청
+            String userInfoUrl = "https://kapi.kakao.com/v2/user/me";
+            HttpURLConnection userInfoConn = (HttpURLConnection) new URL(userInfoUrl).openConnection();
+            userInfoConn.setRequestMethod("GET");
+            userInfoConn.setRequestProperty("Authorization", "Bearer " + accessToken);
+
+            BufferedReader userBr = new BufferedReader(new InputStreamReader(userInfoConn.getInputStream()));
+            StringBuilder userInfoResponse = new StringBuilder();
+            while ((line = userBr.readLine()) != null) {
+                userInfoResponse.append(line);
+            }
+            userBr.close();
+
+            // JSON 파싱: 사용자 ID 추출
+            JSONObject userInfoJson = new JSONObject(userInfoResponse.toString());
+            
+            // 카카오에서 반환된 사용자 정보 중 ID를 숫자형으로 추출
+            long kakaoIdLong = userInfoJson.getLong("id");
+            
+            // 숫자형 ID를 문자열로 변환
+            kakaoId = String.valueOf(kakaoIdLong);       
+            
+            // 카카오 아이디 확인 (디버깅)
+            System.out.println("받은 카카오 아이디: " + kakaoId);
+
+        } catch (Exception e) {
+            System.out.println("카카오 아이디 가져오기 중 오류 발생: " + e.getMessage());
+            e.printStackTrace();
         }
 
-        // 응답 확인
-        BufferedReader tokenBr = new BufferedReader(new InputStreamReader(tokenConn.getInputStream()));
-        StringBuilder tokenResponse = new StringBuilder();
-        String line;
-        while ((line = tokenBr.readLine()) != null) {
-            tokenResponse.append(line);
-        }
-        tokenBr.close();
-
-        // JSON 파싱: 액세스 토큰 추출
-        JSONObject tokenJson = new JSONObject(tokenResponse.toString());
-        String accessToken = tokenJson.getString("access_token");
-
-        // 2. 사용자 정보 요청
-        String userInfoUrl = "https://kapi.kakao.com/v2/user/me";
-        HttpURLConnection userInfoConn = (HttpURLConnection) new URL(userInfoUrl).openConnection();
-        userInfoConn.setRequestMethod("GET");
-        userInfoConn.setRequestProperty("Authorization", "Bearer " + accessToken);
-
-        BufferedReader userBr = new BufferedReader(new InputStreamReader(userInfoConn.getInputStream()));
-        StringBuilder userInfoResponse = new StringBuilder();
-        while ((line = userBr.readLine()) != null) {
-            userInfoResponse.append(line);
-        }
-        userBr.close();
-
-        // JSON 파싱: 사용자 ID 추출
-        JSONObject userInfoJson = new JSONObject(userInfoResponse.toString());
-
-        // 카카오에서 반환된 사용자 정보 중 ID를 숫자형으로 추출
-        long kakaoIdLong = userInfoJson.getLong("id");
-
-        // 숫자형 ID를 문자열로 변환
-        kakaoId = String.valueOf(kakaoIdLong);
-
-        return kakaoId;
+        return kakaoId;  // 카카오 아이디 반환
     }
     
     
@@ -296,7 +311,6 @@ public class MemberService {
 		//String loginedId = (String) session.getAttribute("id");
 		
 		String login_id = request.getParameter("id");
-		String login_name = request.getParameter("name");
 		
 		
 		return memberDAO.selectMember(request.getParameter("id"));

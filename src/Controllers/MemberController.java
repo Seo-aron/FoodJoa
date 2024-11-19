@@ -62,39 +62,17 @@ public class MemberController extends HttpServlet {
         switch (action) {
             case "/join.me": openMemberJoinView(request, response); break;
             case "/joinProGo.me": processMemberJoin(request, response); break; 
-            case "/joinPro.me":      	
-            	//request객체에 "members/join.jsp" 중앙화면 뷰 주소 바인딩
-				request.setAttribute("center", "members/join.jsp");		
-				nextPage = "/main.jsp";
-				break;
+            case "/joinPro.me": processJoinMain(request,response); break;  				
             case "/joinIdCheck.me": checkMemberId(request, response); return;                
-            case "/naverlogin.me" : 
-            	String naverId = processNaverLogin(request, response); 
-            	if (naverId != null) {
-            		request.getSession().setAttribute("userId", naverId);
-            		 // 추가 정보 입력 페이지로 리다이렉트
-                    response.sendRedirect(request.getContextPath() + "/Member/joinPro.me");
-            		}return;
-            		
-            		
-            case "/kakaologin.me": 
-                String kakaoId = processKakaoLogin(request, response);
-                if (kakaoId != null) {
-                    request.getSession().setAttribute("userId", kakaoId);
-                    // 추가 정보 입력 페이지로 리다이렉트
-                    response.sendRedirect(request.getContextPath() + "/Member/joinPro.me");
-                }
-                return;
-
-            case "/getUserProfile.me":
-            	NaverLoginAPI.handleNaverLogin(request, response);
-                return;
-            
-            
+            case "/naverjoin.me": handleNaverJoin(request, response); return;
+            case "/kakaojoin.me":handleKakaoJoin(request, response); return;	
+            case "/getUserProfile.me":NaverLoginAPI.handleNaverLogin(request, response); return;          
             case "/login.me": openLoginView(request, response); break;
+            case "/naverlogin.me": processNaverLogin(request, response); return;
+            case "/kakaologin.me": processKakaoLogin(request, response); return;
             case "/loginProGo.me": processMemberLogin(request, response); break;
-            case "/loginPro.me" :nextPage = "/main.jsp"; break;
-		
+            case "/loginPro.me": nextPage = "/main.jsp"; break;
+            case "/viewWishList.me": nextPage = handleWishlist(request); break;
             
             
             case "/profileupdate.me": //정보수정 페이지 요청
@@ -124,11 +102,7 @@ public class MemberController extends HttpServlet {
                 
             case "/updatePro.me" : updateProfile(request, response); break; 
 
-            case "/wishlist.me":
-            	request.setAttribute("center", "members/wishlist.jsp");		
-				nextPage = "/main.jsp";
-				break;
-
+     
             
                 
         }
@@ -137,6 +111,30 @@ public class MemberController extends HttpServlet {
         dispatcher.forward(request, response);
     }
     
+
+
+	private void processJoinMain(HttpServletRequest request, HttpServletResponse response) {
+		//request객체에 "members/join.jsp" 중앙화면 뷰 주소 바인딩
+		request.setAttribute("center", "members/join.jsp");		
+		nextPage = "/main.jsp";
+	}
+	
+	private void handleNaverJoin(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	    String naverId = processNaverJoin(request, response);
+	    if (naverId != null) {
+	        request.getSession().setAttribute("userId", naverId);
+	        response.sendRedirect(request.getContextPath() + "/Member/joinPro.me");
+	    }
+	}
+	
+	private void handleKakaoJoin(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	    String kakaoId = processKakaoJoin(request, response);
+	    if (kakaoId != null) {
+	        request.getSession().setAttribute("userId", kakaoId);
+	        response.sendRedirect(request.getContextPath() + "/Member/joinPro.me");
+	    }
+	}
+
 	private void updateProfile(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException{
 		
@@ -167,7 +165,7 @@ public class MemberController extends HttpServlet {
         out.close();
     }
     
-    private String processNaverLogin(HttpServletRequest request, HttpServletResponse response) 
+    private String processNaverJoin(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException  {
 
     	
@@ -190,10 +188,10 @@ public class MemberController extends HttpServlet {
 
     }
     
-    private String processKakaoLogin(HttpServletRequest request, HttpServletResponse response)
+    private String processKakaoJoin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        System.out.println("processKakaoLogin 호출됨");
+        System.out.println("processKakaoJoin 호출됨");
 
         // 요청 파라미터에서 카카오 인가 코드 받아오기
         String code = request.getParameter("code");
@@ -254,46 +252,93 @@ public class MemberController extends HttpServlet {
     }
     
 
-        private void processMemberLogin(HttpServletRequest request, HttpServletResponse response)
-                throws ServletException, IOException {
-
-            String loginType = request.getParameter("loginType");  // "naver" 또는 "kakao"
-            String userId = null;
-
-            try {
-                if ("naver".equals(loginType)) {
-                    String code = request.getParameter("code");
-                    if (code != null) {
-                        userId = memberService.getNaverId(request, response);  // 네이버 아이디 받아오기
-                    }
-                } else if ("kakao".equals(loginType)) {
-                    String code = request.getParameter("code");
-                    if (code != null) {
-                        userId = memberService.getKakaoId(code);  // 카카오 아이디 받아오기
-                    }
-                }
-
-                // 아이디가 null이면 로그인 실패 처리
-                if (userId == null) {
-                    response.sendRedirect(request.getContextPath() + "/Member/join.me");
-                    return;
-                }
-
-                // DB에서 아이디 존재 여부 확인
+    private void handleLogin(String userId, HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        try {
+            if (userId != null) {
+                // 사용자 ID로 DB 조회 (회원 존재 여부 확인)
                 boolean isUserExists = memberService.isUserExists(userId);
-                
-                if (isUserExists) {
-                    response.sendRedirect(request.getContextPath() + "/main.jsp");
-                } else {
-                    response.setContentType("text/html; charset=UTF-8");
-                    response.getWriter().println("<script>alert('등록되어 있지 않은 회원입니다. 회원가입을 해주세요.'); window.location.href='" + request.getContextPath() + "/Member/joinPage.me';</script>");
-                }
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                response.sendRedirect(request.getContextPath() + "/errorPage.me");
+                if (isUserExists) {
+                    // 회원 존재 시 메인 페이지로 리다이렉트
+                    System.out.println("회원 존재 확인: " + userId);
+                    response.sendRedirect(request.getContextPath() + "/Member/loginPro.me"); // 메인 페이지로 리다이렉트
+                    return; // 리다이렉트 후 더 이상 코드를 실행하지 않도록 return
+                } else {
+                    // 회원이 존재하지 않으면 회원가입 페이지로 이동
+                    System.out.println("회원 존재하지 않음: " + userId);
+                    response.setContentType("text/html; charset=UTF-8");
+                    PrintWriter out = response.getWriter();
+                    out.println("<script>");
+                    out.println("alert('회원가입이 필요합니다. 회원가입 페이지로 이동합니다.');");
+                    out.println("location.href='" + request.getContextPath() + "/Member/join.me';");
+                    out.println("</script>");
+                    out.close();
+                    return; // 더 이상 코드를 실행하지 않도록 return
+                }
+            } else {
+                // userId가 null이면 에러 처리
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "아이디를 가져오는 데 실패했습니다.");
             }
+        } catch (Exception e) {
+            // 예외 처리
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "로그인 처리 중 오류가 발생했습니다.");
         }
+    }
+
+
+
+    // 네이버 로그인 처리 메소드
+    private void processNaverLogin(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            String userId = memberService.getNaverId(request, response); // 네이버 ID 가져오기
+            handleLogin(userId, request, response); // 공통 로직 호출
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "네이버 로그인 중 오류가 발생했습니다.");
+        }
+    }
+
+    // 카카오 로그인 처리 메소드
+    private void processKakaoLogin(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            String code = request.getParameter("code"); // 카카오 인증 후 전달된 코드
+            String userId = memberService.getKakaoId(code); // 카카오 ID 가져오기
+            handleLogin(userId, request, response); // 공통 로직 호출
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "카카오 로그인 중 오류가 발생했습니다.");
+        }
+    }
+    
+    // 요청에 따라 메소드 호출
+    private void processMemberLogin(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String uri = request.getRequestURI(); // 요청된 URI
+
+        if (uri.endsWith("/naverlogin.me")) {
+            processNaverLogin(request, response); // 네이버 로그인 처리
+        } else if (uri.endsWith("/kakaologin.me")) {
+            processKakaoLogin(request, response); // 카카오 로그인 처리
+        } else {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "잘못된 요청입니다.");
+        }
+    }
+    
+    private String handleWishlist(HttpServletRequest request) {
+        request.setAttribute("center", "members/wishlist.jsp");
+        return "/main.jsp";
+    }
+    
+    
+    
+    
+    
+    
+    
     }
     
    

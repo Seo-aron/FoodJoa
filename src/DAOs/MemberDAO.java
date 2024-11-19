@@ -169,57 +169,101 @@ public class MemberDAO {
     	
     }
 	
-    // 사용자 레시피 위시리스트 조회
-    public ArrayList<RecipeWishListVO> selectUserRecipeWishlist(String id) {
-        ArrayList<RecipeWishListVO> wishlist = new ArrayList<>();
-        String sql = "SELECT * FROM recipe_wishlist WHERE id = ?";
-        ResultSet resultSet = null;
+	// 사용자 레시피 위시리스트 조회
+	public ArrayList<RecipeWishListVO> selectUserRecipeWishlist(String id) {
+	    ArrayList<RecipeWishListVO> wishlist = new ArrayList<>();
+	    String sql = "SELECT rw.no, rw.id, rw.recipe_no, r.thumbnail, r.title, r.description "
+	               + "FROM recipe_wishlist rw "
+	               + "JOIN recipe r ON rw.recipe_no = r.no "
+	               + "WHERE rw.id = ?";  // 사용자의 찜한 레시피 목록을 조회
 
-        try {
-            resultSet = dbConnector.executeQuery(sql, id);
-            while (resultSet.next()) {
-                RecipeWishListVO recipeWishlist = new RecipeWishListVO(
-                        resultSet.getInt("no"),
-                        resultSet.getString("id"),
-                        resultSet.getInt("recipe_no")
-                );
-                wishlist.add(recipeWishlist);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("selectUserRecipeWishlist() SQLException 발생");
-        } finally {
-            dbConnector.release();  // 자원 해제
-        }
-        return wishlist;
-    }
+	    ResultSet resultSet = null;
 
-    // 사용자 상품 위시리스트 조회
-    public ArrayList<MealkitWishListVO> selectUserProductWishlist(String id) {
-        ArrayList<MealkitWishListVO> wishlist = new ArrayList<>();
-        String sql = "SELECT * FROM mealkit_wishlist WHERE id = ?";
-        ResultSet resultSet = null;
+	    try {
+	        // 쿼리 실행
+	        resultSet = dbConnector.executeQuery(sql, id);
 
-        try {
-            resultSet = dbConnector.executeQuery(sql, id);
-            while (resultSet.next()) {
-            	MealkitWishListVO mealkitwishlist = new MealkitWishListVO(
-                        resultSet.getInt("no"),
-                        resultSet.getString("id"),
-                        resultSet.getInt("product_no"),
-                        resultSet.getInt("type")
-                );
-                wishlist.add(mealkitwishlist);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("selectUserMealkitWishListVO() SQLException 발생");
-        } finally {
-            dbConnector.release();  // 자원 해제
-        }
-        return wishlist;
-    }
+	        // 결과 처리
+	        while (resultSet.next()) {
+	            // RecipeWishListVO 객체 생성 (기존 필드만 사용)
+	            RecipeWishListVO recipeWishlist = new RecipeWishListVO(
+	                resultSet.getInt("no"),           // 찜 목록 고유 번호
+	                resultSet.getString("id"),        // 사용자 아이디
+	                resultSet.getInt("recipe_no")     // 레시피 고유 번호
+	            );
 
+	            // 레시피 정보를 추가로 처리 (별도로 저장하지 않음, 단지 사용만 함)
+	            // 예를 들어, JSP에서 레시피 썸네일, 제목, 설명을 사용하려면 `ResultSet`에서 추출한 정보를 이용
+	            String thumbnail = resultSet.getString("thumbnail");
+	            String title = resultSet.getString("title");
+	            String description = resultSet.getString("description");
+
+	            // 여기에 저장하지 않고 바로 JSP에서 출력할 수 있도록 처리
+	            // 예를 들어, JSP 페이지에서 "recipeWishlist.getThumbnail()" 등의 방식으로 사용 가능
+
+	            // 추가 필드가 필요하다면, 그 부분을 JSP에서 직접 처리하거나 `VO` 클래스에서 다른 방법으로 처리 가능
+
+	            wishlist.add(recipeWishlist);  // 리스트에 추가
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("selectUserRecipeWishlist() SQLException 발생");
+	    } finally {
+	        dbConnector.release();  // 자원 해제
+	    }
+	    return wishlist;
+	}
+
+
+
+	// 사용자 상품 위시리스트 조회
+	public ArrayList<MealkitWishListVO> selectUserProductWishlist(String id) {
+	    ArrayList<MealkitWishListVO> wishlist = new ArrayList<>();
+	    
+	    // 상품 테이블(mealkit)을 JOIN하여 상품의 추가 정보도 가져오기
+	    String sql = "SELECT mw.no, mw.id, mw.product_no, mw.type, m.thumbnail, m.name, m.price "
+	               + "FROM mealkit_wishlist mw "
+	               + "JOIN mealkit m ON mw.product_no = m.no "
+	               + "WHERE mw.id = ?";  // 사용자의 찜 목록 조회
+
+	    ResultSet resultSet = null;
+
+	    try {
+	        // 쿼리 실행
+	        resultSet = dbConnector.executeQuery(sql, id);
+
+	        // 결과 처리
+	        while (resultSet.next()) {
+	            // MealkitWishListVO 객체 생성 (기존 필드만 사용)
+	            MealkitWishListVO mealkitwishlist = new MealkitWishListVO(
+	                resultSet.getInt("no"),           // 찜 목록 고유 번호
+	                resultSet.getString("id"),        // 사용자 아이디
+	                resultSet.getInt("product_no"),   // 상품 고유 번호
+	                resultSet.getInt("type")          // 상품 유형
+	            );
+
+	            // 상품의 추가 정보를 가져옴 (VO에 저장하지 않고 사용)
+	            String thumbnail = resultSet.getString("thumbnail");
+	            String name = resultSet.getString("name");
+	            double price = resultSet.getDouble("price");
+
+
+	            wishlist.add(mealkitwishlist);  // 리스트에 추가
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("selectUserProductWishlist() SQLException 발생");
+	    } finally {
+	        dbConnector.release();  // 자원 해제
+	    }
+
+	    return wishlist;
+	}
+
+
+	
+	
+	
     // 레시피 위시리스트에 레시피 추가
     public boolean addRecipeToWishlist(String id, int recipeNo) throws SQLException {
         String sql = "INSERT INTO recipe_wishlist (id, recipe_no) VALUES (?, ?)";
@@ -263,32 +307,7 @@ public class MemberDAO {
             dbConnector.release();  // 자원 해제
         }
     }
-    
-	// 사용자 확인 (로그인용)
-	public int checkMember(String login_id, String login_name) {
-		int check = -1;
-		String sql = "SELECT * FROM member WHERE id=?";
-		ResultSet resultSet = null;
 
-		try {
-			resultSet = dbConnector.executeQuery(sql, login_id);
-			if (resultSet.next()) {
-				if (login_name.equals(resultSet.getString("name"))) {
-					check = 1; // 이름 일치
-				} else {
-					check = 0; // 이름 불일치
-				}
-			} else {
-				check = -1; // ID 없음
-			}
-		} catch (Exception e) {
-			System.out.println("MemberDAO의 userCheck 메소드에서 오류");
-			e.printStackTrace();
-		} finally {
-			dbConnector.release();
-		}
-		return check;
-	}
 
 	// 개인정보수정 - id변경 불가
 	public int updateMember(MemberVO member) {

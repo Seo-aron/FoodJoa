@@ -145,7 +145,7 @@
     
    	<script type="text/javascript">   	
 		function onWishList() {
-			location.href = '<%= contextPath %>/Member/wishlist.me';
+			location.href = '<%= contextPath %>/Member/viewWishList.me';
 		}
 		
 		function onRecently() {
