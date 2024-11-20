@@ -137,7 +137,7 @@
 	    	    $(this).parent().prev().append(newIngredientHtml);
 	    	});
 	    	
-			// 추가 버튼을 눌렀을 때 
+			// 조리순서) 추가 버튼을 눌렀을 때 
 	    	$(document).on('click', '.addrow-orders', function() {
 	    	    var $row = $(this).closest('.orders-row');
 	    	    var name = $row.find('.name-orders').val();
@@ -181,9 +181,9 @@
 		        processData: false, // jQuery가 데이터를 자동으로 변환하지 않도록 설정
 		        contentType: false, // Content-Type을 자동으로 설정하도록
 		        success: function(response) { 
-		            if (response === "1") {
+		            if (response > 0) {
 		                alert("글 작성이 성공적으로 완료되었습니다.");
-		                window.location.href = "<%= contextPath %>/Mealkit/list";
+		                location.href = "<%= contextPath %>/Mealkit/info?no=" + response;
 		            } else {
 		                alert("글 작성에 실패했습니다. 다시 시도해주세요.");
 		            }

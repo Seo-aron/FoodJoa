@@ -75,7 +75,7 @@
 				<strong>글쓴이: ${mealkit.id }</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<strong>게시일: ${mealkit.postDate }</strong><br>
 				<!-- 나중에 평점 수정 -->
-				<strong>평점: ${ratingAvr }</strong><hr>
+				<strong>평점: <fmt:formatNumber value="${ratingAvr}" pattern="#.#" /></strong><hr>
 			</span>
 			<h2>가격: ${mealkit.price }</h2><hr><br>
 			
