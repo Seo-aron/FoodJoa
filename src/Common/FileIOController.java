@@ -32,8 +32,33 @@ public  class FileIOController {
 		
 		if (fileName == null || fileName.isEmpty()) return;
 		
+		System.out.println("path : " + path);
+		System.out.println("fileName : " + fileName);
+		
 		File file = new File(path + "\\" + fileName);
 		
 		file.delete();
+	}
+	
+	public static synchronized void deleteDirectory(String path) {
+		
+		File directory = new File(path);
+		
+		deleteDirectory(directory);
+	}
+	
+	private static synchronized void deleteDirectory(File directory) {
+		
+	    if (directory.isDirectory()) {
+	        File[] files = directory.listFiles();
+	        
+	        if (files != null) {
+	            for (File file : files) {
+	                deleteDirectory(file);
+	            }
+	        }
+	    }
+	    
+	    directory.delete();
 	}
 }
