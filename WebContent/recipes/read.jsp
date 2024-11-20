@@ -18,6 +18,8 @@
 			
 	String compressedContents = recipe.getContents();
 	
+	String currentPage = (String) request.getAttribute("currentPage");
+	String currentBlock = (String) request.getAttribute("currentBlock");
 	
 	//String id = (String) session.getAttribute("id");
 	String id = "admin";
@@ -230,7 +232,7 @@
 	
 	<script>
 		function onListButton() {
-			location.href = '<%= contextPath %>/Recipe/list?category=0';
+			location.href = '<%= contextPath %>/Recipe/list?category=0&currentPage=<%= currentPage %>&currentBlock=<%= currentBlock %>';
 		}
 		
 		function onReviewButton() {
