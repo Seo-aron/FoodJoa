@@ -323,5 +323,18 @@ public class MemberService {
 	    return memberDAO.isUserExists(userId);
 	}
 
+	public boolean deleteMember(String readonlyId) {
+	    try {
+	        // DAO를 통해 회원 삭제 처리
+	        int result = memberDAO.deleteMemberById(readonlyId);
+
+	        // 결과가 1이면 삭제 성공
+	        return result == 1;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false; // 예외 발생 시 false 반환
+	    }
+	}
+
 	
 }

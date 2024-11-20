@@ -261,52 +261,6 @@ public class MemberDAO {
 	}
 
 
-	
-	
-	
-    // 레시피 위시리스트에 레시피 추가
-    public boolean addRecipeToWishlist(String id, int recipeNo) throws SQLException {
-        String sql = "INSERT INTO recipe_wishlist (id, recipe_no) VALUES (?, ?)";
-        try {
-            int result = dbConnector.executeUpdate(sql, id, recipeNo);
-            return result > 0;  // 성공하면 true, 실패하면 false
-        } finally {
-            dbConnector.release();  // 자원 해제
-        }
-    }
-
-    // 상품 위시리스트에 상품 추가
-    public boolean addMealkitToWishlist(String id, int mealkit_no) throws SQLException {
-        String sql = "INSERT INTO mealkit_wishlist (id, mealkit_no, type) VALUES (?, ?, ?)";
-        try {
-            int result = dbConnector.executeUpdate(sql, id, mealkit_no, type);
-            return result > 0;  // 성공하면 true, 실패하면 false
-        } finally {
-            dbConnector.release();  // 자원 해제
-        }
-    }
-
-    // 레시피 위시리스트에서 레시피 삭제
-    public boolean removeRecipeFromWishlist(String id, int recipeNo) throws SQLException {
-        String sql = "DELETE FROM recipe_wishlist WHERE id = ? AND recipe_no = ?";
-        try {
-            int result = dbConnector.executeUpdate(sql, id, recipeNo);
-            return result > 0;  // 성공하면 true, 실패하면 false
-        } finally {
-            dbConnector.release();  // 자원 해제
-        }
-    }
-
-    // 상품 위시리스트에서 상품 삭제
-    public boolean removeProductFromWishlist(String id, int mealkit_no) throws SQLException {
-        String sql = "DELETE FROM mealkit_wishlist WHERE id = ? AND product_no = ?";
-        try {
-            int result = dbConnector.executeUpdate(sql, id, mealkit_no);
-            return result > 0;  // 성공하면 true, 실패하면 false
-        } finally {
-            dbConnector.release();  // 자원 해제
-        }
-    }
 
 
 	// 개인정보수정 - id변경 불가
@@ -349,5 +303,26 @@ public class MemberDAO {
 	public String viewProfile(String profile) {
 
 		return profile;
+	}
+
+	public int deleteMemberById(String readonlyId) {
+		  int result = 0;
+
+		    // 삭제할 회원에 대한 SQL 쿼리
+		    String sql = "DELETE FROM member WHERE id = '" + readonlyId + "'";
+
+		    try {
+		        // DB 연결을 위한 dbConnector 객체 사용 (Statement 사용)
+		        dbConnector.executeUpdate(sql); // executeUpdate로 DELETE 쿼리 실행
+		        
+		        result = 1; // 삭제 성공
+		    } catch (Exception e) {
+		        System.out.println("MemberDAO의 deleteMemberById 메소드에서 오류");
+		        e.printStackTrace();
+		    } finally {
+		        dbConnector.release(); // 연결 해제
+		    }
+
+		    return result; // 삭제 성공 시 1 반환, 실패 시 0 반환
 	}
 }

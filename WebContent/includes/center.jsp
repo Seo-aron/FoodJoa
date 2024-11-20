@@ -148,12 +148,12 @@
 			location.href = '<%= contextPath %>/Member/viewWishList.me';
 		}
 		
-		function onRecently() {
-			location.href = '<%= contextPath %>/Member/recently.me';
+		function onRecentList() {
+			location.href = '<%= contextPath %>/Member/viewRecentList.me';
 		}
 		
-		function onCart() {
-			location.href = '<%= contextPath %>/Member/cart.me';
+		function onCartList() {
+			location.href = '<%= contextPath %>/Member/cartList.me';
 		}		
 	</script>
     
@@ -206,8 +206,8 @@
 	<!-- 사이드바 영역 -->
 	<div class="sidebar">
         <button class="button" onclick="onWishList()">위시리스트 <br> 레시피/상품</button>
-        <button class="button" onclick="onRecently()">최근에 본 <br> 레시피/상품</button>
-        <button class="button" onclick="onCart()">장바구니</button>
+        <button class="button" onclick="onRecentList()">최근에 본 <br> 레시피/상품</button>
+        <button class="button" onclick="onCartList()">장바구니</button>
     </div>
 </body>
 

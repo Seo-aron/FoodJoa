@@ -73,49 +73,32 @@
 		<!-- Info Sections -->
 		<div class="info-section">
 			<div>주문/배송조회</div>
-			<div>
-				<span>주문건수: 0</span> | <span>배송준비중: 1</span> | <span>배송중: 2</span> |
-				<span>배송완료: 0</span> <br><a href="<%=contextPath%>/members/vieworder.jsp">
-				<input type="button" class="more-btn" value="더보기">
+				<div style="display: flex;">
+				<span>주문건수 : 0</span> | <span>배송준비중 : 1</span> | <span>배송중 : 2</span> |
+				<span>배송완료 : 0</span>
+				 <a href="<%=contextPath%>/Member/myorder.me" style="margin-left: auto;">더보기</a>
 			</div>
 		</div>
 
 		<div class="info-section">
-			<div>내 마켓상품 주문/배송조회</div>
-			<div>
-				<span>주문건수: 0</span> | <span>배송준비중: 1</span> | <span>배송중: 2</span> |
-				<span>배송완료: 0</span> <br> <input type="button" class="more-btn"
-					value="더보기">
-			</div>
+			<div>내 마켓 발송 현황</div>
+				<div style="display: flex;">
+			    <span>주문건수 : 0 </span> | <span>배송준비중 : 1 </span> | <span>배송중 : 2 </span> |
+			    <span>배송완료 : 0 </span>
+			    <a href="<%=contextPath%>/Member/sendMyMealkit.me" style="margin-left: auto;">더보기</a>
+		</div>
 		</div>
 
 		<div class="info-section">
 			<div><a href="<%=contextPath%>/members/processingpolicy.jsp">※ 개인정보처리방침</a></div>
 		</div>
 
-		<input type="button" class="more-btn" value="탈퇴"
-			hrf="<%=contextPath%>/main.jsp" onclick="withdraw()">
-		<!-- 탈퇴 버튼을 클릭하면 withdraw 함수가 실행됨 -->
+		<div>
+		<a href="<%=contextPath%>/Member/deleteMember.me">
+		<button>탈퇴하기</button>
+		</a>
+		</div>
 
-		</script>
-	</div>
-
-	<script>
-		// 파일을 선택하면 미리보기 이미지를 표시
-		function previewImage(event) {
-			const reader = new FileReader();
-			reader.onload = function() {
-				const output = document.getElementById('profilePreview');
-				output.src = reader.result;
-			};
-			reader.readAsDataURL(event.target.files[0]);
-		}
-
-		//탈퇴버튼 클릭시 알림창 표시
-		function withdraw() {
-			alert("탈퇴되었습니다");
-		}
-	</script>
 </head>
 
 </body>

@@ -70,7 +70,6 @@
 					<input type="text" id="nickname" name="nickname" class="form-control" placeholder="닉네임을 입력해주세요" required />
 					<input type="text" id="phone" name="phone" class="form-control" placeholder="휴대폰번호 입력해주세요" required />
 					
-					<label>주소를 입력해주세요</label>
 					<p id="addressInput"></p> 
 					<input type="text" id="sample4_postcode" name="address1" class="form-control" placeholder="우편번호">
 					<input type="button" onclick="sample4_execDaumPostcode()" value="우편번호 찾기" class="form-control"><br>					
