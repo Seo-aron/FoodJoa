@@ -171,6 +171,8 @@
 	
 	<form name="frmOpen">
 		<input type="hidden" name="no">
+		<input type="hidden" name="currentPage" value="<%= currentPage %>">
+		<input type="hidden" name="currentBlock" value="<%= currentBlock %>">
 	</form>
 </body>
 

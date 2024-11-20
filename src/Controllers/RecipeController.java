@@ -110,6 +110,9 @@ public class RecipeController extends HttpServlet {
 		request.setAttribute("recipe", recipe);
 		request.setAttribute("ratingAvg", ratingAvg);
 		request.setAttribute("reviews", reviews);
+		request.setAttribute("currentPage", request.getParameter("currentPage"));
+		request.setAttribute("currentBlock", request.getParameter("currentBlock"));
+		
 		request.setAttribute("pageTitle", recipe.getTitle());
 		request.setAttribute("center", "recipes/read.jsp");
 		
