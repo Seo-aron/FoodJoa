@@ -156,10 +156,15 @@ public class MealkitController extends HttpServlet {
 
 		ArrayList<MealkitVO> mealkits = mealkitService.getMealkitsList();
 		Map<Integer, Float> ratingAvr = mealkitService.getAllRatingAvr(mealkits);
+		
+		String nowPage = request.getParameter("nowPage");
+		String nowBlock = request.getParameter("nowBlock");
 
 		request.setAttribute("mealkitList", mealkits);
 		request.setAttribute("ratingAvr", ratingAvr);
 		request.setAttribute("center", "mealkits/list.jsp");
+		request.setAttribute("nowPage", nowPage);
+		request.setAttribute("nowBlock", nowBlock);
 
 		nextPage = "/main.jsp";
 	}
