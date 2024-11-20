@@ -3,6 +3,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ page import="java.time.LocalDate"%>
+<%@ page import="java.time.temporal.ChronoUnit"%>
+<%@ page import="java.sql.*"%>
+<%@ page import="java.sql.Timestamp"%>
+<%@ page import="java.time.ZoneId"%>
+<%@ page import="DAOs.MemberDAO"%>
 
 <%
 	request.setCharacterEncoding("UTF-8");
@@ -14,6 +20,29 @@
 
 	//String loginedid = (String) session.getAttribute("id");	
 	String id = "admin";
+
+	MemberDAO memberDAO = new MemberDAO();
+
+	// 가입 날짜 가져오기
+	Timestamp joinDate = memberDAO.selectJoinDate(id);
+
+	// Timestamp를 LocalDate로 변환
+	LocalDate receivedDate = joinDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+
+	// 현재 날짜
+	LocalDate currentDate = LocalDate.now();
+
+	// 두 날짜 사이의 일 수 차이 계산
+	long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
+
+	System.out.println("날짜 차이: " + daysBetween + "일");
+	
+	//유저 이름 가져오기
+//	MemberVO bringName = memberDAO.bringName();
+	
+	//유저 사진 가져오기
+//	MemberVO bringProfile = memberDAO.bringProfile();
+	
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -35,15 +64,23 @@
 	<div class="profile-wrapper">
 		<div class="profile-section">
 			<div class="profile-image">
-				<img alt="없음" src="../images/member/userProfiles/admin.png">
+				<img alt="없음"
+					src="<%=contextPath%>/images/member/userProfiles/admin.png">
 			</div>
 			<div class="profile-info">
-				<h2>Admin님!</h2>
-				<p>푸드조아와 함께한지 999일째♥</p>
+				<h2>형님!</h2>
+				<%
+				if (joinDate != null) {
+					%>
+					<p>회원님은 푸드조아와 함께한지 <strong><%=daysBetween%></strong>일째입니다!</p>
+					<%
+				} else {
+					%>
+					<p>가입 정보를 가져올 수 없습니다. 관리자에게 문의하세요.</p>
+					<%
+				}
+				%>
 				<button id="updateButton">정보수정</button>
-				<%-- <form action="<%=request.getContextPath()%>/Member/updatePro.me" method="get">
-					<button onclick="checkConditionAndProceed()">정보수정</button>
-				</form> --%>
 			</div>
 
 

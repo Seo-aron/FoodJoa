@@ -22,7 +22,6 @@
 <title>회원 정보 수정</title>
 
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet" href="<%=contextPath%>/css/member/profileupdate.css">
 
 <script type="text/javascript">    
@@ -76,6 +75,7 @@
   
         <!-- JavaScript로 미리보기 기능 구현 -->
         <form action="<%=request.getContextPath()%>/Member/updatePro.me" method="post" enctype="multipart/form-data" >
+        	<input type="hidden" id="origin-profile" name="origin-profile" value="<%= vo.getProfile() %>">
             <br>
             <br>
             <!-- 이미지 미리보기가 표시될 컨테이너 -->
@@ -83,7 +83,7 @@
             </div>
 
             <!-- 파일 선택 버튼 -->
-            <input type="file" accept="image/*" class="file-input" id="fileInput">
+            <input type="file" accept=".jpg, .jpeg, .png" class="profile" id="fileInput" name="profile">
             <div class="form-group">
                 <label for="name">이름</label> 
                 <input type="text" id="name" name="name" value="<%=vo.getName()%>" placeholder="2자 이상 10자 미만으로 입력해주세요">

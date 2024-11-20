@@ -166,21 +166,32 @@ public class MemberService {
 
 	public int updateProfile(HttpServletRequest request) throws ServletException, IOException{
 		
-		String profile = request.getParameter("profile");
-		String name = request.getParameter("name");
-		String nickname = request.getParameter("nickname");
-		String phone = request.getParameter("phone");
-		String address = request.getParameter("address");
+		String id = "admin";
 		
-		MemberVO member = new MemberVO();
-		member.setId("admin");
-		member.setProfile(profile);
-		member.setName(name);
-		member.setNickname(nickname);
-		member.setPhone(phone);
-		member.setAddress(address);
+		String path = request.getServletContext().getRealPath("/images/");
+		int maxSize = 1024 * 1024 * 1024;
 		
+		MultipartRequest multipartRequest = new MultipartRequest(request, path + "temp/", maxSize, "UTF-8", 
+				new DefaultFileRenamePolicy());
+
+		String originProfile = multipartRequest.getParameter("origin-profile");
+		String fileName = multipartRequest.getOriginalFileName("profile");
+		
+		if (fileName == null) {
+			fileName = originProfile;
+		}
+		
+		MemberVO member = new MemberVO(
+				id,
+				multipartRequest.getParameter("name"),
+				multipartRequest.getParameter("nickname"),
+				multipartRequest.getParameter("phone"),
+				multipartRequest.getParameter("address"),
+				fileName);
+
 		int result = memberDAO.updateMember(member);
+		
+		// 병합 후 FileIOController 클래스 생성 되면 작성 해야 함
 		
 		return result;
 	}

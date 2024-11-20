@@ -21,7 +21,40 @@ public class MemberDAO {
 	public MemberDAO() {
 		dbConnector = new DBConnector();
 	}
+	
+	public Timestamp selectJoinDate(String id) {
+		
+		Timestamp result = null;
+		
+	    String sql = "SELECT join_date FROM member WHERE id = ?";
+	    
+	    try {
+	        ResultSet resultSet = dbConnector.executeQuery(sql, id); 
+	        if (resultSet.next()) {
+	            result = resultSet.getTimestamp("join_date"); 
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("selectJoinDate() SQLException 발생");
+	    } finally {
+	        dbConnector.release(); 
+	    }
+	    return result;
+	}
 
+	public void bringName(){
+		
+		try {
+			
+		} catch (Exception e) {
+		}
+		
+	}
+	
+	public void bringProfile(){
+		
+	}
+	
 	public MemberVO selectMembers() {
 		MemberVO members = new MemberVO();
 		String sql = "SELECT * FROM member";
@@ -219,8 +252,15 @@ public class MemberDAO {
 	 // 개인정보수정 - id변경 불가 
 	public int updateMember(MemberVO member) {
 
-		String sql = "UPDATE member SET profile=? name = ?, nickname = ?, phone = ?,"
-				+ ", address = ?,  WHERE id = ?";
+		System.out.println(member.getProfile());
+		System.out.println(member.getName());
+		System.out.println(member.getNickname());
+		System.out.println(member.getPhone());
+		System.out.println(member.getAddress());
+		System.out.println(member.getId());
+		
+		String sql = "UPDATE member SET profile=?, name=?, nickname=?, phone=?, address=? "
+				+ "WHERE id=?";
 
 		int result = dbConnector.executeUpdate(sql,
 				member.getProfile(),

@@ -17,7 +17,7 @@ import javax.sql.DataSource;
 public class DBConnector {
 
 	private DataSource dataSource;
-	
+
 	private Connection connection;
 	private PreparedStatement statement;
 	private ResultSet resultSet;
@@ -27,49 +27,53 @@ public class DBConnector {
 	 * 생성자 호출 시 자동으로 커넥션 풀 등록
 	 */
 	public DBConnector() {
-		
+
 		try {
 			Context context = new InitialContext();
 			dataSource = (DataSource) context.lookup("java:/comp/env/jdbc/FoodJoa");
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			System.out.println("DB 연결 실패");
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 사용이 끝난 자원 일괄적으로 할당 해제
 	 */
 	public void release() {
-		
+
 		try {
-			if (resultSet != null) resultSet.close();
-			if (statement != null) statement.close();
-			if (connection != null) connection.close();
-		}
-		catch (Exception e) {
+			if (resultSet != null)
+				resultSet.close();
+			if (statement != null)
+				statement.close();
+			if (connection != null)
+				connection.close();
+		} catch (Exception e) {
 			System.out.println("자원 해제 실패");
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void prepareQuery(String sql, Object... params) {
-		
+
 		release();
-		
+
 		try {
 			connection = dataSource.getConnection();
-			
+
 			statement = connection.prepareStatement(sql);
 			for (int i = 0; i < params.length; i++) {
-				if (params[i] instanceof String) statement.setString(i + 1, (String) params[i]);
-				else if (params[i] instanceof Integer) statement.setInt(i + 1, (int) params[i]);
-				else if (params[i] instanceof Float) statement.setFloat(i + 1, (float) params[i]);
-				else if (params[i] instanceof Timestamp) statement.setTimestamp(i + 1, (Timestamp) params[i]);
+				if (params[i] instanceof String)
+					statement.setString(i + 1, (String) params[i]);
+				else if (params[i] instanceof Integer)
+					statement.setInt(i + 1, (int) params[i]);
+				else if (params[i] instanceof Float)
+					statement.setFloat(i + 1, (float) params[i]);
+				else if (params[i] instanceof Timestamp)
+					statement.setTimestamp(i + 1, (Timestamp) params[i]);
 			}
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("DBConnector SQLException 발생");
 		}
@@ -78,83 +82,81 @@ public class DBConnector {
 	/**
 	 * SELECT 구문을 실행하기 위한 함수<br>
 	 * 두 번째 매개변수 부터 차례로 SQL에 set<br>
-	 * 사용 예) dbConnector.executeQuery("select * from table where col1=? and col2=?", col1열 값, col2열 값);
-	 * @param sql SELECT 구문이 포함 된 SQL 쿼리문
+	 * 사용 예) dbConnector.executeQuery("select * from table where col1=? and col2=?",
+	 * col1열 값, col2열 값);
+	 * 
+	 * @param sql    SELECT 구문이 포함 된 SQL 쿼리문
 	 * @param params 쿼리문에 포함 할 변수들
 	 * @return SELECT 구문의 실행 결과인 ResultSet 객체
 	 */
 	public ResultSet executeQuery(String sql, Object... params) {
-		
+
 		prepareQuery(sql, params);
-		
+
 		try {
 			resultSet = statement.executeQuery();
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("DBConnector SQLException 발생");
 		}
-		
-		
+
 		return resultSet;
 	}
-	
+
 	/**
 	 * SELECT 구문을 제외한 나머지 구문을 실행하기 위한 함수<br>
 	 * 두 번째 매개변수 부터 차례로 SQL에 set<br>
-	 * 사용 예) dbConnector.executeUpdate("insert into table(col1, col2) values(?, ?), col1열 값, col2열 값);
-	 * @param sql SELECT 구문이 포함 된 SQL 쿼리문
+	 * 사용 예) dbConnector.executeUpdate("insert into table(col1, col2) values(?, ?),
+	 * col1열 값, col2열 값);
+	 * 
+	 * @param sql    SELECT 구문이 포함 된 SQL 쿼리문
 	 * @param params 쿼리문에 포함 할 변수들
 	 * @return SQL 실행 결과를 int로 반환 (-1 : 예외 발생, 0 : 쿼리문 실행 실패, 1 : 쿼리문 실행 성공)
 	 */
 	public int executeUpdate(String sql, Object... params) {
-		
+
 		prepareQuery(sql, params);
-		
+
 		int result = 0;
-		
+
 		try {
 			result = statement.executeUpdate();
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("DBConnector SQLException 발생");
 			result = -1;
 		}
-		
-		
+
 		return result;
 	}
-	
+
 	public ResultSet executeUpdateQuery(String updateSql, String selectSql, Object... params) {
-		
+
 		try {
 			int updateParamCount = (int) updateSql.chars().filter(ch -> ch == '?').count();
 			System.out.println("updateParamCount : " + updateParamCount);
 			int selectParamCount = params.length - updateParamCount;
 			System.out.println("selectParamCount : " + selectParamCount);
-			
+
 			Object[] updateParams = new Object[updateParamCount];
 			for (int i = 0; i < updateParamCount; i++)
 				updateParams[i] = params[i];
 			Object[] selectParams = new Object[selectParamCount];
 			for (int i = 0; i < selectParamCount; i++)
 				selectParams[i] = params[updateParamCount + i];
-			
+
 			prepareQuery(updateSql, updateParams);
-			
+
 			statement.executeUpdate();
-			
+
 			prepareQuery(selectSql, selectParams);
-			
-			resultSet = statement.executeQuery();			
-		}
-		catch (SQLException e) {
+
+			resultSet = statement.executeQuery();
+		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("DBConnector SQLException 발생");
 		}
-		
-		
+
 		return resultSet;
 	}
 }
