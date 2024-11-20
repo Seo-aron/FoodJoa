@@ -27,9 +27,9 @@ public class RecipeService {
 		recipeDAO = new RecipeDAO();
 	}
 	
-	public ArrayList<HashMap<String, Object>> getRecipesWithAvgList() {
+	public ArrayList<HashMap<String, Object>> getRecipesWithAvgList(String category) {
 		
-		return recipeDAO.selectRecipesWithRating();
+		return recipeDAO.selectRecipesWithRating(category);
 	}
   
 	public ArrayList<RecipeVO> getRecipesList() {
@@ -128,6 +128,22 @@ public class RecipeService {
 		}
 		
 		return recipeNo;
+	}
+	
+	public int processRecipeDelete(HttpServletRequest request) {
+		
+		//String id = (String) request.getSession().getAttribute("id");
+		String id = "admin";
+		String no = request.getParameter("no");
+		
+		int result = recipeDAO.deleteRecipe(id, no);
+		
+		if (result == 1) {
+			String path = request.getServletContext().getRealPath("/images/") + "\\recipe\\thumbnails\\" + no;
+			FileIOController.deleteDirectory(path);
+		}
+		
+		return result;
 	}
 	
 	public int processRecipeWishlist(HttpServletRequest request) {

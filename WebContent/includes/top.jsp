@@ -158,13 +158,13 @@
 		<nav>
 			<ul id="topMenu">
 				<li><a href="#">홈</a></li>
-				<li><a href="<%= contextPath %>/Recipe/list">레시피 공유<span> ▼ </span></a>
+				<li><a href="<%= contextPath %>/Recipe/list?category=0">레시피 공유<span> ▼ </span></a>
 					<ul>
-						<li><a href="#">한식 요리</a></li>
-						<li><a href="#">일식 요리</a></li>
-						<li><a href="#">중식 요리</a></li>
-						<li><a href="#">양식 요리</a></li>
-						<li><a href="#">자취 요리</a></li>
+						<li><a href="<%= contextPath %>/Recipe/list?category=1">한식 요리</a></li>
+						<li><a href="<%= contextPath %>/Recipe/list?category=2">일식 요리</a></li>
+						<li><a href="<%= contextPath %>/Recipe/list?category=3">중식 요리</a></li>
+						<li><a href="<%= contextPath %>/Recipe/list?category=4">양식 요리</a></li>
+						<li><a href="<%= contextPath %>/Recipe/list?category=5">자취 요리</a></li>
 					</ul></li>
 				<li><a href="#">나만의 음식 판매<span> ▼ </span></a>
 					<ul>

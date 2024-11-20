@@ -18,10 +18,6 @@ import Services.RecipeService;
 import VOs.RecipeReviewVO;
 import VOs.RecipeVO;
 
-enum RecipeType {
-	None, Korean, japanese, Chinese, Western, Homecooking, RecipeTypeEnd
-}
-
 @WebServlet("/Recipe/*")
 public class RecipeController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -63,7 +59,7 @@ public class RecipeController extends HttpServlet {
 		case "/writePro": processRecipeWrite(request, response); break;
 		case "/update": openRecipeUpdateView(request, response); break;
 		case "/updatePro": processRecipeUpdate(request, response); break;
-		case "/deletePro": break;
+		case "/deletePro": processRecipeDelete(request, response); break;
 		case "/wishlist": processRecipeWishlist(request, response); return;
 		case "/review": if (openRecipeReviewView(request, response)) return ; break;
 		case "/reviewWrite": processReviewWrite(request, response); return;
@@ -77,10 +73,16 @@ public class RecipeController extends HttpServlet {
 	
 	private void openRecipeListView(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
+		String category = request.getParameter("category");
 		
-		ArrayList<HashMap<String, Object>> recipes = recipeService.getRecipesWithAvgList();
+		ArrayList<HashMap<String, Object>> recipes = recipeService.getRecipesWithAvgList(category);
 		
 		request.setAttribute("recipes", recipes);
+		request.setAttribute("category", category);
+		request.setAttribute("currentPage", request.getParameter("currentPage"));
+		request.setAttribute("currentBlock", request.getParameter("currentBlock"));
+		
 		request.setAttribute("pageTitle", "나만의 레시피");
 		request.setAttribute("center", "recipes/list.jsp");
 		
@@ -140,6 +142,14 @@ public class RecipeController extends HttpServlet {
 		int recipeNo = recipeService.processRecipeUpdate(request);
 		
 		nextPage = "/Recipe/read?no=" + recipeNo;
+	}
+	
+	private void processRecipeDelete(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		int result = recipeService.processRecipeDelete(request);
+		
+		nextPage = "/Recipe/list?category=0";
 	}
 	
 	private void processRecipeWishlist(HttpServletRequest request, HttpServletResponse response)

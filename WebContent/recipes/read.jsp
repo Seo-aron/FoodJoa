@@ -230,7 +230,7 @@
 	
 	<script>
 		function onListButton() {
-			location.href = '<%= contextPath %>/Recipe/list';
+			location.href = '<%= contextPath %>/Recipe/list?category=0';
 		}
 		
 		function onReviewButton() {
@@ -242,7 +242,9 @@
 		}
 		
 		function onDeleteButton() {
-			
+			if (confirm("정말 레시피를 삭제 하시겠습니까?")) {
+				location.href = '<%= contextPath %>/Recipe/deletePro?no=<%= recipe.getNo() %>';	
+			}
 		}
 	
 		/* id 파라미터 부분 로그인 완성 되면 수정 필요 */
