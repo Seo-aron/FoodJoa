@@ -37,7 +37,7 @@
 						<input type="hidden" name="mealkit_no" value="${mealkit.no }" data-review-no="${review.no}">
 					</td>
 					<td>
-						평점: <input type="hidden" name="rating" value="" id="ratingInput">
+						<span>평점: ${review.rating}</span>
 					</td>
 					<td>
 						<div class="empathy-container">

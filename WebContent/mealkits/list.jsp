@@ -1,4 +1,5 @@
 <%@ page import="java.util.List"%>
+<%@ page import="java.util.Map" %>
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="VOs.MealkitVO" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -60,7 +61,8 @@
 		int nowBlock = 0;
 		int beginPerPage = 0;
 		
-		ArrayList list = (ArrayList)request.getAttribute("mealkitList");
+		ArrayList<MealkitVO> list = (ArrayList)request.getAttribute("mealkitList");
+		Map<Integer, Float> ratingAvr = (Map<Integer, Float>) request.getAttribute("ratingAvr");
 		
 		totalRecord = list.size();
 		
@@ -93,7 +95,7 @@
 							break;
 						}
 						
-						MealkitVO vo = (MealkitVO)list.get(i);
+						MealkitVO vo = list.get(i);
 						%>
 						<tr>
 					        <td>
@@ -102,7 +104,7 @@
 					                    <img class="thumbnail" src="<%= contextPath %>/images/mealkit/thumbnails/<%=vo.getNo()%>/<%=vo.getPictures()%>">
 					                    작성자: <%=vo.getId() %> &nbsp;&nbsp;&nbsp;&nbsp;
 					                    작성일: <%=vo.getPostDate() %> &nbsp;&nbsp;&nbsp;&nbsp;
-					                    평점: <fmt:formatNumber value="${ratingAvr[mealkit.no]}" pattern="#.#" />&nbsp;&nbsp;&nbsp;&nbsp;
+					                    평점:  <fmt:formatNumber value="<%=ratingAvr.get(vo.getNo()) %>" pattern="#.#" />&nbsp;&nbsp;&nbsp;&nbsp;
 					                    조회수: <%=vo.getViews() %>
 					                </span>
 					                <h3><%=vo.getTitle() %></h3>
