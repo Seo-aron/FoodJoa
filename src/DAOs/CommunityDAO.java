@@ -9,6 +9,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import com.mysql.cj.xdevapi.Result;
+
 import VOs.CommunityVO;
 
 public class CommunityDAO {
@@ -75,7 +77,7 @@ public class CommunityDAO {
 
 		return communities;
 	}
-
+	
 	public void insertCommunity(CommunityVO communityVO) {
 
 		int result = 0;
@@ -100,6 +102,85 @@ public class CommunityDAO {
 			release();
 		}
 
+	}
+
+	public CommunityVO readCommunity(String no) {
+
+		CommunityVO vo = null;
+		String sql = null;
+		
+		try {
+			connection = dataSource.getConnection();
+			sql = "select * from community where no=?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, Integer.parseInt(no));
+			resultSet = preparedStatement.executeQuery();
+			
+			if(resultSet.next()) {
+				
+				vo = new CommunityVO(
+						resultSet.getInt("no"),
+						resultSet.getString("id"),
+						resultSet.getString("title"),
+						resultSet.getString("contents"),
+						resultSet.getInt("views"),
+						resultSet.getTimestamp("post_date"));
+			}
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			release();
+		}
+		
+		return vo;
+	}
+
+	public int updateCommunity(CommunityVO vo) {
+		
+		int result = 0;
+		
+		try {
+			connection = dataSource.getConnection();
+			
+			String sql = "update community set title=?, contents=? where no=?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, vo.getTitle());
+			preparedStatement.setString(2, vo.getContents());
+			preparedStatement.setInt(3, vo.getNo());
+			
+			result = preparedStatement.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			release();
+		}
+		
+		return result;
+	}
+
+	public int deleteCommunity(String no) {
+		
+		int result = 0;
+		
+		try {
+		
+			connection = dataSource.getConnection();
+			
+			String sql = "delete from community where no=?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, Integer.parseInt(no));
+
+			result = preparedStatement.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			release();
+		}
+		
+		return result;
 	}
 
 }

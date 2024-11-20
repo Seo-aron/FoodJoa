@@ -31,7 +31,7 @@
 				<td class="col-title">제목</td>
 				<td class="col-write">작성자</td>
 				<td class="col-views">조회수</td>
-				<td>작성날짜</td>
+				<td class="col-date">작성날짜</td>
 			</tr>
 			
 			<%
@@ -49,8 +49,8 @@
 			%>			
 				<tr align="center">
 					<td><%= vo.getNo()%></td>
-					<td><%= vo.getTitle()%></td>
-					<td><%= vo.getContents()%></td>
+					<td><a href="<%=contextPath%>/Community/read?no=<%=vo.getNo()%>"> <%=vo.getTitle()%></a></td>
+					<td><%= vo.getId()%></td>
 					<td><%= vo.getViews()%></td>
 					<td><%= vo.getPostDate()%></td>
 				</tr>
@@ -85,6 +85,18 @@
 				event.preventDefault();
 				
 				location.href='<%=contextPath%>/Community/write';
+			}
+			
+			function frmSearch(){
+				var word = document.getElementById("word").value;
+				
+				if(word == null || word == ""){
+					alert("검색어를 입력해주세요");
+					
+					document.getElementById("word").focus();
+					
+					return false;
+				}
 			}
 		</script>
 		

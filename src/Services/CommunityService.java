@@ -21,7 +21,7 @@ public class CommunityService {
 		
 		return communitydao.communityListAll();
 	}
-
+	
 	public void insertCommunity(HttpServletRequest request) {
 		
 		CommunityVO communityVO = new CommunityVO();
@@ -37,8 +37,30 @@ public class CommunityService {
 		communitydao.insertCommunity(communityVO);
 		
 	}
-	
-	
-	
-	
+
+	public CommunityVO openCommunityRead(String no) {
+		
+		return communitydao.readCommunity(no);
+	}
+
+	public int updateCommunity(HttpServletRequest request) {
+		
+		CommunityVO vo = new CommunityVO(
+				Integer.parseInt(request.getParameter("no")),
+				request.getParameter("id"),
+				request.getParameter("title"),
+				request.getParameter("contents"),
+				Integer.parseInt(request.getParameter("views")));
+		
+		int result = communitydao.updateCommunity(vo);
+		
+		return result;
+	}
+
+	public int deleteCommunity(HttpServletRequest request) {
+		
+		int result = communitydao.deleteCommunity(request.getParameter("no"));
+		
+		return result;
+	}
 }
