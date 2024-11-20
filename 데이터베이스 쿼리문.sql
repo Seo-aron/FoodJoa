@@ -61,11 +61,36 @@ select id, title, thumbnail,
 	orders, CURRENT_TIMESTAMP
 from recipe;
 
+insert into recipe(
+	id, title, thumbnail, description, 
+    contents, category, views,
+    ingredient, ingredient_amount,
+    orders, post_date
+)
+values
+	('admin', '한식1', 'test_thumbnail.png', '한식소개1', 
+    'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 1, 0,
+    '0008한식1 재료이름0008한식1 재료이름', '0008한식1 재료수량0008한식1 재료수량', 
+    '0008한식1 조리순서0008한식1 조리순서', current_timestamp),
+    ('admin', '일식1', 'test_thumbnail.png', '일식소개1', 
+    'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 2, 0,
+    '0008한식1 재료이름0008한식1 재료이름', '0008한식1 재료수량0008한식1 재료수량', 
+    '0008한식1 조리순서0008한식1 조리순서', current_timestamp),
+    ('admin', '중식1', 'test_thumbnail.png', '중식소개1', 
+    'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 3, 0,
+    '0008한식1 재료이름0008한식1 재료이름', '0008한식1 재료수량0008한식1 재료수량', 
+    '0008한식1 조리순서0008한식1 조리순서', current_timestamp),
+    ('admin', '양식1', 'test_thumbnail.png', '양식소개1', 
+    'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 4, 0,
+    '0008한식1 재료이름0008한식1 재료이름', '0008한식1 재료수량0008한식1 재료수량', 
+    '0008한식1 조리순서0008한식1 조리순서', current_timestamp),
+    ('admin', '자취1', 'test_thumbnail.png', '자취소개1', 
+    'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 5, 0,
+    '0008한식1 재료이름0008한식1 재료이름', '0008한식1 재료수량0008한식1 재료수량', 
+    '0008한식1 조리순서0008한식1 조리순서', current_timestamp);
 
 desc recipe;
 select * from recipe;
-
-SELECT no FROM recipe ORDER BY no DESC LIMIT 1;
 
 drop table if exists recipe_review;
 create table recipe_review(
@@ -94,6 +119,17 @@ values('review1', '1', '0018thumbnailImage.png', '리뷰 내용', 3, CURRENT_TIM
 
 desc recipe_review;
 select * from recipe_review;
+
+select r.*, COALESCE(avg_rating.average_rating, 0) AS average_rating
+from recipe r
+left join (
+	select recipe_no, avg(rating) as average_rating
+    from recipe_review
+    group by recipe_no
+) avg_rating
+on r.no = avg_rating.recipe_no
+where category=1
+order by post_date desc;
 
 drop table if exists recipe_wishlist;
 create table recipe_wishlist(
