@@ -50,7 +50,7 @@
 				<tr>
 					<th>사진</th>
 					<td colspan="3">
-						<img src="<%= contextPath %>/images/recipe/test_thumbnail.png" alt="Review Image">
+						<img src="<%= contextPath %>/images/mealkit/review/${review.no}/${review.pictures}" alt="${review.pictures}">
 					</td>
 				</tr>
 				<tr>

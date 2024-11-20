@@ -19,6 +19,21 @@
 <head>
 	<meta charset="UTF-8">
 	<title>나만의 음식 판매</title>
+	
+	<script type="text/javascript">
+		function fnSearch() {
+			var word = document.getElementById("word").value;
+			
+			if(word == null || word == ""){
+				alert("검색어를 입력하세요");
+				document.getElementById("word").focus();
+				
+				return false;
+			} else{
+				document.frmSearch.submit();
+			}
+		}
+	</script>
 	<style>
 	#container {
 		width: 1000px;
@@ -49,7 +64,7 @@
 									<!--<img src="${mealkit.pictures}" alt="${mealkit.title}">-->
 									작성자: ${mealkit.id } &nbsp;&nbsp;&nbsp;&nbsp;
 									작성일: ${mealkit.postDate} &nbsp;&nbsp;&nbsp;&nbsp;
-									평점:  ${ratingAvr[mealkit.no] }&nbsp;&nbsp;&nbsp;&nbsp;
+									평점:  <fmt:formatNumber value="${ratingAvr[mealkit.no]}" pattern="#.#" />&nbsp;&nbsp;&nbsp;&nbsp;
 									조회수: ${mealkit.views}
 								</sapn>
 								<h3>${mealkit.title}</h3>
@@ -59,6 +74,26 @@
 						</td>
 					</tr>
 			</c:forEach>
+			<!--검색 기능 및 페이지 처리 부분-->
+			<tr>
+				<form action="<%=contextPath%>/Mealkit/searchlist.pro" method="post" name="frmSearch" 
+				onsubmit="fnSearch(); return false;">
+					<td colspan="2">
+						<div id="key_select">
+							<select name="key">
+								<option value="title">제목</option>
+								<option value="name">작성자</option>
+							</select>
+						</div>
+					</td>
+					<td>
+						<div id="search_input">
+							<input type="text" name="word" id="word" />
+							<input type="submit" value="검색" />
+						</div>
+					</td>
+				</form>
+			</tr>
 		</table>
 	</div>
 

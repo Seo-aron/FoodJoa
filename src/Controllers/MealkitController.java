@@ -61,12 +61,22 @@ public class MealkitController extends HttpServlet {
 		case "/delete.pro": processDelete(request, response); return;
 		case "/update": openUpdateBoard(request, response); break;
 		case "/update.pro": processUpdate(request, response); return;
+		case "/searchlist.pro": processSearchList(request, response); break;
 
 		default: break;
 		}
 
 		RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
 		dispatcher.forward(request, response);
+	}
+
+	private void processSearchList(HttpServletRequest request, HttpServletResponse response) {
+		ArrayList<MealkitVO> list = mealkitService.searchList(request);
+
+		request.setAttribute("mealkitList", list);
+		request.setAttribute("center", "mealkits/list.jsp");
+
+		nextPage = "/main.jsp";
 	}
 
 	private void openUpdateBoard(HttpServletRequest request, HttpServletResponse response) {

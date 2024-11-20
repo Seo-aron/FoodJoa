@@ -183,41 +183,67 @@ public class MealkitService {
 
 	    PrintWriter printWriter = response.getWriter();
 	    if (no > 0) {
-	        printWriter.print("1");
+	        printWriter.print(no);
 	    } else {
-	        printWriter.print("0");
+	        printWriter.print(no);
 	    }
 
 	    printWriter.close();
 	}
 
 	public void setWriteReview(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		
-		// 사진 처리 기능 추가 
-		
-		String id = request.getParameter("id");
-		int mealkit_no =  Integer.parseInt(request.getParameter("mealkit_no"));
-		String contents = request.getParameter("contents");	
-		String pictures = request.getParameter("pictures");
-		int rating = Integer.parseInt(request.getParameter("rating"));
-		
-		MealkitReviewVO vo = new MealkitReviewVO();
-		vo.setId(id);
-		vo.setMealkitNo(mealkit_no);
-		vo.setContents(contents);
-		vo.setPictures(pictures);
-		vo.setRating(rating);
-		
-		int result = mealkitDAO.insertNewReview(vo);
-		System.out.println(result);
-		if(result == 1) {
-			printWriter = response.getWriter();
-			printWriter.println("<script>");
-			printWriter.println("alert('리뷰가 작성되었습니다.');");
-			printWriter.println("location.href='/FoodJoa/Mealkit/info?no=" + mealkit_no + "';");
-			printWriter.println("</script>");
-			printWriter.close();
-		}
+
+	    ServletContext application = request.getServletContext();
+	    String path = application.getRealPath("/images/mealkit/");
+	    int maxSize = 1024 * 1024 * 10;
+
+	    String tempPath = path + "temp/";
+	    createDirectoryIfNotExists(tempPath);
+	    
+	    MultipartRequest multipartRequest = new MultipartRequest(request, tempPath, maxSize, "UTF-8", new DefaultFileRenamePolicy());
+
+	    String uploadedFileName = multipartRequest.getFilesystemName("pictures");
+	    String finalPicturePath = null;
+
+	    int no = Integer.parseInt(multipartRequest.getParameter("mealkit_no"));
+	    String id = multipartRequest.getParameter("id");
+	    String contents = multipartRequest.getParameter("contents");
+	    int rating = Integer.parseInt(multipartRequest.getParameter("rating"));
+
+	    MealkitReviewVO vo = new MealkitReviewVO();
+	    vo.setId(id);
+	    vo.setMealkitNo(no);
+	    vo.setContents(contents);
+	    vo.setRating(rating);
+	    vo.setPictures(uploadedFileName);
+
+	    int review_no = mealkitDAO.insertNewReview(vo);
+	    
+	    if (uploadedFileName != null) {
+	        String destinationPath = path + "review" + "/" + review_no + "/";
+	        createDirectoryIfNotExists(destinationPath);
+
+	        moveProfile(tempPath, destinationPath, uploadedFileName);
+	        finalPicturePath = "review" + "/" + review_no + "/" + uploadedFileName;
+	    }
+
+	    System.out.println("사진이름" + vo.getPictures());
+	    
+	    PrintWriter printWriter = response.getWriter();
+	    if (review_no > 0) {
+	    	String contextPath = request.getContextPath();
+	    	
+	        printWriter.println("<script>");
+	        printWriter.println("alert('리뷰가 작성되었습니다.');");
+	        printWriter.println("location.href='" + contextPath + "/Mealkit/info?no=" + no + "';");
+	        printWriter.println("</script>");
+	        printWriter.close();
+	    } else {
+	        printWriter.println("<script>");
+	        printWriter.println("alert('리뷰 작성에 실패했습니다.');");
+	        printWriter.println("</script>");
+	        printWriter.close();
+	    }
 	}
 
 	public void setPlusEmpathy(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -333,5 +359,13 @@ public class MealkitService {
 		float ratingAvr = mealkitDAO.getRatingAvr(no);
 		
 		return ratingAvr;
+	}
+
+	public ArrayList<MealkitVO> searchList(HttpServletRequest request) {
+		
+		String key = request.getParameter("key");
+		String word = request.getParameter("word");
+		
+		return mealkitDAO.selectSearchList(key, word);
 	}
 }

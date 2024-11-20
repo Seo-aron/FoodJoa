@@ -182,6 +182,7 @@ public class MealkitDAO {
 
 	public int insertNewReview(MealkitReviewVO vo) {
 		int mealkit_no = 0;
+		int review_no = 0;
 		
 		String sql = "SELECT no FROM mealkit WHERE no = ?";
 		
@@ -199,12 +200,25 @@ public class MealkitDAO {
 		sql = "INSERT INTO mealkit_review(id, mealkit_no, pictures, contents, rating, empathy, post_date) "
 				+ "VALUES(?,?,?,?,?,0,NOW())";
 
-		int result = dbConnector.executeUpdate(sql, vo.getId(), mealkit_no, vo.getPictures(), 
-				vo.getContents(),vo.getRating());
+		dbConnector.executeUpdate(sql, vo.getId(), mealkit_no, vo.getPictures(), vo.getContents(),vo.getRating());
+		
+		// review_no를 가져오기
+		sql = "SELECT no FROM mealkit_review WHERE id = ? AND mealkit_no = ? ORDER BY post_date DESC LIMIT 1";
+		
+		rs = dbConnector.executeQuery(sql, vo.getId(), mealkit_no);
+		
+		try {
+			if(rs.next()) {
+				review_no = rs.getInt("no");
+			}
+		} catch (SQLException e) {
+			System.out.println("MealkitDAO - insertNewReview 예외발생 ");
+			e.printStackTrace();
+		}
 		
 		dbConnector.release();
 		
-		return result;
+		return review_no;
 	}
 
 	public int updateEmpathy(int empathyCount, int mealkit_no, int no) {
@@ -260,6 +274,7 @@ public class MealkitDAO {
 	}
 
 	public float getRatingAvr(int no) {
+		
 		float avr = 0;
 		
 		String sql = "select AVG(rating) rating_avr from mealkit_review "
@@ -279,6 +294,54 @@ public class MealkitDAO {
 		dbConnector.release();
 		
 		return avr;
+	}
+
+	public ArrayList selectSearchList(String key, String word) {
+		
+		ArrayList<MealkitVO> mealkits = new ArrayList<MealkitVO>();
+		String sql = "";
+		
+		if(!word.equals("")) {
+			if(key.equals("title")) {
+				sql = "select * from mealkit "
+						+ "where title like '%"+word+"%' order by no desc";
+			} else {
+				sql = "select * from mealkit "
+						+ "where id like '%"+word+"%' order by no desc";
+			}
+		} else{
+			sql = "select * from mealkit order by no desc";
+		}
+		
+		ResultSet rs = dbConnector.executeQuery(sql);
+		
+		try {
+			while(rs.next()) {
+				MealkitVO mealkit = new MealkitVO(
+						rs.getInt("no"), 
+						rs.getString("id"),
+						rs.getString("title"),
+						rs.getString("contents"),
+						rs.getInt("category"),
+						rs.getString("price"),
+						rs.getInt("stock"),
+						rs.getString("pictures"),
+						rs.getString("orders"),
+						rs.getString("origin"),
+						rs.getInt("views"),
+						rs.getInt("soldout"),
+						rs.getTimestamp("post_date"));
+				
+				mealkits.add(mealkit);				
+			}
+		} catch (Exception e) {
+			System.out.println("MealkitDAO - selectSearchList 예외발생 ");
+			e.printStackTrace();
+		}
+		
+		dbConnector.release();
+		
+		return mealkits;
 	}
 
 }
