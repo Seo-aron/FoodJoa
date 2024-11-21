@@ -21,22 +21,25 @@ public class MemberDAO {
 	}
 	
 	public Timestamp selectJoinDate(String id) {
-		
-		Timestamp result = null;
-		
+	    Timestamp result = null;
 	    String sql = "SELECT join_date FROM member WHERE id = ?";
-	    
+	    ResultSet resultSet = null;
+
 	    try {
-	        ResultSet resultSet = dbConnector.executeQuery(sql, id); 
-	        if (resultSet.next()) {
-	            result = resultSet.getTimestamp("join_date"); 
+	        // 쿼리 실행
+	        resultSet = dbConnector.executeQuery(sql, id);
+	        
+	        // 결과가 존재하는 경우, join_date를 가져옴
+	        if (resultSet != null && resultSet.next()) {
+	            result = resultSet.getTimestamp("join_date");
 	        }
 	    } catch (SQLException e) {
-	        e.printStackTrace();
 	        System.out.println("selectJoinDate() SQLException 발생");
+	        e.printStackTrace();
 	    } finally {
-	        dbConnector.release(); 
+	        dbConnector.release(); // 자원 해제
 	    }
+
 	    return result;
 	}
 
@@ -411,4 +414,31 @@ public class MemberDAO {
 
 	    return result; // 삭제 성공 시 1 반환, 실패 시 0 반환
 	}
+	
+	public MemberVO getMemberProfile(String userId) throws SQLException {
+	    MemberVO member = null;
+	    String sql = "SELECT * FROM member WHERE id=?";
+	    
+	    ResultSet resultSet = dbConnector.executeQuery(sql, userId);
+	    
+	    try {
+	        if (resultSet.next()) {
+	            member = new MemberVO(
+	                resultSet.getString("id"), 
+	                resultSet.getString("name"),
+	                resultSet.getString("nickname"), 
+	                resultSet.getString("phone"), 
+	                resultSet.getString("address"),
+	                resultSet.getString("profile"), 
+	                resultSet.getTimestamp("join_date")
+	            );
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        dbConnector.release(); // 자원 해제
+	    }
+
+	    return member; // 회원 반환
+}
 }

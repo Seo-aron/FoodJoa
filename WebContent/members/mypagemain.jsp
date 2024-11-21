@@ -11,39 +11,33 @@
 <%@ page import="DAOs.MemberDAO"%>
 
 <%
-	request.setCharacterEncoding("UTF-8");
-	response.setContentType("text/html; charset=utf-8");
+request.setCharacterEncoding("UTF-8");
+response.setContentType("text/html; charset=utf-8");
 
-	String contextPath = request.getContextPath();
+String contextPath = request.getContextPath();
 
-	MemberVO vo = (MemberVO) request.getAttribute("vo");
+String userId = (String) session.getAttribute("userId");   
+//String id = "admin";
 
-	//String loginedid = (String) session.getAttribute("id");	
-	String id = "admin";
+MemberDAO memberDAO = new MemberDAO();
 
-	MemberDAO memberDAO = new MemberDAO();
+// 가입 날짜 가져오기
+Timestamp joinDate = memberDAO.selectJoinDate(userId);
 
-	// 가입 날짜 가져오기
-	Timestamp joinDate = memberDAO.selectJoinDate(id);
+// 프로필 사진 가져오기
+//String openProfile = memberDAO.bringProfile(profile);
 
-	// Timestamp를 LocalDate로 변환
-	LocalDate receivedDate = joinDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+// Timestamp를 LocalDate로 변환
+LocalDate receivedDate = joinDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
 
-	// 현재 날짜
-	LocalDate currentDate = LocalDate.now();
+// 현재 날짜
+LocalDate currentDate = LocalDate.now();
 
-	// 두 날짜 사이의 일 수 차이 계산
-	long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
-
-	System.out.println("날짜 차이: " + daysBetween + "일");
-	
-	//유저 이름 가져오기
-//	MemberVO bringName = memberDAO.bringName();
-	
-	//유저 사진 가져오기
-//	MemberVO bringProfile = memberDAO.bringProfile();
+// 두 날짜 사이의 일 수 차이 계산
+long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
 	
 %>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -63,16 +57,15 @@
 	<div class="profile-wrapper">
 		<div class="profile-section">
 			<div class="profile-image">
-				<img alt="없음"
-					src="<%=contextPath%>/images/member/userProfiles/admin.png">
+				<img src="<%=contextPath%>/images/member/userProfiles/${member.id}/${member.profile}" alt="Profile Image">
 			</div>
 			<div class="profile-info">
-				<h2>형님!</h2>
+				<h2>${member.name}</h2>
 				<%
 				if (joinDate != null) {
 					%>
 					<p>
-						회원님은 푸드조아와 함께한지 <strong><%=daysBetween%></strong>일째입니다!
+						${member.name}님은 푸드조아와 함께한지 <strong><%=daysBetween%></strong>일째입니다!
 					</p>
 					<%
 				} else {

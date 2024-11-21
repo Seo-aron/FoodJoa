@@ -165,7 +165,7 @@
 
 			<!-- 로고 -->
 			<div id="logo">
-				<a href="#"> <img
+				<a href="<%= contextPath %>/main.jsp"> <img
 					src="<%=contextPath%>/images/mainpage/logo.jpg" alt="푸드조아 로고">
 				</a>
 			</div>
@@ -174,7 +174,7 @@
 		<!-- 메뉴바 -->
 		<nav>
 			<ul id="topMenu">
-				<li><a href="#">홈</a></li>
+				<li><a href="<%= contextPath %>/main.jsp">홈</a></li>
 				<li><a href="<%= contextPath %>/Recipe/list?category=0">레시피 공유<span> ▼ </span></a>
 					<ul>
 						<li><a href="<%= contextPath %>/Recipe/list?category=1">한식 요리</a></li>
