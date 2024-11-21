@@ -17,26 +17,28 @@ public class RecipeDAO {
 		dbConnector = new DBConnector();
 	}
 	
-	public ArrayList<HashMap<String, Object>> selectRecipesWithRating() {
+	public ArrayList<HashMap<String, Object>> selectRecipesWithRating(String category) {
+		
+		int _category = Integer.parseInt(category);
 		
 		ArrayList<HashMap<String, Object>> recipes = new ArrayList<HashMap<String,Object>>();
 		
 		String sql = "SELECT "
-				+ "r.*, "
-				+ "COALESCE(avg_rating.average_rating, 0) AS average_rating "
-				+ "FROM "
-				+ "recipe r "
+				+ "r.*, COALESCE(avg_rating.average_rating, 0) AS average_rating "
+				+ "FROM recipe r "
 				+ "LEFT JOIN ( "
 				+ "SELECT "
-				+ "recipe_no, "
-				+ "AVG(rating) AS average_rating "
-				+ "FROM "
-				+ "recipe_review "
-				+ "GROUP BY "
-				+ "recipe_no "
-				+ ") avg_rating ON r.no = avg_rating.recipe_no";
+				+ "recipe_no, AVG(rating) AS average_rating "
+				+ "FROM recipe_review "
+				+ "GROUP BY recipe_no "
+				+ ") avg_rating ON r.no = avg_rating.recipe_no ";
 		
-		ResultSet resultSet = dbConnector.executeQuery(sql);
+		if (_category != 0) sql += "where category=? ";
+		
+		sql += "ORDER BY post_date DESC";
+		
+		ResultSet resultSet = _category != 0 ?
+				dbConnector.executeQuery(sql, _category) : dbConnector.executeQuery(sql);
 		
 		try {
 			while (resultSet.next()) {
@@ -165,7 +167,7 @@ public class RecipeDAO {
 				recipe.getIngredientAmount(),
 				recipe.getOrders());
 	}
-	
+
 	public int selectInsertedRecipeNo(RecipeVO recipe) {
 		
 		String updateSql = "INSERT INTO recipe(id, title, thumbnail, description, "
@@ -203,6 +205,32 @@ public class RecipeDAO {
 		return result;
 	}
 	
+	public int updateRecipe(RecipeVO recipe) {
+
+		String sql = "update recipe set title=?, thumbnail=?, description=?, contents=?, category=?, "
+				+ "views=?, ingredient=?, ingredient_amount=?, orders=? where no=? and id=?";
+		
+		return dbConnector.executeUpdate(sql,
+				recipe.getTitle(),
+				recipe.getThumbnail(),
+				recipe.getDescription(),
+				recipe.getContents(),
+				recipe.getCategory(),
+				recipe.getViews(),
+				recipe.getIngredient(),
+				recipe.getIngredientAmount(),
+				recipe.getOrders(),
+				recipe.getNo(),
+				recipe.getId());
+	}
+	
+	public int deleteRecipe(String id, String no) {
+		
+		String sql = "delete from recipe where id=? and no=?";
+		
+		return dbConnector.executeUpdate(sql, id, Integer.parseInt(no));
+	}
+	
 	// 0 : DB 통신 실패, 1 : insert 성공, 2 : 이미 값이 있음
 	public int insertRecipeWishlist(String id, String recipeNo) {		
 		
@@ -228,6 +256,27 @@ public class RecipeDAO {
 		result = dbConnector.executeUpdate(sql, id, recipeNo);
 		
 		dbConnector.release();
+		
+		return result;
+	}
+	
+	public double selectRecipeRatingAvg(int recipeNo) {
+		
+		String sql = "SELECT recipe_no, AVG(rating) as avg_rating FROM recipe_review "
+				+ "GROUP BY recipe_no HAVING recipe_no=?;";
+		
+		ResultSet resultSet = dbConnector.executeQuery(sql, recipeNo);
+		
+		double result = -1;
+		
+		try {
+			if (resultSet.next()) {
+				result = resultSet.getDouble("avg_rating");
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
 		return result;
 	}

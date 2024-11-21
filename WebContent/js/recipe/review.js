@@ -9,7 +9,6 @@ function combineStrings(strings) {
         return lengthStr + str; // 길이와 문자열을 합침
     }).join(''); // 모든 요소를 하나의 문자열로 결합
 	
-	console.log("result : " + result);
 	return result;
 }
 
@@ -24,6 +23,8 @@ function onSubmit(event, contextPath) {
 
 	setPicturesString();
 
+	let recipeNo = $("#recipe_no").val();
+	
 	const formData = new FormData();
 	formData.append('recipe_no', $("#recipe_no").val());
 	formData.append('pictures', $("#pictures").val());
@@ -41,7 +42,7 @@ function onSubmit(event, contextPath) {
 	    processData: false,
 	    contentType: false,
 	    success: function(responseData, status, jqxhr) {
-	        console.log("success", responseData);
+			location.href = contextPath + '/Recipe/read?no=' + recipeNo;
 	    },
 	    error: function(xhr, status, error) {
 	        console.log("error", error);

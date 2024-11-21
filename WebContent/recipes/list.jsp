@@ -11,7 +11,24 @@
 	String contextPath = request.getContextPath();
 	
 	ArrayList<HashMap<String, Object>> recipes = (ArrayList<HashMap<String, Object>>) request.getAttribute("recipes");
+	
+	String category = (String) request.getAttribute("category");
+	
 	final int columnCount = 4;
+	
+	int totalRecipeCount = recipes.size();
+	
+	int recipeCountPerPage = 12;
+	int totalPageCount = (int) Math.ceil((double) totalRecipeCount / recipeCountPerPage);
+	int currentPage = (request.getAttribute("currentPage") == null) ? 0 :
+		Integer.parseInt(request.getAttribute("currentPage").toString());
+	
+	int pageCountPerBlock = 5;
+	int totalBlockCount = (int) Math.ceil((double) totalPageCount / pageCountPerBlock);
+	int currentBlock = (request.getAttribute("currentBlock") == null) ? 0 :
+		Integer.parseInt(request.getAttribute("currentBlock").toString());
+	
+	int firstRecipeIndex = currentPage * recipeCountPerPage;
 %>
 
 <!DOCTYPE html>
@@ -29,10 +46,9 @@
 			});
 		});
 	
-		function openRecipeContent(recipeNo, ratingAvg) {
+		function openRecipeContent(recipeNo) {
 			document.frmOpen.action = '<%= contextPath %>/Recipe/read';
 			document.frmOpen.no.value = recipeNo;
-			document.frmOpen.ratingAvg.value = ratingAvg;
 			document.frmOpen.submit();
 		}
 	</script>
@@ -64,7 +80,9 @@
 				<%
 			}
 			else {
-				for (int i = 0; i < recipes.size(); i++) {
+				for (int i = firstRecipeIndex; i < firstRecipeIndex + recipeCountPerPage; i++) {
+					
+					if (i >= totalRecipeCount) { %> </tr> <% break; }
 					
 					if (i % columnCount == 0) { %> <tr> <% }
 
@@ -73,9 +91,9 @@
 					
 					%>
 					<td class="list_cell">
-					    <a href="javascript:openRecipeContent(<%= recipe.getNo() %>, <%= rating %>)" class="cell-link">
+					    <a href="javascript:openRecipeContent(<%= recipe.getNo() %>)" class="cell-link">
 					        <span class="thumbnail">
-					            <img src="<%= contextPath %>/images/recipe/test_thumbnail.png" alt="레시피 썸네일">
+					            <img src="<%= contextPath %>/images/recipe/thumbnails/<%= recipe.getNo() %>/<%= recipe.getThumbnail() %>">
 					        </span>
 					        <span class="title"><%= recipe.getTitle() %></span>
 					        <span class="author"><%= recipe.getId() %></span>
@@ -101,12 +119,60 @@
 				}
 			}
 			%>
+			<tr>
+				<td class="paging-area" colspan="4">
+					<ul>
+					<%
+					if (totalRecipeCount != 0) {
+						if (currentBlock > 0) {
+							%>
+							<li>
+								<a href="<%= contextPath %>/Recipe/list?category=<%= category %>&
+									currentBlock=<%= currentBlock - 1 %>&currentPage=<%= (currentBlock - 1) * pageCountPerBlock %>">
+									◀
+								</a>
+							</li>
+							<%
+						}
+						
+						for (int i = 0; i < pageCountPerBlock; i++) {
+							int pageNumber = (currentBlock * pageCountPerBlock) + i;
+							
+							%>
+							<li>
+								<a href="<%= contextPath %>/Recipe/list?category=<%= category %>&
+									currentBlock=<%= currentBlock %>&currentPage=<%= pageNumber %>">
+									<%= pageNumber + 1 %>
+								</a>
+							</li>
+							<%
+							
+							if (pageNumber + 1 == totalPageCount)
+								break;
+						}
+						
+						if (currentBlock + 1 < totalBlockCount) {
+							%>
+							<li>
+								<a href="<%= contextPath %>/Recipe/list?category=<%= category %>&
+									currentBlock=<%= currentBlock + 1 %>&currentPage=<%= (currentBlock + 1) * pageCountPerBlock %>">
+									▶
+								</a>
+							</li>
+							<%
+						}
+					}
+					%>
+					</ul>
+				</td>
+			</tr>
 		</table>
 	</div>
 	
 	<form name="frmOpen">
 		<input type="hidden" name="no">
-		<input type="hidden" name="ratingAvg">
+		<input type="hidden" name="currentPage" value="<%= currentPage %>">
+		<input type="hidden" name="currentBlock" value="<%= currentBlock %>">
 	</form>
 </body>
 
