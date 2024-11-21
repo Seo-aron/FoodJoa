@@ -140,11 +140,28 @@
 	<div>
 		<div id="header">
 			<!-- 사용자 메뉴 (로그인, 회원가입, 검색 버튼) -->
-			<div id="userMenu">
-				<button>로그인</button>
-				<button onclick="onJoinButton()">회원가입</button>
-				<button>검색</button>
-			</div>
+			  <div id="userMenu">
+       
+        <%
+            String userId = (String) session.getAttribute("userId");
+        %>
+        <%
+            if (userId != null) {
+        %>
+            <form action="<%= request.getContextPath() + "/Member/logout.me" %>" method="POST">
+                <button type="submit">로그아웃</button>
+            </form>
+        <%
+            } else {
+        %>
+            <button onclick="onLoginButton()">로그인</button>
+            <button onclick="onJoinButton()">회원가입</button>
+        <% 
+            }
+        %>
+        
+        <button>검색</button>
+    </div>
 
 			<!-- 로고 -->
 			<div id="logo">
@@ -189,6 +206,11 @@
 		function onJoinButton() {
 			location.href = '<%= contextPath %>/Member/join.me';
 		}
+		
+		function onLoginButton(){
+			location.href = '<%= contextPath %>/Member/login.me';
+		}
+		
 	</script>
 </body>
 

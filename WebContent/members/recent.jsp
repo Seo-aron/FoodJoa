@@ -1,19 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>     
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>     
-
-<% 
-request.setCharacterEncoding("UTF-8");
-String contextPath = request.getContextPath();
-request.setAttribute("contextPath", contextPath);
-%>
-
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Wish List</title>
+<title>최근에 본</title>
 <script>
     // 라디오 버튼 선택에 따라 목록과 제목 표시 제어
     function toggleList() {
@@ -48,26 +39,26 @@ request.setAttribute("contextPath", contextPath);
 
 <style>
     /* 그리드 레이아웃 설정: 4개의 항목이 한 줄에 표시되도록 설정 */
-    .wishlist-grid {
+    .recent-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);  /* 4개의 열로 나누기 */
         gap: 20px;  /* 항목 간 간격 */
     }
 
-    .wishlist-item {
+    .recent-item {
         border: 1px solid #ddd;
         padding: 10px;
         text-align: center;
     }
 
-    .wishlist-item img {
+    .recent-item img {
         max-width: 100%;
         height: auto;
     }
 </style>
 </head>
 <body>
-    <h1>Wish List</h1>
+    <h1>Recently seen</h1>
 
     <!-- 라디오 버튼 -->
     <div>
@@ -88,9 +79,9 @@ request.setAttribute("contextPath", contextPath);
         <h2>전체보기</h2>
     </div>
     <div id="allList" style="display: block;">
-        <div class="wishlist-grid">
-            <c:forEach var="item" items="${wishList}">
-                <div class="wishlist-item">
+        <div class="recently-grid">
+            <c:forEach var="item" items="${recently}">
+                <div class="recently-item">
                     <img src="${item.thumbnail}" alt="Thumbnail" width="100" height="100" />
                     <div>${item.name} (${item.type})</div>
                 </div>
@@ -103,10 +94,10 @@ request.setAttribute("contextPath", contextPath);
         <h2>레시피</h2>
     </div>
     <div id="recipeList" style="display: none;">
-        <div class="wishlist-grid">
-            <c:forEach var="item" items="${wishList}">
+        <div class="recently-grid">
+            <c:forEach var="item" items="${recently}">
                 <c:if test="${item.type == 'recipe'}">
-                    <div class="wishlist-item">
+                    <div class="recently-item">
                         <img src="${item.thumbnail}" alt="Thumbnail" width="100" height="100" />
                         <div>${item.name} - ${item.description}</div>
                     </div>
@@ -120,10 +111,10 @@ request.setAttribute("contextPath", contextPath);
         <h2>상품</h2>
     </div>
     <div id="productList" style="display: none;">
-        <div class="wishlist-grid">
-            <c:forEach var="item" items="${wishList}">
+        <div class="recently-grid">
+            <c:forEach var="item" items="${recently}">
                 <c:if test="${item.type == 'product'}">
-                    <div class="wishlist-item">
+                    <div class="recently-item">
                         <img src="${item.thumbnail}" alt="Thumbnail" width="100" height="100" />
                         <div>${item.name} - ${item.description}</div>
                     </div>
@@ -131,6 +122,7 @@ request.setAttribute("contextPath", contextPath);
             </c:forEach>
         </div>
     </div>
+
 
 </body>
 </html>

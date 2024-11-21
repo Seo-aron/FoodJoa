@@ -53,11 +53,10 @@
 
 </head>
 <body>
-
 	<div class="header">
 		<h1>마이페이지</h1>
-		<a href="<%=contextPath%>/main.jsp"> <input type="button"
-			class="logout-btn" value="로그아웃">
+		<a href="<%=contextPath%>/main.jsp">
+			<input type="button" class="logout-btn" value="로그아웃">
 		</a>
 	</div>
 
@@ -72,7 +71,9 @@
 				<%
 				if (joinDate != null) {
 					%>
-					<p>회원님은 푸드조아와 함께한지 <strong><%=daysBetween%></strong>일째입니다!</p>
+					<p>
+						회원님은 푸드조아와 함께한지 <strong><%=daysBetween%></strong>일째입니다!
+					</p>
 					<%
 				} else {
 					%>
@@ -82,27 +83,25 @@
 				%>
 				<button id="updateButton">정보수정</button>
 			</div>
-
-
 		</div>
 
 		<div class="manage-section">
 			<div>
 				<a href="<%=contextPath%>/members/myreceipe.jsp">
-					<p align="center">내 레시피 관리</p> <img src="../images/member/레시피.png"
-					alt="레시피 이미지">
+					<p align="center">내 레시피 관리</p>
+					<img src="../images/member/레시피.png" alt="레시피 이미지">
 				</a>
 			</div>
 			<div>
 				<a href="<%=contextPath%>/members/myproduct.jsp">
-					<p align="center">내 상품 관리</p> <img src="../images/member/상품사진.png"
-					alt="상품 이미지">
+					<p align="center">내 상품 관리</p>
+					<img src="../images/member/상품사진.png" alt="상품 이미지">
 				</a>
 			</div>
 			<div>
 				<a href="<%=contextPath%>/members/myreview.jsp">
-					<p align="center">내 리뷰 관리</p> <img src="../images/member/손모양.png"
-					alt="리뷰 이미지">
+					<p align="center">내 리뷰 관리</p>
+					<img src="../images/member/손모양.png" alt="리뷰 이미지">
 				</a>
 
 			</div>
@@ -111,20 +110,17 @@
 		<!-- Info Sections -->
 		<div class="info-section">
 			<div>주문/배송조회</div>
-			<div>
-				<span>주문건수: 0</span> | <span>배송준비중: 1</span> | <span>배송중: 2</span> |
-				<span>배송완료: 0</span> <br> <a
-					href="<%=contextPath%>/members/vieworder.jsp"> <input
-					type="button" class="more-btn" value="더보기">
+			<div style="display: flex;">
+				<span>주문건수 : 0</span> | <span>배송준비중 : 1</span> | <span>배송중 : 2</span> | <span>배송완료 : 0</span>
+				<a href="<%=contextPath%>/Member/myorder.me" style="margin-left: auto;">더보기</a>
 			</div>
 		</div>
 
 		<div class="info-section">
-			<div>내 마켓상품 주문/배송조회</div>
-			<div>
-				<span>주문건수: 0</span> | <span>배송준비중: 1</span> | <span>배송중: 2</span> |
-				<span>배송완료: 0</span> <br> <input type="button" class="more-btn"
-					value="더보기">
+			<div>내 마켓 발송 현황</div>
+			<div style="display: flex;">
+				<span>주문건수 : 0 </span> | <span>배송준비중 : 1 </span> | <span>배송중 : 2 </span> | <span>배송완료 : 0 </span>
+				<a href="<%=contextPath%>/Member/sendMyMealkit.me" style="margin-left: auto;">더보기</a>
 			</div>
 		</div>
 
@@ -135,9 +131,11 @@
 			</div>
 		</div>
 
-		<input type="button" class="more-btn" value="탈퇴"
-			hrf="<%=contextPath%>/main.jsp" onclick="withdraw()">
-		<!-- 탈퇴 버튼을 클릭하면 withdraw 함수가 실행됨 -->
+		<div>
+			<a href="<%=contextPath%>/Member/deleteMember.me">
+				<button>탈퇴하기</button>
+			</a>
+		</div>
 
 		</script>
 	</div>
