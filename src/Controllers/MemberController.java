@@ -59,6 +59,7 @@ public class MemberController extends HttpServlet {
 		System.out.println("action : " + action);
 
 		switch (action) {
+		/*
 		case "/join.me":
 			openMemberJoinView(request, response);
 			break;
@@ -100,6 +101,16 @@ public class MemberController extends HttpServlet {
 		case "/loginPro.me":
 			processMemberLogin(request, response);
 			break;
+ 
+		case "/getUserProfile.me":
+			NaverLoginAPI.handleNaverLogin(request, response);
+			return;
+
+		case "/wishlist.me":
+			request.setAttribute("center", "members/wishlist.jsp");
+			nextPage = "/main.jsp";
+			break;
+		*/
 		case "/mypagemain.me":
 			
 			// HttpSession session = request.getSession();
@@ -109,21 +120,12 @@ public class MemberController extends HttpServlet {
 			request.setAttribute("center", "members/mypagemain.jsp");
 			nextPage = "/main.jsp";
 			break;
- 
-		case "/getUserProfile.me":
-			NaverLoginAPI.handleNaverLogin(request, response);
-			return;
 		case "/update.me":
 			openMemberUpdateView(request, response);
 			break;
 			
 		case "/updatePro.me":
 			processMemberUpdate(request, response);
-			break;
-
-		case "/wishlist.me":
-			request.setAttribute("center", "members/wishlist.jsp");
-			nextPage = "/main.jsp";
 			break;
 
 		default:
