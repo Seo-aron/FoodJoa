@@ -61,6 +61,9 @@
 		<table class="header">
 			<tr>
 				<td align="center">
+					<select>
+						<option></option>
+					</select>
 					<input type="text" name="search" placeholder="검색할 레시피를 입력하세요.">
 					<input type="button" name="search_button" value="검색">
 				</td>
@@ -88,6 +91,7 @@
 
 					RecipeVO recipe = (RecipeVO) recipes.get(i).get("recipe");					
 					double rating = (double) recipes.get(i).get("average");
+					String nickname = (String) recipes.get(i).get("nickname");
 					
 					%>
 					<td class="list_cell">
@@ -96,7 +100,7 @@
 					            <img src="<%= contextPath %>/images/recipe/thumbnails/<%= recipe.getNo() %>/<%= recipe.getThumbnail() %>">
 					        </span>
 					        <span class="title"><%= recipe.getTitle() %></span>
-					        <span class="author"><%= recipe.getId() %></span>
+					        <span class="nickname"><%= nickname %></span>
 					        
 					        <span class="rating">
 					            <%
@@ -171,6 +175,7 @@
 	
 	<form name="frmOpen">
 		<input type="hidden" name="no">
+		<input type="hidden" name="category" value="<%= category %>">
 		<input type="hidden" name="currentPage" value="<%= currentPage %>">
 		<input type="hidden" name="currentBlock" value="<%= currentBlock %>">
 	</form>

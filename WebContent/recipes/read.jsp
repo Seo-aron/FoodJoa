@@ -1,3 +1,4 @@
+<%@page import="java.util.HashMap"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="VOs.RecipeReviewVO"%>
 <%@page import="java.util.List"%>
@@ -12,17 +13,21 @@
 
 	String contextPath = request.getContextPath();
 	
-	RecipeVO recipe = (RecipeVO) request.getAttribute("recipe");
-	double ratingAvg = (double) request.getAttribute("ratingAvg");
-	ArrayList<RecipeReviewVO> reviews = (ArrayList<RecipeReviewVO>) request.getAttribute("reviews");
+	HashMap<String, Object> recipeInfos = (HashMap<String, Object>) request.getAttribute("recipeInfos");
+	
+	RecipeVO recipe = (RecipeVO) recipeInfos.get("recipe");
+	double averageRating = (double) recipeInfos.get("averageRating");
+	String nickname = (String) recipeInfos.get("nickname");
+	String profile = (String) recipeInfos.get("profile");
+	ArrayList<RecipeReviewVO> reviews = (ArrayList<RecipeReviewVO>) recipeInfos.get("reviews");
 			
 	String compressedContents = recipe.getContents();
 	
+	String category = (String) request.getAttribute("category");
 	String currentPage = (String) request.getAttribute("currentPage");
 	String currentBlock = (String) request.getAttribute("currentBlock");
 	
-	//String id = (String) session.getAttribute("id");
-	String id = "admin";
+	String id = (String) session.getAttribute("userId");
 %>
     
     
@@ -60,18 +65,20 @@
 				<td>			
 					<ul class="recipe-list">
 					    <li class="profile-img">
-					        <img alt="프로필 사진" src="">
+					    	<div>
+					        	<img src="<%= contextPath %>/images/member/userProfiles/<%= recipe.getId() %>/<%= profile %>">
+					    	</div>
 					    </li>
 					    <li class="recipe-title">
 					        <%= recipe.getTitle() %>
 					    </li>
 					    <li class="recipe-id">
-					        <%= recipe.getId() %>
+					        <%= nickname %>
 					    </li>
 					    <li class="recipe-info">
 					        <p>
 					            <img src="<%= contextPath %>/images/recipe/full_star.png" class="rating-star">
-					            <%= ratingAvg %>
+					            <%= averageRating %>
 					        </p>
 					        <p>조회수 : <%= recipe.getViews() %></p>
 					    </li>
@@ -232,7 +239,7 @@
 	
 	<script>
 		function onListButton() {
-			location.href = '<%= contextPath %>/Recipe/list?category=0&currentPage=<%= currentPage %>&currentBlock=<%= currentBlock %>';
+			location.href = '<%= contextPath %>/Recipe/list?category=<%= category %>&currentPage=<%= currentPage %>&currentBlock=<%= currentBlock %>';
 		}
 		
 		function onReviewButton() {

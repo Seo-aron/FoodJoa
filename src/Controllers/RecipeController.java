@@ -101,19 +101,14 @@ public class RecipeController extends HttpServlet {
 	private void openRecipeReadView(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		String recipeNo = request.getParameter("no");
-		
-		RecipeVO recipe = recipeService.getRecipe(request);
-		double ratingAvg = recipeService.getRecipeRatingAvg(recipeNo);
-		ArrayList<RecipeReviewVO> reviews = recipeService.getRecipeReviewes(recipeNo);
+		HashMap<String, Object> recipeInfos = recipeService.getRecipeInfo(request);
 
-		request.setAttribute("recipe", recipe);
-		request.setAttribute("ratingAvg", ratingAvg);
-		request.setAttribute("reviews", reviews);
+		request.setAttribute("recipeInfos", recipeInfos);
+		request.setAttribute("category", request.getParameter("category"));
 		request.setAttribute("currentPage", request.getParameter("currentPage"));
 		request.setAttribute("currentBlock", request.getParameter("currentBlock"));
 		
-		request.setAttribute("pageTitle", recipe.getTitle());
+		request.setAttribute("pageTitle", ((RecipeVO) recipeInfos.get("recipe")).getTitle());
 		request.setAttribute("center", "recipes/read.jsp");
 		
 		nextPage = "/main.jsp";
@@ -178,6 +173,7 @@ public class RecipeController extends HttpServlet {
 			
 			printWriter.print("<script>");
 			printWriter.print("alert('이미 리뷰를 작성 하셨습니다.');");
+			printWriter.print("history.go(-1);");
 			printWriter.print("</script>");
 			
 			printWriter.close();

@@ -8,6 +8,7 @@ import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
@@ -47,6 +48,11 @@ public class RecipeService {
 	public RecipeVO getRecipe(int no) { return recipeDAO.selectRecipe(String.valueOf(no)); }
 	public RecipeVO getRecipe(String no) { return recipeDAO.selectRecipe(no); }
 	
+	public HashMap<String, Object> getRecipeInfo(HttpServletRequest request) {
+		
+		return recipeDAO.selectRecipeInfo(request.getParameter("no"));
+	}
+	
 	public int processRecipeWrite(HttpServletRequest request) throws ServletException, IOException {
 		
 		ServletContext application = request.getServletContext();
@@ -58,11 +64,11 @@ public class RecipeService {
 				new DefaultFileRenamePolicy());
 		
 		String fileName = multipartRequest.getOriginalFileName("file");
-		/* 로그인 완성 되면 구현
-			HttpSession session = request.getSession();
-			String id = session.getAttribute("id");
-		*/
-		String id = "admin";
+		
+		HttpSession session = request.getSession();
+		String id = (String) session.getAttribute("userId");
+		
+		System.out.println("id : " + id);
 		
 		RecipeVO recipe = new RecipeVO();
 		recipe.setId(id);
@@ -132,8 +138,7 @@ public class RecipeService {
 	
 	public int processRecipeDelete(HttpServletRequest request) {
 		
-		//String id = (String) request.getSession().getAttribute("id");
-		String id = "admin";
+		String id = (String) request.getSession().getAttribute("userId");
 		String no = request.getParameter("no");
 		
 		int result = recipeDAO.deleteRecipe(id, no);
@@ -157,22 +162,14 @@ public class RecipeService {
 	public double getRecipeRatingAvg(int recipeNo) { return recipeDAO.selectRecipeRatingAvg(recipeNo); }
 	
 	public ArrayList<RecipeReviewVO> getRecipeReviewes(String recipeNo) {
-		
-		return getRecipeReviewes(Integer.parseInt(recipeNo));
-	}
-	
-	public ArrayList<RecipeReviewVO> getRecipeReviewes(int recipeNo) {
-		
+
 		return recipeDAO.selectRecipeReviews(recipeNo);
 	}
 	
 	public boolean checkRecipeReview(HttpServletRequest request) {
 		
-		/* 로그인 완성 되면 구현
-			HttpSession session = request.getSession();
-			String id = session.getAttribute("id");
-		*/
-		String id = "admin";
+		HttpSession session = request.getSession();
+		String id = (String) session.getAttribute("userId");
 	
 		return recipeDAO.isExistRecipeReview(id, request.getParameter("recipe_no"));
 	}
