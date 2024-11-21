@@ -261,7 +261,3 @@ select * from community;
 select * from member;
 
 desc community;
-
--- -------------------------------------------------------------------------------------
-select * from member;
-UPDATE member SET name = '관리자1', nickname = '고라니', phone = '01029849283', address = '부산금정구', profile='admin1_image.png' WHERE id = 'admin';
