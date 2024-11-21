@@ -20,6 +20,7 @@ import org.json.JSONObject;
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
+import Common.FileIOController;
 import Common.NaverLoginAPI;
 import DAOs.MemberDAO;
 import VOs.MemberVO;
@@ -32,18 +33,6 @@ public class MemberService {
         memberDAO = new MemberDAO();
     }
 	
-    private void moveProfile(String path, String id, String profileFileName) {
-        if (profileFileName != null) {
-            File oldFile = new File(path + "temp/" + profileFileName);
-            File newFile = new File(path + profileFileName);  // 최종 위치 (userProfiles/ID_파일명)
-
-            if (!oldFile.exists()) return;
-            
-            // 새 위치로 파일 이동
-            oldFile.renameTo(newFile);
-        }
-    }
-
     public boolean checkMemberId(HttpServletRequest request) {
         String id = request.getParameter("id");
         return memberDAO.isExistMemberId(id);
@@ -154,19 +143,14 @@ public class MemberService {
     //추가정보
     public void insertMember(HttpServletRequest request) throws ServletException, IOException {
         // 이미지 업로드 디렉토리 설정
-        String path = request.getServletContext().getRealPath("/images/member/userProfiles/");
+        String path = request.getServletContext().getRealPath("/images/");
  
-        // 디렉토리 존재 확인 후 없으면 생성
-        File dir = new File(path);
-        if (!dir.exists()) {
-            dir.mkdirs();  // 디렉토리 생성
-        }
-        
         // 최대 파일 크기 1GB로 설정
         int maxSize = 1024 * 1024 * 1024;  // 1GB
+        
         MultipartRequest multipartRequest = new MultipartRequest(
                 request, 
-                path, 
+                path + "temp/", 
                 maxSize, 
                 "UTF-8", 
                 new DefaultFileRenamePolicy()
@@ -202,7 +186,10 @@ public class MemberService {
         memberDAO.insertMember(vo);
         
         // 프로필 이미지 이동
-        moveProfile(path, userId, profileFileName);
+        String srcPath = path + "\\temp\\";
+        String descPath = path + "\\member\\userProfiles\\" + userId;
+        
+        FileIOController.moveProfile(srcPath, descPath, profileFileName);
     }
 
     public String getNaverId(HttpServletRequest request, HttpServletResponse response) throws IOException {
