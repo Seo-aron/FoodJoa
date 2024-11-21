@@ -11,39 +11,33 @@
 <%@ page import="DAOs.MemberDAO"%>
 
 <%
-	request.setCharacterEncoding("UTF-8");
-	response.setContentType("text/html; charset=utf-8");
+request.setCharacterEncoding("UTF-8");
+response.setContentType("text/html; charset=utf-8");
 
-	String contextPath = request.getContextPath();
+String contextPath = request.getContextPath();
 
-	MemberVO vo = (MemberVO) request.getAttribute("vo");
+String userId = (String) session.getAttribute("userId");   
+//String id = "admin";
 
-	//String loginedid = (String) session.getAttribute("id");	
-	String id = "admin";
+MemberDAO memberDAO = new MemberDAO();
 
-	MemberDAO memberDAO = new MemberDAO();
+// 가입 날짜 가져오기
+Timestamp joinDate = memberDAO.selectJoinDate(userId);
 
-	// 가입 날짜 가져오기
-	Timestamp joinDate = memberDAO.selectJoinDate(id);
+// 프로필 사진 가져오기
+//String openProfile = memberDAO.bringProfile(profile);
 
-	// Timestamp를 LocalDate로 변환
-	LocalDate receivedDate = joinDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+// Timestamp를 LocalDate로 변환
+LocalDate receivedDate = joinDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
 
-	// 현재 날짜
-	LocalDate currentDate = LocalDate.now();
+// 현재 날짜
+LocalDate currentDate = LocalDate.now();
 
-	// 두 날짜 사이의 일 수 차이 계산
-	long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
-
-	System.out.println("날짜 차이: " + daysBetween + "일");
-	
-	//유저 이름 가져오기
-//	MemberVO bringName = memberDAO.bringName();
-	
-	//유저 사진 가져오기
-//	MemberVO bringProfile = memberDAO.bringProfile();
-	
+// 두 날짜 사이의 일 수 차이 계산
+long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
+   
 %>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -53,113 +47,112 @@
 
 </head>
 <body>
-	<div class="header">
-		<h1>마이페이지</h1>
-		<a href="<%=contextPath%>/main.jsp">
-			<input type="button" class="logout-btn" value="로그아웃">
-		</a>
-	</div>
+   <div class="header">
+      <h1>마이페이지</h1>
+      <a href="<%=contextPath%>/main.jsp">
+         <input type="button" class="logout-btn" value="로그아웃">
+      </a>
+   </div>
 
-	<div class="profile-wrapper">
-		<div class="profile-section">
-			<div class="profile-image">
-				<img alt="없음"
-					src="<%=contextPath%>/images/member/userProfiles/admin.png">
-			</div>
-			<div class="profile-info">
-				<h2>형님!</h2>
-				<%
-				if (joinDate != null) {
-					%>
-					<p>
-						회원님은 푸드조아와 함께한지 <strong><%=daysBetween%></strong>일째입니다!
-					</p>
-					<%
-				} else {
-					%>
-					<p>가입 정보를 가져올 수 없습니다. 관리자에게 문의하세요.</p>
-					<%
-				}
-				%>
-				<button id="updateButton">정보수정</button>
-			</div>
-		</div>
+   <div class="profile-wrapper">
+      <div class="profile-section">
+         <div class="profile-image">
+            <img src="<%=contextPath%>/images/member/userProfiles/${member.id}/${member.profile}" alt="Profile Image">
+         </div>
+         <div class="profile-info">
+            <h2>${member.name}</h2>
+            <%
+            if (joinDate != null) {
+               %>
+               <p>
+                  ${member.name}님은 푸드조아와 함께한지 <strong><%=daysBetween%></strong>일째입니다!
+               </p>
+               <%
+            } else {
+               %>
+               <p>가입 정보를 가져올 수 없습니다. 관리자에게 문의하세요.</p>
+               <%
+            }
+            %>
+            <button id="updateButton">정보수정</button>
+         </div>
+      </div>
 
-		<div class="manage-section">
-			<div>
-				<a href="<%=contextPath%>/members/myreceipe.jsp">
-					<p align="center">내 레시피 관리</p>
-					<img src="../images/member/레시피.png" alt="레시피 이미지">
-				</a>
-			</div>
-			<div>
-				<a href="<%=contextPath%>/members/myproduct.jsp">
-					<p align="center">내 상품 관리</p>
-					<img src="../images/member/상품사진.png" alt="상품 이미지">
-				</a>
-			</div>
-			<div>
-				<a href="<%=contextPath%>/members/myreview.jsp">
-					<p align="center">내 리뷰 관리</p>
-					<img src="../images/member/손모양.png" alt="리뷰 이미지">
-				</a>
+      <div class="manage-section">
+         <div>
+            <a href="<%=contextPath%>/members/myreceipe.jsp">
+               <p align="center">내 레시피 관리</p>
+               <img src="../images/member/레시피.png" alt="레시피 이미지">
+            </a>
+         </div>
+         <div>
+            <a href="<%=contextPath%>/members/myproduct.jsp">
+               <p align="center">내 상품 관리</p>
+               <img src="../images/member/상품사진.png" alt="상품 이미지">
+            </a>
+         </div>
+         <div>
+            <a href="<%=contextPath%>/members/myreview.jsp">
+               <p align="center">내 리뷰 관리</p>
+               <img src="../images/member/손모양.png" alt="리뷰 이미지">
+            </a>
 
-			</div>
-		</div>
+         </div>
+      </div>
 
-		<!-- Info Sections -->
-		<div class="info-section">
-			<div>주문/배송조회</div>
-			<div style="display: flex;">
-				<span>주문건수 : 0</span> | <span>배송준비중 : 1</span> | <span>배송중 : 2</span> | <span>배송완료 : 0</span>
-				<a href="<%=contextPath%>/Member/myorder.me" style="margin-left: auto;">더보기</a>
-			</div>
-		</div>
+      <!-- Info Sections -->
+      <div class="info-section">
+         <div>주문/배송조회</div>
+         <div style="display: flex;">
+            <span>주문건수 : 0</span> | <span>배송준비중 : 1</span> | <span>배송중 : 2</span> | <span>배송완료 : 0</span>
+            <a href="<%=contextPath%>/Member/myorder.me" style="margin-left: auto;">더보기</a>
+         </div>
+      </div>
 
-		<div class="info-section">
-			<div>내 마켓 발송 현황</div>
-			<div style="display: flex;">
-				<span>주문건수 : 0 </span> | <span>배송준비중 : 1 </span> | <span>배송중 : 2 </span> | <span>배송완료 : 0 </span>
-				<a href="<%=contextPath%>/Member/sendMyMealkit.me" style="margin-left: auto;">더보기</a>
-			</div>
-		</div>
+      <div class="info-section">
+         <div>내 마켓 발송 현황</div>
+         <div style="display: flex;">
+            <span>주문건수 : 0 </span> | <span>배송준비중 : 1 </span> | <span>배송중 : 2 </span> | <span>배송완료 : 0 </span>
+            <a href="<%=contextPath%>/Member/sendMyMealkit.me" style="margin-left: auto;">더보기</a>
+         </div>
+      </div>
 
-		<div class="info-section">
-			<div>
-				<a href="<%=contextPath%>/members/processingpolicy.jsp">※
-					개인정보처리방침</a>
-			</div>
-		</div>
+      <div class="info-section">
+         <div>
+            <a href="<%=contextPath%>/members/processingpolicy.jsp">※
+               개인정보처리방침</a>
+         </div>
+      </div>
 
-		<div>
-			<a href="<%=contextPath%>/Member/deleteMember.me">
-				<button>탈퇴하기</button>
-			</a>
-		</div>
+      <div>
+         <a href="<%=contextPath%>/Member/deleteMember.me">
+            <button>탈퇴하기</button>
+         </a>
+      </div>
 
-		</script>
-	</div>
+      </script>
+   </div>
 
-	<script>
-		document.getElementById('updateButton').onclick = function() {
-			location.href = '<%=contextPath%>/Member/update.me';
-		};
+   <script>
+      document.getElementById('updateButton').onclick = function() {
+         location.href = '<%=contextPath%>/Member/update.me';
+      };
 
-		// 파일을 선택하면 미리보기 이미지를 표시
-		function previewImage(event) {
-			const reader = new FileReader();
-			reader.onload = function() {
-				const output = document.getElementById('profilePreview');
-				output.src = reader.result;
-			};
-			reader.readAsDataURL(event.target.files[0]);
-		}
+      // 파일을 선택하면 미리보기 이미지를 표시
+      function previewImage(event) {
+         const reader = new FileReader();
+         reader.onload = function() {
+            const output = document.getElementById('profilePreview');
+            output.src = reader.result;
+         };
+         reader.readAsDataURL(event.target.files[0]);
+      }
 
-		//탈퇴버튼 클릭시 알림창 표시
-		function withdraw() {
-			alert("탈퇴되었습니다");
-		}
-	</script>
+      //탈퇴버튼 클릭시 알림창 표시
+      function withdraw() {
+         alert("탈퇴되었습니다");
+      }
+   </script>
 </head>
 
 </body>

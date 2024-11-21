@@ -12,8 +12,9 @@
     
     MemberVO vo = (MemberVO) request.getAttribute("vo");    		
     
-    // String id = (String) session.getAttribute("id");
-    String id = "admin";
+  
+	String id = (String) session.getAttribute("id");  
+    //String id = "admin";
 %>
 <!DOCTYPE html>
 <html lang="ko">

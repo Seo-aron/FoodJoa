@@ -136,10 +136,6 @@ public class MemberService {
         return kakaoId;
     }
 
-    
-    
-    
-    
     //추가정보
     public void insertMember(HttpServletRequest request) throws ServletException, IOException {
         // 이미지 업로드 디렉토리 설정
@@ -281,16 +277,18 @@ public class MemberService {
 
 	public MemberVO getMember(HttpServletRequest request) throws ServletException, IOException  {
 		
-		// HttpSession session = request.getSession();
-		// String id = (String) session.getAttribute("id");
-		String id = "admin";
+		 HttpSession session = request.getSession();
+		 String id = (String) session.getAttribute("userId");
+		//String id = "admin";
 		return memberDAO.selectMember(id);
 	
 	}
 
 	public int updateProfile(HttpServletRequest request) throws ServletException, IOException{
 		
-		String id = "admin";
+		HttpSession session = request.getSession();
+		String id = (String) session.getAttribute("userId");
+		//String id = "admin";
 		
 		String path = request.getServletContext().getRealPath("/images/");
 		int maxSize = 1024 * 1024 * 1024;
@@ -338,4 +336,16 @@ public class MemberService {
 	    }
 	}
 
+	   public void getMemberProfile(HttpServletRequest request, String userId) throws ServletException, IOException, SQLException {
+	       // 회원 정보를 DAO에서 조회
+	       MemberVO member = memberDAO.getMemberProfile(userId);
+	       
+	       if (member != null) {
+	           // 회원 정보를 request에 저장
+	           request.setAttribute("member", member);
+	       } else {
+	           // 회원 정보 조회 실패 시 에러 메시지 설정
+	           request.setAttribute("error", "회원 정보를 찾을 수 없습니다.");
+	       }
+	   }
 }

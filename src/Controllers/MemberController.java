@@ -91,7 +91,30 @@ public class MemberController extends HttpServlet {
 		RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
 		dispatcher.forward(request, response);
 	}
+	private void openMypagemainView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	       try {
+	           // 세션에서 사용자 아이디를 가져옵니다.
+	           HttpSession session = request.getSession();
+	           String userId = (String) session.getAttribute("userId");
+	           
+	           // 아이디가 세션에 없으면 로그인 페이지로 리다이렉트
+	           if (userId == null) {
+	               response.sendRedirect("login.jsp");
+	               return;
+	           }
 
+	           // 서비스 메서드를 호출하여 회원 정보 처리
+	           memberService.getMemberProfile(request, userId);
+
+	           // 처리 후 마이페이지로 이동
+	           request.setAttribute("center", "members/mypagemain.jsp");
+	           request.getRequestDispatcher("main.jsp").forward(request, response);
+	       } catch (Exception e) {
+	           e.printStackTrace();
+	           request.setAttribute("error", "회원 프로필 처리 중 오류가 발생했습니다.");
+	           request.getRequestDispatcher("error.jsp").forward(request, response);
+	       }
+	   }
 	private void openMemberJoinView(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
@@ -297,16 +320,6 @@ public class MemberController extends HttpServlet {
 		request.setAttribute("center", "members/sendmealkit.jsp");
 		nextPage = "/main.jsp";
 
-	}
-	
-	private void openMypagemainView(HttpServletRequest request, HttpServletResponse response) {
-
-		// HttpSession session = request.getSession();
-		// String id = (String) session.getAttribute("id");
-		String id = "admin";
-		
-		request.setAttribute("center", "members/mypagemain.jsp");
-		nextPage = "/main.jsp";
 	}
 
 	private void openMemberUpdateView(HttpServletRequest request, HttpServletResponse response)
