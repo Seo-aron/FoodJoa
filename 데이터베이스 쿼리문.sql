@@ -122,16 +122,28 @@ values('review1', '1', '0018thumbnailImage.png', '리뷰 내용', 3, CURRENT_TIM
 desc recipe_review;
 select * from recipe_review;
 
-select r.*, COALESCE(avg_rating.average_rating, 0) AS average_rating
+select r.*, COALESCE(avg_rating.average_rating, 0) AS average_rating, m.nickname as nickname 
 from recipe r
 left join (
 	select recipe_no, avg(rating) as average_rating
     from recipe_review
     group by recipe_no
-) avg_rating
-on r.no = avg_rating.recipe_no
-where category=1
-order by post_date desc;
+) avg_rating on r.no = avg_rating.recipe_no
+left join member m on r.id=m.id 
+where r.category=1 
+order by r.post_date desc;
+
+select
+	r.*, COALESCE(avg_rating.average_rating, 0) AS average_rating,
+    m.nickname as nickname, m.profile as profile 
+from recipe r
+left join (
+	select recipe_no, avg(rating) as average_rating
+    from recipe_review
+    group by recipe_no
+) avg_rating on r.no = avg_rating.recipe_no
+left join member m on r.id=m.id 
+where r.no=59;
 
 drop table if exists recipe_wishlist;
 create table recipe_wishlist(
