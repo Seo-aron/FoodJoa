@@ -37,7 +37,7 @@
 						<input type="hidden" name="mealkit_no" value="${mealkit.no }" data-review-no="${review.no}">
 					</td>
 					<td>
-						평점: <input type="hidden" name="rating" value="" id="ratingInput">
+						<span>평점: ${review.rating}</span>
 					</td>
 					<td>
 						<div class="empathy-container">
@@ -50,7 +50,7 @@
 				<tr>
 					<th>사진</th>
 					<td colspan="3">
-						<img src="<%= contextPath %>/images/recipe/test_thumbnail.png" alt="Review Image">
+						<img src="<%= contextPath %>/images/mealkit/review/${review.no}/${review.pictures}" alt="${review.pictures}">
 					</td>
 				</tr>
 				<tr>

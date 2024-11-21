@@ -83,7 +83,7 @@
 
 <body>
 	<div id="container">
-		<form id="frmReview" action="<%= contextPath %>/Recipe/reviewWrite" method="post" enctype="multipart/form-data">
+		<form id="frmReview" action="#" method="post" enctype="multipart/form-data">
 			<input type="hidden" id="recipe_no" name="recipe_no" value="<%= recipe.getNo() %>">
 			
 			<table width="100%" border="1">

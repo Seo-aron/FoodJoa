@@ -3,17 +3,46 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
- 
+<%@ page import="java.time.LocalDate"%>
+<%@ page import="java.time.temporal.ChronoUnit"%>
+<%@ page import="java.sql.*"%>
+<%@ page import="java.sql.Timestamp"%>
+<%@ page import="java.time.ZoneId"%>
+<%@ page import="DAOs.MemberDAO"%>
+
 <%
 	request.setCharacterEncoding("UTF-8");
 	response.setContentType("text/html; charset=utf-8");
-	
+
 	String contextPath = request.getContextPath();
-	
+
 	MemberVO vo = (MemberVO) request.getAttribute("vo");
-	
+
 	//String loginedid = (String) session.getAttribute("id");	
 	String id = "admin";
+
+	MemberDAO memberDAO = new MemberDAO();
+
+	// 가입 날짜 가져오기
+	Timestamp joinDate = memberDAO.selectJoinDate(id);
+
+	// Timestamp를 LocalDate로 변환
+	LocalDate receivedDate = joinDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+
+	// 현재 날짜
+	LocalDate currentDate = LocalDate.now();
+
+	// 두 날짜 사이의 일 수 차이 계산
+	long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
+
+	System.out.println("날짜 차이: " + daysBetween + "일");
+	
+	//유저 이름 가져오기
+//	MemberVO bringName = memberDAO.bringName();
+	
+	//유저 사진 가져오기
+//	MemberVO bringProfile = memberDAO.bringProfile();
+	
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -24,47 +53,55 @@
 
 </head>
 <body>
-
 	<div class="header">
 		<h1>마이페이지</h1>
-		<a href="<%=contextPath%>/main.jsp"> <input type="button"
-			class="logout-btn" value="로그아웃">
+		<a href="<%=contextPath%>/main.jsp">
+			<input type="button" class="logout-btn" value="로그아웃">
 		</a>
 	</div>
 
 	<div class="profile-wrapper">
 		<div class="profile-section">
 			<div class="profile-image">
-				<img alt="없음" src="../images/member/admin.png">
+				<img alt="없음"
+					src="<%=contextPath%>/images/member/userProfiles/admin.png">
 			</div>
 			<div class="profile-info">
-				<h2>김보노님!</h2>
-				<p>푸드조아와 함께한지 999일째♥</p>
-				<form action="profileupdate.jsp" method="get">
-					<button onclick="checkConditionAndProceed()">정보수정</button>
-				</form>
+				<h2>형님!</h2>
+				<%
+				if (joinDate != null) {
+					%>
+					<p>
+						회원님은 푸드조아와 함께한지 <strong><%=daysBetween%></strong>일째입니다!
+					</p>
+					<%
+				} else {
+					%>
+					<p>가입 정보를 가져올 수 없습니다. 관리자에게 문의하세요.</p>
+					<%
+				}
+				%>
+				<button id="updateButton">정보수정</button>
 			</div>
-
-
 		</div>
 
 		<div class="manage-section">
 			<div>
 				<a href="<%=contextPath%>/members/myreceipe.jsp">
-					<p align="center">내 레시피 관리</p> <img src="../images/레시피.png"
-					alt="레시피 이미지">
+					<p align="center">내 레시피 관리</p>
+					<img src="../images/member/레시피.png" alt="레시피 이미지">
 				</a>
 			</div>
 			<div>
 				<a href="<%=contextPath%>/members/myproduct.jsp">
-					<p align="center">내 상품 관리</p> <img src="../images/상품사진.png"
-					alt="상품 이미지">
+					<p align="center">내 상품 관리</p>
+					<img src="../images/member/상품사진.png" alt="상품 이미지">
 				</a>
 			</div>
 			<div>
 				<a href="<%=contextPath%>/members/myreview.jsp">
-					<p align="center">내 리뷰 관리</p> <img src="../images/손모양.png"
-					alt="리뷰 이미지">
+					<p align="center">내 리뷰 관리</p>
+					<img src="../images/member/손모양.png" alt="리뷰 이미지">
 				</a>
 
 			</div>
@@ -73,34 +110,41 @@
 		<!-- Info Sections -->
 		<div class="info-section">
 			<div>주문/배송조회</div>
-			<div>
-				<span>주문건수: 0</span> | <span>배송준비중: 1</span> | <span>배송중: 2</span> |
-				<span>배송완료: 0</span> <br><a href="<%=contextPath%>/members/vieworder.jsp">
-				<input type="button" class="more-btn" value="더보기">
+			<div style="display: flex;">
+				<span>주문건수 : 0</span> | <span>배송준비중 : 1</span> | <span>배송중 : 2</span> | <span>배송완료 : 0</span>
+				<a href="<%=contextPath%>/Member/myorder.me" style="margin-left: auto;">더보기</a>
 			</div>
 		</div>
 
 		<div class="info-section">
-			<div>내 마켓상품 주문/배송조회</div>
-			<div>
-				<span>주문건수: 0</span> | <span>배송준비중: 1</span> | <span>배송중: 2</span> |
-				<span>배송완료: 0</span> <br> <input type="button" class="more-btn"
-					value="더보기">
+			<div>내 마켓 발송 현황</div>
+			<div style="display: flex;">
+				<span>주문건수 : 0 </span> | <span>배송준비중 : 1 </span> | <span>배송중 : 2 </span> | <span>배송완료 : 0 </span>
+				<a href="<%=contextPath%>/Member/sendMyMealkit.me" style="margin-left: auto;">더보기</a>
 			</div>
 		</div>
 
 		<div class="info-section">
-			<div><a href="<%=contextPath%>/members/processingpolicy.jsp">※ 개인정보처리방침</a></div>
+			<div>
+				<a href="<%=contextPath%>/members/processingpolicy.jsp">※
+					개인정보처리방침</a>
+			</div>
 		</div>
 
-		<input type="button" class="more-btn" value="탈퇴"
-			hrf="<%=contextPath%>/main.jsp" onclick="withdraw()">
-		<!-- 탈퇴 버튼을 클릭하면 withdraw 함수가 실행됨 -->
+		<div>
+			<a href="<%=contextPath%>/Member/deleteMember.me">
+				<button>탈퇴하기</button>
+			</a>
+		</div>
 
 		</script>
 	</div>
 
 	<script>
+		document.getElementById('updateButton').onclick = function() {
+			location.href = '<%=contextPath%>/Member/update.me';
+		};
+
 		// 파일을 선택하면 미리보기 이미지를 표시
 		function previewImage(event) {
 			const reader = new FileReader();

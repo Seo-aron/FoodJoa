@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
- 
+  
 <%
 	request.setCharacterEncoding("UTF-8");
 	response.setContentType("text/html; charset=utf-8");
@@ -27,7 +27,7 @@
     <!-- Header Section -->
    <div class="header">
     <h1>내 레시피 관리</h1>
-    <a href="<%=contextPath%>/main.jsp">
+    <a href="<%=contextPath%>/managerecipe.me">
     <input type="button" class="logout-btn" value="로그아웃">
     </a>
 	</div>

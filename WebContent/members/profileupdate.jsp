@@ -7,15 +7,13 @@
 <%
     request.setCharacterEncoding("UTF-8");
     response.setContentType("text/html; charset=utf-8");
+    
     String contextPath = request.getContextPath();
-
-    MemberVO vo = (MemberVO) request.getAttribute("vo");
-
-    String profile = vo.getProfile();
-    String name = vo.getName();
-    String nickname = vo.getNickname();
-    String phone = vo.getPhone();
-    String address = vo.getAddress();
+    
+    MemberVO vo = (MemberVO) request.getAttribute("vo");    		
+    
+    // String id = (String) session.getAttribute("id");
+    String id = "admin";
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -24,7 +22,6 @@
 <title>회원 정보 수정</title>
 
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet" href="<%=contextPath%>/css/member/profileupdate.css">
 
 <script type="text/javascript">    
@@ -65,7 +62,7 @@
         
         $(".btn-cancel").click(function(event) {
             event.preventDefault(); // 기본 클릭 이벤트 방지 (필요에 따라 추가)
-            window.location.href = "<%=contextPath%>/main.jsp";
+            window.location.href = "<%=request.getContextPath()%>/Member/mypagemain.me";
         });
     });
 </script>
@@ -75,9 +72,10 @@
 
     <div class="form-container">
         <h2>정보 수정</h2>
-
+  
         <!-- JavaScript로 미리보기 기능 구현 -->
-        <form action="<%=contextPath%>/mypagemain.jsp" method="post">
+        <form action="<%=request.getContextPath()%>/Member/updatePro.me" method="post" enctype="multipart/form-data" >
+        	<input type="hidden" id="origin-profile" name="origin-profile" value="<%= vo.getProfile() %>">
             <br>
             <br>
             <!-- 이미지 미리보기가 표시될 컨테이너 -->
@@ -85,22 +83,22 @@
             </div>
 
             <!-- 파일 선택 버튼 -->
-            <input type="file" accept="image/*" class="file-input" id="fileInput">
+            <input type="file" accept=".jpg, .jpeg, .png" class="profile" id="fileInput" name="profile">
             <div class="form-group">
                 <label for="name">이름</label> 
-                <input type="text" id="name" name="name" value="<%=name%>" placeholder="2자 이상 10자 미만으로 입력해주세요">
+                <input type="text" id="name" name="name" value="<%=vo.getName()%>" placeholder="2자 이상 10자 미만으로 입력해주세요">
             </div>
             <div class="form-group">
                 <label for="nickname">닉네임</label> 
-                <input type="text" id="nickname" name="nickname" value="<%=nickname%>" placeholder="2자 이상 10자 미만으로 입력해주세요">
+                <input type="text" id="nickname" name="nickname" value="<%=vo.getNickname()%>" placeholder="2자 이상 10자 미만으로 입력해주세요">
             </div>
             <div class="form-group">
                 <label for="phone">번호</label> 
-                <input type="text" id="phone" name="phone" value="<%=phone%>" placeholder="-없이 입력해주세요">
+                <input type="text" id="phone" name="phone" value="<%=vo.getPhone()%>" placeholder="-없이 입력해주세요">
             </div>
             <div class="form-group">
                 <label for="address">주소</label> 
-                <input type="text" id="address" name="address" value="<%=address%>">
+                <input type="text" id="address" name="address" value="<%=vo.getAddress()%>">
             </div>
             <div class="btn-container">
                 <button type="button" class="btn-submit">제출</button>

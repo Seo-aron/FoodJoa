@@ -140,11 +140,26 @@
 	<div>
 		<div id="header">
 			<!-- 사용자 메뉴 (로그인, 회원가입, 검색 버튼) -->
-			<div id="userMenu">
-				<button>로그인</button>
-				<button onclick="onJoinButton()">회원가입</button>
-			</div>
-
+			  <div id="userMenu">
+       
+        <%
+            String userId = (String) session.getAttribute("userId");
+        %>
+        <%
+            if (userId != null) {
+        %>
+            <form action="<%= request.getContextPath() + "/Member/logout.me" %>" method="POST">
+                <button type="submit">로그아웃</button>
+            </form>
+        <%
+            } else {
+        %>
+            <button onclick="onLoginButton()">로그인</button>
+            <button onclick="onJoinButton()">회원가입</button>
+        <% 
+            }
+        %>        
+    </div>
 			<!-- 로고 -->
 			<div id="logo">
 				<a href="#"> <img
@@ -157,13 +172,13 @@
 		<nav>
 			<ul id="topMenu">
 				<li><a href="#">홈</a></li>
-				<li><a href="<%= contextPath %>/Recipe/list">레시피 공유<span> ▼ </span></a>
+				<li><a href="<%= contextPath %>/Recipe/list?category=0">레시피 공유<span> ▼ </span></a>
 					<ul>
-						<li><a href="#">한식 요리</a></li>
-						<li><a href="#">일식 요리</a></li>
-						<li><a href="#">중식 요리</a></li>
-						<li><a href="#">양식 요리</a></li>
-						<li><a href="#">자취 요리</a></li>
+						<li><a href="<%= contextPath %>/Recipe/list?category=1">한식 요리</a></li>
+						<li><a href="<%= contextPath %>/Recipe/list?category=2">일식 요리</a></li>
+						<li><a href="<%= contextPath %>/Recipe/list?category=3">중식 요리</a></li>
+						<li><a href="<%= contextPath %>/Recipe/list?category=4">양식 요리</a></li>
+						<li><a href="<%= contextPath %>/Recipe/list?category=5">자취 요리</a></li>
 					</ul></li>
 				<li><a href="#">나만의 음식 판매<span> ▼ </span></a>
 					<ul>
@@ -188,6 +203,11 @@
 		function onJoinButton() {
 			location.href = '<%= contextPath %>/Member/join.me';
 		}
+		
+		function onLoginButton(){
+			location.href = '<%= contextPath %>/Member/login.me';
+		}
+		
 	</script>
 </body>
 

@@ -1,3 +1,6 @@
+<%@page import="java.util.List"%>
+<%@page import="Common.StringParser"%>
+<%@page import="VOs.RecipeVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
@@ -6,6 +9,10 @@
 	response.setContentType("text/html; charset=utf-8");
 
 	String contextPath = request.getContextPath();
+	
+	RecipeVO recipe = (RecipeVO) request.getAttribute("recipe");
+	
+	String compressedContents = recipe.getContents();
 %>
     
 <!DOCTYPE html>
@@ -16,7 +23,7 @@
 	<title>Insert title here</title>
 	
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
-	<script src="<%= contextPath %>/js/recipe/write.js"></script>
+	<script src="<%= contextPath %>/js/recipe/update.js"></script>
 	<script src="https://cdn.tiny.cloud/1/dvxu8ag2amp0f6jzdha1igxdgal2cpo0waqtixb0z64yirx7/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 	
@@ -60,11 +67,15 @@
 
 <body>
 	<div id="container">
-		<form action="<%= contextPath %>/Recipe/writePro" method="post" id="frmWrite" enctype="multipart/form-data">
+		<form action="<%= contextPath %>/Recipe/updatePro" method="post" id="frmWrite" enctype="multipart/form-data">
+			<input type="hidden" id="no" name="no">
+			<input type="hidden" id="views" name="views">
+			<input type="hidden" id="thumbnail-origin" name="thumbnail-origin">
+			
 			<table border="1" width="100%">
 				<tr>
 					<td colspan="2">
-						<input type="button" class="write" value="레시피 작성" onclick="onSubmit(event)">
+						<input type="button" class="write" value="레시피 수정" onclick="onSubmit(event)">
 					</td>
 				</tr>
 				<tr>
@@ -86,7 +97,7 @@
 				</tr>
 				<tr>
 					<td>
-						<select name="category">
+						<select id="category" name="category">
 							<option value="" disabled hidden selected>음식 종류를 선택하세요.</option>
 							<option value="1">한식</option>
 							<option value="2">일식</option>
@@ -99,7 +110,7 @@
 				<tr>
 					<td colspan="2">
 						<textarea id="contentsArea" width="100%"></textarea>
-						<input type="hidden" name="contents" required>
+						<input type="hidden" name="contents">
 					</td>
 				</tr>
 				<tr>
@@ -123,14 +134,18 @@
 				</tr>
 				<tr>
 					<td colspan="2">
-						<input type="button" class="write" value="레시피 작성" onclick="onSubmit(event)">
+						<input type="button" class="write" value="레시피 수정" onclick="onSubmit(event)">
 					</td>
 				</tr>
 			</table>
 		</form>
 	</div>
 	
-	
+	<%
+	List<String> ingredients = StringParser.splitString(recipe.getIngredient());
+	List<String> amounts = StringParser.splitString(recipe.getIngredientAmount());
+	List<String> orders = StringParser.splitString(recipe.getOrders());
+	%>
 	<script>
 		function onSubmit(e) {
 		    e.preventDefault();
@@ -144,6 +159,48 @@
 			document.getElementsByName('contents')[0].value = base64Compressed;
  	
 		    document.getElementById('frmWrite').submit();
+		}
+		
+		let decompressedText;
+		
+		initialize();		
+		
+		function initialize() {
+			$("#no").val('<%= recipe.getNo() %>');
+			$("#views").val('<%= recipe.getViews() %>');
+			$("#thumbnail-origin").val('<%= recipe.getThumbnail() %>');
+			
+			$("#imagePreview").attr('src','<%= contextPath %>/images/recipe/thumbnails/<%= recipe.getNo() %>/<%= recipe.getThumbnail() %>');
+			$("#title").val('<%= recipe.getTitle() %>');
+			$("#description").val('<%= recipe.getDescription() %>');
+			$("#category").val('<%= recipe.getCategory() %>');
+			decompressContents();
+			<%
+			for (int i = 0; i < ingredients.size(); i++) {
+				%>
+				var newIngredientHtml = 
+	                '<p class="added-ingredient">' +
+					'<span class="added-ingredient-name"><%= ingredients.get(i) %></span>' + 
+					'<span class="added-ingredient-amount"><%= amounts.get(i) %></span>' +
+	                '<button type="button" class="remove-ingredient">삭제</button>' +
+	                '</p>';
+	                
+                $(".ingredients-container").append(newIngredientHtml);
+				<%
+			}
+			
+			for (int i = 0; i < orders.size(); i++) {
+				%>
+				var newOrderHtml = 
+		            '<p class="added-orders">' +
+					'<span class="added-order"><%= orders.get(i) %></span>' + 
+		            '<button type="button" class="remove-orders">삭제</button>' +
+		            '</p>';
+		            
+	            $(".orders-container").append(newOrderHtml);
+				<%
+			}
+			%>
 		}
 		
 		const imageInput = document.getElementById('imageInput');
@@ -163,7 +220,26 @@
 		    reader.readAsDataURL(file);
 		  }
 		});
-	
+
+		function decompressContents() {
+		    var compressedData = "<%= compressedContents %>";
+		    
+	        try {
+	            // Base64 디코딩
+	            const binaryString = atob(compressedData);
+	            const bytes = new Uint8Array(binaryString.length);
+	            for (let i = 0; i < binaryString.length; i++) {
+	                bytes[i] = binaryString.charCodeAt(i);
+	            }
+
+	            const decompressedBytes = pako.inflate(bytes);
+	            
+	            decompressedText = new TextDecoder('utf-8').decode(decompressedBytes);
+	        } catch (error) {
+	            console.error("압축 해제 중 오류 발생:", error);
+	        }
+		}
+		
 		tinymce.init({
 	        selector: "#contentsArea", // TinyMCE를 적용할 textarea 요소의 선택자를 지정
 	        statusbar: false,
@@ -174,39 +250,12 @@
 	        menubar: false,
 	        advlist_bullet_styles: 'square',
 	        advlist_number_styles: 'lower-alpha,lower-roman,upper-alpha,upper-roman',
-	        
-	        
-	        
-	        /*	        
-	        formats: {
-	            alignleft: { selector: 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img,audio,video', classes: 'left' },
-	            aligncenter: { selector: 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img,audio,video', classes: 'center' },
-	            alignright: { selector: 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img,audio,video', classes: 'right' },
-	            alignjustify: { selector: 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img,audio,video', classes: 'full' },
-	            bold: { inline: 'span', 'classes': 'bold' },
-	            italic: { inline: 'span', 'classes': 'italic' },
-	            underline: { inline: 'span', 'classes': 'underline', exact: true },
-	            strikethrough: { inline: 'del' },
-	            forecolor: { inline: 'span', classes: 'forecolor', styles: { color: '%value' } },
-	            hilitecolor: { inline: 'span', classes: 'hilitecolor', styles: { backgroundColor: '%value' } },
-	            custom_format: { block: 'h1', attributes: { title: 'Header' }, styles: { color: 'red' } }
-	        },
-			skin: 'oxide-dark',
-			content_css: 'dark'
-	        
-	        file_picker_types: 'image', // TinyMCE에서 이미지를 선택할 때, 이미지 파일만 선택 (옵션 : media, file 등)
-	        images_upload_handler(blobInfo, success) { // 이미지를 업로드하는 핸들러 함수
-	            // blobInfo : TinyMCE에서 이미지 업로드 시 사용되는 정보를 담고 있는 객체
-	            const file = new File([blobInfo.blob()], blobInfo.filename());
-	            const fileName = blobInfo.filename();
-	 
-	            if (fileName.includes("blobid")) {
-	                success(URL.createObjectURL(file));
-	            } else {
-	                imageFiles.push(file);
-	                success(URL.createObjectURL(file)); // Blob 객체의 임시 URL을 생성해 이미지 미리보기 적용
-	            }
-	        } */
+			setup : function(editor) {
+				editor.on('init', function() {
+					// 에디터가 초기화된 후 실행될 코드
+					tinymce.get('contentsArea').setContent(decompressedText);
+				});
+			}
 	    });
 	</script>
 </body>

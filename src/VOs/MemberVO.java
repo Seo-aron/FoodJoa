@@ -102,5 +102,5 @@ public class MemberVO {
 		this.join_date = join_date;
 	}
 	
-	
+
 }
