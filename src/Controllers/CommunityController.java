@@ -58,6 +58,7 @@ public class CommunityController extends HttpServlet {
 			case "/update": openCommunityUpdateView(request,response);break;
 			case "/updatePro": processCommunityUpdate(request, response);return;
 			case "/deletePro": processCommunityDelete(request, response);return;	
+			case "/searchList" : processCommunitySearch(request, response);break;
 			
 			default:
 		}
@@ -155,4 +156,13 @@ public class CommunityController extends HttpServlet {
 		out.close();
 		
 	}	
+	
+	private void processCommunitySearch(HttpServletRequest request, HttpServletResponse response) {
+
+		String key = request.getParameter("key");
+		String word = request.getParameter("word");
+		
+		communityService.processCommuniitySearch(key, word);
+		
+	}
 }

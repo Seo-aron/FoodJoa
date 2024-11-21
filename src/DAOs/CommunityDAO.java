@@ -183,4 +183,10 @@ public class CommunityDAO {
 		return result;
 	}
 
+	public ArrayList<CommunityVO> communityList(String key, String word) {
+
+		
+		return null;
+	}
+
 }
