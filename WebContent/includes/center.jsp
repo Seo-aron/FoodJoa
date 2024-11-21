@@ -177,7 +177,7 @@
                 <!-- 오늘 뭐 먹지? 데일리 추천 -->
                 <td>
                 	<img alt="" src="">
-                    <오늘 뭐 먹지? 데일리 알고리즘 추천>
+                    <오늘의 추천 요리>
                     <a><img src="${contextPath}/images/mainpage//marketrank1.jpg" alt="첫번째 오른쪽" width="300px"></a>
                 </td>
             </tr>
