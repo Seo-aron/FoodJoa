@@ -143,7 +143,6 @@
 			<div id="userMenu">
 				<button>로그인</button>
 				<button onclick="onJoinButton()">회원가입</button>
-				<button>검색</button>
 			</div>
 
 			<!-- 로고 -->
