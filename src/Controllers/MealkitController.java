@@ -3,6 +3,7 @@ package Controllers;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -57,12 +58,44 @@ public class MealkitController extends HttpServlet {
 		case "/reviewwrite": openAddReview(request, response); break;
 		case "/reviewwrite.pro": processAddReview(request, response); return;
 		case "/empathy.pro": processEmpathy(request, response); return;
+		case "/delete.pro": processDelete(request, response); return;
+		case "/update": openUpdateBoard(request, response); break;
+		case "/update.pro": processUpdate(request, response); return;
+		case "/searchlist.pro": processSearchList(request, response); break;
 
 		default: break;
 		}
 
 		RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
 		dispatcher.forward(request, response);
+	}
+
+	private void processSearchList(HttpServletRequest request, HttpServletResponse response) {
+		ArrayList<MealkitVO> list = mealkitService.searchList(request);
+
+		request.setAttribute("mealkitList", list);
+		request.setAttribute("center", "mealkits/list.jsp");
+
+		nextPage = "/main.jsp";
+	}
+
+	private void openUpdateBoard(HttpServletRequest request, HttpServletResponse response) {
+		MealkitVO mealkitvo = mealkitService.getMealkitInfo(request);
+		
+		request.setAttribute("mealkitvo", mealkitvo);
+		request.setAttribute("center", "mealkits/editBoard.jsp");
+		
+		nextPage = "/main.jsp";
+	}
+
+	private void processUpdate(HttpServletRequest request, HttpServletResponse response) 
+			throws IOException {
+		mealkitService.updateMealkit(request, response);
+	}
+
+	private void processDelete(HttpServletRequest request, HttpServletResponse response) 
+			throws IOException {
+		mealkitService.delMealkit(request, response);
 	}
 
 	private void processEmpathy(HttpServletRequest request, HttpServletResponse response) 
@@ -82,19 +115,16 @@ public class MealkitController extends HttpServlet {
 
 	private void processAddReview(HttpServletRequest request, HttpServletResponse response) 
 			throws IOException {
-		
 		mealkitService.setWriteReview(request, response);
 	}
 
 	private void processAddMealkit(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		mealkitService.setWriteMealkit(request, response);
-		
-		
 	}
 
 	private void openAddMealkit(HttpServletRequest request, HttpServletResponse response) {
-		// 추후 membervo에서 멤버 아이디 받아와야 할 거임 
+		// 추후 membervo에서 멤버 아이디를 session으로 받아와야 할 거임 
 		request.setAttribute("center", "mealkits/write.jsp");
 		
 		nextPage = "/main.jsp";
@@ -110,9 +140,11 @@ public class MealkitController extends HttpServlet {
 
 		MealkitVO mealkitvo = mealkitService.getMealkitInfo(request);
 		ArrayList<MealkitReviewVO> reviewvo = mealkitService.getReviewInfo(request);
+		float ratingAvr = mealkitService.getRatingAvr(mealkitvo);
 		
 		request.setAttribute("mealkitvo", mealkitvo);
 		request.setAttribute("reviewvo", reviewvo);
+		request.setAttribute("ratingAvr", ratingAvr);
 		
 		request.setAttribute("center", "mealkits/info.jsp");
 
@@ -123,9 +155,16 @@ public class MealkitController extends HttpServlet {
 			throws ServletException, IOException {
 
 		ArrayList<MealkitVO> mealkits = mealkitService.getMealkitsList();
+		Map<Integer, Float> ratingAvr = mealkitService.getAllRatingAvr(mealkits);
+		
+		String nowPage = request.getParameter("nowPage");
+		String nowBlock = request.getParameter("nowBlock");
 
 		request.setAttribute("mealkitList", mealkits);
+		request.setAttribute("ratingAvr", ratingAvr);
 		request.setAttribute("center", "mealkits/list.jsp");
+		request.setAttribute("nowPage", nowPage);
+		request.setAttribute("nowBlock", nowBlock);
 
 		nextPage = "/main.jsp";
 	}

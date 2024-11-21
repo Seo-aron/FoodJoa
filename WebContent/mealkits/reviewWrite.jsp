@@ -57,7 +57,7 @@
 <body>
     <div id="container">
         <h2>리뷰 작성</h2>
-        <form action="<%=contextPath %>/Mealkit/reviewwrite.pro" method="post">
+        <form action="<%=contextPath %>/Mealkit/reviewwrite.pro" method="post" enctype="multipart/form-data">
             <table>
                 <tr>
                     <th>작성자</th>
@@ -96,7 +96,6 @@
                     </td>
                 </tr>
             </table>
-            <input type="hidden" name="rating" value="" id="ratingInput">
         </form>
     </div>
 </body>

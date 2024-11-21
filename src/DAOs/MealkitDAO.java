@@ -3,6 +3,7 @@ package DAOs;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import Common.DBConnector;
 import VOs.MealkitOrderVO;
@@ -157,25 +158,31 @@ public class MealkitDAO {
 	}
 
 	public int insertNewContent(MealkitVO vo) {
-		int result = 0;
+		int no = 0;
 		
 		String sql = "INSERT INTO mealkit(id, title, contents, category, price, stock, pictures, orders, origin, "
 				+ "views, soldout, post_date) VALUES(?,?,?,?,?,?,?,?,?,0,0,NOW())";
-	
+		
 		try {
-			result = dbConnector.executeUpdate(sql, vo.getId(), vo.getTitle(), vo.getContents(), vo.getCategory(), 
-					vo.getPrice(), vo.getStock(), vo.getPictures(), vo.getOrders(), vo.getOrigin());
+				ResultSet rs = dbConnector.executeInsertAndGetGeneratedKeys( sql,
+		            vo.getId(), vo.getTitle(), vo.getContents(), vo.getCategory(),
+		            vo.getPrice(), vo.getStock(), vo.getPictures(), vo.getOrders(), vo.getOrigin()
+		        );
+			 if (rs.next()) {
+			     no = rs.getInt(1);
+			 }
 		} catch (Exception e) {
 			System.out.println("MealkitDAO - insertNewContent 예외발생 ");
 		}
 		
 		dbConnector.release();
 		
-		return result;
+		return no;
 	}
 
 	public int insertNewReview(MealkitReviewVO vo) {
 		int mealkit_no = 0;
+		int review_no = 0;
 		
 		String sql = "SELECT no FROM mealkit WHERE no = ?";
 		
@@ -193,12 +200,25 @@ public class MealkitDAO {
 		sql = "INSERT INTO mealkit_review(id, mealkit_no, pictures, contents, rating, empathy, post_date) "
 				+ "VALUES(?,?,?,?,?,0,NOW())";
 
-		int result = dbConnector.executeUpdate(sql, vo.getId(), mealkit_no, vo.getPictures(), 
-				vo.getContents(),vo.getRating());
+		dbConnector.executeUpdate(sql, vo.getId(), mealkit_no, vo.getPictures(), vo.getContents(),vo.getRating());
+		
+		// review_no를 가져오기
+		sql = "SELECT no FROM mealkit_review WHERE id = ? AND mealkit_no = ? ORDER BY post_date DESC LIMIT 1";
+		
+		rs = dbConnector.executeQuery(sql, vo.getId(), mealkit_no);
+		
+		try {
+			if(rs.next()) {
+				review_no = rs.getInt("no");
+			}
+		} catch (SQLException e) {
+			System.out.println("MealkitDAO - insertNewReview 예외발생 ");
+			e.printStackTrace();
+		}
 		
 		dbConnector.release();
 		
-		return result;
+		return review_no;
 	}
 
 	public int updateEmpathy(int empathyCount, int mealkit_no, int no) {
@@ -210,6 +230,118 @@ public class MealkitDAO {
 		dbConnector.release();
 		
 		return result;
+	}
+
+	public int deleteMealkit(int no) {
+		
+		String sql = "DELETE FROM mealkit_review WHERE mealkit_no = ?";
+		
+		dbConnector.executeUpdate(sql, no);
+		
+		sql = "DELETE FROM mealkit WHERE no = ?";
+		
+		int result = dbConnector.executeUpdate(sql, no);
+		
+		dbConnector.release();
+		
+		return result;
+	}
+
+	public int updateMealkit(MealkitVO vo) {
+		
+		String sql = "UPDATE mealkit SET title = ?, contents = ?, price = ?, origin = ?, orders= ?, "
+				+ "stock = ?, pictures = ? WHERE no = ?";
+		
+		int result = dbConnector.executeUpdate(sql, vo.getTitle(), vo.getContents(), vo.getPrice(), 
+				vo.getOrigin(), vo.getOrders(), vo.getStock(), vo.getPictures(), vo.getNo());
+		
+		dbConnector.release();
+		
+		return result;
+	}
+
+	public MealkitVO getMealkitByNo(int no) {
+		return InfoMealkit(no);
+	}
+
+	public void incrementViewCount(int no) {
+		
+		String sql = "UPDATE mealkit SET views = views + 1 WHERE no = ?";
+		
+		dbConnector.executeUpdate(sql, no);
+		
+		dbConnector.release();
+	}
+
+	public float getRatingAvr(int no) {
+		
+		float avr = 0;
+		
+		String sql = "select AVG(rating) rating_avr from mealkit_review "
+				+ "where mealkit_no = ?";
+		
+		ResultSet rs = dbConnector.executeQuery(sql, no);
+		
+		try {
+			if(rs.next()) {
+				avr = rs.getFloat("rating_avr");
+			}
+		} catch (SQLException e) {
+			System.out.println("MealkitDAAO - getRatingAvr 예외 발생");
+			e.printStackTrace();
+		}
+		
+		dbConnector.release();
+		
+		return avr;
+	}
+
+	public ArrayList selectSearchList(String key, String word) {
+		
+		ArrayList<MealkitVO> mealkits = new ArrayList<MealkitVO>();
+		String sql = "";
+		
+		if(!word.equals("")) {
+			if(key.equals("title")) {
+				sql = "select * from mealkit "
+						+ "where title like '%"+word+"%' order by no desc";
+			} else {
+				sql = "select * from mealkit "
+						+ "where id like '%"+word+"%' order by no desc";
+			}
+		} else{
+			sql = "select * from mealkit order by no desc";
+		}
+		
+		ResultSet rs = dbConnector.executeQuery(sql);
+		
+		try {
+			while(rs.next()) {
+				MealkitVO mealkit = new MealkitVO(
+						rs.getInt("no"), 
+						rs.getString("id"),
+						rs.getString("title"),
+						rs.getString("contents"),
+						rs.getInt("category"),
+						rs.getString("price"),
+						rs.getInt("stock"),
+						rs.getString("pictures"),
+						rs.getString("orders"),
+						rs.getString("origin"),
+						rs.getInt("views"),
+						rs.getInt("soldout"),
+						rs.getTimestamp("post_date"));
+				
+				mealkits.add(mealkit);				
+			}
+		} catch (Exception e) {
+			System.out.println("MealkitDAO - selectSearchList 예외발생 ");
+			e.printStackTrace();
+		}
+		
+		dbConnector.release();
+		
+		return mealkits;
 	}
 
 }
