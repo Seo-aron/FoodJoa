@@ -32,9 +32,6 @@ public  class FileIOController {
 		
 		if (fileName == null || fileName.isEmpty()) return;
 		
-		System.out.println("path : " + path);
-		System.out.println("fileName : " + fileName);
-		
 		File file = new File(path + "\\" + fileName);
 		
 		file.delete();
