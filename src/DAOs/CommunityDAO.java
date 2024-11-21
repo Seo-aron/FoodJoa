@@ -9,8 +9,6 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
-import com.mysql.cj.xdevapi.Result;
-
 import VOs.CommunityVO;
 
 public class CommunityDAO {
@@ -52,7 +50,7 @@ public class CommunityDAO {
 
 			connection = dataSource.getConnection();
 
-			String sql = "select * from community";
+			String sql = "select * from community order by post_date desc";
 
 			preparedStatement = connection.prepareStatement(sql);
 
@@ -111,6 +109,13 @@ public class CommunityDAO {
 		
 		try {
 			connection = dataSource.getConnection();
+			
+			sql = "update community set views=views+1 where no=?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, Integer.parseInt(no));
+			
+			preparedStatement.executeUpdate();
+			
 			sql = "select * from community where no=?";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, Integer.parseInt(no));
@@ -185,8 +190,53 @@ public class CommunityDAO {
 
 	public ArrayList<CommunityVO> communityList(String key, String word) {
 
+		String sql = null;
 		
-		return null;
+		ArrayList list = new ArrayList();
+		
+		if(!word.equals("")) {
+			
+			if(key.equals("titleContent")) {
+				
+				sql = "select * from community"
+					+ " where title like '%"+word+"%' "
+					+ " OR contents like '%"+word+"%' "
+					+ " order by no asc";
+				
+			}else {
+				sql = "select * from community"
+					+ " where id like '%"+word+"%' "
+					+ " order by no asc";
+			}
+		
+		}else {
+			
+			sql = "select * from community"
+				+ " order by no asc";
+		}
+		
+		try {
+			connection=dataSource.getConnection();
+			
+			preparedStatement = connection.prepareStatement(sql);
+			resultSet = preparedStatement.executeQuery();
+			
+			while(resultSet.next()) {
+				CommunityVO vo = new CommunityVO(resultSet.getInt("no"),
+												resultSet.getString("id"),
+												resultSet.getString("title"),
+												resultSet.getString("contents"),
+												resultSet.getInt("views"),
+												resultSet.getTimestamp("post_date"));
+				list.add(vo);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			release();
+		}
+		return list;
 	}
 
 }

@@ -76,15 +76,15 @@ public class CommunityController extends HttpServlet {
 	
 		ArrayList<CommunityVO> communities = communityService.getCommunityList();
 		
-		// String nowPage = request.getParameter("nowPage");
-		// String nowBlock = request.getParameter("nowBlock");
+		String nowPage = request.getParameter("nowPage");
+		String nowBlock = request.getParameter("nowBlock");
 
 		request.setAttribute("communities", communities);
 		request.setAttribute("center", "communities/list.jsp");
-		request.setAttribute("admin", loginid);
-		
-		nextPage = "/main.jsp";
-		
+		request.setAttribute("nowPage", nowPage);
+		request.setAttribute("nowBlock", nowBlock);
+
+		nextPage = "/main.jsp";	
 	}
 
 	private void openCommunityWriteView(HttpServletRequest request, HttpServletResponse response)
@@ -159,10 +159,21 @@ public class CommunityController extends HttpServlet {
 	
 	private void processCommunitySearch(HttpServletRequest request, HttpServletResponse response) {
 
+		HttpSession session = request.getSession();
+		String loginid = (String)session.getAttribute("id");
+		
 		String key = request.getParameter("key");
 		String word = request.getParameter("word");
 		
-		communityService.processCommuniitySearch(key, word);
+		System.out.println(key);
+		System.out.println(word);
+		
+		ArrayList<CommunityVO> communities = communityService.processCommunitySearch(key, word);
+
+		request.setAttribute("communities", communities);
+		request.setAttribute("center", "communities/list.jsp");
+		
+		nextPage = "/main.jsp";
 		
 	}
 }

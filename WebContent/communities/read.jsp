@@ -8,8 +8,7 @@
 	
 	CommunityVO vo = (CommunityVO)request.getAttribute("vo");
 	
-	//String id = (String) session.getAttribute("id");
-	String id = "admin";
+	String id = (String) session.getAttribute("userId");
 %>
     
 <!DOCTYPE html>
@@ -68,7 +67,7 @@
 			<td colspan="3">
 				<input type="button" value="목록" id="list" onclick="onListButton()">
 				<%
-				if (id.equals(vo.getId())) {
+				if (id != null && id.equals(vo.getId())) {
 					%>
 					<input type="submit" value="수정" id="update" onclick="onUpdateButton()">
 					<input type="submit" value="삭제" id="delete" onclick="onDeleteButton()">
@@ -97,7 +96,7 @@
 			<td colspan="3">
 				<input type="button" value="목록" id="list" onclick="onListButton()">
 				<%
-				if (id.equals(vo.getId())) {
+				if (id != null && id.equals(vo.getId())) {
 					%>
 					<input type="button" value="수정" id="update" onclick="onUpdateButton()">
 					<input type="button" value="삭제" id="delete" onclick="onDeleteButton()">
