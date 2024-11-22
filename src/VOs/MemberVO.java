@@ -3,7 +3,7 @@ package VOs;
 import java.sql.Timestamp;
 
 public class MemberVO {
-  
+
 	private String id;
 	private String name;
 	private String nickname;
@@ -14,13 +14,13 @@ public class MemberVO {
 
 	public MemberVO() {
 	}
-	
+
 	// join_date 없는 생성자
 	public MemberVO(String id, String name, String nickname, String phone, String address, String profile) {
 		this.id = id;
 		this.name = name;
 		this.nickname = nickname;
-		this.phone = phone; 
+		this.phone = phone;
 		this.address = address;
 		this.profile = profile;
 	}
@@ -36,15 +36,16 @@ public class MemberVO {
 		this.profile = profile;
 		this.join_date = join_date;
 	}
-	
-	// join_date, id 없는 대신 profile 포함된 정보수정 양식 생성자
-		public MemberVO(String profile,  String name, String nickname, String phone, String address) {
-			this.profile = profile;
-			this.name = name;
-			this.nickname = nickname;
-			this.phone = phone;
-			this.address = address;}
 
+	// join_date, id 없는 대신 profile 포함된 정보수정 양식 생성자
+	public MemberVO(String profile, String name, String nickname, String phone, String address) {
+		this.profile = profile;
+		this.name = name;
+		this.nickname = nickname;
+		this.phone = phone;
+		this.address = address;
+	}
+	
 	// Getters and Setters
 	public String getId() {
 		return id;
@@ -101,6 +102,5 @@ public class MemberVO {
 	public void setJoin_date(Timestamp join_date) {
 		this.join_date = join_date;
 	}
-	
 
 }

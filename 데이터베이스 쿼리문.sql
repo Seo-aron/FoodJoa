@@ -31,6 +31,14 @@ values ('review1', '리뷰자1', '리1', '01012345678', '부산시 부산진구'
 
 UPDATE member SET profile="test.png", name="관리자", nickname="고나리자1234", phone="01012341234", address="부산진구" WHERE id="admin";
 
+SELECT A.id, A.nickname, B.pictures, C.address, C.amount, C.delivered, C.refund
+FROM MEMBER A
+JOIN MEALKIT B
+ON A.ID = B.ID
+JOIN MEALKIT_ORDER C 
+ON B.ID = C.ID
+WHERE A.id='admin';
+
 -- -------------------------------------------------------------------------------------
 
 
@@ -152,8 +160,8 @@ select * from recipe_wishlist;
 -- -------------------------------------------------------------------------------------
 
 
--- mealkit ------------------------------------------------------------------------------
-DROP TABLE IF EXISTS mealkit;
+-- mealkit ----------------------------------------------------------
+DROP TABLE IF EXISTS mealkit;--------------------
 CREATE TABLE mealkit(
     no            int primary key auto_increment,
 	id            varchar(50) not null,

@@ -5,15 +5,15 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <%
-    request.setCharacterEncoding("UTF-8");
-    response.setContentType("text/html; charset=utf-8");
-    
-    String contextPath = request.getContextPath();
-    
-    MemberVO vo = (MemberVO) request.getAttribute("vo");    		
-    
-    String userId = (String) session.getAttribute("userId");
+request.setCharacterEncoding("UTF-8");
+response.setContentType("text/html; charset=utf-8");
 
+String contextPath = request.getContextPath();
+
+MemberVO vo = (MemberVO) request.getAttribute("vo");          
+
+
+String id = (String) session.getAttribute("id"); 
 %>
 <!DOCTYPE html>
 <html lang="ko">
