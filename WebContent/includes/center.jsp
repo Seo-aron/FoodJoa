@@ -145,11 +145,11 @@
     
    	<script type="text/javascript">   	
 		function onWishList() {
-			location.href = '<%= contextPath %>/Member/openWishList.me';
+			location.href = '<%= contextPath %>/Member/WishList.me';
 		}
 		
 		function onRecentList() {
-			location.href = '<%= contextPath %>/Member/openRecentList.me';
+			location.href = '<%= contextPath %>/Member/RecentList.me';
 		}
 		
 		function onCartList() {

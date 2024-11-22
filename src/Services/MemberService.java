@@ -9,6 +9,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -24,15 +26,21 @@ import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 import Common.FileIOController;
 import Common.NaverLoginAPI;
 import DAOs.MemberDAO;
+import DAOs.RecipeDAO;
 import VOs.MemberVO;
 
 public class MemberService {
 
-	private MemberDAO memberDAO;
+	  private MemberDAO memberDAO;
+	    private RecipeDAO recipeDAO; // RecipeDAO 객체 추가
 
-    public MemberService() {
-        memberDAO = new MemberDAO();
-    }
+	    public MemberService() {
+	        memberDAO = new MemberDAO(); // MemberDAO 초기화
+	        recipeDAO = new RecipeDAO(); // RecipeDAO 초기화
+	    }
+    
+
+
     
     //네이버 아이디 받아오기
     public  String insertNaverMember(HttpServletRequest request, HttpServletResponse response)throws IOException {
@@ -348,5 +356,9 @@ public class MemberService {
 	    }
 	}
 
+	  // 추가: 사용자의 위시리스트를 가져오는 메소드
+    public ArrayList<HashMap<String, Object>> getWishList(String userId) {
+        return recipeDAO.selectWishListInfos(userId); // RecipeDAO의 메소드 호출
+    }
 
 }

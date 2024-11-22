@@ -7,6 +7,8 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -74,9 +76,10 @@ public class MemberController extends HttpServlet {
 		case "/logout.me" : processMemberLogOut(request, response); return;
 		case "/deleteMember.me": openDeleteMember(request, response); break;
 		case "/deleteMemberPro.me": processDeleteMember(request, response); return;
-		case "/openWishList.me": openWishList(request, response); break;
-		case "/openRecentList.me": openRecentList(request, response); break;
+		case "/WishList.me": openWishList(request, response); break;
+		case "/RecentList.me": openRecentList(request, response); break;
 		case "/sendMyMealkit.me":openSendView(request, response); break;
+		case "/cartList.me" : openCartList(request, response); break;
 		// -----
 		case "/mypagemain.me": openMypagemainView(request, response); break;		
 		case "/update.me": openMemberUpdateView(request, response); break;
@@ -88,6 +91,22 @@ public class MemberController extends HttpServlet {
 
 		RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
 		dispatcher.forward(request, response);
+	}
+
+	private void openCartList(HttpServletRequest request, HttpServletResponse response) {
+		 // 서비스에서 위시리스트 정보 가져오기
+	    String userId = request.getParameter("userId");  // 사용자 ID를 파라미터로 받음
+	    MemberService memberService = new MemberService();
+	    ArrayList<HashMap<String, Object>> wishList = memberService.getWishList(userId);  // 위시리스트 정보를 가져옴
+	    
+	    // 위시리스트 정보를 request에 담기
+	    request.setAttribute("wishList", wishList);
+	    
+	    // center 부분에 해당하는 JSP 파일 설정
+	    request.setAttribute("center", "members/cartlist.jsp");
+	    
+	    // 메인 페이지로 이동
+	    nextPage = "/main.jsp";
 	}
 
 	private void openMemberJoinView(HttpServletRequest request, HttpServletResponse response)
