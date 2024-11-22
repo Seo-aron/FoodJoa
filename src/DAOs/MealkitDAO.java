@@ -163,14 +163,17 @@ public class MealkitDAO {
 		String sql = "INSERT INTO mealkit(id, title, contents, category, price, stock, pictures, orders, origin, "
 				+ "views, soldout, post_date) VALUES(?,?,?,?,?,?,?,?,?,0,0,NOW())";
 		
+		dbConnector.executeUpdate(sql, vo.getId(), vo.getTitle(), vo.getContents(), vo.getCategory(),
+	            vo.getPrice(), vo.getStock(), vo.getPictures(), vo.getOrders(), vo.getOrigin());
+		
 		try {
-				ResultSet rs = dbConnector.executeInsertAndGetGeneratedKeys( sql,
-		            vo.getId(), vo.getTitle(), vo.getContents(), vo.getCategory(),
-		            vo.getPrice(), vo.getStock(), vo.getPictures(), vo.getOrders(), vo.getOrigin()
-		        );
-			 if (rs.next()) {
-			     no = rs.getInt(1);
-			 }
+			sql = "SELECT no FROM mealkit WHERE id = ? ORDER BY post_date DESC LIMIT 1";
+			
+			ResultSet rs = dbConnector.executeQuery(sql, vo.getId());
+			
+			if (rs.next()) {
+				no = rs.getInt(1);
+			}
 		} catch (Exception e) {
 			System.out.println("MealkitDAO - insertNewContent 예외발생 ");
 		}

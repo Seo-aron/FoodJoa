@@ -74,7 +74,7 @@
                 <tr>
 				    <th>사진 추가</th>
 				    <td>
-				        <input type="file" name="pictures[]" accept="image/*" required id="thumbnail"><br>
+				        <input type="file" name="pictures" accept="image/*" required id="thumbnail"><br>
 				        <div id="imageContainer"></div>
 				        <button type="button" id="addImage">추가 사진</button>
 				    </td>

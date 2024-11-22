@@ -20,6 +20,8 @@ import org.apache.commons.io.FileUtils;
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
+import Common.FileIOController;
+import Common.StringParser;
 import DAOs.MealkitDAO;
 import VOs.MealkitOrderVO;
 import VOs.MealkitReviewVO;
@@ -35,44 +37,6 @@ public class MealkitService {
 		mealkitDAO = new MealkitDAO();
 	}
 	
-	private synchronized void moveProfile(String srcPath, String destinationPath, String fileName) throws IOException {
-	    if (fileName == null || fileName.isEmpty()) return;
-
-	    String fileSeparator = File.separator;
-	    File srcFile = new File(srcPath + fileSeparator + fileName);
-	    File destDir = new File(destinationPath);
-
-	    // 대상 디렉토리가 존재하지 않으면 생성
-	    if (!destDir.exists()) {
-	        destDir.mkdirs();
-	    }
-
-	    File destFile = new File(destDir, fileName);
-	    if (destFile.exists()) {
-	        System.out.println("파일이 이미 대상 디렉토리에 존재합니다: " + destFile.getAbsolutePath());
-	    } else {
-	        if (srcFile.exists()) {
-	            // 파일 이동
-	            FileUtils.moveToDirectory(srcFile, destDir, true);
-	            System.out.println("파일이 성공적으로 이동되었습니다: " + destFile.getAbsolutePath());
-	        } else {
-	            System.out.println("원본 파일이 존재하지 않습니다: " + srcFile.getAbsolutePath());
-	        }
-	    }
-	}
-
-	// 경로가 없으면 디렉토리를 생성하는 메서드
-	private void createDirectoryIfNotExists(String path) {
-	    File directory = new File(path);
-	    if (!directory.exists()) {
-	        if (directory.mkdirs()) {
-	            System.out.println("폴더 생성 성공: " + path);
-	        } else {
-	            System.out.println("폴더 생성 실패: " + path);
-	        }
-	    }
-	}
-
 	public ArrayList<MealkitVO> getMealkitsList() {
 		
 		return mealkitDAO.selectMealkits();
@@ -119,44 +83,31 @@ public class MealkitService {
 	    ServletContext application = request.getServletContext();
 	    String path = application.getRealPath("/images/"); // 업로드된 파일이 저장될 기본 경로
 	    int maxSize = 1024 * 1024 * 1024;
-
-	    // 임시 디렉토리와 저장 디렉토리 경로 생성
-	    String tempPath = path + "temp/";
-	    String destinationBasePath = path + "mealkit/thumbnails/";
-
-	    // 디렉토리 생성 로직
-	    createDirectoryIfNotExists(tempPath);
-	    createDirectoryIfNotExists(destinationBasePath);
-
+	    
 	    // MultipartRequest로 파일 업로드 처리
-	    MultipartRequest multipartRequest = new MultipartRequest(request, tempPath, maxSize, "UTF-8",
+	    MultipartRequest multipartRequest = new MultipartRequest(request, path + "temp/", maxSize, "UTF-8",
 	            new DefaultFileRenamePolicy());
-
-	    // 업로드된 파일 이름을 가져옴
-	    List<String> uploadedFileNames = new ArrayList<>();
-
-	    // MultipartRequest의 fileNames() 메서드를 사용해 업로드된 파일들을 가져오기
-	    Enumeration<?> fileNames = multipartRequest.getFileNames();
-	    while (fileNames.hasMoreElements()) {
-	        String inputName = (String) fileNames.nextElement(); // input 태그의 name 속성
-	        String uploadedFileName = multipartRequest.getFilesystemName(inputName); // 저장된 파일 이름
-	        if (uploadedFileName != null) {
-	            uploadedFileNames.add(uploadedFileName);
-	        }
-	    }
 
 	    String id = multipartRequest.getParameter("id");
 	    String title = multipartRequest.getParameter("title");
+	    String pictures = multipartRequest.getParameter("pictures");
 	    String contents = multipartRequest.getParameter("contents");
 	    int category = Integer.parseInt(multipartRequest.getParameter("category"));
 	    String price = multipartRequest.getParameter("price");
 	    int stock = Integer.parseInt(multipartRequest.getParameter("stock"));
 	    String orders = multipartRequest.getParameter("orders");
-	    String origin = multipartRequest.getParameter("origin");
+	    String origin = multipartRequest.getParameter("origin");        
 
+	    List<String> fileNames = StringParser.splitString(pictures);
+	    
+	    String allPictures = String.join(",", fileNames);
+
+	    System.out.println("pictures : " + allPictures);
+	    
 	    MealkitVO vo = new MealkitVO();
 	    vo.setId(id);
 	    vo.setTitle(title);
+	    vo.setPictures(allPictures);
 	    vo.setContents(contents);
 	    vo.setCategory(category);
 	    vo.setPrice(price);
@@ -164,23 +115,16 @@ public class MealkitService {
 	    vo.setOrders(orders);
 	    vo.setOrigin(origin);
 
-	    if (!uploadedFileNames.isEmpty()) {
-	        String pictures = String.join(",", uploadedFileNames);
-	        vo.setPictures(pictures); // MealkitVO에 파일 이름 설정
-	    } else {
-	        vo.setPictures(null); // 파일이 업로드되지 않은 경우
-	    }
-
 	    int no = mealkitDAO.insertNewContent(vo);
-
-	    // 파일 이동: 임시 디렉토리에서 실제 디렉토리로 이동
-	    String destinationPath = destinationBasePath + String.valueOf(no);
-	    createDirectoryIfNotExists(destinationPath); // 이동할 디렉토리가 없으면 생성
-
-	    for (String fileName : uploadedFileNames) {
-	        moveProfile(tempPath, destinationPath, fileName);
-	    }
-
+	    
+        for(String fileName : fileNames) {
+    		
+    		String srcPath = path + "temp" + File.separator;
+    	    String destinationPath = path + "mealkit" + File.separator + "thumbnails" + File.separator + no + File.separator + id;
+    		
+    		FileIOController.moveProfile(srcPath, destinationPath, fileName);
+        }
+		
 	    PrintWriter printWriter = response.getWriter();
 	    if (no > 0) {
 	        printWriter.print(no);
@@ -194,16 +138,14 @@ public class MealkitService {
 	public void setWriteReview(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 	    ServletContext application = request.getServletContext();
-	    String path = application.getRealPath("/images/mealkit/");
-	    int maxSize = 1024 * 1024 * 10;
-
-	    String tempPath = path + "temp/";
-	    createDirectoryIfNotExists(tempPath);
 	    
-	    MultipartRequest multipartRequest = new MultipartRequest(request, tempPath, maxSize, "UTF-8", new DefaultFileRenamePolicy());
+	    String path = application.getRealPath("/images/");
+	    int maxSize = 1024 * 1024 * 1024;
 
-	    String uploadedFileName = multipartRequest.getFilesystemName("pictures");
-	    String finalPicturePath = null;
+	    MultipartRequest multipartRequest = new MultipartRequest(request, path + "temp/", maxSize, "UTF-8",
+				new DefaultFileRenamePolicy());
+	    
+	    String fileName = multipartRequest.getOriginalFileName("pictures");
 
 	    int no = Integer.parseInt(multipartRequest.getParameter("mealkit_no"));
 	    String id = multipartRequest.getParameter("id");
@@ -215,22 +157,20 @@ public class MealkitService {
 	    vo.setMealkitNo(no);
 	    vo.setContents(contents);
 	    vo.setRating(rating);
-	    vo.setPictures(uploadedFileName);
+	    vo.setPictures(fileName);
 
-	    int review_no = mealkitDAO.insertNewReview(vo);
+	    int reviewNo = mealkitDAO.insertNewReview(vo);
 	    
-	    if (uploadedFileName != null) {
-	        String destinationPath = path + "review" + "/" + review_no + "/";
-	        createDirectoryIfNotExists(destinationPath);
-
-	        moveProfile(tempPath, destinationPath, uploadedFileName);
-	        finalPicturePath = "review" + "/" + review_no + "/" + uploadedFileName;
-	    }
+	    String srcPath = path + "\\temp\\";
+		String destinationPath = path + "\\mealkit\\reviews\\" + String.valueOf(reviewNo);
+		
+		FileIOController.moveProfile(srcPath, destinationPath, fileName);
+		
 
 	    System.out.println("사진이름" + vo.getPictures());
 	    
 	    PrintWriter printWriter = response.getWriter();
-	    if (review_no > 0) {
+	    if (reviewNo > 0) {
 	    	String contextPath = request.getContextPath();
 	    	
 	        printWriter.println("<script>");
@@ -278,30 +218,20 @@ public class MealkitService {
 
 	public void updateMealkit(HttpServletRequest request, HttpServletResponse response) throws IOException {
 	    ServletContext application = request.getServletContext();
+	    
 	    String path = application.getRealPath("/images/");
 	    int maxSize = 1024 * 1024 * 1024;
-	    
-	    String srcPath = path + "/temp/";
-
-	    createDirectoryIfNotExists(srcPath);
 	    
 	    MultipartRequest multipartRequest = new MultipartRequest(request, path + "temp/", maxSize, "UTF-8",
 	            new DefaultFileRenamePolicy());
 
-	    List<String> uploadedFileNames = new ArrayList<>();
-	    Enumeration<?> fileNames = multipartRequest.getFileNames();
-	    while (fileNames.hasMoreElements()) {
-	        String inputName = (String) fileNames.nextElement();
-	        String uploadedFileName = multipartRequest.getFilesystemName(inputName);
-	        if (uploadedFileName != null) {
-	            uploadedFileNames.add(uploadedFileName);
-	        } else {
-	            System.out.println("파일 업로드 실패: " + inputName);
-	        }
-	    }
-
+	    String originFileName = multipartRequest.getParameter("thumbnail-origin");
+		String fileName = multipartRequest.getOriginalFileName("file");
+	    
 	    int no = Integer.parseInt(multipartRequest.getParameter("no"));
+	    String id = multipartRequest.getParameter("id");
 	    String title = multipartRequest.getParameter("title");
+	    String pictures = multipartRequest.getParameter("pictures");
 	    String contents = multipartRequest.getParameter("contents");
 	    String price = multipartRequest.getParameter("price");
 	    String origin = multipartRequest.getParameter("origin");
@@ -310,7 +240,9 @@ public class MealkitService {
 
 	    MealkitVO vo = new MealkitVO();
 	    vo.setNo(no);
+	    vo.setId(id);
 	    vo.setTitle(title);
+	    vo.setPictures(pictures);
 	    vo.setContents(contents);
 	    vo.setPrice(price);
 	    vo.setStock(stock);
@@ -318,27 +250,21 @@ public class MealkitService {
 	    vo.setOrigin(origin);
 	    
 	    MealkitVO mealkitvo = mealkitDAO.getMealkitByNo(no);
-	    vo.setPictures(mealkitvo.getPictures());
-
-	    if (!uploadedFileNames.isEmpty()) {
-	        String pictures = String.join(",", uploadedFileNames);
-	        vo.setPictures(pictures);
-	    } else {
-	        vo.setPictures(mealkitvo.getPictures());
-	    }
 
 	    no = mealkitDAO.updateMealkit(vo);
 
-	    String destinationPath = path + "/mealkit/thumbnails/" + no;
-	    
-	    for (String fileName : uploadedFileNames) {
-	        File srcFile = new File(srcPath + fileName);
-	        if (srcFile.exists()) {
-	            moveProfile(srcPath, destinationPath, fileName);
-	        } else {
-	            System.out.println("파일 이동 실패: " + fileName);
-	        }
-	    }
+	    List<String> fileNames = StringParser.splitString(pictures);
+        
+        for(String file : fileNames) {
+        	if (fileName != null && !fileName.equals("")) {
+        		String srcPath = path + "\\temp\\";
+	    		String destinationPath = path + "\\mealkit\\thumbnails\\" + String.valueOf(no) + "\\" + id;
+			
+	    		FileIOController.deleteFile(destinationPath, originFileName);
+    			FileIOController.moveProfile(srcPath, destinationPath, file);	 		
+        	}
+    	}
+
 	}
 
 	public Map<Integer, Float> getAllRatingAvr(ArrayList<MealkitVO> mealkits) {

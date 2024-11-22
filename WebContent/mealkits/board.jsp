@@ -43,7 +43,7 @@
 		    <ul class="bxslider">
 		        <c:forEach var="picture" items="${fn:split(mealkit.pictures, ',')}">
 		            <li>
-		                <img src="<%= contextPath %>/images/mealkit/thumbnails/${mealkit.no}/${picture}" title="${picture}" />
+		                <img src="<%= contextPath %>/images/mealkit/thumbnails/${mealkit.no}/${mealkit.id }/${picture}" title="${picture}" />
 		            </li>
 		        </c:forEach>
 		    </ul>

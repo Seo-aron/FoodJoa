@@ -18,32 +18,6 @@
     <link rel="stylesheet" type="text/css" href="<%=contextPath%>/css/mealkit/write.css">
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
     <script>
-        // 사진 추가 관련 
-        $(document).ready(function() {
-            let pictureCount = 1;
-            const maxPictures = 5;
-
-            $('#addImage').click(function() {
-                if (pictureCount < maxPictures) {
-                    const newInput = `
-                        <div class="image-row">
-                            <input type="file" name="pictures[]" accept="image/*" class="additionalInput">
-                            <button type="button" class="removeImage">삭제</button>
-                        </div>
-                    `;
-                    $('#imageContainer').append(newInput);
-                    pictureCount++;
-                } else {
-                    alert("최대 5장의 사진만 추가할 수 있습니다.");
-                }
-            });
-
-            // 추가된 사진 삭제 기능
-            $(document).on('click', '.removeImage', function() {
-                $(this).closest('.image-row').remove();
-                pictureCount--;
-            });
-        });
     </script>
  
 </head>
@@ -67,9 +41,11 @@
                 <tr>
 				    <th>사진 추가</th>
 				    <td>
-				        <input type="file" name="pictures[]" accept="image/*" required id="thumbnail"><br>
-				        <div id="imageContainer"></div>
-				        <button type="button" id="addImage">추가 사진</button>
+				        <div id="imagePreview"></div>
+   						<input type="file" id="pictureFiles" name="pictureFiles" 
+							accept=".jpg,.jpeg,.png" multiple onchange="handleFileSelect(this.files)">
+						<button type="button" id="addFileBtn" onclick="triggerFileInput()">사진 추가</button>	
+						<input type="hidden" id="pictures" name="pictures">
 				    </td>
 				</tr>
                 <tr>
@@ -119,6 +95,8 @@
     </div>
     
     <script type="text/javascript">
+	    let selectedFiles = [];
+	    let selectedRealFiles = [];
     
 	    $(function() {
 	    	$(".write").click(function(event) {
@@ -171,15 +149,29 @@
 		    e.preventDefault();
 		  	
 		    setOrdersString();
+		    setPicturesString();
 		    
-		    var formData = new FormData($("#frmWrite")[0]);
+		    const formData = new FormData();
+		    formData.append('id', $("input[name='id']").val());
+		    formData.append('title', $("input[name='title']").val());
+		    formData.append('pictures', $("#pictures").val());
+		    formData.append('category', $("select[name='category']").val());
+		    formData.append('contents', $("textarea[name='contents']").val());
+		    formData.append('price', $("input[name='price']").val());
+		    formData.append('stock', $("input[name='stock']").val());
+		    formData.append('origin', $("input[name='origin']").val());
+		    formData.append('orders', $("#orders").val());
 
+		    selectedRealFiles.forEach((file, index) => {
+				formData.append('file' + index, file);
+			});
+		    
 		    $.ajax({
 		        url: "<%= contextPath %>/Mealkit/write.pro",
 		        type: "POST",
 		        data: formData,
-		        processData: false, // jQuery가 데이터를 자동으로 변환하지 않도록 설정
-		        contentType: false, // Content-Type을 자동으로 설정하도록
+		        processData: false,
+		        contentType: false,
 		        success: function(response) { 
 		            if (response > 0) {
 		                alert("글 작성이 성공적으로 완료되었습니다.");
@@ -222,6 +214,94 @@
 			console.log("result : " + result);
 			return result;
 		}
+		
+		function triggerFileInput() {
+	        if (selectedFiles.length >= 5) {
+	            alert("사진은 최대 5장까지 추가할 수 있습니다.");
+	            return;
+	        }
+	        document.getElementById('pictureFiles').click();
+	    }
+	    
+		function handleFileSelect(files) {
+	        const imagePreview = document.getElementById('imagePreview');
+
+	        Array.from(files).forEach(file => {
+	            if (file.type.startsWith('image/')) {
+	                let fileIdentifier = file.name + '-' + file.size;
+
+	                if (!selectedFiles.includes(fileIdentifier)) {
+	                    if (selectedFiles.length >= 5) {
+	                        alert("사진은 최대 5장까지 추가할 수 있습니다.");
+	                        return;
+	                    }
+
+	                    selectedFiles.push(fileIdentifier);
+	                    selectedRealFiles.push(file);
+
+	                    const reader = new FileReader();
+
+	                    reader.readAsDataURL(file);
+
+	                    reader.onload = function(e) {
+	                        const img = document.createElement('img');
+	                        img.src = e.target.result;
+
+	                        img.dataset.filename = file.name;
+	                        img.classList.add('preview_image');
+
+	                        img.addEventListener('click', function() {
+	                            imagePreview.removeChild(img);
+	                            removeSelectedFile(fileIdentifier);
+	                            document.getElementById('pictureFiles').value = '';
+	                        });
+
+	                        img.style.cursor = 'pointer';
+
+	                        imagePreview.appendChild(img);
+	                    }
+	                }
+	            }
+	        });
+
+	        document.getElementById('pictureFiles').value = '';
+	    }
+
+	    // 선택한 파일 제거
+	    function removeSelectedFile(fileIdentifier) {
+	        for (let i = 0; i < selectedFiles.length; i++) {
+	            if (selectedFiles[i] == fileIdentifier) {
+	                selectedFiles.splice(i, 1);
+	                selectedRealFiles.splice(i, 1);
+	                break;
+	            }
+	        }
+	    }
+
+	    function removeSelectedFile(fileIdentifier) {
+	        //selectedFiles = selectedFiles.filter(item => item !== fileIdentifier);
+	    	for (let i = 0; i < selectedFiles.length; i++) {
+	    		if (selectedFiles[i] == fileIdentifier) {
+	    			selectedFiles.splice(i, 1);
+	    			selectedRealFiles.splice(i, 1);
+	    			break;
+	    		}
+	    	}
+	    }
+
+	    function setPicturesString() {
+	    	let strings = [];
+
+	    	selectedFiles.forEach(fileIdentifier => {
+	    		// fileIdentifier는 "파일이름-파일크기" 형식
+	    		let fileName = fileIdentifier.split('-')[0]; // 파일 이름 부분만 추출
+	    		strings.push(fileName);
+	    	});
+
+	    	let pictures = combineStrings(strings);
+
+	    	document.getElementsByName('pictures')[0].value = pictures;
+	    }
 
     </script>
 </body>
