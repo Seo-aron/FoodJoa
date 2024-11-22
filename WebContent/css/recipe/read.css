@@ -136,8 +136,9 @@
 
 .review-contents {
 	width: 100%;
-	min-height: 400px;
+	min-height: 200px;
 	height: auto;
 	resize: none;
 	overflow-y: hidden;
+	white-space: pre-wrap;
 }

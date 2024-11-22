@@ -145,21 +145,61 @@ left join (
 left join member m on r.id=m.id 
 where r.no=59;
 
+-- 리뷰 별 멤버의 닉네임을 같이 조회
+SELECT r.*, m.nickname
+FROM recipe_review r 
+LEFT JOIN member m ON r.id=m.id
+WHERE recipe_no=28;
+
 drop table if exists recipe_wishlist;
 create table recipe_wishlist(
-	no 			int primary key auto_increment,
-    id 			varchar(50) not null,
-    recipe_no 	int not null, 
+	no 				int primary key auto_increment,
+    id 				varchar(50) not null,
+    recipe_no 		int not null, 
+    choice_date		timestamp not null, 
     
     FOREIGN KEY (id) REFERENCES member(id),
     FOREIGN KEY (recipe_no) REFERENCES recipe(no)
 );
 
-insert into recipe_wishlist(id, recipe_no) 
-values('admin', 1);
+insert into recipe_wishlist(id, recipe_no, choice_date) 
+values('admin', 1, CURRENT_TIMESTAMP),
+('admin', 2, CURRENT_TIMESTAMP),
+('admin', 3, CURRENT_TIMESTAMP),
+('admin', 4, CURRENT_TIMESTAMP),
+('admin', 5, CURRENT_TIMESTAMP),
+('admin', 47, CURRENT_TIMESTAMP);
 
 desc recipe_wishlist;
 select * from recipe_wishlist;
+
+SELECT 
+    recipeWithAvg.*,
+    m.nickname
+FROM recipe_wishlist wish
+LEFT JOIN (
+	SELECT r.*, COALESCE(avg_rating.average_rating, 0) AS average_rating 
+	FROM recipe r
+	LEFT JOIN (
+		SELECT review.recipe_no, AVG(rating) AS average_rating
+		FROM recipe_review review
+		GROUP BY recipe_no
+	) avg_rating ON r.no = avg_rating.recipe_no
+) recipeWithAvg ON wish.recipe_no = recipeWithAvg.no
+LEFT JOIN member m ON wish.id=m.id 
+WHERE wish.id='admin';
+
+select r.*, COALESCE(avg_rating.average_rating, 0) AS average_rating, m.nickname as nickname 
+from recipe r
+left join (
+	select recipe_no, avg(rating) as average_rating
+    from recipe_review
+    group by recipe_no
+) avg_rating on r.no = avg_rating.recipe_no
+left join member m on r.id=m.id 
+where r.category=1 
+order by r.post_date desc;
+
 
 -- -------------------------------------------------------------------------------------
 

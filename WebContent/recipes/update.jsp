@@ -26,6 +26,7 @@
 	<script src="<%= contextPath %>/js/recipe/update.js"></script>
 	<script src="https://cdn.tiny.cloud/1/dvxu8ag2amp0f6jzdha1igxdgal2cpo0waqtixb0z64yirx7/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+	<script src="<%= contextPath %>/js/common/common.js"></script>
 	
 	<style>
 		#container {			

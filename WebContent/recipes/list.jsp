@@ -62,7 +62,8 @@
 			<tr>
 				<td align="center">
 					<select>
-						<option></option>
+						<option>레시피 명</option>
+						<option>작성자</option>
 					</select>
 					<input type="text" name="search" placeholder="검색할 레시피를 입력하세요.">
 					<input type="button" name="search_button" value="검색">

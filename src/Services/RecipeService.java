@@ -161,11 +161,6 @@ public class RecipeService {
 	public double getRecipeRatingAvg(String recipeNo) { return recipeDAO.selectRecipeRatingAvg(Integer.parseInt(recipeNo)); }
 	public double getRecipeRatingAvg(int recipeNo) { return recipeDAO.selectRecipeRatingAvg(recipeNo); }
 	
-	public ArrayList<RecipeReviewVO> getRecipeReviewes(String recipeNo) {
-
-		return recipeDAO.selectRecipeReviews(recipeNo);
-	}
-	
 	public boolean checkRecipeReview(HttpServletRequest request) {
 		
 		HttpSession session = request.getSession();
@@ -175,8 +170,8 @@ public class RecipeService {
 	}
 	
 	public int processReviewWrite(HttpServletRequest request) throws ServletException, IOException {
-		
-		String id = "admin";
+
+		String id = (String) request.getSession().getAttribute("userId");
 		
 		ServletContext application = request.getServletContext();
 		
