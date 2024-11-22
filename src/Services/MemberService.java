@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -31,11 +32,6 @@ public class MemberService {
 
     public MemberService() {
         memberDAO = new MemberDAO();
-    }
-	
-    public boolean checkMemberId(HttpServletRequest request) {
-        String id = request.getParameter("id");
-        return memberDAO.isExistMemberId(id);
     }
     
     //네이버 아이디 받아오기
@@ -351,5 +347,6 @@ public class MemberService {
 	        request.setAttribute("error", "회원 정보를 찾을 수 없습니다.");
 	    }
 	}
+
 
 }

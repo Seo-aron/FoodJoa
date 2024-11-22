@@ -204,7 +204,7 @@
 	
 	<script type="text/javascript">
 		function onJoinButton() {
-			location.href = '<%= contextPath %>/Member/join.me';
+			location.href = '<%= contextPath %>/Member/snsjoin.me';
 		}
 		
 		function onLoginButton(){

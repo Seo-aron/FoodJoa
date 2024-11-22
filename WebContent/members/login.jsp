@@ -57,18 +57,6 @@
 		</table>
 		</div>
 	</center>
-	<%-- alertMessage가 있으면 알림창 띄우기 --%>
-<%
-    String alertMessage = (String) request.getAttribute("alertMessage");
-    if (alertMessage != null) {
-%>
-        <script type="text/javascript">
-            alert("<%= alertMessage %>");
-            location.href = "<%= request.getContextPath() %>/Member/join.me"; // 회원가입 페이지로 리디렉션
-        </script>
-<%
-    }
-%>
 
 </body>
 </html>

@@ -61,23 +61,21 @@ public class MemberController extends HttpServlet {
 		System.out.println("action : " + action);
 
 		switch (action) {
-		case "/join.me": openMemberJoinView(request, response); break;
-		case "/joinProGo.me": processMemberJoin(request, response); break; 
-		case "/joinPro.me": processJoinMain(request,response); break;  				
-		case "/joinIdCheck.me": checkMemberId(request, response); return;                
+		case "/snsjoin.me": openMemberJoinView(request, response); break; //sns회원가입화면
+		case "/joinPro.me": processMemberJoin(request, response); break; //정보 다 받고 찐 가입완료
+		case "/join.me": openJoinMain(request,response); break; //추가정보화면 				              
 		case "/naverjoin.me": handleNaverJoin(request, response); return;
 		case "/kakaojoin.me":handleKakaoJoin(request, response); return;	
 		case "/getUserProfile.me":NaverLoginAPI.handleNaverLogin(request, response); return;          
 		case "/login.me": openLoginView(request, response); break;
 		case "/naverlogin.me": processNaverLogin(request, response); return;
 		case "/kakaologin.me": processKakaoLogin(request, response); return;
-		case "/loginProGo.me": processMemberLogin(request, response); break;
-		case "/loginPro.me": nextPage = "/main.jsp"; break;
+		case "/loginPro.me": processMemberLogin(request, response); break;
 		case "/logout.me" : processMemberLogOut(request, response); return;
 		case "/deleteMember.me": openDeleteMember(request, response); break;
 		case "/deleteMemberPro.me": processDeleteMember(request, response); return;
-		case "/viewWishList.me": viewWishList(request, response); break;
-		case "/viewRecentList.me": viewRecentList(request, response); break;
+		case "/openWishList.me": openWishList(request, response); break;
+		case "/openRecentList.me": openRecentList(request, response); break;
 		case "/sendMyMealkit.me":openSendView(request, response); break;
 		// -----
 		case "/mypagemain.me": openMypagemainView(request, response); break;		
@@ -125,30 +123,17 @@ public class MemberController extends HttpServlet {
         nextPage = "/main.jsp";  // 회원가입 후 메인 페이지로 이동
     }
 
-    private void processJoinMain(HttpServletRequest request, HttpServletResponse response) {
+    private void openJoinMain(HttpServletRequest request, HttpServletResponse response) {
 		//request객체에 "members/join.jsp" 중앙화면 뷰 주소 바인딩
 		request.setAttribute("center", "members/join.jsp");		
 		nextPage = "/main.jsp";
-	}
-
-	// 아이디 중복 체크 처리
-	private void checkMemberId(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-
-		boolean result = memberService.checkMemberId(request);
-
-		PrintWriter out = response.getWriter();
-
-		out.write(result ? "not_usable" : "usable");
-
-		out.close();
 	}
 	
 	private void handleNaverJoin(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 	    String naverId = processNaverJoin(request, response);
 	    if (naverId != null) {
 	        request.getSession().setAttribute("userId", naverId);
-	        response.sendRedirect(request.getContextPath() + "/Member/joinPro.me");
+	        response.sendRedirect(request.getContextPath() + "/Member/join.me");
 	    }
 	}
 	
@@ -156,7 +141,7 @@ public class MemberController extends HttpServlet {
 	    String kakaoId = processKakaoJoin(request, response);
 	    if (kakaoId != null) {
 	        request.getSession().setAttribute("userId", kakaoId);
-	        response.sendRedirect(request.getContextPath() + "/Member/joinPro.me");
+	        response.sendRedirect(request.getContextPath() + "/Member/join.me");
 	    }
 	}
     private String processKakaoJoin(HttpServletRequest request, HttpServletResponse response)
@@ -168,7 +153,7 @@ public class MemberController extends HttpServlet {
         String code = request.getParameter("code");
         if (code == null || code.trim().isEmpty()) {
             System.out.println("인가 코드 없음");
-            response.sendRedirect(request.getContextPath() + "/Member/join.me"); // 로그인 페이지로 리디렉트
+            response.sendRedirect(request.getContextPath() + "/Member/snsjoin.me"); // 로그인 페이지로 리디렉트
             return null;
         }
 
@@ -178,7 +163,7 @@ public class MemberController extends HttpServlet {
 
             if (kakaoId == null || kakaoId.trim().isEmpty()) {
                 // 카카오 로그인 실패 시, 로그인 페이지로 리다이렉트
-                response.sendRedirect(request.getContextPath() + "/Member/join.me");
+                response.sendRedirect(request.getContextPath() + "/Member/snsjoin.me");
                 return null;
             }
 
@@ -207,7 +192,7 @@ public class MemberController extends HttpServlet {
 		// 네이버 아이디가 세션에 저장되지 않았거나 빈 값일 경우 처리
 		if (naverId == null || naverId.trim().isEmpty()) {
 			// 네이버 로그인 실패 시, 다시 네이버 로그인 페이지로 리다이렉트
-			response.sendRedirect(request.getContextPath() + "/Member/join.me");
+			response.sendRedirect(request.getContextPath() + "/Member/snsjoin.me");
 			return null;
 		}
 
@@ -233,6 +218,7 @@ public class MemberController extends HttpServlet {
         } else {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "잘못된 요청입니다.");
         }
+        
     }
 
 	private void processMemberLogOut(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -283,12 +269,14 @@ public class MemberController extends HttpServlet {
 		
 	}
 
-    private void viewWishList(HttpServletRequest request, HttpServletResponse response) {
+    private void openWishList(HttpServletRequest request, HttpServletResponse response) {
+    	
+    	
         request.setAttribute("center", "members/wishlist.jsp");
         nextPage = "/main.jsp";
     }
     
-    private void viewRecentList(HttpServletRequest request, HttpServletResponse response) {
+    private void openRecentList(HttpServletRequest request, HttpServletResponse response) {
         request.setAttribute("center", "members/recent.jsp");
         nextPage ="/main.jsp";
 	}
@@ -382,7 +370,7 @@ public class MemberController extends HttpServlet {
                       session.setAttribute("userId", userId);  // 로그인한 사용자의 아이디를 세션에 저장
                     // 회원 존재 시 메인 페이지로 리다이렉트
                     System.out.println("회원 존재 확인: " + userId);
-                    response.sendRedirect(request.getContextPath() + "/Member/loginPro.me"); // 메인 페이지로 리다이렉트
+                    response.sendRedirect(request.getContextPath() + "/main.jsp"); // 메인 페이지로 리다이렉트
                    
                   
                     return; // 리다이렉트 후 더 이상 코드를 실행하지 않도록 return

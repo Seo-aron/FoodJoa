@@ -82,27 +82,6 @@ public class MemberDAO {
 		return members;
 	}
 
-	// ID 중복 확인
-	public boolean isExistMemberId(String id) {
-		boolean result = false;
-		String sql = "SELECT COUNT(*) AS count FROM member WHERE id = ?";
-		ResultSet resultSet = null;
-
-		try {
-			resultSet = dbConnector.executeQuery(sql, id);
-			if (resultSet != null && resultSet.next()) {
-				int count = resultSet.getInt("count");
-				result = (count > 0);
-			}
-		} catch (Exception e) {
-			System.out.println("isExistMemberId 메소드에서 예외 발생");
-			e.printStackTrace();
-		} finally {
-			dbConnector.release();
-		}
-		return result;
-	}
-
 	// 네이버 아이디 저장
 	public void insertNaverMember(String naverId) throws SQLException {
 		String sql = "INSERT INTO member (id) VALUES (?)";
@@ -178,50 +157,6 @@ public class MemberDAO {
         return false;
     }
 
-
-	// 레시피 위시리스트에 레시피 추가
-	public boolean addRecipeToWishlist(String id, int recipeNo) throws SQLException {
-		String sql = "INSERT INTO recipe_wishlist (id, recipe_no) VALUES (?, ?)";
-		try {
-			int result = dbConnector.executeUpdate(sql, id, recipeNo);
-			return result > 0; // 성공하면 true, 실패하면 false
-		} finally {
-			dbConnector.release(); // 자원 해제
-		}
-	}
-
-	// 상품 위시리스트에 상품 추가
-	public boolean addMealkitToWishlist(String id, int mealkit_no) throws SQLException {
-		String sql = "INSERT INTO mealkit_wishlist (id, mealkit_no, type) VALUES (?, ?, ?)";
-		try {
-			int result = dbConnector.executeUpdate(sql, id, mealkit_no, type);
-			return result > 0; // 성공하면 true, 실패하면 false
-		} finally {
-			dbConnector.release(); // 자원 해제
-		}
-	}
-
-	// 레시피 위시리스트에서 레시피 삭제
-	public boolean removeRecipeFromWishlist(String id, int recipeNo) throws SQLException {
-		String sql = "DELETE FROM recipe_wishlist WHERE id = ? AND recipe_no = ?";
-		try {
-			int result = dbConnector.executeUpdate(sql, id, recipeNo);
-			return result > 0; // 성공하면 true, 실패하면 false
-		} finally {
-			dbConnector.release(); // 자원 해제
-		}
-	}
-
-	// 상품 위시리스트에서 상품 삭제
-	public boolean removeProductFromWishlist(String id, int mealkit_no) throws SQLException {
-		String sql = "DELETE FROM mealkit_wishlist WHERE id = ? AND product_no = ?";
-		try {
-			int result = dbConnector.executeUpdate(sql, id, mealkit_no);
-			return result > 0; // 성공하면 true, 실패하면 false
-		} finally {
-			dbConnector.release(); // 자원 해제
-		}
-	}
 
 	// 사용자 확인 (로그인용)
 	public int checkMember(String login_id, String login_name) {

@@ -60,12 +60,12 @@ long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
 				<img src="<%=contextPath%>/images/member/userProfiles/${member.id}/${member.profile}" alt="Profile Image">
 			</div>
 			<div class="profile-info">
-				<h2>${member.name}</h2>
+				<h2>${member.nickname}</h2>
 				<%
 				if (joinDate != null) {
 					%>
 					<p>
-						${member.name}님은 푸드조아와 함께한지 <strong><%=daysBetween%></strong>일째입니다!
+						${member.nickname}님은 푸드조아와 함께한지 <strong><%=daysBetween%></strong>일째입니다!
 					</p>
 					<%
 				} else {
