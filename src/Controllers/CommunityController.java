@@ -59,6 +59,7 @@ public class CommunityController extends HttpServlet {
 			case "/updatePro": processCommunityUpdate(request, response);return;
 			case "/deletePro": processCommunityDelete(request, response);return;	
 			case "/searchList" : processCommunitySearch(request, response);break;
+			case "/shareList": openShareList(request, response);break; 
 			
 			default:
 		}
@@ -67,6 +68,7 @@ public class CommunityController extends HttpServlet {
 		dispatcher.forward(request, response);
 		
 	}
+
 
 	private void openCommunityList(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -174,6 +176,10 @@ public class CommunityController extends HttpServlet {
 		request.setAttribute("center", "communities/list.jsp");
 		
 		nextPage = "/main.jsp";
+		
+	}
+	
+	private void openShareList(HttpServletRequest request, HttpServletResponse response) {
 		
 	}
 }
