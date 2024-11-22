@@ -159,30 +159,4 @@ public class DBConnector {
 
 		return resultSet;
 	}
-
-	// INSERT 이후 DB에 AUTO_INCREMENT된 값 (no)을 가져오는 함수
-	public ResultSet executeInsertAndGetGeneratedKeys(String sql, Object... params) {
-		
-	    release();
-
-	    try {
-	        connection = dataSource.getConnection();
-	        statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-
-	        for (int i = 0; i < params.length; i++) {
-	            if (params[i] instanceof String) statement.setString(i + 1, (String) params[i]);
-	            else if (params[i] instanceof Integer) statement.setInt(i + 1, (int) params[i]);
-	            else if (params[i] instanceof Float) statement.setFloat(i + 1, (float) params[i]);
-	            else if (params[i] instanceof Timestamp) statement.setTimestamp(i + 1, (Timestamp) params[i]);
-	        }
-
-	        statement.executeUpdate();
-	        resultSet = statement.getGeneratedKeys();
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        System.out.println("DBConnector - executeInsertAndGetGeneratedKeys 예외 발생");
-	    }
-
-	    return resultSet;
-	}
 }
