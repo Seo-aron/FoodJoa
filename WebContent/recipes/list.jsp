@@ -29,6 +29,8 @@
 		Integer.parseInt(request.getAttribute("currentBlock").toString());
 	
 	int firstRecipeIndex = currentPage * recipeCountPerPage;
+	
+	String id = (String) session.getAttribute("userId");
 %>
 
 <!DOCTYPE html>
@@ -69,7 +71,11 @@
 					<input type="button" name="search_button" value="검색">
 				</td>
 				<td align="center">
-					<input type="button" id="write" name="write" value="나만의 레시피 쓰기">
+					<%
+					if (id != null && !id.equals("")) {
+						%><input type="button" id="write" name="write" value="나만의 레시피 쓰기"><%
+					}
+					%>
 				</td>
 			</tr>
 		</table>
