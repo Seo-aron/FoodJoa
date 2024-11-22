@@ -17,15 +17,11 @@ response.setContentType("text/html; charset=utf-8");
 String contextPath = request.getContextPath();
 
 String userId = (String) session.getAttribute("userId");   
-//String id = "admin";
 
 MemberDAO memberDAO = new MemberDAO();
 
 // 가입 날짜 가져오기
 Timestamp joinDate = memberDAO.selectJoinDate(userId);
-
-// 프로필 사진 가져오기
-//String openProfile = memberDAO.bringProfile(profile);
 
 // Timestamp를 LocalDate로 변환
 LocalDate receivedDate = joinDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
@@ -60,12 +56,12 @@ long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
             <img src="<%=contextPath%>/images/member/userProfiles/${member.id}/${member.profile}" alt="Profile Image">
          </div>
          <div class="profile-info">
-            <h2>${member.name}</h2>
+            <h2>${member.nickname}</h2>
             <%
             if (joinDate != null) {
                %>
                <p>
-                  ${member.name}님은 푸드조아와 함께한지 <strong><%=daysBetween%></strong>일째입니다!
+                  ${member.nickname}님은 푸드조아와 함께한지 <strong><%=daysBetween%></strong>일째입니다!
                </p>
                <%
             } else {
@@ -99,13 +95,13 @@ long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
 
          </div>
       </div>
-
+      
       <!-- Info Sections -->
       <div class="info-section">
          <div>주문/배송조회</div>
          <div style="display: flex;">
             <span>주문건수 : 0</span> | <span>배송준비중 : 1</span> | <span>배송중 : 2</span> | <span>배송완료 : 0</span>
-            <a href="<%=contextPath%>/Member/myorder.me" style="margin-left: auto;">더보기</a>
+            <a href="<%=contextPath%>/Member/viewMyDelivery.me" style="margin-left: auto;">더보기</a>
          </div>
       </div>
 
@@ -130,7 +126,7 @@ long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
          </a>
       </div>
 
-      </script>
+ 
    </div>
 
    <script>

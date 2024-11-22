@@ -41,7 +41,7 @@ public class MemberDAO {
 		}
 		return result;
 	}
-	
+
 	public MemberVO selectMembers() {
 		MemberVO members = new MemberVO();
 		String sql = "SELECT * FROM member";
@@ -64,32 +64,26 @@ public class MemberDAO {
 	}
 
 	public MemberVO getMemberProfile(String userId) throws SQLException {
-	       MemberVO member = null;
-	       String sql = "SELECT * FROM member WHERE id=?";
-	       
-	       ResultSet resultSet = dbConnector.executeQuery(sql, userId);
-	       
-	       try {
-	           if (resultSet.next()) {
-	               member = new MemberVO(
-	                   resultSet.getString("id"), 
-	                   resultSet.getString("name"),
-	                   resultSet.getString("nickname"), 
-	                   resultSet.getString("phone"), 
-	                   resultSet.getString("address"),
-	                   resultSet.getString("profile"), 
-	                   resultSet.getTimestamp("join_date")
-	               );
-	           }
-	       } catch (SQLException e) {
-	           e.printStackTrace();
-	       } finally {
-	           dbConnector.release(); // 자원 해제
-	       }
+		MemberVO member = null;
+		String sql = "SELECT * FROM member WHERE id=?";
 
-	       return member; // 회원 반환
+		ResultSet resultSet = dbConnector.executeQuery(sql, userId);
+
+		try {
+			if (resultSet.next()) {
+				member = new MemberVO(resultSet.getString("id"), resultSet.getString("name"),
+						resultSet.getString("nickname"), resultSet.getString("phone"), resultSet.getString("address"),
+						resultSet.getString("profile"), resultSet.getTimestamp("join_date"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			dbConnector.release(); // 자원 해제
+		}
+
+		return member; // 회원 반환
 	}
-	
+
 	// ID 중복 확인
 	public boolean isExistMemberId(String id) {
 		boolean result = false;
@@ -389,5 +383,19 @@ public class MemberDAO {
 		}
 
 		return result; // 삭제 성공 시 1 반환, 실패 시 0 반환
+	}
+
+	public MemberVO selectDelivers(String id) {
+		MemberVO deliver = null;
+		String sql = "SELECT A.id, A.nickname, B.pictures, C.address, C.amount, C.delivered, C.refund " + 
+				"FROM MEMBER A " + 
+				"JOIN MEALKIT B " + 
+				"ON A.ID = B.ID " + 
+				"JOIN MEALKIT_ORDER C " + 
+				"ON B.ID = C.ID " + 
+				"WHERE A.id=?"; 
+		ResultSet rs = dbConnector.executeQuery(sql, id);
+		return null;
+		
 	}
 }
