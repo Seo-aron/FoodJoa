@@ -128,8 +128,7 @@ public class MealkitDAO {
 	public int addMyMealkit(int no, int type) {
 		// 장바구니 1, 찜목록 0
 		String sql = "SELECT id FROM mealkit WHERE no = ?";
-		String id = null;
-		
+		String id = null;		
 		int result = 0;
 		
 		try {
@@ -151,6 +150,19 @@ public class MealkitDAO {
 		} else {
 			System.out.println("일치하는 ID가 없습니다.");
 		}
+		
+		// Member파트 요청사항 (id를 아직 안받아옴)
+		/* 
+		sql = "SELECT m.nickname, m.id, mk.title, mk.contents, mk.category, mk.price, mk.pictures, mk.post_date, "
+				+ "AVG(r.rating) AS avr_rating "
+			+ "FROM member m "
+			+ "JOIN mealkit mk ON m.id = mk.id "
+			+ "JOIN mealkit_review r ON mk.no = r.mealkit_no "
+			+ "WHERE m.id = ? "
+			+ "GROUP BY m.nickname, m.id, mk.title, mk.contents, mk.category, mk.price, mk.pictures, mk.post_date";
+			
+		dbConnector.executeQuery(sql, id);
+		*/
 		
 		dbConnector.release();
 		
