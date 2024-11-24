@@ -5,9 +5,11 @@ import java.sql.Timestamp;
 public class CommunityShareVO {
 	private int no;
 	private String id;
+	private String thumbnail;
 	private String title;
 	private String contents;
-	private String address;
+	private double lat;
+	private double lng;
 	private int type;
 	private int views;
 	private Timestamp postDate;
@@ -16,20 +18,31 @@ public class CommunityShareVO {
 
 	}
 
-	public CommunityShareVO(int no, String id, String title, String contents, String address, int type, int views) {
-		this.no = no;
-		this.id = id;
-		this.title = title;
-		this.contents = contents;
-		this.address = address;
-		this.type = type;
-		this.views = views;
+	public CommunityShareVO(int no, String id, String thumbnail, String title, String contents, double lat, double lng,
+			int type, int views, Timestamp postDate) {
+
+		this(no, id, thumbnail, title, contents, lat, lng, type, views);
+		this.postDate = postDate;
 	}
 
-	public CommunityShareVO(int no, String id, String title, String contents, String address, int type, int views,
-			Timestamp postDate) {
-		this(no, id, title, contents, address, type, views);
-		this.postDate = postDate;
+	public CommunityShareVO(int no, String id, String thumbnail, String title, String contents, double lat, double lng,
+			int type, int views) {
+
+		this(id, thumbnail, title, contents, lat, lng, type, views);
+		this.no = no;
+	}
+
+	public CommunityShareVO(String id, String thumbnail, String title, String contents, double lat, double lng,
+			int type, int views) {
+
+		this.id = id;
+		this.thumbnail = thumbnail;
+		this.title = title;
+		this.contents = contents;
+		this.lat = lat;
+		this.lng = lng;
+		this.type = type;
+		this.views = views;
 	}
 
 	public int getNo() {
@@ -48,6 +61,14 @@ public class CommunityShareVO {
 		this.id = id;
 	}
 
+	public String getThumbnail() {
+		return thumbnail;
+	}
+
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
+	}
+
 	public String getTitle() {
 		return title;
 	}
@@ -64,12 +85,20 @@ public class CommunityShareVO {
 		this.contents = contents;
 	}
 
-	public String getAddress() {
-		return address;
+	public double getLat() {
+		return lat;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setLat(double lat) {
+		this.lat = lat;
+	}
+
+	public double getLng() {
+		return lng;
+	}
+
+	public void setLng(double lng) {
+		this.lng = lng;
 	}
 
 	public int getType() {
@@ -95,6 +124,5 @@ public class CommunityShareVO {
 	public void setPostDate(Timestamp postDate) {
 		this.postDate = postDate;
 	}
-	
 }
 

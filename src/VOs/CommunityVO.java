@@ -15,17 +15,20 @@ public class CommunityVO {
 		
 	}
 
+	public CommunityVO(int no, String id, String title, String contents, int views,
+			Timestamp postDate) {
+
+		this(no, id, title, contents, views);
+		this.postDate = postDate;
+	}
+
 	public CommunityVO(int no, String id, String title, String contents, int views) {
+
 		this.no = no;
 		this.id = id;
 		this.title = title;
 		this.contents = contents;
 		this.views = views;
-	}
-
-	public CommunityVO(int no, String id, String title, String contents, int views, Timestamp postDate) {
-		this(no, id, title, contents, views);
-		this.postDate = postDate;
 	}
 
 	public int getNo() {
@@ -75,6 +78,5 @@ public class CommunityVO {
 	public void setPostDate(Timestamp postDate) {
 		this.postDate = postDate;
 	}
-	
 }
 

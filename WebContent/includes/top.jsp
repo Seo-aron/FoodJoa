@@ -190,7 +190,7 @@
 				<li><a href="#">자유게시판<span> ▼ </span></a>
 					<ul>
 						<li><a href="<%=contextPath%>/Community/list">지역별 게시판</a></li>
-						<li><a href="<%=contextPath%>/Community/">재료 나눔 게시판</a></li>
+						<li><a href="<%=contextPath%>/Community/shareList">재료 나눔 게시판</a></li>
 						<li><a href="#">같이 먹어요</a></li>
 					</ul></li>
 				<li><a href="<%= contextPath %>/Member/mypagemain.me">마이페이지</a></li>

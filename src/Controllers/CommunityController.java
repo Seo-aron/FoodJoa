@@ -3,6 +3,7 @@ package Controllers;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
@@ -59,7 +60,18 @@ public class CommunityController extends HttpServlet {
 			case "/updatePro": processCommunityUpdate(request, response);return;
 			case "/deletePro": processCommunityDelete(request, response);return;	
 			case "/searchList" : processCommunitySearch(request, response);break;
+			
 			case "/shareList": openShareList(request, response);break; 
+			case "/shareWrite": openShareWriteView(request, response);break; 
+			case "/shareWrite.pro":
+				if (!processShareWrite(request, response))
+					return;
+				break; 
+			case "/shareRead": openShareRead(request, response);break; 
+			case "/shareUpdate": openShareUpdateView(request, response);break; 
+			case "/shareUpdatePro": processShareUpdate(request, response);break; 
+			case "/shareDeletePro": processShareDelete(request, response);break;
+			case "/shareSearchList": processShareSearch(request, response); break;
 			
 			default:
 		}
@@ -68,7 +80,6 @@ public class CommunityController extends HttpServlet {
 		dispatcher.forward(request, response);
 		
 	}
-
 
 	private void openCommunityList(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -167,9 +178,6 @@ public class CommunityController extends HttpServlet {
 		String key = request.getParameter("key");
 		String word = request.getParameter("word");
 		
-		System.out.println(key);
-		System.out.println(word);
-		
 		ArrayList<CommunityVO> communities = communityService.processCommunitySearch(key, word);
 
 		request.setAttribute("communities", communities);
@@ -179,7 +187,87 @@ public class CommunityController extends HttpServlet {
 		
 	}
 	
-	private void openShareList(HttpServletRequest request, HttpServletResponse response) {
+	private void openShareList(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException{
 		
+		ArrayList<HashMap<String, Object>> shareList = communityService.getShareList();
+		
+		String nowPage = request.getParameter("nowPage");
+		String nowBlock = request.getParameter("nowBlock");
+		
+		request.setAttribute("shareList", shareList);
+		request.setAttribute("nowPage", nowPage);
+		request.setAttribute("nowBlock", nowBlock);
+		request.setAttribute("center", "communities/shareList.jsp");
+		
+		nextPage = "/main.jsp";
+	}
+	
+	private void openShareWriteView(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException{
+
+		request.setAttribute("center", "communities/shareWrite.jsp");
+		
+		nextPage = "/main.jsp";
+	}
+	
+	private boolean processShareWrite(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException{
+		
+		System.out.println("??????");
+		
+		int result = communityService.insertCommunityShare(request);
+		
+		if (result != -1) {
+
+			nextPage = "/Community/shareList";
+			
+			return true;
+		}
+		else {
+			PrintWriter out = response.getWriter();
+			
+			out.print("<script>");
+			
+			out.print("alert('게시물 등록에 실패했습니다.');");
+			out.print("location.href = '<%= request.getContextPath() %>/Community/shareList';");
+			
+			out.print("</script>");
+			
+			out.close();
+			
+			return false;
+		}
+	}
+	
+	private void openShareRead(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException{
+		
+	}
+	
+	private void openShareUpdateView(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException{
+
+	}
+	
+	private void processShareUpdate(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException{
+		
+	}
+	
+	private void processShareDelete(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+	}
+
+	private void processShareSearch(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		ArrayList<HashMap<String, Object>> shareList = communityService.getShareList();
+		
+		request.setAttribute("shareList", shareList);
+		request.setAttribute("center", "communities/shareList.jsp");
+		
+		nextPage = "/main.jsp";
 	}
 }

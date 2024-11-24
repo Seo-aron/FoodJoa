@@ -1,4 +1,4 @@
-
+/*
 let markers = [];
 
 function setNewMarker(point){
@@ -9,7 +9,6 @@ function setNewMarker(point){
 	console.log(point.toString());
 	
 	let newPoint = new naver.maps.LatLng(point._lat, point._lng);
-	console.log(newPoint);
 	
 	for (let i = 0; i < markers.length; i++ ){
 		markers[i].setMap(null);
@@ -20,6 +19,11 @@ function setNewMarker(point){
 	    map: map
 	});
 	markers.push(marker);
+}
+*/
+function setLatLngValue(point) {
+	$("#lat").val(point._lat);
+	$("#lng").val(point._lng);
 }
 
 var mapOptions = {
@@ -66,8 +70,9 @@ function searchCoordinateToAddress(latlng) {
             htmlAddresses.push((i+1) +'. '+ addrType +' '+ address);
         }
 
-		setNewMarker(latlng);
-		/*
+		//setNewMarker(latlng);
+		setLatLngValue(latlng);
+		
         infoWindow.setContent([
             '<div style="padding:10px;min-width:200px;line-height:150%;">',
             '<h4 style="margin-top:5px;">검색 좌표</h4><br />',
@@ -76,7 +81,6 @@ function searchCoordinateToAddress(latlng) {
         ].join('\n'));
 
         infoWindow.open(map, latlng);
-		*/
     });
 }
 
@@ -104,13 +108,11 @@ function searchAddressToCoordinate(address) {
             htmlAddresses.push('[지번 주소] ' + item.jibunAddress);
         }
 
-        if (item.englishAddress) {
-            htmlAddresses.push('[영문명 주소] ' + item.englishAddress);
-        }
-
         map.setCenter(point);
-		setNewMarker(point);
-		/*
+		
+		//setNewMarker(point);
+		setLatLngValue(latlng);
+
         infoWindow.setContent([
             '<div style="padding:10px;min-width:200px;line-height:150%;">',
             '<h4 style="margin-top:5px;">검색 주소 : '+ address +'</h4><br />',
@@ -119,7 +121,6 @@ function searchAddressToCoordinate(address) {
         ].join('\n'));
 
         infoWindow.open(map, point);
-		*/
     });
 }
 
@@ -142,7 +143,7 @@ function initGeocoder() {
 	    */
     });
 
-    $('#address').on('keydown', function(e) {
+    $('#naverAddress').on('keydown', function(e) {
         var keyCode = e.which;
 
         if (keyCode === 13) { // Enter Key
@@ -150,7 +151,7 @@ function initGeocoder() {
         }
     });
 
-    $('#submit').on('click', function(e) {
+    $('#naverSearch').on('click', function(e) {
         e.preventDefault();
 
         searchAddressToCoordinate($('#address').val());

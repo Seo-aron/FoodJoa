@@ -4,12 +4,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import VOs.CommunityShareVO;
 import VOs.CommunityVO;
+import VOs.MemberVO;
 
 public class CommunityDAO {
 
@@ -238,5 +241,165 @@ public class CommunityDAO {
 		}
 		return list;
 	}
+	
+	public ArrayList<HashMap<String, Object>> selectCommunityShareList() {
+		
+		ArrayList<HashMap<String, Object>> shareList = new ArrayList<HashMap<String, Object>>();
+		
+		try {
+			connection = dataSource.getConnection();
+			
+			String sql = "select c.*, m.profile, m.nickname "
+					+ "from community_share c "
+					+ "LEFT OUTER JOIN member m "
+					+ "ON c.id = m.id "
+					+ "ORDER BY c.post_date DESC";
+			preparedStatement = connection.prepareStatement(sql);
+			
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next()) {
+				HashMap<String, Object> data = new HashMap<String, Object>();
+				
+				CommunityShareVO share = new CommunityShareVO(
+						resultSet.getInt("no"), 
+						resultSet.getString("id"),
+						resultSet.getString("thumbnail"),
+						resultSet.getString("title"), 
+						resultSet.getString("contents"), 
+						resultSet.getDouble("lat"), 
+						resultSet.getDouble("lng"), 
+						resultSet.getInt("type"), 
+						resultSet.getInt("views"), 
+						resultSet.getTimestamp("post_date"));
+				
+				MemberVO member = new MemberVO();
+				member.setProfile(resultSet.getString("profile"));
+				member.setNickname(resultSet.getString("nickname"));
+				
+				data.put("share", share);
+				data.put("member", member);
+				
+				shareList.add(data);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			release();
+		}		
+		
+		return shareList;
+	}
 
+	public ArrayList<HashMap<String, Object>> selectSearchedShareList(String key, String word) {
+		
+		ArrayList<HashMap<String, Object>> shareList = new ArrayList<HashMap<String,Object>>();
+		String sql = "";
+
+		if(!word.equals("")) {			
+			if(key.equals("title")) {				
+				sql = "SELECT c.*, m.profile, m.nickname "
+						+ "FROM community_share c "
+						+ "LEFT OUTER JOIN member m "
+						+ "ON c.id = m.id "
+						+ "WHERE c.title like '%" + word + "%' "
+						+ "ORDER BY c.post_date DESC";				
+			}
+			else {
+				sql = "SELECT c.*, m.profile, m.nickname "
+						+ "FROM community_share c "
+						+ "LEFT OUTER JOIN member m "
+						+ "ON c.id = m.id "
+						+ "WHERE m.nickname like '%" + word + "%' "
+						+ "ORDER BY c.post_date DESC";
+			}
+		
+		}else {
+			sql = "select c.*, m.profile, m.nickname "
+					+ "from community_share c "
+					+ "LEFT OUTER JOIN member m "
+					+ "ON c.id = m.id "
+					+ "ORDER BY c.post_date DESC";
+		}
+		
+		try {
+			connection=dataSource.getConnection();
+			
+			preparedStatement = connection.prepareStatement(sql);
+			resultSet = preparedStatement.executeQuery();
+			
+			while(resultSet.next()) {
+				HashMap<String, Object> data = new HashMap<String, Object>();
+				
+				CommunityShareVO share = new CommunityShareVO(
+						resultSet.getInt("no"), 
+						resultSet.getString("id"), 
+						resultSet.getString("thumbnail"),
+						resultSet.getString("title"), 
+						resultSet.getString("contents"), 
+						resultSet.getDouble("lat"), 
+						resultSet.getDouble("lng"), 
+						resultSet.getInt("type"), 
+						resultSet.getInt("views"), 
+						resultSet.getTimestamp("post_date"));
+				
+				MemberVO member = new MemberVO();
+				member.setProfile(resultSet.getString("profile"));
+				member.setNickname(resultSet.getString("nickname"));
+				
+				data.put("share", share);
+				data.put("member", member);
+				
+				shareList.add(data);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			release();
+		}
+		
+		return shareList;
+	}
+
+	public int selectNoInsertedShare(CommunityShareVO share) {
+		
+		int no = 0;
+
+		try {
+			connection = dataSource.getConnection();
+			
+			String sql = "insert into community_share(id, thumbnail, title, contents, lat, lng, type, views, post_date) "
+					+ "values(?, ?, ?, ?, ?, ?, ?, 0, CURRENT_TIMESTAMP)";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, share.getId());
+			preparedStatement.setString(2, share.getThumbnail());
+			preparedStatement.setString(3, share.getTitle());
+			preparedStatement.setString(4, share.getContents());
+			preparedStatement.setDouble(5, share.getLat());
+			preparedStatement.setDouble(6, share.getLng());
+			preparedStatement.setInt(7, share.getType());
+			
+			preparedStatement.executeUpdate();
+			
+			sql = "SELECT no FROM comunity_share ORDER BY no DESC LIMIT 1";
+			preparedStatement = connection.prepareStatement(sql);
+			resultSet = preparedStatement.executeQuery();
+			
+			if (resultSet.next()) {
+				no = resultSet.getInt("no");
+			}
+			else {
+				no = -1;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			release();
+		}
+		
+		return no;
+	}
 }
