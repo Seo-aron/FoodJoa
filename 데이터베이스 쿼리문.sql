@@ -229,20 +229,22 @@ desc community;
 
 insert into community(id, title, contents, views, post_date)
 values
-('admin', 'seoul', 'eat', '3', now()),
-('admin', 'busan', 'meet', '100', now()),
-('admin', 'daegu', 'go', '500', now()),
-('admin', 'ulsan', 'do', '70', now()),
-('admin', 'gwangju', 'abcdefg', '90', now());
+('admin', 'seoul', 'eat', 3, now()),
+('admin', 'busan', 'meet', 100, now()),
+('admin', 'daegu', 'go', 500, now()),
+('admin', 'ulsan', 'do', 70, now()),
+('admin', 'gwangju', 'abcdefg', 90, now());
 -- --------------------------
 drop table community_share;
 
 create table community_share(
 	no int primary key auto_increment,
     id varchar(50) not null,
+    thumbnail varchar(255) not null,
     title varchar(50) not null,
-    contents text not null,
-    address text not null,
+    contents longtext not null,
+    lat double not null,
+    lng double not null,
     type tinyint not null,
     views int not null,
 	post_date timestamp not null,
@@ -252,5 +254,30 @@ create table community_share(
 
 select * from community_share;
 
+insert into community_share(id, thumbnail, title, contents, lat, lng, type, views, post_date)
+values
+('admin','test_thumbnail.png', 'seoul', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 0, 3, now()),
+('admin','test_thumbnail.png', 'seoul1', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 0, 3, now()),
+('admin','test_thumbnail.png', 'seoul2', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 0, 3, now()),
+('admin','test_thumbnail.png', 'seoul3', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 0, 3, now()),
+('admin','test_thumbnail.png', 'seoul4', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 0, 3, now());
 
+select c.*, m.profile, m.nickname 
+from community_share c 
+LEFT OUTER JOIN member m 
+ON c.id = m.id
+ORDER BY c.post_date DESC;
 
+SELECT c.*, m.profile, m.nickname 
+FROM community_share c 
+LEFT OUTER JOIN member m 
+ON c.id = m.id 
+WHERE c.title like '%eo%' 
+ORDER BY c.post_date DESC;
+
+SELECT c.*, m.profile, m.nickname 
+FROM community_share c 
+LEFT OUTER JOIN member m 
+ON c.id = m.id 
+WHERE m.nickname like '%나리%'
+ORDER BY c.post_date DESC;
