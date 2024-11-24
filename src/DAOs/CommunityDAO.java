@@ -383,7 +383,7 @@ public class CommunityDAO {
 			
 			preparedStatement.executeUpdate();
 			
-			sql = "SELECT no FROM comunity_share ORDER BY no DESC LIMIT 1";
+			sql = "SELECT no FROM community_share ORDER BY no DESC LIMIT 1";
 			preparedStatement = connection.prepareStatement(sql);
 			resultSet = preparedStatement.executeQuery();
 			
