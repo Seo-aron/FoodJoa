@@ -84,7 +84,11 @@
 					%>			
 					<tr align="center">
 						<td><%= share.getNo()%></td>
-						<td><a href="<%=contextPath%>/Community/read?no=<%=share.getNo()%>"> <%=share.getTitle()%></a></td>
+						<td>
+							<a href="<%=contextPath%>/Community/shareRead?no=<%=share.getNo()%>&nowPage=<%=nowPage%>&nowBlock=<%=nowBlock%>">
+								<%=share.getTitle()%>
+							</a>
+						</td>
 						<td><%= member.getNickname() %></td>
 						<td><%= share.getViews()%></td>
 						<td><%= new SimpleDateFormat("yyyy-MM-dd").format(share.getPostDate()) %></td>

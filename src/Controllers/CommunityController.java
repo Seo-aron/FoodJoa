@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,9 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.eclipse.jdt.internal.compiler.ast.ThrowStatement;
-
 import Services.CommunityService;
+import VOs.CommunityShareVO;
 import VOs.CommunityVO;
 
 @WebServlet("/Community/*")
@@ -69,7 +67,7 @@ public class CommunityController extends HttpServlet {
 				break; 
 			case "/shareRead": openShareRead(request, response);break; 
 			case "/shareUpdate": openShareUpdateView(request, response);break; 
-			case "/shareUpdatePro": processShareUpdate(request, response);break; 
+			case "/shareUpdatePro": processShareUpdate(request, response);return; 
 			case "/shareDeletePro": processShareDelete(request, response);break;
 			case "/shareSearchList": processShareSearch(request, response); break;
 			
@@ -214,8 +212,6 @@ public class CommunityController extends HttpServlet {
 	private boolean processShareWrite(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException{
 		
-		System.out.println("??????");
-		
 		int result = communityService.insertCommunityShare(request);
 		
 		if (result != -1) {
@@ -243,21 +239,47 @@ public class CommunityController extends HttpServlet {
 	private void openShareRead(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException{
 		
+		HashMap<String, Object> share = communityService.getCommunityShareMap(request);
+		
+		request.setAttribute("share", share);
+		request.setAttribute("nowBlock", request.getParameter("nowBlock"));
+		request.setAttribute("nowPage", request.getParameter("nowPage"));
+		request.setAttribute("center", "communities/shareRead.jsp");
+		
+		nextPage = "/main.jsp";
 	}
 	
 	private void openShareUpdateView(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException{
+		
+		CommunityShareVO share = communityService.getCommunityShare(request);
 
+		request.setAttribute("share", share);
+		request.setAttribute("nowBlock", request.getParameter("nowBlock"));
+		request.setAttribute("nowPage", request.getParameter("nowPage"));
+		request.setAttribute("center", "communities/shareUpdate.jsp");
+		
+		nextPage = "/main.jsp";
 	}
 	
 	private void processShareUpdate(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException{
 		
+		int result = communityService.processShareUpdate(request);
+		
+		PrintWriter out = response.getWriter();
+		
+		out.print(result);
+		
+		out.close();
 	}
 	
 	private void processShareDelete(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
+		int result = communityService.processShareDelete(request);
+
+		nextPage = "/Community/shareList";
 	}
 
 	private void processShareSearch(HttpServletRequest request, HttpServletResponse response)

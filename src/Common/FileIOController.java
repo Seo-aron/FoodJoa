@@ -28,11 +28,32 @@ public  class FileIOController {
         }
 	}
 	
-	public static synchronized void deleteFile(String path, String fileName) {
+	public static synchronized void moveFile(String srcPath, String destinationPath, String fileName, String separator)
+			throws IOException {
+		
+	    if (fileName == null || fileName.isEmpty()) return;
+
+        File srcFile = new File(srcPath + separator + fileName);
+        File destDir = new File(destinationPath);
+
+        if (!destDir.exists()) {
+            destDir.mkdirs();
+        }
+
+        File destFile = new File(destDir, fileName);
+        if (destFile.exists()) {
+            System.out.println("File already exists: " + destFile.getAbsolutePath());
+        } 
+        else {
+            FileUtils.moveToDirectory(srcFile, destDir, true);
+        }
+	}
+	
+	public static synchronized void deleteFile(String path, String fileName, String separator) {
 		
 		if (fileName == null || fileName.isEmpty()) return;
 		
-		File file = new File(path + "\\" + fileName);
+		File file = new File(path + separator + fileName);
 		
 		file.delete();
 	}

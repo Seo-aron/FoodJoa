@@ -402,4 +402,148 @@ public class CommunityDAO {
 		
 		return no;
 	}
+
+	public HashMap<String, Object> selectCommunityShareMap(String no) {
+		
+		HashMap<String, Object> share = new HashMap<String, Object>();
+		
+		try {
+			connection = dataSource.getConnection();
+			
+			String sql = "update community_share set views = views + 1 "
+						+ "where no='" + no + "'";
+			preparedStatement = connection.prepareStatement(sql);
+			
+			preparedStatement.executeUpdate();
+			
+			sql = "SELECT c.*, m.profile, m.nickname "
+					+ "FROM community_share c "
+					+ "LEFT OUTER JOIN member m "
+					+ "ON c.id = m.id "
+					+ "WHERE no=?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, Integer.parseInt(no));
+			
+			resultSet = preparedStatement.executeQuery();
+			
+			if(resultSet.next()) {
+				CommunityShareVO shareVO = new CommunityShareVO(
+						resultSet.getInt("no"), 
+						resultSet.getString("id"), 
+						resultSet.getString("thumbnail"),
+						resultSet.getString("title"), 
+						resultSet.getString("contents"), 
+						resultSet.getDouble("lat"), 
+						resultSet.getDouble("lng"), 
+						resultSet.getInt("type"), 
+						resultSet.getInt("views"), 
+						resultSet.getTimestamp("post_date"));
+				
+				MemberVO memberVO = new MemberVO();
+				memberVO.setNickname(resultSet.getString("nickname"));
+				memberVO.setProfile(resultSet.getString("profile"));
+				
+				share.put("share", shareVO);
+				share.put("member", memberVO);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			release();
+		}
+		
+		return share;
+	}
+
+	public CommunityShareVO selectCommunityShare(String no) {
+		
+		CommunityShareVO share = null;
+		
+		try {
+			
+			connection = dataSource.getConnection();
+			
+			String sql = "select * from community_share where no=?";
+			preparedStatement = connection.prepareStatement(sql);
+			
+			preparedStatement.setInt(1, Integer.parseInt(no));
+			
+			resultSet = preparedStatement.executeQuery();
+			
+			if(resultSet.next()) {
+				share = new CommunityShareVO(
+						resultSet.getInt("no"), 
+						resultSet.getString("id"), 
+						resultSet.getString("thumbnail"),
+						resultSet.getString("title"), 
+						resultSet.getString("contents"), 
+						resultSet.getDouble("lat"), 
+						resultSet.getDouble("lng"), 
+						resultSet.getInt("type"), 
+						resultSet.getInt("views"), 
+						resultSet.getTimestamp("post_date"));
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}finally {
+			release();
+		}
+		
+		return share;
+	}
+
+	public int updateCommunityShare(CommunityShareVO share) {
+		
+		int result = 0;
+		
+		try {
+			connection = dataSource.getConnection();
+			
+			String sql = "UPDATE community_share SET thumbnail=?, title=?, contents=?, lat=?, lng=?, type=? "
+					+ "WHERE no=? AND id=?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, share.getThumbnail());
+			preparedStatement.setString(2, share.getTitle());
+			preparedStatement.setString(3, share.getContents());
+			preparedStatement.setDouble(4, share.getLat());
+			preparedStatement.setDouble(5, share.getLng());
+			preparedStatement.setInt(6, share.getType());
+			preparedStatement.setInt(7, share.getNo());
+			preparedStatement.setString(8, share.getId());
+			
+			result = preparedStatement.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			release();
+		}
+
+		return result;
+	}
+
+	public int deleteCommunityShare(String no) {
+		
+		int result = 0;
+		
+		try {
+			connection = dataSource.getConnection();
+			
+			String sql = "DELETE FROM community_share WHERE no=?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, Integer.parseInt(no));
+			
+			result = preparedStatement.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			release();
+		}
+		
+		return result;
+	}
 }

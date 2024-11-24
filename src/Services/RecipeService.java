@@ -1,6 +1,7 @@
 package Services;
 
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,12 +56,14 @@ public class RecipeService {
 	
 	public int processRecipeWrite(HttpServletRequest request) throws ServletException, IOException {
 		
+		String separator = FileSystems.getDefault().getSeparator();
+		
 		ServletContext application = request.getServletContext();
-		
-		String path = application.getRealPath("/images/");
+
+		String path = application.getRealPath(separator + "images");
 		int maxSize = 1024 * 1024 * 1024;
-		
-		MultipartRequest multipartRequest = new MultipartRequest(request, path + "temp/", maxSize, "UTF-8",
+
+		MultipartRequest multipartRequest = new MultipartRequest(request, path + separator + "temp", maxSize, "UTF-8",
 				new DefaultFileRenamePolicy());
 		
 		String fileName = multipartRequest.getOriginalFileName("file");
@@ -83,32 +86,33 @@ public class RecipeService {
 		
 		int recipeNo = recipeDAO.selectInsertedRecipeNo(recipe);
 		
-		String srcPath = path + "\\temp\\";
-		String destinationPath = path + "\\recipe\\thumbnails\\" + String.valueOf(recipeNo);
+		String srcPath = path + separator + "temp";
+		String destinationPath = path + separator + "recipe" + separator + "thumbnails" + separator + String.valueOf(recipeNo);
 		
-		FileIOController.moveProfile(srcPath, destinationPath, fileName);
+		FileIOController.moveFile(srcPath, destinationPath, fileName, separator);
 		
 		return recipeNo;
 	}
 	
 	public int processRecipeUpdate(HttpServletRequest request) throws ServletException, IOException  {
+
+		String separator = FileSystems.getDefault().getSeparator();
 		
 		ServletContext application = request.getServletContext();
-		
-		String path = application.getRealPath("/images/");
+
+		String path = application.getRealPath(separator + "images");
 		int maxSize = 1024 * 1024 * 1024;
-		
-		MultipartRequest multipartRequest = new MultipartRequest(request, path + "temp/", maxSize, "UTF-8",
+
+		MultipartRequest multipartRequest = new MultipartRequest(request, path + separator + "temp", maxSize, "UTF-8",
 				new DefaultFileRenamePolicy());
 		
 		String originFileName = multipartRequest.getParameter("thumbnail-origin");
 		String fileName = multipartRequest.getOriginalFileName("file");
-		/* 로그인 완성 되면 구현
-			HttpSession session = request.getSession();
-			String id = session.getAttribute("id");
-		*/
+		
+		HttpSession session = request.getSession();
+		String id = (String) session.getAttribute("userId");
+		
 		int recipeNo = Integer.parseInt(multipartRequest.getParameter("no"));
-		String id = "admin";
 		
 		RecipeVO recipe = new RecipeVO();
 		recipe.setNo(recipeNo);
@@ -126,10 +130,10 @@ public class RecipeService {
 		int result = recipeDAO.updateRecipe(recipe);
 		
 		if (fileName != null && !fileName.equals("")) {
-			String srcPath = path + "\\temp\\";
-			String destinationPath = path + "\\recipe\\thumbnails\\" + String.valueOf(recipeNo);
+			String srcPath = path + separator + "temp";
+			String destinationPath = path + separator + "recipe" + separator + "thumbnails" + separator + String.valueOf(recipeNo);
 			
-			FileIOController.deleteFile(destinationPath, originFileName);
+			FileIOController.deleteFile(destinationPath, originFileName, separator);
 			FileIOController.moveProfile(srcPath, destinationPath, fileName);	
 		}
 		
@@ -137,6 +141,8 @@ public class RecipeService {
 	}
 	
 	public int processRecipeDelete(HttpServletRequest request) {
+
+		String separator = FileSystems.getDefault().getSeparator();
 		
 		String id = (String) request.getSession().getAttribute("userId");
 		String no = request.getParameter("no");
@@ -144,7 +150,7 @@ public class RecipeService {
 		int result = recipeDAO.deleteRecipe(id, no);
 		
 		if (result == 1) {
-			String path = request.getServletContext().getRealPath("/images/") + "\\recipe\\thumbnails\\" + no;
+			String path = request.getServletContext().getRealPath(separator + "images") + separator + "recipe" + separator + "thumbnails" + separator + no;
 			FileIOController.deleteDirectory(path);
 		}
 		
@@ -171,14 +177,16 @@ public class RecipeService {
 	
 	public int processReviewWrite(HttpServletRequest request) throws ServletException, IOException {
 
+		String separator = FileSystems.getDefault().getSeparator();
+		
 		String id = (String) request.getSession().getAttribute("userId");
 		
 		ServletContext application = request.getServletContext();
-		
-		String path = application.getRealPath("/images/");
+
+		String path = application.getRealPath(separator + "images");
 		int maxSize = 1024 * 1024 * 1024;
-		
-		MultipartRequest multipartRequest = new MultipartRequest(request, path + "temp/", maxSize, "UTF-8",
+
+		MultipartRequest multipartRequest = new MultipartRequest(request, path + separator + "temp", maxSize, "UTF-8",
 				new DefaultFileRenamePolicy());
 
 		String recipeNo = multipartRequest.getParameter("recipe_no");
@@ -192,8 +200,8 @@ public class RecipeService {
         
         for(String fileName : fileNames) {
     		
-    		String srcPath = path + "\\temp\\";
-    		String destinationPath = path + "\\recipe\\reviews\\" + String.valueOf(recipeNo) + "\\" + id;
+    		String srcPath = path + separator + "temp";
+    		String destinationPath = path + separator + "recipe" + separator + "reviews" + separator + String.valueOf(recipeNo) + separator + id;
     		
     		FileIOController.moveProfile(srcPath, destinationPath, fileName);
         }

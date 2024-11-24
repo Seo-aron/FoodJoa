@@ -1,29 +1,62 @@
-/*
-let markers = [];
 
-function setNewMarker(point){
-	console.log(typeof point);
-	console.log(point);
-	console.log(point._lat);
-	console.log(point._lng);
-	console.log(point.toString());
+let selectedRealFile;
+
+function onSubmit(event, contextPath) {
+	event.preventDefault();
 	
-	let newPoint = new naver.maps.LatLng(point._lat, point._lng);
-	
-	for (let i = 0; i < markers.length; i++ ){
-		markers[i].setMap(null);
+	if ($("#lat").val() == "" || $("#lng").val() == "") {
+		alert('지도 좌표를 선택해주세요');
+		return;
 	}
-
-	var marker = new naver.maps.Marker({
-	    position: point,
-	    map: map
+	
+	let no = $("#no").val();
+	let nowPage = $("#nowPage").val();
+	let nowBlock = $("#nowBlock").val();
+	
+	const formData = new FormData();
+	formData.append('no', no);
+	formData.append('originThumbnail', $("#origin-thumbnail").val());
+	formData.append('thumbnail', selectedRealFile);
+	formData.append('title', $("#title").val());	
+	formData.append('contents', $("#contents").val());	
+	formData.append('lat', $("#lat").val());	
+	formData.append('lng', $("#lng").val());	
+	formData.append('type', $("#type").val());	
+	formData.append('views', $("#views").val());	
+	
+	$.ajax({
+		url: contextPath + '/Community/shareUpdatePro',
+		type: "post",
+		data: formData,
+		processData: false,
+		contentType: false,
+		success: function(responsedData) {
+			
+			if (responsedData == "1") {
+				location.href = contextPath + '/Community/shareRead?no=' + no + '&nowPage=' + nowPage + '&nowBlock=' + nowBlock;
+			}
+			else {
+				alert('게시글 수정을 실패 했습니다.');
+			}
+		},
+		error: function(error) {
+			console.log(error);
+		}
 	});
-	markers.push(marker);
 }
-*/
+
+
+function handleFileSelect(files) {
+	
+	selectedRealFile = files[0];
+}
+
+
+//------ Naver Map API
+
 function setLatLngValue(point) {
-	$("#lat").val(point._lat);
-	$("#lng").val(point._lng);
+	$("#lat").val(point.y);
+	$("#lng").val(point.x);
 }
 
 var mapOptions = {
@@ -70,7 +103,6 @@ function searchCoordinateToAddress(latlng) {
             htmlAddresses.push((i+1) +'. '+ addrType +' '+ address);
         }
 
-		//setNewMarker(latlng);
 		setLatLngValue(latlng);
 		
         infoWindow.setContent([
@@ -110,9 +142,8 @@ function searchAddressToCoordinate(address) {
 
         map.setCenter(point);
 		
-		//setNewMarker(point);
-		setLatLngValue(latlng);
-
+		setLatLngValue(point);
+		
         infoWindow.setContent([
             '<div style="padding:10px;min-width:200px;line-height:150%;">',
             '<h4 style="margin-top:5px;">검색 주소 : '+ address +'</h4><br />',
@@ -135,26 +166,20 @@ function initGeocoder() {
 
 	    utmk.x = parseFloat(utmk.x.toFixed(1));
 	    utmk.y = parseFloat(utmk.y.toFixed(1));
-		/*
-	    console.log('LatLng: ' + latlng.toString());
-	    console.log('UTMK: ' + utmk.toString());
-	    console.log('TM128: ' + tm128.toString());
-	    console.log('NAVER: ' + naverCoord.toString());
-	    */
     });
 
     $('#naverAddress').on('keydown', function(e) {
         var keyCode = e.which;
 
         if (keyCode === 13) { // Enter Key
-            searchAddressToCoordinate($('#address').val());
+            searchAddressToCoordinate($('#naverAddress').val());
         }
     });
 
     $('#naverSearch').on('click', function(e) {
         e.preventDefault();
 
-        searchAddressToCoordinate($('#address').val());
+        searchAddressToCoordinate($('#naverAddress').val());
     });
 }
 
