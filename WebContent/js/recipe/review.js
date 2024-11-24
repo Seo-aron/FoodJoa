@@ -1,20 +1,4 @@
 
-// 문자열을 합치는 함수
-function combineStrings(strings) {
-	
-	let result = strings.map(str => {
-        const length = str.length;
-        // 길이를 4자리로 포맷하고 0으로 패딩
-        const lengthStr = String(length).padStart(4, '0');
-        return lengthStr + str; // 길이와 문자열을 합침
-    }).join(''); // 모든 요소를 하나의 문자열로 결합
-	
-	return result;
-}
-
-
-
-
 let selectedFiles = [];
 let selectedRealFiles = [];
 

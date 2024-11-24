@@ -1,3 +1,4 @@
+<%@page import="java.util.HashMap"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="VOs.RecipeReviewVO"%>
 <%@page import="java.util.List"%>
@@ -12,17 +13,23 @@
 
 	String contextPath = request.getContextPath();
 	
-	RecipeVO recipe = (RecipeVO) request.getAttribute("recipe");
-	double ratingAvg = (double) request.getAttribute("ratingAvg");
-	ArrayList<RecipeReviewVO> reviews = (ArrayList<RecipeReviewVO>) request.getAttribute("reviews");
+	HashMap<String, Object> recipeInfos = (HashMap<String, Object>) request.getAttribute("recipeInfos");
+	
+	RecipeVO recipe = (RecipeVO) recipeInfos.get("recipe");
+	double averageRating = (double) recipeInfos.get("averageRating");
+	String nickname = (String) recipeInfos.get("nickname");
+	String profile = (String) recipeInfos.get("profile");
+	ArrayList<HashMap<String, Object>> reviews = (ArrayList<HashMap<String, Object>>) recipeInfos.get("reviews");
 			
 	String compressedContents = recipe.getContents();
 	
+	ArrayList<String> reviewContents = new ArrayList<String>();
+	
+	String category = (String) request.getAttribute("category");
 	String currentPage = (String) request.getAttribute("currentPage");
 	String currentBlock = (String) request.getAttribute("currentBlock");
 	
-	//String id = (String) session.getAttribute("id");
-	String id = "admin";
+	String id = (String) session.getAttribute("userId");
 %>
     
     
@@ -35,6 +42,7 @@
 	
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+	<script src="<%= contextPath %>/js/common/common.js"></script>
 	
 	<link rel="stylesheet" href="<%=contextPath%>/css/recipe/read.css">    
 </head>
@@ -44,7 +52,11 @@
 		<table width="100%">
 			<tr>
 				<td>
-					<input type="button" value="리뷰 쓰기" onclick="onReviewButton()">
+					<%
+					if (id != null && !id.equals("") && !id.equals(recipe.getId())) {
+						%><input type="button" value="리뷰 쓰기" onclick="onReviewButton()"><%
+					}
+					%>
 					<input type="button" value="목록" onclick="onListButton()">
 					<%
 					if (recipe.getId().equals(id)) {
@@ -60,18 +72,20 @@
 				<td>			
 					<ul class="recipe-list">
 					    <li class="profile-img">
-					        <img alt="프로필 사진" src="">
+					    	<div>
+					        	<img src="<%= contextPath %>/images/member/userProfiles/<%= recipe.getId() %>/<%= profile %>">
+					    	</div>
 					    </li>
 					    <li class="recipe-title">
 					        <%= recipe.getTitle() %>
 					    </li>
 					    <li class="recipe-id">
-					        <%= recipe.getId() %>
+					        <%= nickname %>
 					    </li>
 					    <li class="recipe-info">
 					        <p>
 					            <img src="<%= contextPath %>/images/recipe/full_star.png" class="rating-star">
-					            <%= ratingAvg %>
+					            <%= averageRating %>
 					        </p>
 					        <p>조회수 : <%= recipe.getViews() %></p>
 					    </li>
@@ -83,7 +97,11 @@
 					<div id="thumbnail">
 						<img src="<%= contextPath %>/images/recipe/thumbnails/<%= recipe.getNo() %>/<%= recipe.getThumbnail() %>">
 						<div id="wishlist">
-							<button id="wishlist-button">레시피 찜하기</button>
+							<%
+							if (id != null && !id.equals("") && !id.equals(recipe.getId())) {
+								%><button id="wishlist-button">레시피 찜하기</button><%
+							}
+							%>
 						</div>
 					</div>
 				</td>
@@ -155,8 +173,8 @@
 						}
 						else {
 							for (int i = 0; i < reviews.size(); i++) {
-								RecipeReviewVO review = reviews.get(i);
-								
+								RecipeReviewVO review = (RecipeReviewVO) (reviews.get(i).get("review"));
+								String reviewNickName = (String) (reviews.get(i).get("nickname"));
 								%>
 								<tr>
 									<td rowspan="3" class="reviewer-profile" width="10%">
@@ -164,7 +182,7 @@
 											<img alt="프로필사진" src="<%= contextPath %>/images/recipe/test_thumbnail.png">
 										</div>
 										<div>
-											<p align="center"><%= review.getId() %></p>
+											<p align="center"><%= reviewNickName %></p>
 										</div>
 									</td>
 									<td>
@@ -202,7 +220,10 @@
 								</tr>
 								<tr>
 									<td>
-										<textarea class="review-contents" readonly><%= review.getContents() %></textarea>
+										<%-- <div class="review-contents"><%= review.getContents() %></div> --%>
+										<div class="review-contents">
+										<% reviewContents.add(review.getContents()); %>
+										</div>
 									</td>
 								</tr>
 								<%
@@ -232,7 +253,7 @@
 	
 	<script>
 		function onListButton() {
-			location.href = '<%= contextPath %>/Recipe/list?category=0&currentPage=<%= currentPage %>&currentBlock=<%= currentBlock %>';
+			location.href = '<%= contextPath %>/Recipe/list?category=<%= category %>&currentPage=<%= currentPage %>&currentBlock=<%= currentBlock %>';
 		}
 		
 		function onReviewButton() {
@@ -277,7 +298,7 @@
 			});
 		});
 		
-	    function decompressAndDisplay() {
+	    function initialize() {
 		    var compressedData = "<%= compressedContents %>";
 		    
 	        try {
@@ -297,10 +318,25 @@
 	            console.error("압축 해제 중 오류 발생:", error);
 	            document.getElementById('contents').innerHTML = "내용을 표시할 수 없습니다.";
 	        }
+	        
+	        let reviewContents = [
+	            <%
+	            for (int i = 0; i < reviewContents.size(); i++) {
+	                String str = StringParser.escapeHtml(reviewContents.get(i));
+	            %>
+	                "<%= str.replace("\"", "\\\"") %>"<%= (i < reviewContents.size() - 1) ? "," : "" %>
+	            <%
+	            }
+	            %>
+	        ];
+	        
+	        $(".review-contents").each(function(index, element) {
+				$(element).text(unescapeHtml(reviewContents[index]));
+			})
 	    }
 	
 	    // 페이지 로드 시 함수 실행
-	    window.onload = decompressAndDisplay;
+	    window.onload = initialize;
 </script>
 </body>
 

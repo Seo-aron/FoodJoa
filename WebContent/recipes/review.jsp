@@ -19,6 +19,7 @@
 	<title>Insert title here</title>
 	
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script src="<%= contextPath %>/js/common/common.js"></script>
 	
 	<style type="text/css">
 		#container {
