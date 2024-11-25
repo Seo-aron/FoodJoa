@@ -14,8 +14,9 @@
     String contextPath = request.getContextPath();
     
     MealkitVO mealkitvo = (MealkitVO) request.getAttribute("mealkitvo");
-    String updatePictures = request.getParameter("updatePictures");
-    System.out.println("editBoard.jsp에서 받은 bytePictures: " + updatePictures);
+    
+    // String updatePictures = (String) request.getAttribute("updatePictures");	// 파일명 (이미지 로드용)
+    // String bytePictures = (String) request.getAttribute("bytePictures");		// 0000파일명
 %>
 <c:set var="mealkit" value="${requestScope.mealkitvo}"/>
 
@@ -37,7 +38,7 @@
 				    <td>
 				    	<!-- 로그인정보를 세션에 저장해야 쓸 수 있음 -->
 				    	<!--<input type="text" name="id" value="${sessionScope.userId}" readonly>-->
-				    	<input type="text" name="id" value="user1" readonly>
+				    	<input type="text" name="id" value="admin" readonly>
 				    	<input type="hidden" name="no" value="${mealkit.no }">
 				    </td>
 				</tr>
@@ -51,8 +52,8 @@
 				        <div id="imagePreview"></div>
    						<input type="file" id="pictureFiles" name="pictureFiles" 
 							accept=".jpg,.jpeg,.png" multiple onchange="handleFileSelect(this.files)">
-						<button type="button" id="addFileBtn" onclick="triggerFileInput()">사진 추가</button>	
-						<input type="hidden" id="pictures" name="pictures" value="<%=updatePictures%>">
+						<button type="button" id="addFileBtn" onclick="triggerFileInput()">사진 추가</button>
+						<input type="hidden" id="pictures" name="pictures" value="">
 					</td>
 				</tr>
                 <tr>
@@ -242,6 +243,33 @@
 			<%
 		}
 		%>
+		
+		let initialPictures = "<%=mealkitvo.getPictures()%>";
+		
+		const mealkitNo = $("input[name='no']").val();
+	    const mealkitId = $("input[name='id']").val();
+
+	    if (initialPictures) {
+	        const picturesArray = initialPictures.split(',');
+	        const imagePreview = document.getElementById('imagePreview');
+
+	        picturesArray.forEach(picture => {
+	            const img = document.createElement('img');
+	            img.src = "<%=contextPath%>" + "/images/mealkit/thumbnails/" + mealkitNo + "/" + mealkitId + "/" + picture; 
+	            console.log(img.src);
+	            img.dataset.filename = picture;
+	            img.classList.add('preview_image');
+
+	            img.addEventListener('click', function () {
+	                imagePreview.removeChild(img);
+	                removeSelectedFile(picture);
+	            });
+
+	            imagePreview.appendChild(img);
+	        });
+
+	        document.getElementsByName('pictures')[0].value = combineStrings(picturesArray);
+	    }
 		
 	}
 	

@@ -85,12 +85,16 @@ public class MealkitController extends HttpServlet {
 
 	private void openUpdateBoard(HttpServletRequest request, HttpServletResponse response) {
 		MealkitVO mealkitvo = mealkitService.getMealkitInfo(request);
-		String updatePictures = mealkitService.getBytePicturesParser(request);
+		//String updatePictures = mealkitService.getBytePicturesParser(request);
 		
-		System.out.println("getBytePicures(controller) : " + updatePictures);
+		// String bytePictures = request.getParameter("bytePictures");
+		
+		// System.out.println("getBytePicures(controller) : " + updatePictures);
+		// System.out.println("getBytePicures(controller) : " + bytePictures);
 		
 		request.setAttribute("mealkitvo", mealkitvo);
-		request.setAttribute("updatePictures", updatePictures);
+		//request.setAttribute("updatePictures", updatePictures);	// 파일명
+		// request.setAttribute("bytePictures", bytePictures);		// 0000파일명
 		request.setAttribute("center", "mealkits/editBoard.jsp");
 		
 		nextPage = "/main.jsp";

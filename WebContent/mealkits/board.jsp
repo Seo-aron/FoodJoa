@@ -12,6 +12,7 @@
 	response.setContentType("text/html;charset=utf-8");
 	
 	String contextPath = request.getContextPath();
+    String id = (String) session.getAttribute("userId");
 	
 	MealkitVO mealkitvo = (MealkitVO) request.getAttribute("mealkitvo");
 	
@@ -29,6 +30,8 @@
   	<script src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
   	<link rel="stylesheet" href="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css">
   	<link rel="stylesheet" href="<%=contextPath%>/css/mealkit/board.css">
+  	
+  	<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
   	
 	<meta charset="UTF-8">
 	<title>Insert title here</title>
@@ -96,7 +99,7 @@
 			</div>
 			<br>
 			<div class="button_row">
-				<button class="buy_button" type="button" onclick="buyMealkit('<%=contextPath%>')">구매</button>
+				<button id="payment">구매하기</button>
 				<button class="cart_button" type="button" onclick="cartMealkit('<%=contextPath%>')">장바구니</button>
 				<button class="wishlist_button" type="button" onclick="wishMealkit('<%=contextPath%>')">찜하기</button>
 			</div>
@@ -110,7 +113,7 @@
 			
 			<!-- 수정 삭제 버튼 -->
             <div class="edit_delete_buttons">
-            	<c:if test="${'user1' == mealkit.id}">
+            	<c:if test="${sessionScope.userId == mealkit.id}">
                 	<button class="edit_button" type="button" onclick="editMealkit('<%=contextPath%>')">수정</button>
                 	<button class="delete_button" type="button"
                 	 onclick="deleteMealkit(${mealkit.no}, '<%=contextPath%>')">삭제</button>
@@ -120,5 +123,6 @@
 	</div>
 	
 	<script src="<%= contextPath %>/js/mealkit/board.js"></script>
+  	<script src="<%= contextPath %>/js/mealkit/portOne.js"></script>
 </body>
 </html>

@@ -13,6 +13,8 @@
 	response.setContentType("text/html;charset=utf-8");
 	
 	String contextPath = request.getContextPath();
+	
+    String id = (String) session.getAttribute("userId");
 %>
 
 <!DOCTYPE html>
@@ -78,8 +80,10 @@
 		}
 	%>
 	<div id="container">
-		<input type="button" id="newContent" value="글쓰기" 
-			onclick="location.href='<%=contextPath%>/Mealkit/write'"/>
+		<c:if test="${not empty sessionScope.userId}">
+			<input type="button" id="newContent" value="글쓰기" 
+				onclick="location.href='<%=contextPath%>/Mealkit/write'"/>
+		</c:if>
 		<table class="list">
 			<%
 				if(list.isEmpty()){
@@ -150,7 +154,7 @@
 							if(nowBlock > 0){
 							%>
 								<a href="<%=contextPath%>/Mealkit/list?nowBlock=<%=nowBlock-1%>&nowPage=<%=((nowBlock-1) * pagePerBlock)%>">
-								이전 <%=pagePerBlock %>개
+								이전
 								</a>
 							<%
 							}
@@ -173,7 +177,7 @@
 							if(totalBlock > nowBlock + 1){
 							%>
 								<a href="<%=contextPath%>/Mealkit/list?nowBlock=<%=nowBlock+1%>&nowPage=<%=(nowBlock + 1) * pagePerBlock%>">
-									다음 <%=pagePerBlock %>개
+									다음
 								</a>
 							<%
 							}
