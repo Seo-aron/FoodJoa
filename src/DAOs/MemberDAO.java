@@ -125,20 +125,21 @@ public class MemberDAO {
 	 */
 
 	// 회원가입 처리 (추가 정보 포함)
-	public void insertMember(MemberVO vo) {
-		String sql = "INSERT INTO member (id, name, nickname, phone, address, profile, join_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
-		try {
-			Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-			int result = dbConnector.executeUpdate(sql, vo.getId(), vo.getName(), vo.getNickname(), vo.getPhone(),
-					vo.getAddress(), vo.getProfile(), currentTimestamp);
-			if (result > 0) {
-				System.out.println("회원이 성공적으로 등록되었습니다.");
-			} else {
-				System.out.println("회원 등록에 실패했습니다.");
-			}
-		} finally {
-			dbConnector.release();
-		}
+	public int insertMember(MemberVO vo) {
+		String sql = "INSERT INTO member (id, name, nickname, phone, address, profile, join_date) "
+				+ "VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
+		
+		int result = dbConnector.executeUpdate(sql,
+				vo.getId(),
+				vo.getName(),
+				vo.getNickname(),
+				vo.getPhone(),
+				vo.getAddress(),
+				vo.getProfile());
+		
+		dbConnector.release();
+		
+		return result;
 	}
 
 	public boolean isUserExists(String userId) throws SQLException {
