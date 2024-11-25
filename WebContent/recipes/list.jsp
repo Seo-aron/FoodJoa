@@ -59,6 +59,14 @@
 			document.frmOpen.no.value = recipeNo;
 			document.frmOpen.submit();
 		}
+		
+		function onSearchButton() {
+			let category = '<%= category %>';
+			let key = document.getElementById('key').value;
+			let word = document.getElementById('word').value;
+			
+			location.href = '<%= contextPath %>/Recipe/search?category=' + category + '&key=' + key + '&word=' + word;
+		}
 	</script>
 	
 	<link rel="stylesheet" href="<%=contextPath%>/css/recipe/list.css">
@@ -69,12 +77,12 @@
 		<table class="header">
 			<tr>
 				<td align="center">
-					<select>
-						<option>레시피 명</option>
-						<option>작성자</option>
+					<select id="key" name="key">
+						<option value="recipe">레시피 명</option>
+						<option value="nickname">작성자</option>
 					</select>
-					<input type="text" name="search" placeholder="검색할 레시피를 입력하세요.">
-					<input type="button" name="search_button" value="검색">
+					<input type="text" id="word" name="word" placeholder="검색할 레시피를 입력하세요.">
+					<input type="button" name="search_button" value="검색" onclick="onSearchButton()">
 				</td>
 				<td align="center">
 					<%

@@ -30,14 +30,14 @@ public class RecipeService {
 		recipeDAO = new RecipeDAO();
 	}
 	
-	public ArrayList<HashMap<String, Object>> getRecipesWithAvgList(String category) {
+	public ArrayList<HashMap<String, Object>> getRecipesListWithAvgRating(String category) {
 		
-		return recipeDAO.selectRecipesWithRating(category);
+		return recipeDAO.selectRecipesWithAvgRating(category);
 	}
   
 	public ArrayList<HashMap<String, Object>> getRecipesListById(HttpServletRequest request) {
 		
-		return recipeDAO.selectRecipesById(request.getParameter("id"));
+		return recipeDAO.selectRecipesById((String) request.getSession().getAttribute("userId"));
 	}
 	
 	public RecipeVO getRecipe(HttpServletRequest request) {
@@ -211,5 +211,13 @@ public class RecipeService {
         review.setRating(Integer.parseInt(rating));
         
 		return recipeDAO.insertRecipeReivew(review);
+	}
+
+	public ArrayList<HashMap<String, Object>> getSearchedRecipeList(HttpServletRequest request) {
+		
+		return recipeDAO.selectSearchedRecipeList(
+				request.getParameter("category"),
+				request.getParameter("key"),
+				request.getParameter("word"));
 	}
 }

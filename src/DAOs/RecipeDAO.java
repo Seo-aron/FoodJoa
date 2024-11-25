@@ -18,7 +18,7 @@ public class RecipeDAO {
 		dbConnector = new DBConnector();
 	}
 	
-	public ArrayList<HashMap<String, Object>> selectRecipesWithRating(String category) {
+	public ArrayList<HashMap<String, Object>> selectRecipesWithAvgRating(String category) {
 		
 		int _category = Integer.parseInt(category);
 		
@@ -451,9 +451,9 @@ public class RecipeDAO {
 		String sql = "SELECT r.*, COALESCE(avg_rating.average_rating, 0) AS average_rating "
 				+ "FROM recipe r "
 				+ "LEFT JOIN ( "
-				+ "	SELECT recipe_no, AVG(rating) AS average_rating "
-				+ "    FROM recipe_review "
-				+ "    GROUP BY recipe_no "
+				+ "SELECT recipe_no, AVG(rating) AS average_rating "
+				+ "FROM recipe_review "
+				+ "GROUP BY recipe_no "
 				+ ") avg_rating ON r.no = avg_rating.recipe_no "
 				+ "WHERE r.id=?";
 		
@@ -490,6 +490,64 @@ public class RecipeDAO {
 			e.printStackTrace();
 		}
 		
+		return recipes;
+	}
+
+	public ArrayList<HashMap<String, Object>> selectSearchedRecipeList(String category, String key, String word) {
+		
+		ArrayList<HashMap<String, Object>> recipes = new ArrayList<HashMap<String,Object>>(); 
+		
+		String sql = "select r.*, COALESCE(avg_rating.average_rating, 0) AS average_rating, m.nickname as nickname "
+				+ "from recipe r "
+				+ "left join ( "
+				+ "	select recipe_no, avg(rating) as average_rating "
+				+ "    from recipe_review "
+				+ "    group by recipe_no "
+				+ ") avg_rating on r.no = avg_rating.recipe_no "
+				+ "left join member m on r.id=m.id ";
+		
+		sql += (key.equals("recipe")) ? "WHERE r.title LIKE '%?%'" : "WHERE nickname LIKE '%?%'";
+		if (!category.equals("0")) sql += "and category=? ";
+		sql += "order by r.post_date desc";
+		
+		ResultSet resultSet = (category.equals("0")) ?
+				dbConnector.executeQuery(sql, word) :
+				dbConnector.executeQuery(sql, word, category);
+		try {
+			while (resultSet.next()) {
+				
+				RecipeVO recipe = new RecipeVO(
+						resultSet.getInt("no"),
+						resultSet.getString("id"),
+						resultSet.getString("title"),
+						resultSet.getString("thumbnail"),
+						resultSet.getString("description"),
+						resultSet.getString("contents"),
+						resultSet.getInt("category"),
+						resultSet.getInt("views"),
+						resultSet.getString("ingredient"),
+						resultSet.getString("ingredient_amount"),
+						resultSet.getString("orders"),
+						resultSet.getTimestamp("post_date"));
+				
+				double avgReview = resultSet.getDouble("average_rating");
+				String nickname = resultSet.getString("nickname");
+				
+				HashMap<String, Object> recipeHashMap = new HashMap<String, Object>();
+				recipeHashMap.put("recipe", recipe);
+				recipeHashMap.put("average", avgReview);
+				recipeHashMap.put("nickname", nickname);
+				
+				recipes.add(recipeHashMap);
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("selectRecipes() SQLException 발생");
+		}
+		
+		dbConnector.release();
+				
 		return recipes;
 	}
 } 

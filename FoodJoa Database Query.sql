@@ -127,6 +127,17 @@ left join member m on r.id=m.id
 where r.category=1 
 order by r.post_date desc;
 
+select r.*, COALESCE(avg_rating.average_rating, 0) AS average_rating, m.nickname as nickname 
+from recipe r
+left join (
+	select recipe_no, avg(rating) as average_rating
+    from recipe_review
+    group by recipe_no
+) avg_rating on r.no = avg_rating.recipe_no
+left join member m on r.id=m.id 
+where r.title like '%3%'
+order by r.post_date desc;
+
 select
 	r.*, COALESCE(avg_rating.average_rating, 0) AS average_rating,
     m.nickname as nickname, m.profile as profile 
@@ -344,9 +355,9 @@ select * from community_share;
 insert into community_share(id, thumbnail, title, contents, lat, lng, type, views, post_date)
 values
 ('admin','test_thumbnail.png', 'seoul', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 0, 3, now()),
-('admin','test_thumbnail.png', 'seoul1', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 0, 3, now()),
-('admin','test_thumbnail.png', 'seoul2', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 0, 3, now()),
-('admin','test_thumbnail.png', 'seoul3', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 0, 3, now()),
+('admin','test_thumbnail.png', 'seoul1', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 1, 3, now()),
+('admin','test_thumbnail.png', 'seoul2', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 1, 3, now()),
+('admin','test_thumbnail.png', 'seoul3', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 1, 3, now()),
 ('admin','test_thumbnail.png', 'seoul4', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 0, 3, now());
 
 select c.*, m.profile, m.nickname 
@@ -368,3 +379,10 @@ LEFT OUTER JOIN member m
 ON c.id = m.id 
 WHERE m.nickname like '%나리%'
 ORDER BY c.post_date DESC;
+
+SELECT c.*, m.nickname 
+FROM community_share c 
+LEFT OUTER JOIN member m 
+ON c.id = m.id 
+WHERE c.type = IF('재료나눔' LIKE '%이먹%', 0, IF('같이먹어요' LIKE '%이먹%',  1, -1)) 
+ORDER BY c.post_date DESC; 
