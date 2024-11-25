@@ -158,28 +158,30 @@ public class MemberController extends HttpServlet {
 		System.out.println("processMemberJoin 호출됨");
 
 		// 회원 가입 처리
-		memberService.insertMember(request); // 사용자가 입력한 추가 정보를 처리해서 DB에 저장
+		// 사용자가 입력한 추가 정보를 처리해서 DB에 저장
+		if (memberService.insertMember(request)) {
+			// 네이버나 카카오 로그인 후 받은 아이디를 세션에서 가져옴
+			HttpSession session = request.getSession(true); // 세션이 없으면 새로 생성
+			String userId = (String) session.getAttribute("userId"); // 네이버나 카카오에서 받은 아이디
 
-		// 네이버나 카카오 로그인 후 받은 아이디를 세션에서 가져옴
-		HttpSession session = request.getSession(true); // 세션이 없으면 새로 생성
-		String userId = (String) session.getAttribute("userId"); // 네이버나 카카오에서 받은 아이디
+			// 세션에 아이디가 없으면 예외 처리 (아이디가 없을 경우 탈퇴나 다른 처리 불가)
+			if (userId == null) {
+				throw new ServletException("로그인 정보가 없습니다. 로그인 후 다시 시도해주세요.");
+			}
 
-		// 세션에 아이디가 없으면 예외 처리 (아이디가 없을 경우 탈퇴나 다른 처리 불가)
-		if (userId == null) {
-			throw new ServletException("로그인 정보가 없습니다. 로그인 후 다시 시도해주세요.");
+			// 회원 가입 후 아이디를 세션에 저장
+			session.setAttribute("userId", userId); // 로그인한 사용자의 아이디를 세션에 저장
 		}
 
-		// 회원 가입 후 아이디를 세션에 저장
-		session.setAttribute("userId", userId); // 로그인한 사용자의 아이디를 세션에 저장
-
-		// 리다이렉트 처리
-		response.setCharacterEncoding("UTF-8");
+		nextPage = "/main.jsp";
 	}
 
 
     private void openJoinMain(HttpServletRequest request, HttpServletResponse response) {
 		//request객체에 "members/join.jsp" 중앙화면 뷰 주소 바인딩
-		request.setAttribute("center", "members/join.jsp");		
+		request.setAttribute("center", "members/join.jsp");
+		request.setAttribute("userId", request.getParameter("userId"));
+		
 		nextPage = "/main.jsp";
 	}
 	
@@ -442,7 +444,7 @@ public class MemberController extends HttpServlet {
                     PrintWriter out = response.getWriter();
                     out.println("<script>");
                     out.println("alert('회원가입이 필요합니다. 회원가입 페이지로 이동합니다.');");
-                    out.println("location.href='" + request.getContextPath() + "/Member/join.me';");
+                    out.println("location.href='" + request.getContextPath() + "/Member/join.me?userId=" + userId + "';");
                     out.println("</script>");
                     out.close();
                     return; // 더 이상 코드를 실행하지 않도록 return

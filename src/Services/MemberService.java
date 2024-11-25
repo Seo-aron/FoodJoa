@@ -139,7 +139,7 @@ public class MemberService {
 	}
 
 	// 추가정보
-	public void insertMember(HttpServletRequest request) throws ServletException, IOException {
+	public boolean insertMember(HttpServletRequest request) throws ServletException, IOException {
 
 		ServletContext application = request.getServletContext();
 
@@ -149,11 +149,7 @@ public class MemberService {
 		MultipartRequest multipartRequest = new MultipartRequest(request, path + File.separator + "temp", maxSize, "UTF-8",
 				new DefaultFileRenamePolicy());
 
-		HttpSession session = request.getSession();
-		String userId = (String) session.getAttribute("userId");
-		if (userId == null) {
-			userId = multipartRequest.getParameter("userId"); // 파라미터로도 확인
-		}
+		String userId = multipartRequest.getParameter("userId"); // 파라미터로도 확인
 
 		// 주소 파라미터 가져오기
 		String address1 = multipartRequest.getParameter("address1");
@@ -169,13 +165,21 @@ public class MemberService {
 				multipartRequest.getParameter("nickname"), multipartRequest.getParameter("phone"), address, // 결합된 주소
 				profileFileName);
 
-		memberDAO.insertMember(vo);
+		if (memberDAO.insertMember(vo) == 1) {
+			// 회원가입 성공했을 경우
+			
+			request.getSession().setAttribute("userId", userId);
+			// 프로필 이미지 이동
+			String srcPath = path + File.separator + "temp" + File.separator;
+			String descPath = path + File.separator + "member" + File.separator + "userProfiles" + File.separator + userId;
 
-		// 프로필 이미지 이동
-		String srcPath = path + File.separator + "temp" + File.separator;
-		String descPath = path + File.separator + "member" + File.separator + "userProfiles" + File.separator + userId;
-
-		FileIOController.moveFile(srcPath, descPath, profileFileName);
+			FileIOController.moveFile(srcPath, descPath, profileFileName);
+			
+			return true;
+		}
+		else {
+			return false;
+		}		
 	}
 
 	public String getNaverId(HttpServletRequest request, HttpServletResponse response) throws IOException {
