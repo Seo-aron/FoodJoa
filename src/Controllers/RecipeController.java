@@ -20,184 +20,180 @@ import VOs.RecipeVO;
 
 @WebServlet("/Recipe/*")
 public class RecipeController extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	
-	private RecipeService recipeService;	
-	private PrintWriter printWriter;
-	private String nextPage;	
+   private static final long serialVersionUID = 1L;
+   
+   private RecipeService recipeService;   
+   private PrintWriter printWriter;
+   private String nextPage;   
 
-	public void init(ServletConfig config) throws ServletException {
-		
-		recipeService = new RecipeService();
-	}
+   public void init(ServletConfig config) throws ServletException {
+      
+      recipeService = new RecipeService();
+   }
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		doHandle(request, response);
-	}
+   protected void doGet(HttpServletRequest request, HttpServletResponse response)
+         throws ServletException, IOException {
+      doHandle(request, response);
+   }
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		doHandle(request, response);
-	}
+   protected void doPost(HttpServletRequest request, HttpServletResponse response)
+         throws ServletException, IOException {
+      doHandle(request, response);
+   }
 
-	protected void doHandle(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		
-		request.setCharacterEncoding("utf-8");
-		response.setContentType("text/html; charset=utf-8");
-		
-		HttpSession session = request.getSession();
-		
-		String action = request.getPathInfo();
-		System.out.println("action : " + action);
+   protected void doHandle(HttpServletRequest request, HttpServletResponse response)
+         throws ServletException, IOException {
+      
+      request.setCharacterEncoding("utf-8");
+      response.setContentType("text/html; charset=utf-8");
+      
+      HttpSession session = request.getSession();
+      
+      String action = request.getPathInfo();
+      System.out.println("action : " + action);
 
-		switch (action) {
-		case "/list": openRecipeListView(request, response); break;
-		case "/write": openRecipeWriteView(request, response); break;
-		case "/read": openRecipeReadView(request, response); break;
-		case "/writePro": processRecipeWrite(request, response); break;
-		case "/update": openRecipeUpdateView(request, response); break;
-		case "/updatePro": processRecipeUpdate(request, response); break;
-		case "/deletePro": processRecipeDelete(request, response); break;
-		case "/wishlist": processRecipeWishlist(request, response); return;
-		case "/review": if (openRecipeReviewView(request, response)) return ; break;
-		case "/reviewWrite": processReviewWrite(request, response); return;
+      switch (action) {
+      case "/list": openRecipeListView(request, response); break;
+      case "/write": openRecipeWriteView(request, response); break;
+      case "/read": openRecipeReadView(request, response); break;
+      case "/writePro": processRecipeWrite(request, response); break;
+      case "/update": openRecipeUpdateView(request, response); break;
+      case "/updatePro": processRecipeUpdate(request, response); break;
+      case "/deletePro": processRecipeDelete(request, response); break;
+      case "/wishlist": processRecipeWishlist(request, response); return;
+      case "/review": if (openRecipeReviewView(request, response)) return ; break;
+      case "/reviewWrite": processReviewWrite(request, response); return;
 
-		default:
-		}
-		
-		RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
-		dispatcher.forward(request, response);
-	}
-	
-	private void openRecipeListView(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+      default:
+      }
+      
+      RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
+      dispatcher.forward(request, response);
+   }
+   
+   private void openRecipeListView(HttpServletRequest request, HttpServletResponse response)
+         throws ServletException, IOException {
 
-		String category = request.getParameter("category");
-		
-		ArrayList<HashMap<String, Object>> recipes = recipeService.getRecipesWithAvgList(category);
-		
-		request.setAttribute("recipes", recipes);
-		request.setAttribute("category", category);
-		request.setAttribute("currentPage", request.getParameter("currentPage"));
-		request.setAttribute("currentBlock", request.getParameter("currentBlock"));
-		
-		request.setAttribute("pageTitle", "나만의 레시피");
-		request.setAttribute("center", "recipes/list.jsp");
-		
-		nextPage = "/main.jsp";
-	}
-	
-	private void openRecipeWriteView(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+      String category = request.getParameter("category");
+      
+      ArrayList<HashMap<String, Object>> recipes = recipeService.getRecipesWithAvgList(category);
+      
+      request.setAttribute("recipes", recipes);
+      request.setAttribute("category", category);
+      request.setAttribute("currentPage", request.getParameter("currentPage"));
+      request.setAttribute("currentBlock", request.getParameter("currentBlock"));
+      
+      request.setAttribute("pageTitle", "나만의 레시피");
+      request.setAttribute("center", "recipes/list.jsp");
+      
+      nextPage = "/main.jsp";
+   }
+   
+   private void openRecipeWriteView(HttpServletRequest request, HttpServletResponse response)
+         throws ServletException, IOException {
 
-		request.setAttribute("pageTitle", "나만의 레시피 작성하기");
-		request.setAttribute("center", "recipes/write.jsp");
-		
-		nextPage = "/main.jsp";
-	}
-	
-	private void openRecipeReadView(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		
-		String recipeNo = request.getParameter("no");
-		
-		RecipeVO recipe = recipeService.getRecipe(request);
-		double ratingAvg = recipeService.getRecipeRatingAvg(recipeNo);
-		ArrayList<RecipeReviewVO> reviews = recipeService.getRecipeReviewes(recipeNo);
+      request.setAttribute("pageTitle", "나만의 레시피 작성하기");
+      request.setAttribute("center", "recipes/write.jsp");
+      
+      nextPage = "/main.jsp";
+   }
+   
+   private void openRecipeReadView(HttpServletRequest request, HttpServletResponse response)
+         throws ServletException, IOException {
+      
+      HashMap<String, Object> recipeInfos = recipeService.getRecipeInfo(request);
 
-		request.setAttribute("recipe", recipe);
-		request.setAttribute("ratingAvg", ratingAvg);
-		request.setAttribute("reviews", reviews);
-		request.setAttribute("currentPage", request.getParameter("currentPage"));
-		request.setAttribute("currentBlock", request.getParameter("currentBlock"));
-		
-		request.setAttribute("pageTitle", recipe.getTitle());
-		request.setAttribute("center", "recipes/read.jsp");
-		
-		nextPage = "/main.jsp";
-	}
-	
-	private void processRecipeWrite(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+      request.setAttribute("recipeInfos", recipeInfos);
+      request.setAttribute("category", request.getParameter("category"));
+      request.setAttribute("currentPage", request.getParameter("currentPage"));
+      request.setAttribute("currentBlock", request.getParameter("currentBlock"));
+      
+      request.setAttribute("pageTitle", ((RecipeVO) recipeInfos.get("recipe")).getTitle());
+      request.setAttribute("center", "recipes/read.jsp");
+      
+      nextPage = "/main.jsp";
+   }
+   
+   private void processRecipeWrite(HttpServletRequest request, HttpServletResponse response)
+         throws ServletException, IOException {
 
-		int recipeNo = recipeService.processRecipeWrite(request);
-		
-		nextPage = "/Recipe/read?no=" + recipeNo;
-	}
-	
-	private void openRecipeUpdateView(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		
-		RecipeVO recipe = recipeService.getRecipe(request);
+      int recipeNo = recipeService.processRecipeWrite(request);
+      
+      nextPage = "/Recipe/read?no=" + recipeNo;
+   }
+   
+   private void openRecipeUpdateView(HttpServletRequest request, HttpServletResponse response)
+         throws ServletException, IOException {
+      
+      RecipeVO recipe = recipeService.getRecipe(request);
 
-		request.setAttribute("recipe", recipe);
-		request.setAttribute("pageTitle", "게시글 수정하기");
-		request.setAttribute("center", "recipes/update.jsp");
-		
-		nextPage = "/main.jsp";
-	}
-	
-	private void processRecipeUpdate(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+      request.setAttribute("recipe", recipe);
+      request.setAttribute("pageTitle", "게시글 수정하기");
+      request.setAttribute("center", "recipes/update.jsp");
+      
+      nextPage = "/main.jsp";
+   }
+   
+   private void processRecipeUpdate(HttpServletRequest request, HttpServletResponse response)
+         throws ServletException, IOException {
 
-		int recipeNo = recipeService.processRecipeUpdate(request);
-		
-		nextPage = "/Recipe/read?no=" + recipeNo;
-	}
-	
-	private void processRecipeDelete(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		
-		int result = recipeService.processRecipeDelete(request);
-		
-		nextPage = "/Recipe/list?category=0";
-	}
-	
-	private void processRecipeWishlist(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		
-		int result = recipeService.processRecipeWishlist(request);
-		
-		printWriter = response.getWriter();
-		
-		printWriter.print(result);
-		
-		printWriter.close();
-		printWriter = null;
-	}
-	
-	private boolean openRecipeReviewView(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		
-		boolean result = recipeService.checkRecipeReview(request);
+      int recipeNo = recipeService.processRecipeUpdate(request);
+      
+      nextPage = "/Recipe/read?no=" + recipeNo;
+   }
+   
+   private void processRecipeDelete(HttpServletRequest request, HttpServletResponse response)
+         throws ServletException, IOException {
+      
+      int result = recipeService.processRecipeDelete(request);
+      
+      nextPage = "/Recipe/list?category=0";
+   }
+   
+   private void processRecipeWishlist(HttpServletRequest request, HttpServletResponse response)
+         throws ServletException, IOException {
+      
+      int result = recipeService.processRecipeWishlist(request);
+      
+      printWriter = response.getWriter();
+      
+      printWriter.print(result);
+      
+      printWriter.close();
+      printWriter = null;
+   }
+   
+   private boolean openRecipeReviewView(HttpServletRequest request, HttpServletResponse response)
+         throws ServletException, IOException {
+      
+      boolean result = recipeService.checkRecipeReview(request);
 
-		if (result) {
-			printWriter = response.getWriter();
-			
-			printWriter.print("<script>");
-			printWriter.print("alert('이미 리뷰를 작성 하셨습니다.');");
-			printWriter.print("</script>");
-			
-			printWriter.close();
-			printWriter = null;
-		}
-		else {
-			RecipeVO recipe = recipeService.getRecipe(request.getParameter("recipe_no"));
-			
-			request.setAttribute("recipe", recipe);
-			request.setAttribute("center", "recipes/review.jsp");
-			
-			nextPage = "/main.jsp";
-		}
-		
-		return result;
-	}
-	
-	private void processReviewWrite(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		
-		recipeService.processReviewWrite(request);
-	}
+      if (result) {
+         printWriter = response.getWriter();
+         
+         printWriter.print("<script>");
+         printWriter.print("alert('이미 리뷰를 작성 하셨습니다.');");
+         printWriter.print("history.go(-1);");
+         printWriter.print("</script>");
+         
+         printWriter.close();
+         printWriter = null;
+      }
+      else {
+         RecipeVO recipe = recipeService.getRecipe(request.getParameter("recipe_no"));
+         
+         request.setAttribute("recipe", recipe);
+         request.setAttribute("center", "recipes/review.jsp");
+         
+         nextPage = "/main.jsp";
+      }
+      
+      return result;
+   }
+   
+   private void processReviewWrite(HttpServletRequest request, HttpServletResponse response)
+         throws ServletException, IOException {
+      
+      recipeService.processReviewWrite(request);
+   }
 }
