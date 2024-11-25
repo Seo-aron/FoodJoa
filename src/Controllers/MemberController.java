@@ -97,13 +97,6 @@ public class MemberController extends HttpServlet {
 
 
 	private void openCartList(HttpServletRequest request, HttpServletResponse response) {
-		 // 서비스에서 위시리스트 정보 가져오기
-	    String userId = request.getParameter("userId");  // 사용자 ID를 파라미터로 받음
-	    MemberService memberService = new MemberService();
-	    ArrayList<HashMap<String, Object>> wishList = memberService.getWishList(userId);  // 위시리스트 정보를 가져옴
-	    
-	    // 위시리스트 정보를 request에 담기
-	    request.setAttribute("wishList", wishList);
 	    
 	    // center 부분에 해당하는 JSP 파일 설정
 	    request.setAttribute("center", "members/cartlist.jsp");
@@ -339,12 +332,35 @@ public class MemberController extends HttpServlet {
 
 	}
 	
-    private void openWishList(HttpServletRequest request, HttpServletResponse response) {
-    	
-    	
-        request.setAttribute("center", "members/wishlist.jsp");
-        nextPage = "/main.jsp";
-    }
+	    private void openWishList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	        // 세션에서 사용자 ID를 가져옴
+	        HttpSession session = request.getSession();
+	        String userId = (String) session.getAttribute("userId");
+
+	        // 사용자 ID가 존재하는지 확인
+	        if (userId != null) {
+	            try {
+	                // 서비스 호출하여 위시리스트 가져오기
+	                ArrayList<HashMap<String, Object>> wishList = memberService.getWishListInfos(userId);
+
+	                // 위시리스트 정보를 request에 저장
+	                request.setAttribute("wishList", wishList);
+
+	            } catch (Exception e) {
+	                // 오류 발생 시 처리
+	                request.setAttribute("error", "위시리스트를 가져오는 도중 오류가 발생했습니다.");
+	                e.printStackTrace();
+	            }
+	        } else {
+	            // 세션에 사용자 ID가 없는 경우 에러 메시지 설정
+	            request.setAttribute("error", "로그인이 필요합니다.");
+	        }
+
+	        // 포워딩할 페이지 설정
+	        request.setAttribute("center", "members/wishlist.jsp");
+	        nextPage = "/main.jsp";  // 메인 페이지로 이동하도록 설정
+	    }
+	
     
     private void openRecentList(HttpServletRequest request, HttpServletResponse response) {
         request.setAttribute("center", "members/recent.jsp");

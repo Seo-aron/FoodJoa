@@ -321,10 +321,11 @@ public class MemberService {
 	}
 	
 
-	  // 추가: 사용자의 위시리스트를 가져오는 메소드
-    public ArrayList<HashMap<String, Object>> getWishList(String userId) {
-        return recipeDAO.selectWishListInfos(userId); // RecipeDAO의 메소드 호출
-    }
+	public ArrayList<HashMap<String, Object>> getWishListInfos(String id) {
+		
+	    RecipeDAO recipeDAO = new RecipeDAO();
+	    return recipeDAO.selectWishListInfos(id);
+	}
 
 	public void getMemberProfile(HttpServletRequest request, String userId) throws ServletException, IOException, SQLException {
 	    // 회원 정보를 DAO에서 조회

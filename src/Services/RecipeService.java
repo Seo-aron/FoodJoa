@@ -178,7 +178,7 @@ public class RecipeService {
 	public int processReviewWrite(HttpServletRequest request) throws ServletException, IOException {
 
 		String separator = FileSystems.getDefault().getSeparator();
-		
+
 		String id = (String) request.getSession().getAttribute("userId");
 		
 		ServletContext application = request.getServletContext();
