@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -139,13 +140,13 @@ public class MemberService {
 
 	// 추가정보
 	public void insertMember(HttpServletRequest request) throws ServletException, IOException {
-		// 이미지 업로드 디렉토리 설정
-		String path = request.getServletContext().getRealPath("/images/");
 
-		// 최대 파일 크기 1GB로 설정
-		int maxSize = 1024 * 1024 * 1024; // 1GB
+		ServletContext application = request.getServletContext();
 
-		MultipartRequest multipartRequest = new MultipartRequest(request, path + "temp/", maxSize, "UTF-8",
+		String path = application.getRealPath(File.separator + "images");
+		int maxSize = 1024 * 1024 * 1024;
+
+		MultipartRequest multipartRequest = new MultipartRequest(request, path + File.separator + "temp", maxSize, "UTF-8",
 				new DefaultFileRenamePolicy());
 
 		HttpSession session = request.getSession();
@@ -171,10 +172,10 @@ public class MemberService {
 		memberDAO.insertMember(vo);
 
 		// 프로필 이미지 이동
-		String srcPath = path + "\\temp\\";
-		String descPath = path + "\\member\\userProfiles\\" + userId;
+		String srcPath = path + File.separator + "temp" + File.separator;
+		String descPath = path + File.separator + "member" + File.separator + "userProfiles" + File.separator + userId;
 
-		FileIOController.moveProfile(srcPath, descPath, profileFileName);
+		FileIOController.moveFile(srcPath, descPath, profileFileName);
 	}
 
 	public String getNaverId(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -278,10 +279,12 @@ public class MemberService {
 		String id = (String) session.getAttribute("userId");
 		// String id = "admin";
 
-		String path = request.getServletContext().getRealPath("/images/");
+		ServletContext application = request.getServletContext();
+
+		String path = application.getRealPath(File.separator + "images");
 		int maxSize = 1024 * 1024 * 1024;
 
-		MultipartRequest multipartRequest = new MultipartRequest(request, path + "temp/", maxSize, "UTF-8",
+		MultipartRequest multipartRequest = new MultipartRequest(request, path + File.separator + "temp", maxSize, "UTF-8",
 				new DefaultFileRenamePolicy());
 
 		String originProfile = multipartRequest.getParameter("origin-profile");

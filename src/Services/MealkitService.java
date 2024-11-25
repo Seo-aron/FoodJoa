@@ -80,12 +80,13 @@ public class MealkitService {
 	public void setWriteMealkit(HttpServletRequest request, HttpServletResponse response) 
 	        throws ServletException, IOException {
 
-	    ServletContext application = request.getServletContext();
-	    String path = application.getRealPath("/images/"); // 업로드된 파일이 저장될 기본 경로
-	    int maxSize = 1024 * 1024 * 1024;
-	    
-	    MultipartRequest multipartRequest = new MultipartRequest(request, path + "temp/", maxSize, "UTF-8",
-	            new DefaultFileRenamePolicy());
+		ServletContext application = request.getServletContext();
+
+		String path = application.getRealPath(File.separator + "images");
+		int maxSize = 1024 * 1024 * 1024;
+
+		MultipartRequest multipartRequest = new MultipartRequest(request, path + File.separator + "temp", maxSize, "UTF-8",
+				new DefaultFileRenamePolicy());
 	    
 	    String id = multipartRequest.getParameter("id");
 	    String title = multipartRequest.getParameter("title");
@@ -122,7 +123,7 @@ public class MealkitService {
     		String srcPath = path + "temp" + File.separator;
     	    String destinationPath = path + "mealkit" + File.separator + "thumbnails" + File.separator + no + File.separator + id;
     		
-    		FileIOController.moveProfile(srcPath, destinationPath, fileName);
+    		FileIOController.moveFile(srcPath, destinationPath, fileName);
         }
 
 	    String bytePictures = multipartRequest.getParameter("pictures");
@@ -149,12 +150,12 @@ public class MealkitService {
 
 	public void setWriteReview(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-	    ServletContext application = request.getServletContext();
-	    
-	    String path = application.getRealPath("/images/");
-	    int maxSize = 1024 * 1024 * 1024;
+		ServletContext application = request.getServletContext();
 
-	    MultipartRequest multipartRequest = new MultipartRequest(request, path + "temp/", maxSize, "UTF-8",
+		String path = application.getRealPath(File.separator + "images");
+		int maxSize = 1024 * 1024 * 1024;
+
+		MultipartRequest multipartRequest = new MultipartRequest(request, path + File.separator + "temp", maxSize, "UTF-8",
 				new DefaultFileRenamePolicy());
 	    
 	    String fileName = multipartRequest.getOriginalFileName("pictures");
@@ -172,11 +173,12 @@ public class MealkitService {
 	    vo.setPictures(fileName);
 
 	    int reviewNo = mealkitDAO.insertNewReview(vo);
-	    
-	    String srcPath = path + "\\temp\\";
-		String destinationPath = path + "\\mealkit\\reviews\\" + String.valueOf(reviewNo);
+
+		String srcPath = path + File.separator + "temp" + File.separator;
+		String destinationPath = path + File.separator + "mealkit" + File.separator +
+				"reviews" + File.separator + String.valueOf(reviewNo);
 		
-		FileIOController.moveProfile(srcPath, destinationPath, fileName);
+		FileIOController.moveFile(srcPath, destinationPath, fileName);
 		
 
 	    System.out.println("사진이름" + vo.getPictures());
@@ -231,15 +233,13 @@ public class MealkitService {
 
 	public void updateMealkit(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-		String separator = FileSystems.getDefault().getSeparator();
-		
-	    ServletContext application = request.getServletContext();
-	    
-	    String path = application.getRealPath("/images/");
-	    int maxSize = 1024 * 1024 * 1024;
-	    
-	    MultipartRequest multipartRequest = new MultipartRequest(request, path + "temp/", maxSize, "UTF-8",
-	            new DefaultFileRenamePolicy());
+		ServletContext application = request.getServletContext();
+
+		String path = application.getRealPath(File.separator + "images");
+		int maxSize = 1024 * 1024 * 1024;
+
+		MultipartRequest multipartRequest = new MultipartRequest(request, path + File.separator + "temp", maxSize, "UTF-8",
+				new DefaultFileRenamePolicy());
 
 	    String originFileName = multipartRequest.getParameter("thumbnail-origin");
 		String fileName = multipartRequest.getOriginalFileName("file");
@@ -284,18 +284,19 @@ public class MealkitService {
 	    mealkitDAO.updateMealkit(vo);
    
 	    String srcPath = path + File.separator + "temp" + File.separator;
-		String destinationPath = path + File.separator + "mealkit" + File.separator +"thumbnails" + File.separator + String.valueOf(no) + File.separator + id;
+		String destinationPath = path + File.separator + "mealkit" + File.separator +
+				"thumbnails" + File.separator + String.valueOf(no) + File.separator + id;
 		
 		if (fileName != null && !fileName.equals("")) {
 		    if (originFileName != null && !originFileName.equals("")) {
-		        FileIOController.deleteFile(destinationPath, originFileName, separator);
+		        FileIOController.deleteFile(destinationPath, originFileName);
 		    }
-		    FileIOController.moveProfile(srcPath, destinationPath, fileName);
+		    FileIOController.moveFile(srcPath, destinationPath, fileName);
 		}
 		
 		for (String file : fileNames) {
 		    if (file != null && !file.equals("")) {
-		        FileIOController.moveProfile(srcPath, destinationPath, file);
+		        FileIOController.moveFile(srcPath, destinationPath, file);
 		    }
 		}
 		

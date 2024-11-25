@@ -1,5 +1,6 @@
 package Services;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.util.ArrayList;
@@ -89,14 +90,12 @@ public class CommunityService {
 
 	public int insertCommunityShare(HttpServletRequest request) throws ServletException, IOException {
 
-		String separator = FileSystems.getDefault().getSeparator();
-		
 		ServletContext application = request.getServletContext();
 		
-		String path = application.getRealPath(separator + "images");
+		String path = application.getRealPath(File.separator + "images");
 		int maxSize = 1024 * 1024 * 1024;
 		
-		MultipartRequest multipartRequest = new MultipartRequest(request, path + separator + "temp", maxSize, "UTF-8",
+		MultipartRequest multipartRequest = new MultipartRequest(request, path + File.separator + "temp", maxSize, "UTF-8",
 				new DefaultFileRenamePolicy());
 		
 		String fileName = multipartRequest.getOriginalFileName("thumbnail");
@@ -117,10 +116,11 @@ public class CommunityService {
 		
 		int no = communitydao.selectNoInsertedShare(share);
 		
-		String srcPath = path + separator + "temp";
-		String destinationPath = path + separator + "community" + separator + "thumbnails" + separator + String.valueOf(no);
+		String srcPath = path + File.separator + "temp";
+		String destinationPath = path + File.separator + "community" + File.separator +
+				"thumbnails" + File.separator + String.valueOf(no);
 		
-		FileIOController.moveFile(srcPath, destinationPath, fileName, separator);
+		FileIOController.moveFile(srcPath, destinationPath, fileName);
 		
 		return no;
 	}
@@ -141,16 +141,14 @@ public class CommunityService {
 
 	public int processShareUpdate(HttpServletRequest request) throws ServletException, IOException {
 
-		String separator = FileSystems.getDefault().getSeparator();
-		
 		String id = (String) request.getSession().getAttribute("userId");
 		
 		ServletContext application = request.getServletContext();
 
-		String path = application.getRealPath(separator + "images");
+		String path = application.getRealPath(File.separator + "images");
 		int maxSize = 1024 * 1024 * 1024;
 
-		MultipartRequest multipartRequest = new MultipartRequest(request, path + separator + "temp", maxSize, "UTF-8",
+		MultipartRequest multipartRequest = new MultipartRequest(request, path + File.separator + "temp", maxSize, "UTF-8",
 				new DefaultFileRenamePolicy());
 		
 		String originThumbnail = multipartRequest.getParameter("originThumbnail");
@@ -172,11 +170,12 @@ public class CommunityService {
 		int result = communitydao.updateCommunityShare(share);
 		
 		if ((thumbnail != null && !thumbnail.equals(""))) {
-			String srcPath = path + separator + "temp";
-			String destinationPath = path + separator + "community" + separator + "thumbnails" + separator + String.valueOf(no);
+			String srcPath = path + File.separator + "temp";
+			String destinationPath = path + File.separator + "community" + File.separator +
+					"thumbnails" + File.separator + String.valueOf(no);
 			
-			FileIOController.deleteFile(destinationPath, originThumbnail, separator);
-			FileIOController.moveFile(srcPath, destinationPath, thumbnail, separator);
+			FileIOController.deleteFile(destinationPath, originThumbnail);
+			FileIOController.moveFile(srcPath, destinationPath, thumbnail);
 		}
 		
 		return result;
@@ -184,13 +183,13 @@ public class CommunityService {
 
 	public int processShareDelete(HttpServletRequest request) {
 
-		String separator = FileSystems.getDefault().getSeparator();
 		String no = (String) request.getParameter("no");
 		
 		int result = communitydao.deleteCommunityShare(no);
 		
 		if (result == 1) {
-			String path = request.getServletContext().getRealPath(separator + "images") + separator + "community" + separator + "thumbnails" + separator + no;
+			String path = request.getServletContext().getRealPath(File.separator + "images") + 
+					File.separator + "community" + File.separator + "thumbnails" + File.separator + no;
 			FileIOController.deleteDirectory(path);
 		}
 		
