@@ -79,15 +79,13 @@ public class MealkitService {
 	public void setWriteMealkit(HttpServletRequest request, HttpServletResponse response) 
 	        throws ServletException, IOException {
 
-	    // 서버의 실제 경로를 가져옴
 	    ServletContext application = request.getServletContext();
 	    String path = application.getRealPath("/images/"); // 업로드된 파일이 저장될 기본 경로
 	    int maxSize = 1024 * 1024 * 1024;
 	    
-	    // MultipartRequest로 파일 업로드 처리
 	    MultipartRequest multipartRequest = new MultipartRequest(request, path + "temp/", maxSize, "UTF-8",
 	            new DefaultFileRenamePolicy());
-
+	    
 	    String id = multipartRequest.getParameter("id");
 	    String title = multipartRequest.getParameter("title");
 	    String pictures = multipartRequest.getParameter("pictures");
@@ -103,6 +101,7 @@ public class MealkitService {
 	    String allPictures = String.join(",", fileNames);
 
 	    System.out.println("pictures : " + allPictures);
+	    System.out.println("orders : " + orders);
 	    
 	    MealkitVO vo = new MealkitVO();
 	    vo.setId(id);
@@ -124,12 +123,24 @@ public class MealkitService {
     		
     		FileIOController.moveProfile(srcPath, destinationPath, fileName);
         }
-		
+
+	    String bytePictures = multipartRequest.getParameter("pictures");
+	    System.out.println("setWriteMealkit - bytePictures: " + bytePictures);
+
+	    response.setContentType("application/json;charset=UTF-8");
 	    PrintWriter printWriter = response.getWriter();
 	    if (no > 0) {
-	        printWriter.print(no);
+	    	String jsonResponse = String.format("{\"no\": %d, \"bytePictures\": \"%s\"}", no, bytePictures);
+	        printWriter.print(jsonResponse);
+	    	
+	        // printWriter.print(no);
+		    
+	        // RequestDispatcher dispatcher = request.getRequestDispatcher("mealkits/editBoard.jsp");
+	    	// dispatcher.forward(request, response);
 	    } else {
-	        printWriter.print(no);
+	    	printWriter.print("{\"no\": 0, \"error\": \"글 작성에 실패했습니다.\"}");
+	    	
+	        // printWriter.print(no);
 	    }
 
 	    printWriter.close();
@@ -214,6 +225,7 @@ public class MealkitService {
 	    } else {
 	        printWriter.print("0");
 	    }
+		printWriter.close();
 	}
 
 	public void updateMealkit(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -237,34 +249,55 @@ public class MealkitService {
 	    String origin = multipartRequest.getParameter("origin");
 	    String orders = multipartRequest.getParameter("orders");
 	    int stock = Integer.parseInt(multipartRequest.getParameter("stock"));
+	    
+	    System.out.println("Received Parameters:");
+	    System.out.println("no: " + no);
+	    System.out.println("id: " + id);
+	    System.out.println("title: " + title);
+	    System.out.println("pictures: " + pictures);
+	    System.out.println("contents: " + contents);
+	    System.out.println("price: " + price);
+	    System.out.println("origin: " + origin);
+	    System.out.println("orders: " + orders);
+	    System.out.println("stock: " + stock);
 
+	    List<String> fileNames = StringParser.splitString(pictures);   
+	    String allPictures = String.join(",", fileNames);
+
+	    System.out.println("pictures : " + allPictures);
+	    
 	    MealkitVO vo = new MealkitVO();
 	    vo.setNo(no);
 	    vo.setId(id);
 	    vo.setTitle(title);
-	    vo.setPictures(pictures);
+	    vo.setPictures(allPictures);
 	    vo.setContents(contents);
 	    vo.setPrice(price);
 	    vo.setStock(stock);
 	    vo.setOrders(orders);
 	    vo.setOrigin(origin);
-	    
-	    MealkitVO mealkitvo = mealkitDAO.getMealkitByNo(no);
 
-	    no = mealkitDAO.updateMealkit(vo);
-
-	    List<String> fileNames = StringParser.splitString(pictures);
-        
-        for(String file : fileNames) {
-        	if (fileName != null && !fileName.equals("")) {
-        		String srcPath = path + "\\temp\\";
-	    		String destinationPath = path + "\\mealkit\\thumbnails\\" + String.valueOf(no) + "\\" + id;
-			
-	    		FileIOController.deleteFile(destinationPath, originFileName);
-    			FileIOController.moveProfile(srcPath, destinationPath, file);	 		
-        	}
-    	}
-
+	    mealkitDAO.updateMealkit(vo);
+   
+	    String srcPath = path + File.separator + "temp" + File.separator;
+		String destinationPath = path + File.separator + "mealkit" + File.separator +"thumbnails" + File.separator + String.valueOf(no) + File.separator + id;
+		
+		if (fileName != null && !fileName.equals("")) {
+		    if (originFileName != null && !originFileName.equals("")) {
+		        FileIOController.deleteFile(destinationPath, originFileName);
+		    }
+		    FileIOController.moveProfile(srcPath, destinationPath, fileName);
+		}
+		
+		for (String file : fileNames) {
+		    if (file != null && !file.equals("")) {
+		        FileIOController.moveProfile(srcPath, destinationPath, file);
+		    }
+		}
+		
+		PrintWriter printWriter = response.getWriter();
+		printWriter.println(no);
+		printWriter.close();
 	}
 
 	public Map<Integer, Float> getAllRatingAvr(ArrayList<MealkitVO> mealkits) {
@@ -293,5 +326,18 @@ public class MealkitService {
 		String word = request.getParameter("word");
 		
 		return mealkitDAO.selectSearchList(key, word);
+	}
+
+	public String getBytePicturesParser(HttpServletRequest request) {
+
+		String bytePictures = request.getParameter("bytePictures");
+		
+		List<String> fileNames = StringParser.splitString(bytePictures);
+	    
+	    String updatePictures = String.join(",", fileNames);
+		
+	    System.out.println("getBytePicures(service) : " + updatePictures);
+	    
+		return updatePictures;
 	}
 }

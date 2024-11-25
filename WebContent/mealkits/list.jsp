@@ -95,12 +95,15 @@
 						}
 						
 						MealkitVO vo = list.get(i);
+						String[] picturesArray = vo.getPictures().split(",");
+						String thumbnail = picturesArray[0]; 
 						%>
 						<tr>
 					        <td>
 					            <a href="<%= contextPath %>/Mealkit/info?no=<%=vo.getNo()%>">
 					                <span>
-					                    <img class="thumbnail" src="<%= contextPath %>/images/mealkit/thumbnails/<%=vo.getNo()%>/<%=vo.getPictures()%>">
+					                    <img class="thumbnail" 
+					                    src="<%= contextPath %>/images/mealkit/thumbnails/<%=vo.getNo()%>/<%=vo.getId() %>/<%=thumbnail%>">
 					                    작성자: <%=vo.getId() %> &nbsp;&nbsp;&nbsp;&nbsp;
 					                    작성일: <%=vo.getPostDate() %> &nbsp;&nbsp;&nbsp;&nbsp;
 					                    평점:  <fmt:formatNumber value="<%=ratingAvr.get(vo.getNo()) %>" pattern="#.#" />&nbsp;&nbsp;&nbsp;&nbsp;
