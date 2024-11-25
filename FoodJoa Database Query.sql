@@ -354,3 +354,10 @@ LEFT OUTER JOIN member m
 ON c.id = m.id 
 WHERE m.nickname like '%나리%'
 ORDER BY c.post_date DESC;
+
+SELECT c.*, m.nicknames 
+FROM community_share c 
+LEFT OUTER JOIN member m 
+ON c.id = m.id 
+where c.type = if('재료나눔' like '%%', 0, if('같이먹어요' like '%%', 1, -1)) 
+ORDER BY c.post_date DESC;

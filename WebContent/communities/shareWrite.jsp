@@ -23,7 +23,7 @@
 			width: 128px;
 			height: 128px;
 			overflow: hidden;
-		}ß
+		}
 		
 		#imageContainer img {
 			width: 100%;

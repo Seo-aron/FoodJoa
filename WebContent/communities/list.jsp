@@ -48,12 +48,22 @@
 		width: 1200px;
 	}
 	
+	#top_container{
+		font-family: fantasy;
+		margin-top: 40px;
+		text-align: center;
+	
+	}
 </style>
 </head>
 <body>
 	<div id="container">
+		<div id="top_container">
+			<h1>< 자유 게시판 ></h1>
+			<h2>css 테스트 중입니다</h2>
+		</div>
 		<table border="0" width=100% cellpadding="2" cellspacing="0">
-			<tr align="center" bgcolor="#99ff99">
+			<tr align="center" bgcolor="BF917E">
 				<td class="col-no">글번호</td>
 				<td class="col-title">제목</td>
 				<td class="col-write">작성자</td>

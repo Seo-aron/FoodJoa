@@ -285,7 +285,7 @@ public class CommunityController extends HttpServlet {
 	private void processShareSearch(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		ArrayList<HashMap<String, Object>> shareList = communityService.getShareList();
+		ArrayList<HashMap<String, Object>> shareList = communityService.getSearchedShareList(request);
 		
 		request.setAttribute("shareList", shareList);
 		request.setAttribute("center", "communities/shareList.jsp");

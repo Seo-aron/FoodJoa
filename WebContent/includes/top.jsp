@@ -85,7 +85,7 @@
 		/* 메뉴바 스타일 */
 		#topMenu {
 			height: 60px;
-			background-color: #99ff99;
+			background-color: white;
 			list-style: none;
 			display: flex;
 			justify-content: center;
@@ -105,8 +105,8 @@
 		}
 		
 		#topMenu>li:hover>a {
-			background-color: #99ff99;
-			color: #fff;
+			background-color: #white;
+			color: rgb(191, 145, 126);
 		}
 		
 		/* 서브메뉴 스타일 */
@@ -172,7 +172,7 @@
 		<nav>
 			<ul id="topMenu">
 				<li><a href="<%= contextPath %>/main.jsp">홈</a></li>
-				<li><a href="<%= contextPath %>/Recipe/list?category=0">레시피 공유<span> ▼ </span></a>
+				<li><a href="<%= contextPath %>/Recipe/list?category=0">레시피 공유</a>
 					<ul>
 						<li><a href="<%= contextPath %>/Recipe/list?category=1">한식 요리</a></li>
 						<li><a href="<%= contextPath %>/Recipe/list?category=2">일식 요리</a></li>
@@ -180,14 +180,14 @@
 						<li><a href="<%= contextPath %>/Recipe/list?category=4">양식 요리</a></li>
 						<li><a href="<%= contextPath %>/Recipe/list?category=5">자취 요리</a></li>
 					</ul></li>
-				<li><a href="#">나만의 음식 판매<span> ▼ </span></a>
+				<li><a href="#">나만의 음식 판매</a>
 					<ul>
 						<li><a href="<%=contextPath%>/Mealkit/list">1</a></li>
 						<li><a href="#">2</a></li>
 						<li><a href="#">3</a></li>
 						<li><a href="#">4</a></li>
 					</ul></li>
-				<li><a href="#">자유게시판<span> ▼ </span></a>
+				<li><a href="#">자유게시판</a>
 					<ul>
 						<li><a href="<%=contextPath%>/Community/list">지역별 게시판</a></li>
 						<li><a href="<%=contextPath%>/Community/shareList">재료 나눔 게시판</a></li>
