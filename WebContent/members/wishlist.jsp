@@ -1,13 +1,38 @@
+<%@page import="java.util.HashMap"%>
+<%@page import="VOs.RecipeVO"%>
+<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>     
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>     
 
-<% 
-request.setCharacterEncoding("UTF-8");
-String contextPath = request.getContextPath();
-request.setAttribute("contextPath", contextPath);
+<%
+	request.setCharacterEncoding("UTF-8");
+	response.setContentType("text/html; charset=utf-8");
+
+	String contextPath = request.getContextPath();
+	
+	ArrayList<HashMap<String, Object>> wishListInfos = (ArrayList<HashMap<String, Object>>) request.getAttribute("wishListInfos");
+	
+	String category = (String) request.getAttribute("category");
+	
+	final int columnCount = 4;
+	
+	int totalRecipeCount = wishListInfos.size();
+	
+	int recipeCountPerPage = 12;
+	int totalPageCount = (int) Math.ceil((double) totalRecipeCount / recipeCountPerPage);
+	int currentPage = (request.getAttribute("currentPage") == null) ? 0 :
+		Integer.parseInt(request.getAttribute("currentPage").toString());
+	
+	int pageCountPerBlock = 5;
+	int totalBlockCount = (int) Math.ceil((double) totalPageCount / pageCountPerBlock);
+	int currentBlock = (request.getAttribute("currentBlock") == null) ? 0 :
+		Integer.parseInt(request.getAttribute("currentBlock").toString());
+	
+	int firstRecipeIndex = currentPage * recipeCountPerPage;
 %>
+
 
 <!DOCTYPE html>
 <html>
@@ -101,19 +126,46 @@ request.setAttribute("contextPath", contextPath);
     <!-- 레시피 목록 -->
     <div id="recipeTitle" style="display: none;">
         <h2>레시피</h2>
-    </div>
-    <div id="recipeList" style="display: none;">
-        <div class="wishlist-grid">
-            <c:forEach var="item" items="${wishList}">
-                <c:if test="${item.type == 'recipe'}">
-                    <div class="wishlist-item">
-                        <img src="${item.thumbnail}" alt="Thumbnail" width="100" height="100" />
-                        <div>${item.name} - ${item.description}</div>
-                    </div>
-                </c:if>
-            </c:forEach>
-        </div>
-    </div>
+  <% 
+    if (wishListInfos == null || wishListInfos.size() <= 0) { 
+%>
+        <tr>
+            <td>등록된 위시리스트가 없습니다.</td>
+        </tr>
+<% 
+    } else {
+        int firstRecipeIndex = 0; // 시작 인덱스
+        int recipeCountPerPage = 5; // 한 페이지당 보여줄 레시피 개수
+        int totalRecipeCount = wishListInfos.size(); // 전체 위시리스트 수
+        int columnCount = 3; // 한 줄에 보여줄 열 수
+        
+        // 페이지 나누기를 위한 for문
+        for (int i = firstRecipeIndex; i < firstRecipeIndex + recipeCountPerPage; i++) {
+            if (i >= totalRecipeCount) { %> </tr> <% break; }
+            
+            if (i % columnCount == 0) { %> <tr> <% }
+            
+            // 위시리스트에서 각 항목을 가져오기
+            HashMap<String, Object> wishListItem = wishListInfos.get(i);
+            RecipeVO recipe = (RecipeVO) wishListItem.get("recipeVO");  // RecipeVO 객체
+            double rating = (double) wishListItem.get("averageRating");  // 평균 평점
+            String nickname = (String) wishListItem.get("nickname");  // 사용자 닉네임
+            
+%>
+            <td>
+                <div>
+                    <h3>${recipe.title}</h3>
+                    <img src="${recipe.thumbnail}" alt="${recipe.title}" width="100" height="100">
+                    <p>평균 평점: ${rating}</p>
+                    <p>작성자: ${nickname}</p>
+                </div>
+            </td>
+
+<% 
+            if ((i + 1) % columnCount == 0) { %> </tr> <% }
+        }
+    }
+%>
 
     <!-- 상품 목록 -->
     <div id="productTitle" style="display: none;">

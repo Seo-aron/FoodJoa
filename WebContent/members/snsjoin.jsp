@@ -37,10 +37,11 @@
 	<center>
 		<div id="container">
 		<table width="100%">
+		<h2>푸드조아 회원가입</h2>
 			<tr>
 				<td>
 					<a href="https://nid.naver.com/oauth2.0/authorize?client_id=XhLz64aZjKhLJHJUdga6&response_type=code&redirect_uri=http://localhost:8090/FoodJoa/Member/naverjoin.me&state=YOUR_STATE">
-					    <img height="50" src="<%= contextPath %>/images/member/naverlogin.png"/>
+					    <img height="50" src="<%= contextPath %>/images/member/naverjoin.png"/>
 					</a>
 				</td>
 			</tr>
@@ -49,7 +50,7 @@
 				<td>
 					
 				     <a href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=dfedef18f339b433884cc51b005f2b42&redirect_uri=http://localhost:8090/FoodJoa/Member/kakaojoin.me">
-						<img src="<%= contextPath %>/images/member/kakaologin.png" style="width: 200px">
+						<img src="<%= contextPath %>/images/member/kakaojoin.png">
 					</a>
 				</td>
 			</tr>

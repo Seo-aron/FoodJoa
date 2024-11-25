@@ -5,15 +5,15 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <%
-    request.setCharacterEncoding("UTF-8");
-    response.setContentType("text/html; charset=utf-8");
-    
-    String contextPath = request.getContextPath();
-    
-    MemberVO vo = (MemberVO) request.getAttribute("vo");    		
-    
-    // String id = (String) session.getAttribute("id");
-    String id = "admin";
+request.setCharacterEncoding("UTF-8");
+response.setContentType("text/html; charset=utf-8");
+
+String contextPath = request.getContextPath();
+
+MemberVO vo = (MemberVO) request.getAttribute("vo");          
+
+
+String id = (String) session.getAttribute("id"); 
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -86,19 +86,19 @@
             <input type="file" accept=".jpg, .jpeg, .png" class="profile" id="fileInput" name="profile">
             <div class="form-group">
                 <label for="name">이름</label> 
-                <input type="text" id="name" name="name" value="<%=vo.getName()%>" placeholder="2자 이상 10자 미만으로 입력해주세요">
+                <input type="text" id="name" name="name" value="${member.name}" placeholder="2자 이상 10자 미만으로 입력해주세요">
             </div>
             <div class="form-group">
                 <label for="nickname">닉네임</label> 
-                <input type="text" id="nickname" name="nickname" value="<%=vo.getNickname()%>" placeholder="2자 이상 10자 미만으로 입력해주세요">
+                <input type="text" id="nickname" name="nickname" value="${member.nickname}" placeholder="2자 이상 10자 미만으로 입력해주세요">
             </div>
             <div class="form-group">
                 <label for="phone">번호</label> 
-                <input type="text" id="phone" name="phone" value="<%=vo.getPhone()%>" placeholder="-없이 입력해주세요">
+                <input type="text" id="phone" name="phone" value="${member.phone}" placeholder="-없이 입력해주세요">
             </div>
             <div class="form-group">
                 <label for="address">주소</label> 
-                <input type="text" id="address" name="address" value="<%=vo.getAddress()%>">
+                <input type="text" id="address" name="address" value="${member.address}">
             </div>
             <div class="btn-container">
                 <button type="button" class="btn-submit">제출</button>
