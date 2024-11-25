@@ -14,19 +14,25 @@
 	
 	String category = (String) request.getAttribute("category");
 	
+	String currentPageStr = (String) request.getAttribute("currentPage");
+	String currentBlockStr = (String) request.getAttribute("currentBlock");
+	
+	System.out.println(currentPageStr);
+	System.out.println(currentBlockStr);
+	
 	final int columnCount = 4;
 	
 	int totalRecipeCount = recipes.size();
 	
 	int recipeCountPerPage = 12;
 	int totalPageCount = (int) Math.ceil((double) totalRecipeCount / recipeCountPerPage);
-	int currentPage = (request.getAttribute("currentPage") == null) ? 0 :
-		Integer.parseInt(request.getAttribute("currentPage").toString());
+	int currentPage = (currentPageStr == null) ? 0 :
+		Integer.parseInt(currentPageStr);
 	
 	int pageCountPerBlock = 5;
 	int totalBlockCount = (int) Math.ceil((double) totalPageCount / pageCountPerBlock);
-	int currentBlock = (request.getAttribute("currentBlock") == null) ? 0 :
-		Integer.parseInt(request.getAttribute("currentBlock").toString());
+	int currentBlock = (currentBlockStr == null) ? 0 :
+		Integer.parseInt(currentBlockStr);
 	
 	int firstRecipeIndex = currentPage * recipeCountPerPage;
 	

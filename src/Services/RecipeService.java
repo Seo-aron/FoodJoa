@@ -35,9 +35,9 @@ public class RecipeService {
 		return recipeDAO.selectRecipesWithRating(category);
 	}
   
-	public ArrayList<RecipeVO> getRecipesList() {
+	public ArrayList<HashMap<String, Object>> getRecipesListById(HttpServletRequest request) {
 		
-		return recipeDAO.selectRecipes();
+		return recipeDAO.selectRecipesById(request.getParameter("id"));
 	}
 	
 	public RecipeVO getRecipe(HttpServletRequest request) {

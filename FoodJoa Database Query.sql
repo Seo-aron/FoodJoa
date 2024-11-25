@@ -107,6 +107,15 @@ values('review1', '1', 'thumbnailImage.png', '리뷰 내용', 3, CURRENT_TIMESTA
 desc recipe_review;
 select * from recipe_review;
 
+SELECT r.*, COALESCE(avg_rating.average_rating, 0) AS average_rating 
+FROM recipe r 
+LEFT JOIN ( 
+	SELECT recipe_no, AVG(rating) AS average_rating 
+    FROM recipe_review 
+    GROUP BY recipe_no 
+) avg_rating ON r.no = avg_rating.recipe_no 
+WHERE r.id='admin';
+
 select r.*, COALESCE(avg_rating.average_rating, 0) AS average_rating, m.nickname as nickname 
 from recipe r
 left join (

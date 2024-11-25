@@ -63,6 +63,8 @@ public class RecipeController extends HttpServlet {
       case "/wishlist": processRecipeWishlist(request, response); return;
       case "/review": if (openRecipeReviewView(request, response)) return ; break;
       case "/reviewWrite": processReviewWrite(request, response); return;
+      
+      case "/myRecipes": openMyRecipeView(request, response); break;
 
       default:
       }
@@ -122,17 +124,17 @@ public class RecipeController extends HttpServlet {
       nextPage = "/Recipe/read?no=" + recipeNo;
    }
    
-   private void openRecipeUpdateView(HttpServletRequest request, HttpServletResponse response)
-         throws ServletException, IOException {
-      
-      RecipeVO recipe = recipeService.getRecipe(request);
+	private void openRecipeUpdateView(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-      request.setAttribute("recipe", recipe);
-      request.setAttribute("pageTitle", "게시글 수정하기");
-      request.setAttribute("center", "recipes/update.jsp");
-      
-      nextPage = "/main.jsp";
-   }
+		RecipeVO recipe = recipeService.getRecipe(request);
+
+		request.setAttribute("recipe", recipe);
+		request.setAttribute("pageTitle", "게시글 수정하기");
+		request.setAttribute("center", "recipes/update.jsp");
+
+		nextPage = "/main.jsp";
+	}
    
    private void processRecipeUpdate(HttpServletRequest request, HttpServletResponse response)
          throws ServletException, IOException {
@@ -149,19 +151,19 @@ public class RecipeController extends HttpServlet {
       
       nextPage = "/Recipe/list?category=0";
    }
-   
-   private void processRecipeWishlist(HttpServletRequest request, HttpServletResponse response)
-         throws ServletException, IOException {
-      
-      int result = recipeService.processRecipeWishlist(request);
-      
-      printWriter = response.getWriter();
-      
-      printWriter.print(result);
-      
-      printWriter.close();
-      printWriter = null;
-   }
+
+	private void processRecipeWishlist(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		int result = recipeService.processRecipeWishlist(request);
+
+		printWriter = response.getWriter();
+
+		printWriter.print(result);
+
+		printWriter.close();
+		printWriter = null;
+	}
    
    private boolean openRecipeReviewView(HttpServletRequest request, HttpServletResponse response)
          throws ServletException, IOException {
@@ -195,5 +197,17 @@ public class RecipeController extends HttpServlet {
 			throws ServletException, IOException {
 		
 		recipeService.processReviewWrite(request);
+	}
+	
+	private void openMyRecipeView(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		ArrayList<HashMap<String, Object>> recipes = recipeService.getRecipesListById(request);
+
+		request.setAttribute("recipes", recipes);
+		request.setAttribute("pageTitle", "나의 레시피");
+		request.setAttribute("center", "recipes/myrecipes.jsp");
+		
+		nextPage = "/main.jsp";
 	}
 }
