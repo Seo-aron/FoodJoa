@@ -57,6 +57,10 @@
         };
     </script>
     <style>
+    	#container {
+    		width: 1200px;
+    	}
+    
         .wishlist-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr); /* 4개의 열로 나누기 */
@@ -76,98 +80,100 @@
     </style>
 </head>
 <body>
-    <h1>Wish List</h1>
-
-    <!-- 라디오 버튼 -->
-    <div>
-        <input type="radio" id="all" name="filter" value="all" checked onchange="toggleList()">
-        <label for="all">전체보기</label>
-
-        <input type="radio" id="recipe" name="filter" value="recipe" onchange="toggleList()">
-        <label for="recipe">레시피</label>
-
-        <input type="radio" id="product" name="filter" value="product" onchange="toggleList()">
-        <label for="product">상품</label>
-    </div>
-    <hr>
-
-    <!-- 전체보기 -->
-    <div id="allTitle" style="display: block;">
-        <h2>전체보기</h2>
-    </div>
-    <div id="allList" style="display: block;">
-        <div class="wishlist-grid">
-            <c:forEach var="item" items="${wishList}">
-                <div class="wishlist-item">
-                    <img src="${item.thumbnail}" alt="Thumbnail" width="100" height="100" />
-                    <div>${item.name} (${item.type})</div>
-                </div>
-            </c:forEach>
-        </div>
-    </div>
-
-    <!-- 레시피 목록 -->
-    <div id="recipeTitle" style="display: none;">
-        <h2>레시피</h2>
-    </div>
-    <div id="recipeList" style="display: none;">
-        <table class="list_table">
-            <%
-            if (wishListInfos.isEmpty()) {
-            %>
-                <tr>
-                    <td colspan="<%= columnCount %>">등록된 레시피가 없습니다.</td>
-                </tr>
-            <%
-            } else {
-                for (int i = 0; i < wishListInfos.size(); i++) {
-                    if (i % columnCount == 0) {
-            %>
-                <tr> <!-- 새로운 행 시작 -->
-            <%
-                    }
-
-                    // 레시피 정보 추출
-                    HashMap<String, Object> recipeData = wishListInfos.get(i);
-                    RecipeVO recipe = (RecipeVO) recipeData.get("recipeVO");
-                    double rating = (double) recipeData.get("averageRating");
-            %>
-                    <td class="wishlist-item">
-                        <a href="recipeDetails.jsp?recipeNo=<%= recipe.getNo() %>">
-                            <img src="<%= contextPath %>/images/recipe/thumbnails/<%= recipe.getNo() %>/<%= recipe.getThumbnail() %>" 
-                                 alt="Thumbnail">
-                            <div><b><%= recipe.getTitle() %></b></div>
-                            <div>작성자: <%= recipe.getId() %></div>
-                            <div>평점: <%= String.format("%.1f", rating) %></div>
-                        </a>
-                    </td>
-            <%
-                    if ((i + 1) % columnCount == 0 || i == wishListInfos.size() - 1) {
-            %>
-                </tr> <!-- 현재 행 종료 -->
-            <%
-                    }
-                }
-            }
-            %>
-        </table>
-    </div>
-
-    <!-- 상품 목록 -->
-    <div id="productTitle" style="display: none;">
-        <h2>상품</h2>
-    </div>
-    <div id="productList" style="display: none;">
-        <div class="wishlist-grid">
-            <c:forEach var="item" items="${wishList}">
-                <c:if test="${item.type == 'product'}">
-                    <div class="wishlist-item">
-                        <img src="${item.thumbnail}" alt="Thumbnail" width="100" height="100" />
-                        <div>${item.name} - ${item.description}</div>
-                    </div>
-                </c:if>
-            </c:forEach>
-        </div>
-    </div>
+	<div id="container">
+	    <h1>Wish List</h1>
+	
+	    <!-- 라디오 버튼 -->
+	    <div>
+	        <input type="radio" id="all" name="filter" value="all" checked onchange="toggleList()">
+	        <label for="all">전체보기</label>
+	
+	        <input type="radio" id="recipe" name="filter" value="recipe" onchange="toggleList()">
+	        <label for="recipe">레시피</label>
+	
+	        <input type="radio" id="product" name="filter" value="product" onchange="toggleList()">
+	        <label for="product">상품</label>
+	    </div>
+	    <hr>
+	
+	    <!-- 전체보기 -->
+	    <div id="allTitle" style="display: block;">
+	        <h2>전체보기</h2>
+	    </div>
+	    <div id="allList" style="display: block;">
+	        <div class="wishlist-grid">
+	            <c:forEach var="item" items="${wishList}">
+	                <div class="wishlist-item">
+	                    <img src="${item.thumbnail}" alt="Thumbnail" width="100" height="100" />
+	                    <div>${item.name} (${item.type})</div>
+	                </div>
+	            </c:forEach>
+	        </div>
+	    </div>
+	
+	    <!-- 레시피 목록 -->
+	    <div id="recipeTitle" style="display: none;">
+	        <h2>레시피</h2>
+	    </div>
+	    <div id="recipeList" style="display: none;">
+	        <table class="list_table">
+	            <%
+	            if (wishListInfos.isEmpty()) {
+	            %>
+	                <tr>
+	                    <td colspan="<%= columnCount %>">등록된 레시피가 없습니다.</td>
+	                </tr>
+	            <%
+	            } else {
+	                for (int i = 0; i < wishListInfos.size(); i++) {
+	                    if (i % columnCount == 0) {
+	            %>
+	                <tr> <!-- 새로운 행 시작 -->
+	            <%
+	                    }
+	
+	                    // 레시피 정보 추출
+	                    HashMap<String, Object> recipeData = wishListInfos.get(i);
+	                    RecipeVO recipe = (RecipeVO) recipeData.get("recipeVO");
+	                    double rating = (double) recipeData.get("averageRating");
+	            %>
+	                    <td class="wishlist-item">
+	                        <a href="recipeDetails.jsp?recipeNo=<%= recipe.getNo() %>">
+	                            <img src="<%= contextPath %>/images/recipe/thumbnails/<%= recipe.getNo() %>/<%= recipe.getThumbnail() %>" 
+	                                 alt="Thumbnail">
+	                            <div><b><%= recipe.getTitle() %></b></div>
+	                            <div>작성자: <%= recipe.getId() %></div>
+	                            <div>평점: <%= String.format("%.1f", rating) %></div>
+	                        </a>
+	                    </td>
+	            <%
+	                    if ((i + 1) % columnCount == 0 || i == wishListInfos.size() - 1) {
+	            %>
+	                </tr> <!-- 현재 행 종료 -->
+	            <%
+	                    }
+	                }
+	            }
+	            %>
+	        </table>
+	    </div>
+	
+	    <!-- 상품 목록 -->
+	    <div id="productTitle" style="display: none;">
+	        <h2>상품</h2>
+	    </div>
+	    <div id="productList" style="display: none;">
+	        <div class="wishlist-grid">
+	            <c:forEach var="item" items="${wishList}">
+	                <c:if test="${item.type == 'product'}">
+	                    <div class="wishlist-item">
+	                        <img src="${item.thumbnail}" alt="Thumbnail" width="100" height="100" />
+	                        <div>${item.name} - ${item.description}</div>
+	                    </div>
+	                </c:if>
+	            </c:forEach>
+	        </div>
+	    </div>
+	</div>
 </body>
 </html>

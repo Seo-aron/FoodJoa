@@ -88,7 +88,7 @@ public class MealkitService {
 		MultipartRequest multipartRequest = new MultipartRequest(request, path + File.separator + "temp", maxSize, "UTF-8",
 				new DefaultFileRenamePolicy());
 	    
-	    String id = multipartRequest.getParameter("id");
+	    String id = (String) request.getSession().getAttribute("userId");
 	    String title = multipartRequest.getParameter("title");
 	    String pictures = multipartRequest.getParameter("pictures");
 	    String contents = multipartRequest.getParameter("contents");
@@ -121,7 +121,7 @@ public class MealkitService {
         for(String fileName : fileNames) {
     		
     		String srcPath = path + "temp" + File.separator;
-    	    String destinationPath = path + "mealkit" + File.separator + "thumbnails" + File.separator + no + File.separator + id;
+    	    String destinationPath = path + File.separator + "mealkit" + File.separator + "thumbnails" + File.separator + no + File.separator + id;
     		
     		FileIOController.moveFile(srcPath, destinationPath, fileName);
         }

@@ -50,7 +50,6 @@ long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
       </a>
    </div>
 
-<<<<<<< HEAD
 	<div class="profile-wrapper">
 		<div class="profile-section">
 			<div class="profile-image">
@@ -74,31 +73,6 @@ long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
 				<button id="updateButton">정보수정</button>
 			</div>
 		</div>
-=======
-   <div class="profile-wrapper">
-      <div class="profile-section">
-         <div class="profile-image">
-            <img src="<%=contextPath%>/images/member/userProfiles/${member.id}/${member.profile}" alt="Profile Image">
-         </div>
-         <div class="profile-info">
-            <h2>${member.nickname}</h2>
-            <%
-            if (joinDate != null) {
-               %>
-               <p>
-                  ${member.nickname}님은 푸드조아와 함께한지 <strong><%=daysBetween%></strong>일째입니다!
-               </p>
-               <%
-            } else {
-               %>
-               <p>가입 정보를 가져올 수 없습니다. 관리자에게 문의하세요.</p>
-               <%
-            }
-            %>
-            <button id="updateButton">정보수정</button>
-         </div>
-      </div>
->>>>>>> a575f7bd4a95c68b6f4dba2bd1a8c24f17493e14
 
       <div class="manage-section">
          <div>

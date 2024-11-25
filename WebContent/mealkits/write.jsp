@@ -9,6 +9,8 @@
     response.setContentType("text/html; charset=utf-8");
     
     String contextPath = request.getContextPath();
+    
+    String id = (String) session.getAttribute("userId");
 %>
 <!DOCTYPE html>
 <html>
@@ -24,14 +26,6 @@
         <h2>밀키트 게시글 작성</h2>
         <form action="<%=contextPath%>/Mealkit/write.pro" method="post" id="frmWrite" enctype="multipart/form-data">
             <table border="1">
-	            <tr>
-				    <th>ID</th>
-				    <td>
-				    	<!-- 로그인정보를 세션에 저장해야 쓸 수 있음 -->
-				    	<!--<input type="text" name="id" value="${sessionScope.userId}" readonly>-->
-				    	<input type="text" name="id" value="user1" readonly>
-				    </td>
-				</tr>
                 <tr>
                     <th>글 제목</th>
                     <td><input type="text" name="title" required></td>
