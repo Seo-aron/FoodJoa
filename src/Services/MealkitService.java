@@ -3,6 +3,7 @@ package Services;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -229,6 +230,9 @@ public class MealkitService {
 	}
 
 	public void updateMealkit(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		String separator = FileSystems.getDefault().getSeparator();
+		
 	    ServletContext application = request.getServletContext();
 	    
 	    String path = application.getRealPath("/images/");
@@ -284,7 +288,7 @@ public class MealkitService {
 		
 		if (fileName != null && !fileName.equals("")) {
 		    if (originFileName != null && !originFileName.equals("")) {
-		        FileIOController.deleteFile(destinationPath, originFileName);
+		        FileIOController.deleteFile(destinationPath, originFileName, separator);
 		    }
 		    FileIOController.moveProfile(srcPath, destinationPath, fileName);
 		}
