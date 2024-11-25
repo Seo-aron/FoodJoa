@@ -14,6 +14,8 @@
     String contextPath = request.getContextPath();
     
     MealkitVO mealkitvo = (MealkitVO) request.getAttribute("mealkitvo");
+    String updatePictures = request.getParameter("updatePictures");
+    System.out.println("editBoard.jsp에서 받은 bytePictures: " + updatePictures);
 %>
 <c:set var="mealkit" value="${requestScope.mealkitvo}"/>
 
@@ -24,35 +26,6 @@
     <title>밀키트 판매 게시글 수정</title>
     <link rel="stylesheet" type="text/css" href="<%=contextPath%>/css/mealkit/write.css">
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
-    <script>
-        // 사진 추가 관련 
-        $(document).ready(function() {
-            let pictureCount = 1;
-            const maxPictures = 5;
-
-            $('#addImage').click(function() {
-                if (pictureCount < maxPictures) {
-                    const newInput = `
-                        <div class="image-row">
-                            <input type="file" name="pictures[]" accept="image/*" class="additionalInput">
-                            <button type="button" class="removeImage">삭제</button>
-                        </div>
-                    `;
-                    $('#imageContainer').append(newInput);
-                    pictureCount++;
-                } else {
-                    alert("최대 5장의 사진만 추가할 수 있습니다.");
-                }
-            });
-
-            // 추가된 사진 삭제 기능
-            $(document).on('click', '.removeImage', function() {
-                $(this).closest('.image-row').remove();
-                pictureCount--;
-            });
-        });
-    </script>
- 
 </head>
 <body>
     <div id="container">
@@ -65,6 +38,7 @@
 				    	<!-- 로그인정보를 세션에 저장해야 쓸 수 있음 -->
 				    	<!--<input type="text" name="id" value="${sessionScope.userId}" readonly>-->
 				    	<input type="text" name="id" value="user1" readonly>
+				    	<input type="hidden" name="no" value="${mealkit.no }">
 				    </td>
 				</tr>
                 <tr>
@@ -74,10 +48,12 @@
                 <tr>
 				    <th>사진 추가</th>
 				    <td>
-				        <input type="file" name="pictures[]" accept="image/*" required id="thumbnail"><br>
-				        <div id="imageContainer"></div>
-				        <button type="button" id="addImage">추가 사진</button>
-				    </td>
+				        <div id="imagePreview"></div>
+   						<input type="file" id="pictureFiles" name="pictureFiles" 
+							accept=".jpg,.jpeg,.png" multiple onchange="handleFileSelect(this.files)">
+						<button type="button" id="addFileBtn" onclick="triggerFileInput()">사진 추가</button>	
+						<input type="hidden" id="pictures" name="pictures" value="<%=updatePictures%>">
+					</td>
 				</tr>
                 <tr>
                     <th>카테고리</th>
@@ -124,130 +100,239 @@
             </table>
         </form>
     </div>
-    <% List<String> orders = StringParser.splitString(mealkitvo.getOrders()); %>
-    <script type="text/javascript">
-    
-	    $(function() {
-	    	$(".write").click(function(event) {
-	    		event.preventDefault();
-	    	});
-	    	
-	    	$(".add-orders").click(function() {
-	    	    var newIngredientHtml = `
-	    	        <p class="orders-row">
-	    	            <input type="text" class="name-orders" placeholder="조리 순서를 간단히 적어주세요.">
-	    	            <button type="button" class="addrow-orders">추가</button>
-	    	            <button type="button" class="cancle-orders">취소</button>
-	    	        </p>
-	    	    `;
-	    	    
-	    	    $(this).parent().prev().append(newIngredientHtml);
-	    	});
-	    	
-			// 추가 버튼을 눌렀을 때 
-	    	$(document).on('click', '.addrow-orders', function() {
-	    	    var $row = $(this).closest('.orders-row');
-	    	    var name = $row.find('.name-orders').val();
-	    	    
-	    	    if (name) {
-	    	    	var newIngredientHtml = 
-	    	            '<p class="added-orders">' +
-	    				'<span class="added-order">' + name + '</span>' + 
-	    	            '<button type="button" class="remove-orders">삭제</button>' +
-	    	            '</p>';
-	    	        
-	    	        $row.replaceWith(newIngredientHtml);
-	    	        
-	    	    }
-	    		else {
-	    	        alert("조리 순서를 입력 해주세요.");
-	    	    }
-	    	});
-			// 조리 순서 취소 버튼 
-	    	$(document).on('click', '.cancle-orders', function() {
-	    	    $(this).closest('.orders-row').remove();
-	    	});
-			// 조리 순서 삭제 버튼 
-	    	$(document).on('click', '.remove-orders', function() {
-	    	    $(this).closest('.added-orders').remove();
-	    	});
-	    });
-	    
-		// 전송버튼 
-		function onSubmit(e) {
-		    e.preventDefault();
-		  	
-		    setOrdersString();
-		    
-		    var formData = new FormData($("#frmWrite")[0]);
+    <% 
+    	List<String> orders = StringParser.splitString(mealkitvo.getOrders()); 
+	    String pictures = mealkitvo.getPictures();
+	    String[] pictureArray = pictures.split(",");
+    %>
+   <script type="text/javascript">
+   	let selectedFiles = [];
+   	let selectedRealFiles = [];
 
-		    $.ajax({
-		        url: "<%= contextPath %>/Mealkit/update.pro",
-		        type: "POST",
-		        data: formData,
-		        processData: false,
-		        contentType: false,
-		        success: function(response) { 
-		            if (response === "1") {
-		                alert("글 수정이 성공적으로 완료되었습니다.");
-		                window.location.href = "<%= contextPath %>/Mealkit/list";
-		            } else {
-		                alert("글 수정에 실패했습니다. 다시 시도해주세요.");
-		            }
-		        },
-		        error: function() { 
-		            alert("서버 요청 중 에러가 발생했습니다.");
-		        }
-		    });
-		}
-		
-		// 받은 조리 순서를 하나의 배열로 만드는 함수 
-		function setOrdersString() {
+    $(function() {
+    	$(".write").click(function(event) {
+    		event.preventDefault();
+    	});
+    	
+    	$(".add-orders").click(function() {
+    	    var newOrderHtml = `
+    	        <p class="orders-row">
+    	            <input type="text" class="name-orders" placeholder="조리 순서를 간단히 적어주세요.">
+    	            <button type="button" class="addrow-orders">추가</button>
+    	            <button type="button" class="cancle-orders">취소</button>
+    	        </p>
+    	    `;
+    	    
+    	    $(this).parent().prev().append(newOrderHtml);
+    	});
+    	
+		// 추가 버튼을 눌렀을 때 
+    	$(document).on('click', '.addrow-orders', function() {
+    	    var $row = $(this).closest('.orders-row');
+    	    var name = $row.find('.name-orders').val();
+    	    
+    	    if (name) {
+    	    	var newOrderHtml = 
+    	            '<p class="added-orders">' +
+    				'<span class="added-order">' + name + '</span>' + 
+    	            '<button type="button" class="remove-orders">삭제</button>' +
+    	            '</p>';
+    	        
+    	        $row.replaceWith(newOrderHtml);    
+    	    }
+    		else {
+    	        alert("조리 순서를 입력 해주세요.");
+    	    }
+    	});
+		// 조리 순서 취소 버튼 
+    	$(document).on('click', '.cancle-orders', function() {
+    	    $(this).closest('.orders-row').remove();
+    	});
+		// 조리 순서 삭제 버튼 
+    	$(document).on('click', '.remove-orders', function() {
+    	    $(this).closest('.added-orders').remove();
+    	});
+    });
 
-			let orders = $(".added-order");
-			let ordersString = [];
-					
-			orders.each(function(index, element) {
-				ordersString.push($(element).text());
-			});
-				
-			let combinedOrderString = combineStrings(ordersString);
-			
-			document.getElementsByName('orders')[0].value = combinedOrderString;
-		}
-					
-		// 문자열을 합치는 함수
-		function combineStrings(strings) {
-			
-			let result = strings.map(str => {
-		        const length = str.length;
-		        // 길이를 4자리로 포맷하고 0으로 패딩
-		        const lengthStr = String(length).padStart(4, '0');
-		        return lengthStr + str; // 길이와 문자열을 합침
-		    }).join(''); // 모든 요소를 하나의 문자열로 결합
-			
-			console.log("result : " + result);
-			return result;
-		}
-		
-		initialize();		
-		
-		function initialize() {
-			<%
-			for (int i = 0; i < orders.size(); i++) {
-				%>
-				var newOrderHtml = 
-		            '<p class="added-orders">' +
-					'<span class="added-order"><%= orders.get(i) %></span>' + 
-		            '<button type="button" class="remove-orders">삭제</button>' +
-		            '</p>';
-		            
-	            $(".orders-container").append(newOrderHtml);
-				<%
+	// 전송버튼 
+	function onSubmit(e, contextPath) {
+		e.preventDefault();
+	
+		setOrdersString();
+		setPicturesString();
+	
+		const formData = new FormData();
+		formData.append('no', $("input[name='no']").val());
+		formData.append('id', $("input[name='id']").val());
+		formData.append('title', $("input[name='title']").val());
+		formData.append('pictures', $("#pictures").val());
+		formData.append('category', $("select[name='category']").val());
+		formData.append('contents', $("textarea[name='contents']").val());
+		formData.append('price', $("input[name='price']").val());
+		formData.append('stock', $("input[name='stock']").val());
+		formData.append('origin', $("input[name='origin']").val());
+		formData.append('orders', $("#orders").val());
+	
+		selectedRealFiles.forEach((file, index) => {
+			formData.append('file' + index, file);
+		});
+	
+		$.ajax({
+			url: "<%=contextPath%>/Mealkit/update.pro",
+			type: "POST",
+			data: formData,
+			processData: false,
+			contentType: false,
+			success: function(response) {
+				if (response > 0) {
+					alert("글 작성이 성공적으로 완료되었습니다.");
+					location.href = "<%=contextPath%>/Mealkit/info?no=" + response;
+				} else {
+					alert("글 작성에 실패했습니다. 다시 시도해주세요.");
+				}
+			},
+			error: function() {
+				alert("서버 요청 중 에러가 발생했습니다.");
 			}
-			%>
-		}
+		});
+	}
+	
+	// 받은 조리 순서를 하나의 배열로 만드는 함수 
+	function setOrdersString() {
 
+		let orders = $(".added-order");
+		let ordersString = [];
+				
+		orders.each(function(index, element) {
+			ordersString.push($(element).text());
+		});
+			
+		let combinedOrderString = combineStrings(ordersString);
+		
+		document.getElementsByName('orders')[0].value = combinedOrderString;
+	}
+				
+	// 문자열을 합치는 함수
+	function combineStrings(strings) {
+		
+		let result = strings.map(str => {
+	        const length = str.length;
+	        // 길이를 4자리로 포맷하고 0으로 패딩
+	        const lengthStr = String(length).padStart(4, '0');
+	        return lengthStr + str; // 길이와 문자열을 합침
+	    }).join(''); // 모든 요소를 하나의 문자열로 결합
+		
+		console.log("result : " + result);
+		return result;
+	}
+	
+	initialize();		
+	
+	function initialize() {
+		<%
+		for (int i = 0; i < orders.size(); i++) {
+			%>
+			var newOrderHtml = 
+	            '<p class="added-orders">' +
+				'<span class="added-order"><%= orders.get(i) %></span>' + 
+	            '<button type="button" class="remove-orders">삭제</button>' +
+	            '</p>';
+	            
+            $(".orders-container").append(newOrderHtml);
+			<%
+		}
+		%>
+		
+	}
+	
+	// 사진 관련 
+	function triggerFileInput() {
+		if (selectedFiles.length >= 5) {
+			alert("사진은 최대 5장까지 추가할 수 있습니다.");
+			return;
+		}
+		document.getElementById('pictureFiles').click();
+	}
+	
+	function handleFileSelect(files) {
+		const imagePreview = document.getElementById('imagePreview');
+	
+		Array.from(files).forEach(file => {
+			if (file.type.startsWith('image/')) {
+				let fileIdentifier = file.name + '-' + file.size;
+	
+				if (!selectedFiles.includes(fileIdentifier)) {
+					if (selectedFiles.length >= 5) {
+						alert("사진은 최대 5장까지 추가할 수 있습니다.");
+						return;
+					}
+	
+					selectedFiles.push(fileIdentifier);
+					selectedRealFiles.push(file);
+	
+					const reader = new FileReader();
+	
+					reader.readAsDataURL(file);
+	
+					reader.onload = function(e) {
+						const img = document.createElement('img');
+						img.src = e.target.result;
+	
+						img.dataset.filename = file.name;
+						img.classList.add('preview_image');
+	
+						img.addEventListener('click', function() {
+							imagePreview.removeChild(img);
+							removeSelectedFile(fileIdentifier);
+							document.getElementById('pictureFiles').value = '';
+						});
+	
+						img.style.cursor = 'pointer';
+	
+						imagePreview.appendChild(img);
+					}
+				}
+			}
+		});
+	
+		document.getElementById('pictureFiles').value = '';
+	}
+	
+	// 선택한 파일 제거
+	function removeSelectedFile(fileIdentifier) {
+		for (let i = 0; i < selectedFiles.length; i++) {
+			if (selectedFiles[i] == fileIdentifier) {
+				selectedFiles.splice(i, 1);
+				selectedRealFiles.splice(i, 1);
+				break;
+			}
+		}
+	}
+	
+	function removeSelectedFile(fileIdentifier) {
+		//selectedFiles = selectedFiles.filter(item => item !== fileIdentifier);
+		for (let i = 0; i < selectedFiles.length; i++) {
+			if (selectedFiles[i] == fileIdentifier) {
+				selectedFiles.splice(i, 1);
+				selectedRealFiles.splice(i, 1);
+				break;
+			}
+		}
+	}
+	
+	function setPicturesString() {
+		let strings = [];
+	
+		selectedFiles.forEach(fileIdentifier => {
+			// fileIdentifier는 "파일이름-파일크기" 형식
+			let fileName = fileIdentifier.split('-')[0]; // 파일 이름 부분만 추출
+			strings.push(fileName);
+		});
+	
+		let pictures = combineStrings(strings);
+	
+		document.getElementsByName('pictures')[0].value = pictures;
+	}
     </script>
 </body>
 </html>

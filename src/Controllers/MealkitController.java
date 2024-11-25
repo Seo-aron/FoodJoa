@@ -6,11 +6,15 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.oreilly.servlet.MultipartRequest;
+import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
 import Services.MealkitService;
 import VOs.MealkitOrderVO;
@@ -81,8 +85,12 @@ public class MealkitController extends HttpServlet {
 
 	private void openUpdateBoard(HttpServletRequest request, HttpServletResponse response) {
 		MealkitVO mealkitvo = mealkitService.getMealkitInfo(request);
+		String updatePictures = mealkitService.getBytePicturesParser(request);
+		
+		System.out.println("getBytePicures(controller) : " + updatePictures);
 		
 		request.setAttribute("mealkitvo", mealkitvo);
+		request.setAttribute("updatePictures", updatePictures);
 		request.setAttribute("center", "mealkits/editBoard.jsp");
 		
 		nextPage = "/main.jsp";

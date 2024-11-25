@@ -15,37 +15,9 @@
 <head>
     <meta charset="UTF-8">
     <title>밀키트 판매 게시글 작성</title>
+    
     <link rel="stylesheet" type="text/css" href="<%=contextPath%>/css/mealkit/write.css">
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
-    <script>
-        // 사진 추가 관련 
-        $(document).ready(function() {
-            let pictureCount = 1;
-            const maxPictures = 5;
-
-            $('#addImage').click(function() {
-                if (pictureCount < maxPictures) {
-                    const newInput = `
-                        <div class="image-row">
-                            <input type="file" name="pictures[]" accept="image/*" class="additionalInput">
-                            <button type="button" class="removeImage">삭제</button>
-                        </div>
-                    `;
-                    $('#imageContainer').append(newInput);
-                    pictureCount++;
-                } else {
-                    alert("최대 5장의 사진만 추가할 수 있습니다.");
-                }
-            });
-
-            // 추가된 사진 삭제 기능
-            $(document).on('click', '.removeImage', function() {
-                $(this).closest('.image-row').remove();
-                pictureCount--;
-            });
-        });
-    </script>
- 
 </head>
 <body>
     <div id="container">
@@ -67,9 +39,11 @@
                 <tr>
 				    <th>사진 추가</th>
 				    <td>
-				        <input type="file" name="pictures[]" accept="image/*" required id="thumbnail"><br>
-				        <div id="imageContainer"></div>
-				        <button type="button" id="addImage">추가 사진</button>
+				        <div id="imagePreview"></div>
+   						<input type="file" id="pictureFiles" name="pictureFiles" 
+							accept=".jpg,.jpeg,.png" multiple onchange="handleFileSelect(this.files)">
+						<button type="button" id="addFileBtn" onclick="triggerFileInput()">사진 추가</button>	
+						<input type="hidden" id="pictures" name="pictures">
 				    </td>
 				</tr>
                 <tr>
@@ -111,118 +85,13 @@
                 </tr>
                 <tr>
                 <td colspan="2">
-					<input type="button" class="write" value="작성 완료" onclick="onSubmit(event)">
+					<input type="button" class="write" value="작성 완료" onclick="onSubmit(event, '<%=contextPath%>')">
 				</td>
 			</tr>
             </table>
         </form>
     </div>
     
-    <script type="text/javascript">
-    
-	    $(function() {
-	    	$(".write").click(function(event) {
-	    		event.preventDefault();
-	    	});
-	    	
-	    	$(".add-orders").click(function() {
-	    	    var newIngredientHtml = `
-	    	        <p class="orders-row">
-	    	            <input type="text" class="name-orders" placeholder="조리 순서를 간단히 적어주세요.">
-	    	            <button type="button" class="addrow-orders">추가</button>
-	    	            <button type="button" class="cancle-orders">취소</button>
-	    	        </p>
-	    	    `;
-	    	    
-	    	    $(this).parent().prev().append(newIngredientHtml);
-	    	});
-	    	
-			// 조리순서) 추가 버튼을 눌렀을 때 
-	    	$(document).on('click', '.addrow-orders', function() {
-	    	    var $row = $(this).closest('.orders-row');
-	    	    var name = $row.find('.name-orders').val();
-	    	    
-	    	    if (name) {
-	    	    	var newIngredientHtml = 
-	    	            '<p class="added-orders">' +
-	    				'<span class="added-order">' + name + '</span>' + 
-	    	            '<button type="button" class="remove-orders">삭제</button>' +
-	    	            '</p>';
-	    	        
-	    	        $row.replaceWith(newIngredientHtml);
-	    	        
-	    	    }
-	    		else {
-	    	        alert("조리 순서를 입력 해주세요.");
-	    	    }
-	    	});
-	
-	    	$(document).on('click', '.cancle-orders', function() {
-	    	    $(this).closest('.orders-row').remove();
-	    	});
-	
-	    	$(document).on('click', '.remove-orders', function() {
-	    	    $(this).closest('.added-orders').remove();
-	    	});
-	    });
-	    
-		// 전송버튼 
-		function onSubmit(e) {
-		    e.preventDefault();
-		  	
-		    setOrdersString();
-		    
-		    var formData = new FormData($("#frmWrite")[0]);
-
-		    $.ajax({
-		        url: "<%= contextPath %>/Mealkit/write.pro",
-		        type: "POST",
-		        data: formData,
-		        processData: false, // jQuery가 데이터를 자동으로 변환하지 않도록 설정
-		        contentType: false, // Content-Type을 자동으로 설정하도록
-		        success: function(response) { 
-		            if (response > 0) {
-		                alert("글 작성이 성공적으로 완료되었습니다.");
-		                location.href = "<%= contextPath %>/Mealkit/info?no=" + response;
-		            } else {
-		                alert("글 작성에 실패했습니다. 다시 시도해주세요.");
-		            }
-		        },
-		        error: function() { 
-		            alert("서버 요청 중 에러가 발생했습니다.");
-		        }
-		    });
-		}
-		
-		// 받은 조리 순서를 하나의 배열로 만드는 함수 
-		function setOrdersString() {
-
-			let orders = $(".added-order");
-			let ordersString = [];
-					
-			orders.each(function(index, element) {
-				ordersString.push($(element).text());
-			});
-				
-			let combinedOrderString = combineStrings(ordersString);
-			
-			document.getElementsByName('orders')[0].value = combinedOrderString;
-		}
-					
-		// 문자열을 합치는 함수
-		function combineStrings(strings) {
-			
-			let result = strings.map(str => {
-		        const length = str.length;
-		        // 길이를 4자리로 포맷하고 0으로 패딩
-		        const lengthStr = String(length).padStart(4, '0');
-		        return lengthStr + str; // 길이와 문자열을 합침
-		    }).join(''); // 모든 요소를 하나의 문자열로 결합
-			
-			console.log("result : " + result);
-			return result;
-		}
-
-    </script>
+    <script src="<%= contextPath %>/js/mealkit/write.js"></script>
 </body>
 </html>

@@ -12,7 +12,7 @@ public  class FileIOController {
 		
 	    if (fileName == null || fileName.isEmpty()) return;
 
-        File srcFile = new File(srcPath + "\\" + fileName);
+        File srcFile = new File(srcPath + File.separator + fileName);
         File destDir = new File(destinationPath);
 
         if (!destDir.exists()) {
