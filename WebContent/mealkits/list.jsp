@@ -1,5 +1,6 @@
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.Map" %>
+<%@ page import="Common.StringParser"%>
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="VOs.MealkitVO" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -99,13 +100,17 @@
 						}
 						
 						MealkitVO vo = list.get(i);
-						String[] picturesArray = vo.getPictures().split(",");
-						String thumbnail = picturesArray[0]; 
+						
+						List<String> picturesList = StringParser.splitString(vo.getPictures());
+					    String thumbnail = picturesList.get(0);
 						%>
 						<tr>
 					        <td>
 					            <a href="<%= contextPath %>/Mealkit/info?no=<%=vo.getNo()%>">
 					                <span>
+					                <%
+									   
+									%>
 					                    <img class="thumbnail" 
 					                    src="<%= contextPath %>/images/mealkit/thumbnails/<%=vo.getNo()%>/<%=vo.getId() %>/<%=thumbnail%>">
 					                    작성자: <%=vo.getId() %> &nbsp;&nbsp;&nbsp;&nbsp;

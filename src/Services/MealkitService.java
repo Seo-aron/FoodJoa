@@ -27,6 +27,7 @@ import DAOs.MealkitDAO;
 import VOs.MealkitOrderVO;
 import VOs.MealkitReviewVO;
 import VOs.MealkitVO;
+import VOs.MemberVO;
 
 public class MealkitService {
 	
@@ -88,8 +89,7 @@ public class MealkitService {
 		MultipartRequest multipartRequest = new MultipartRequest(request, path + File.separator + "temp", maxSize, "UTF-8",
 				new DefaultFileRenamePolicy());
 	    
-	    // String id = (String) request.getSession().getAttribute("userId");
-		String id = multipartRequest.getParameter("id");
+	    String id = (String) request.getSession().getAttribute("userId");
 	    String title = multipartRequest.getParameter("title");
 	    String pictures = multipartRequest.getParameter("pictures");
 	    String contents = multipartRequest.getParameter("contents");
@@ -99,17 +99,10 @@ public class MealkitService {
 	    String orders = multipartRequest.getParameter("orders");
 	    String origin = multipartRequest.getParameter("origin");        
 
-	    List<String> fileNames = StringParser.splitString(pictures);
-	    
-	    String allPictures = String.join(",", fileNames);
-
-	    System.out.println("pictures : " + allPictures);
-	    System.out.println("orders : " + orders);
-	    
 	    MealkitVO vo = new MealkitVO();
 	    vo.setId(id);
 	    vo.setTitle(title);
-	    vo.setPictures(allPictures);
+	    vo.setPictures(pictures);
 	    vo.setContents(contents);
 	    vo.setCategory(category);
 	    vo.setPrice(price);
@@ -118,6 +111,8 @@ public class MealkitService {
 	    vo.setOrigin(origin);
 
 	    int no = mealkitDAO.insertNewContent(vo);
+
+	    List<String> fileNames = StringParser.splitString(pictures);
 	    
         for(String fileName : fileNames) {
     		
@@ -246,7 +241,7 @@ public class MealkitService {
 		String fileName = multipartRequest.getOriginalFileName("file");
 	    
 	    int no = Integer.parseInt(multipartRequest.getParameter("no"));
-	    String id = multipartRequest.getParameter("id");
+	    String id = (String) request.getSession().getAttribute("userId");
 	    String title = multipartRequest.getParameter("title");
 	    String pictures = multipartRequest.getParameter("pictures");
 	    String contents = multipartRequest.getParameter("contents");
@@ -266,16 +261,11 @@ public class MealkitService {
 	    System.out.println("orders: " + orders);
 	    System.out.println("stock: " + stock);
 
-	    List<String> fileNames = StringParser.splitString(pictures);   
-	    String allPictures = String.join(",", fileNames);
-
-	    System.out.println("pictures : " + allPictures);
-	    
 	    MealkitVO vo = new MealkitVO();
 	    vo.setNo(no);
 	    vo.setId(id);
 	    vo.setTitle(title);
-	    vo.setPictures(allPictures);
+	    vo.setPictures(pictures);
 	    vo.setContents(contents);
 	    vo.setPrice(price);
 	    vo.setStock(stock);
@@ -283,7 +273,9 @@ public class MealkitService {
 	    vo.setOrigin(origin);
 
 	    mealkitDAO.updateMealkit(vo);
-   
+
+	    List<String> fileNames = StringParser.splitString(pictures);
+	    
 	    String srcPath = path + File.separator + "temp" + File.separator;
 		String destinationPath = path + File.separator + "mealkit" + File.separator +
 				"thumbnails" + File.separator + String.valueOf(no) + File.separator + id;
@@ -346,4 +338,19 @@ public class MealkitService {
 	    
 		return updatePictures;
 	}
+
+	public void buyMealkit(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		
+	    String id = request.getParameter("id");
+	    int mealkitNo = Integer.parseInt(request.getParameter("mealkitNo"));
+	    int quantity = Integer.parseInt(request.getParameter("quantity"));
+	    int delivered = Integer.parseInt(request.getParameter("delivered"));
+	    int refund = Integer.parseInt(request.getParameter("refund"));
+
+	    boolean result = mealkitDAO.saveOrder(id, mealkitNo, quantity, delivered, refund);
+	    PrintWriter out = response.getWriter();
+	    out.print(result);
+	    out.close();
+	}
+
 }

@@ -53,7 +53,8 @@
    						<input type="file" id="pictureFiles" name="pictureFiles" 
 							accept=".jpg,.jpeg,.png" multiple onchange="handleFileSelect(this.files)">
 						<button type="button" id="addFileBtn" onclick="triggerFileInput()">사진 추가</button>
-						<input type="hidden" id="pictures" name="pictures" value="">
+						<input type="text" id="pictures" name="pictures" value="${mealkit.pictures }">
+						<button type="button" onclick="clearInputValue()">삭제</button>
 					</td>
 				</tr>
                 <tr>
@@ -160,7 +161,9 @@
 		e.preventDefault();
 	
 		setOrdersString();
-		setPicturesString();
+		if(!$("#pictures").val()){
+			setPicturesString();
+		}
 	
 		const formData = new FormData();
 		formData.append('no', $("input[name='no']").val());
@@ -244,33 +247,6 @@
 		}
 		%>
 		
-		let initialPictures = "<%=mealkitvo.getPictures()%>";
-		
-		const mealkitNo = $("input[name='no']").val();
-	    const mealkitId = $("input[name='id']").val();
-
-	    if (initialPictures) {
-	        const picturesArray = initialPictures.split(',');
-	        const imagePreview = document.getElementById('imagePreview');
-
-	        picturesArray.forEach(picture => {
-	            const img = document.createElement('img');
-	            img.src = "<%=contextPath%>" + "/images/mealkit/thumbnails/" + mealkitNo + "/" + mealkitId + "/" + picture; 
-	            console.log(img.src);
-	            img.dataset.filename = picture;
-	            img.classList.add('preview_image');
-
-	            img.addEventListener('click', function () {
-	                imagePreview.removeChild(img);
-	                removeSelectedFile(picture);
-	            });
-
-	            imagePreview.appendChild(img);
-	        });
-
-	        document.getElementsByName('pictures')[0].value = combineStrings(picturesArray);
-	    }
-		
 	}
 	
 	// 사진 관련 
@@ -325,6 +301,11 @@
 	
 		document.getElementById('pictureFiles').value = '';
 	}
+	
+	function clearInputValue() {
+        // 'pictures' input의 value 값을 빈 문자열로 설정
+        document.getElementById('pictures').value = "";
+    }
 	
 	// 선택한 파일 제거
 	function removeSelectedFile(fileIdentifier) {

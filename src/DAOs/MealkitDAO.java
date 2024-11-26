@@ -10,6 +10,7 @@ import VOs.MealkitOrderVO;
 import VOs.MealkitReviewVO;
 import VOs.MealkitVO;
 import VOs.MealkitWishListVO;
+import VOs.MemberVO;
 
 public class MealkitDAO {
 	private DBConnector dbConnector;
@@ -145,7 +146,7 @@ public class MealkitDAO {
 		}
 		
 		if(id != null) {
-			sql = "INSERT INTO mealkit_wishlist(id, mealkit_no, type) VALUES (?,?,?)";
+			sql = "INSERT INTO mealkit_wishlist(id, mealkit_no, type, choice_date) VALUES (?,?,?,NOW())";
 			result = dbConnector.executeUpdate(sql, id, no, type);
 		} else {
 			System.out.println("일치하는 ID가 없습니다.");
@@ -357,6 +358,16 @@ public class MealkitDAO {
 		dbConnector.release();
 		
 		return mealkits;
+	}
+
+	public boolean saveOrder(String id, int mealkitNo, int quantity, int delivered, int refund) {
+
+		String sql = "INSERT INTO mealkit_order (id, mealkit_no, address, quantity, delivered, refund, post_date) " +
+                 "VALUES (?, ?, (SELECT address FROM member WHERE id = ?), ?, 0, 0, NOW())";
+		
+		int result = dbConnector.executeUpdate(sql, id, mealkitNo, id, quantity);
+		
+		return result == 1;
 	}
 
 }

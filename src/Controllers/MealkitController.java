@@ -66,12 +66,17 @@ public class MealkitController extends HttpServlet {
 		case "/update": openUpdateBoard(request, response); break;
 		case "/update.pro": processUpdate(request, response); return;
 		case "/searchlist.pro": processSearchList(request, response); break;
+		case "/buyMealkit.pro": processBuyMealkit(request, response); return;
 
 		default: break;
 		}
 
 		RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
 		dispatcher.forward(request, response);
+	}
+
+	private void processBuyMealkit(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		mealkitService.buyMealkit(request, response);
 	}
 
 	private void processSearchList(HttpServletRequest request, HttpServletResponse response) {
