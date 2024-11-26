@@ -27,6 +27,7 @@
 	<script src="https://code.jquery.com/jquery-latest.min.js"></script>
   	<script src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
   	<link rel="stylesheet" href="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css">
+  	
   	<link rel="stylesheet" href="<%=contextPath%>/css/mealkit/board.css">
   	
   	<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
@@ -210,8 +211,7 @@
 		        });
 		    } else {  // 구매 확인 취소 시
 		        return false;
-		    }
-		});
+		}
 	}
 
 	</script>

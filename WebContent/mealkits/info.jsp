@@ -21,7 +21,7 @@
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>	
 	<style type="text/css">
 		#container{
-			width: 1000px;
+			width: 1200px;
 		}
 	</style>
 </head>
