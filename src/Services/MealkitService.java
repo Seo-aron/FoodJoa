@@ -3,20 +3,15 @@ package Services;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.FileSystems;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.io.FileUtils;
 
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
@@ -24,10 +19,8 @@ import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 import Common.FileIOController;
 import Common.StringParser;
 import DAOs.MealkitDAO;
-import VOs.MealkitOrderVO;
 import VOs.MealkitReviewVO;
 import VOs.MealkitVO;
-import VOs.MemberVO;
 
 public class MealkitService {
 	
@@ -60,12 +53,12 @@ public class MealkitService {
 		return mealkitDAO.InfoReview(no);
 	}
 
-	public void setMyMealkit(HttpServletRequest request, HttpServletResponse response) 
+	public void setWishMealkit(HttpServletRequest request, HttpServletResponse response) 
 			throws IOException {
 		int no = Integer.parseInt(request.getParameter("no"));
 		int type = Integer.parseInt(request.getParameter("type"));
 		
-		int result = mealkitDAO.addMyMealkit(no, type);
+		int result = mealkitDAO.addWishMealkit(no, type);
 		
 		
 		String res = String.valueOf(result);
@@ -250,17 +243,6 @@ public class MealkitService {
 	    String orders = multipartRequest.getParameter("orders");
 	    int stock = Integer.parseInt(multipartRequest.getParameter("stock"));
 	    
-	    System.out.println("Received Parameters:");
-	    System.out.println("no: " + no);
-	    System.out.println("id: " + id);
-	    System.out.println("title: " + title);
-	    System.out.println("pictures: " + pictures);
-	    System.out.println("contents: " + contents);
-	    System.out.println("price: " + price);
-	    System.out.println("origin: " + origin);
-	    System.out.println("orders: " + orders);
-	    System.out.println("stock: " + stock);
-
 	    MealkitVO vo = new MealkitVO();
 	    vo.setNo(no);
 	    vo.setId(id);

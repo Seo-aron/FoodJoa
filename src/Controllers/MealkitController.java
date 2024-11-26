@@ -56,7 +56,7 @@ public class MealkitController extends HttpServlet {
 		switch (action) {
 		case "/list": openMealkitView(request, response); break;
 		case "/info": openMealkitInfoView(request, response); break;
-		case "/mypage.pro": processMealkitMyPage(request, response); return;
+		case "/wish.pro": processWishMealkit(request, response); return;
 		case "/write": openAddMealkit(request, response); break;
 		case "/write.pro": processAddMealkit(request, response); return;
 		case "/reviewwrite": openAddReview(request, response); break;
@@ -147,9 +147,9 @@ public class MealkitController extends HttpServlet {
 		nextPage = "/main.jsp";
 	}
 
-	private void processMealkitMyPage(HttpServletRequest request, HttpServletResponse response) 
+	private void processWishMealkit(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException{
-		mealkitService.setMyMealkit(request, response);
+		mealkitService.setWishMealkit(request, response);
 	}
 	
 	private void openMealkitInfoView(HttpServletRequest request, HttpServletResponse response)

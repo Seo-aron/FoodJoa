@@ -150,27 +150,20 @@
         const price = "<%=mealkitvo.getPrice()%>";
         const quantity = parseInt($('#stock').val());
         const mealkitNo = "<%=mealkitvo.getNo()%>";
-    	// 모든 가격을 합친 제품당 (가격 * 수량) 한 가격을 더한 값을 저장 할 변수 생성
-    	// 그럴려면 price * quantity 를 저장할 변수 + 배열에서 그 값을 꺼내어 또 다 합쳐서 저장할 변수 
-    	// 결제창은 1번만 실행, db작업은 각 제품별로 실행해야하니 forEach(item => {})문은 ajax쪽으로 이동 시켜야 할 듯 
-    	
-		// 장바구니에서는 ex) 체크박스에 체크가 되면 cartItems.push(필요한 정보들 키:값); 이런식으로 동적 추가
-    	var cartItems = [
-			{ title: title, price: price, quantity: quantity, mealkitNo: mealkitNo }
-		];
+        
+        // 하나의 주문에 대한 총 금액
+        cartItems.forEach(item => {
+            item.totalPrice = item.price * item.quantity;
+        });
 
-        var paymentData = cartItems.map(item => [item.title, item.price, item.quantity, item.mealkitNo]);
+        // 여러개의 주문에 대한 총 금액
+        var totalAmount = cartItems.reduce((sum, item) => sum + item.totalPrice, 0);
 
-        kakaoPay(paymentData); // 로그인된 사용자만 결제 함수 호출
+        kakaoPay(totalAmount, cartItems);
     });
 
 	// 카카오페이 결제 함수
-	function kakaoPay(paymentData) {
-		paymentData.forEach(item => {
-	        var title = item[0];
-	        var price = item[1];
-	        var quantity = item[2];
-	        var mealkitNo = item[3];
+	function kakaoPay(totalAmount, cartItems) {
 	    
 		    if (confirm("구매 하시겠습니까?")) {
 		    	
@@ -180,36 +173,37 @@
 		            pg: 'kakaopay.TC0ONETIME',  // PG사 코드
 		            pay_method: 'card',          // 결제 방식
 		            merchant_uid: "IMP" + makeMerchantUid, // 결제 고유 번호
-		            name: title,
-		            amount: price,
+		            name: "총 주문", // 결제 명칭
+	                amount: totalAmount,
 		        }, async function(rsp) { // 결제 요청 후 callback 처리
 		            if (rsp.success) {  // 결제 성공 시
 		                console.log(rsp); // 결제 성공 시 응답 로그            
                         alert('결제 완료!');
                     	// ajax로 데이터 넘기고 mealkit_order 테이블로 데이터 이동 후, 주문 조회 페이지로 이동
-                    	$.ajax({
-                    		url: "<%=contextPath%>/Mealkit/buyMealkit.pro",
-                    		type: "POST",
-                    		async: true,
-                    		data: {
-                    	        id: "<%=id%>",       	// 사용자 ID (로그인 사용자)
-                    	        mealkitNo: mealkitNo,	// 밀키트 번호
-                    	        quantity: quantity,  	// 구매 수량
-                    	        delivered: 0,        	// 배송 상태
-                    	        refund: 0            	// 환불 상태
-                    	        // 주소 JOIN 처리
-                    		},
-                    		success: function(response) {
-                    	        // 서버 응답 처리
-                    	        if (response) {
-									console.log('결제가 성공적으로 완료되었습니다.');
-									alert('결제가 성공적으로 완료되었습니다.');
-									// 멤버 배송정보 뭐 이런 페이지로 이동 location.href =
-                    	        } else {
-                    	            alert('결제는 성공했지만 DB 저장 중 오류가 발생했습니다.');
-                    	        }
-                    	    }
-                    	});	                   
+                    	cartItems.forEach(item => {
+	                        $.ajax({
+	                            url: "<%=contextPath%>/Mealkit/buyMealkit.pro",
+	                            type: "POST",
+	                            async: true,
+	                            data: {
+	                                id: "<%=id%>",
+	                                mealkitNo: item.mealkitNo,
+	                                quantity: item.quantity,
+	                                delivered: 0,
+	                                refund: 0
+	                            },
+	                    		success: function(response) {
+	                    	        // 서버 응답 처리
+	                    	        if (response) {
+										console.log('결제가 성공적으로 완료되었습니다.');
+										alert('결제가 성공적으로 완료되었습니다.');
+										// 멤버 배송정보 뭐 이런 페이지로 이동 location.href =
+	                    	        } else {
+	                    	            alert('결제는 성공했지만 DB 저장 중 오류가 발생했습니다.');
+	                    	        }
+	                    	    }
+	                    	});
+                    	});
 		            } else {  // 결제 실패 시
 		                alert(rsp.error_msg);
 		            }

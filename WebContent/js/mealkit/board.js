@@ -32,7 +32,7 @@ $('.stock_minus').click(function() {
 function cartMealkit(contextPath) {
 	// 장바구니 type = 1
 	$.ajax({
-		url: contextPath + "/Mealkit/mypage.pro",
+		url: contextPath + "/Mealkit/wish.pro",
 		type: "POST",
 		async: true,
 		data: {
@@ -49,7 +49,7 @@ function cartMealkit(contextPath) {
 function wishMealkit(contextPath) {
 	// 찜하기 type = 0
 	$.ajax({
-		url: contextPath + "/Mealkit/mypage.pro",
+		url: contextPath + "/Mealkit/wish.pro",
 		type: "POST",
 		async: true,
 		data: {

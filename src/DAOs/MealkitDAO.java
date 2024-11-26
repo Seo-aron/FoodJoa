@@ -126,7 +126,7 @@ public class MealkitDAO {
 		return reviews;
 	}
 
-	public int addMyMealkit(int no, int type) {
+	public int addWishMealkit(int no, int type) {
 		// 장바구니 1, 찜목록 0
 		String sql = "SELECT id FROM mealkit WHERE no = ?";
 		String id = null;		
