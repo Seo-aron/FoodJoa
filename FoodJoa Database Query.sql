@@ -219,7 +219,7 @@ CREATE TABLE mealkit_order(
     id			varchar(50) not null,
     mealkit_no	int not null,
     address		varchar(5) not null,
-    amount		int not null,
+    quantity	int not null,
     delivered	tinyint not null,
     refund		tinyint not null,
     post_date	timestamp not null,
