@@ -25,14 +25,16 @@ public class RecipeDAO {
 		ArrayList<HashMap<String, Object>> recipes = new ArrayList<HashMap<String,Object>>();
 		
 		String sql = "SELECT "
-				+ "r.*, COALESCE(avg_rating.average_rating, 0) AS average_rating, m.nickname AS nickname "
+				+ "    r.*, "
+				+ "    COALESCE(rr.average_rating, 0) AS average_rating, "
+				+ "    COALESCE(rr.review_count, 0) AS review_count, "
+				+ "    m.nickname AS nickname "
 				+ "FROM recipe r "
 				+ "LEFT JOIN ( "
-				+ "SELECT "
-				+ "recipe_no, AVG(rating) AS average_rating "
-				+ "FROM recipe_review "
-				+ "GROUP BY recipe_no "
-				+ ") avg_rating ON r.no = avg_rating.recipe_no "
+				+ "	   SELECT recipe_no, AVG(rating) AS average_rating, COUNT(rating) AS review_count "
+				+ "    FROM recipe_review "
+				+ "    GROUP BY recipe_no "
+				+ ")rr ON r.no = rr.recipe_no "
 				+ "LEFT JOIN member m ON r.id=m.id ";
 		
 		if (_category != 0) sql += "WHERE r.category=? ";
@@ -59,12 +61,14 @@ public class RecipeDAO {
 						resultSet.getString("orders"),
 						resultSet.getTimestamp("post_date"));
 				
-				double avgReview = resultSet.getDouble("average_rating");
+				float avgReview = resultSet.getFloat("average_rating");
+				int reviewCount = resultSet.getInt("review_count");
 				String nickname = resultSet.getString("nickname");
 				
 				HashMap<String, Object> recipeHashMap = new HashMap<String, Object>();
 				recipeHashMap.put("recipe", recipe);
 				recipeHashMap.put("average", avgReview);
+				recipeHashMap.put("reviewCount", reviewCount);
 				recipeHashMap.put("nickname", nickname);
 				
 				recipes.add(recipeHashMap);
@@ -497,18 +501,20 @@ public class RecipeDAO {
 		
 		ArrayList<HashMap<String, Object>> recipes = new ArrayList<HashMap<String,Object>>(); 
 		
-		String sql = "select r.*, COALESCE(avg_rating.average_rating, 0) AS average_rating, m.nickname as nickname "
-				+ "from recipe r "
-				+ "left join ( "
-				+ "	select recipe_no, avg(rating) as average_rating "
-				+ "    from recipe_review "
-				+ "    group by recipe_no "
-				+ ") avg_rating on r.no = avg_rating.recipe_no "
-				+ "left join member m on r.id=m.id ";
+		String sql = "SELECT r.*, COALESCE(avg_rating.average_rating, 0) AS average_rating, m.nickname AS nickname "
+				+ "FROM recipe r "
+				+ "LEFT JOIN ( "
+				+ "SELECT recipe_no, AVG(rating) AS average_rating "
+				+ "FROM recipe_review "
+				+ "GROUP BY recipe_no "
+				+ ") avg_rating ON r.no = avg_rating.recipe_no "
+				+ "LEFT JOIN member m ON r.id=m.id ";
 		
-		sql += (key.equals("recipe")) ? "WHERE r.title LIKE '%?%'" : "WHERE nickname LIKE '%?%'";
-		if (!category.equals("0")) sql += "and category=? ";
-		sql += "order by r.post_date desc";
+		sql += (key.equals("recipe")) ? "WHERE r.title LIKE ? " : "WHERE nickname LIKE ? ";
+		if (!category.equals("0")) sql += "AND category=? ";
+		sql += "ORDER BY r.post_date DESC";
+		
+		word = "%" + word + "%";
 		
 		ResultSet resultSet = (category.equals("0")) ?
 				dbConnector.executeQuery(sql, word) :

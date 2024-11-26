@@ -116,16 +116,20 @@ LEFT JOIN (
 ) avg_rating ON r.no = avg_rating.recipe_no 
 WHERE r.id='admin';
 
-select r.*, COALESCE(avg_rating.average_rating, 0) AS average_rating, m.nickname as nickname 
-from recipe r
-left join (
-	select recipe_no, avg(rating) as average_rating
-    from recipe_review
-    group by recipe_no
-) avg_rating on r.no = avg_rating.recipe_no
-left join member m on r.id=m.id 
-where r.category=1 
-order by r.post_date desc;
+SELECT 
+	r.*, 
+    COALESCE(rr.average_rating, 0) AS average_rating, 
+    COALESCE(rr.review_count, 0) AS review_count, 
+    m.nickname AS nickname 
+FROM recipe r 
+LEFT JOIN ( 
+	SELECT recipe_no, AVG(rating) AS average_rating, COUNT(rating) AS review_count 
+    FROM recipe_review 
+    GROUP BY recipe_no 
+)rr ON r.no = rr.recipe_no 
+LEFT JOIN member m ON r.id=m.id 
+ORDER BY r.post_date DESC;
+
 
 select r.*, COALESCE(avg_rating.average_rating, 0) AS average_rating, m.nickname as nickname 
 from recipe r
@@ -135,7 +139,8 @@ left join (
     group by recipe_no
 ) avg_rating on r.no = avg_rating.recipe_no
 left join member m on r.id=m.id 
-where r.title like '%3%'
+where r.title like '%33%'
+and category=2 
 order by r.post_date desc;
 
 select

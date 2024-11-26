@@ -17,9 +17,6 @@
 	String currentPageStr = (String) request.getAttribute("currentPage");
 	String currentBlockStr = (String) request.getAttribute("currentBlock");
 	
-	System.out.println(currentPageStr);
-	System.out.println(currentBlockStr);
-	
 	final int columnCount = 4;
 	
 	int totalRecipeCount = recipes.size();
@@ -52,6 +49,14 @@
 			$("#write").click(function() {
 				location.href = '<%= contextPath %>/Recipe/write';
 			});
+			
+			$('#word').on('keydown', function(e) {
+		        var keyCode = e.which;
+
+		        if (keyCode === 13) {
+		        	onSearchButton();
+		        }
+		    });
 		});
 	
 		function openRecipeContent(recipeNo) {
@@ -74,27 +79,40 @@
 
 <body>
 	<div id="container">
-		<table class="header">
-			<tr>
-				<td align="center">
-					<select id="key" name="key">
-						<option value="recipe">레시피 명</option>
-						<option value="nickname">작성자</option>
-					</select>
-					<input type="text" id="word" name="word" placeholder="검색할 레시피를 입력하세요.">
-					<input type="button" name="search_button" value="검색" onclick="onSearchButton()">
-				</td>
-				<td align="center">
-					<%
-					if (id != null && !id.equals("")) {
-						%><input type="button" id="write" name="write" value="나만의 레시피 쓰기"><%
-					}
-					%>
-				</td>
-			</tr>
-		</table>
+		<h1>
+			<%
+			int _catetory = (category == null || category.equals("")) ? 0 : Integer.parseInt(category);
 		
-		<table class="list_table">
+			switch (_catetory) {
+			case 1: %> 한식 요리 <% break;
+			case 2: %> 일식 요리 <% break;
+			case 3: %> 중식 요리 <% break;
+			case 4: %> 양식 요리 <% break;
+			case 5: %> 자취 요리 <% break;
+			default: %> 전체 레시피 <%;
+			}
+			%>
+		</h1>
+		<div class="recipe-list-header">
+			<div class="recipe-list-search-area">
+				<select id="key" name="key">
+					<option value="recipe">레시피 명</option>
+					<option value="nickname">작성자</option>
+				</select>
+				<input type="text" id="word" name="word" placeholder="검색할 레시피를 입력하세요.">
+				<input type="button" id="search-button" name="search-button" value="검색" onclick="onSearchButton()">
+			</div>
+			
+			<div class="recipe-write-button">
+				<%
+				if (id != null && !id.equals("")) {
+					%><input type="button" id="write" name="write" value="레시피 작성"><%
+				}
+				%>
+			</div>
+		</div>
+		
+		<table class="recipe-list-table">
 			<%
 			if (recipes == null || recipes.size() <= 0) {
 				%>
@@ -110,33 +128,57 @@
 					
 					if (i % columnCount == 0) { %> <tr> <% }
 
-					RecipeVO recipe = (RecipeVO) recipes.get(i).get("recipe");					
-					double rating = (double) recipes.get(i).get("average");
+					RecipeVO recipe = (RecipeVO) recipes.get(i).get("recipe");
+					int reviewCount = (int) recipes.get(i).get("reviewCount");
+					float rating = (float) recipes.get(i).get("average");
 					String nickname = (String) recipes.get(i).get("nickname");
 					
 					%>
-					<td class="list_cell">
+					<td class="recipe-cell">
 					    <a href="javascript:openRecipeContent(<%= recipe.getNo() %>)" class="cell-link">
-					        <span class="thumbnail">
-					            <img src="<%= contextPath %>/images/recipe/thumbnails/<%= recipe.getNo() %>/<%= recipe.getThumbnail() %>">
-					        </span>
-					        <span class="title"><%= recipe.getTitle() %></span>
-					        <span class="nickname"><%= nickname %></span>
-					        
-					        <span class="rating">
-					            <%
-					            String starImage = "";
-					            for (int j = 1; j <= 5; j++) {
-					                if (j <= rating) starImage = "full_star.png";
-					                else if (j > rating && j < rating + 1) starImage = "half_star.png";
-					                else starImage = "empty_star.png";
-					                %>
-					                <img class="review_star" src="<%= contextPath %>/images/recipe/<%= starImage %>" alt="별점">
-					                <%
-					            }
-					            %>
-					        </span>
-					        <span class="views"><%= recipe.getViews() %></span>
+					    	<table>
+					    		<tr>
+					    			<td class="recipe-thumbnail" colspan="2">
+					    				<img src="<%= contextPath %>/images/recipe/thumbnails/<%= recipe.getNo() %>/<%= recipe.getThumbnail() %>">	
+					    			</td>
+					    		</tr>
+					    		<tr>
+					    			<td class="recipe-title" colspan="2">
+					    				<%= recipe.getTitle() %>
+					    			</td>
+					    		</tr>
+					    		<tr>
+					    			<td class="recipe-nickname" colspan="2">
+					    				<%= nickname %>
+					    			</td>
+					    		</tr>
+					    		<tr>
+					    			<td class="recipe-review">					    			
+					    				<img src="<%= contextPath %>/images/recipe/review_icon.png">
+					    				<span><%= reviewCount %> reviews</span>
+					    				<%-- <%
+					    				if (rating < 1) {
+					    					%>등록된 리뷰가 없습니다.<%
+					    				}
+					    				else {
+								            String starImage = "";
+								            for (int j = 1; j <= 5; j++) {
+								                if (j <= rating) starImage = "full_star.png";
+								                else if (j > rating && j < rating + 1) starImage = "half_star.png";
+								                else starImage = "empty_star.png";
+								                %>
+								                <img class="review_star" src="<%= contextPath %>/images/recipe/<%= starImage %>" alt="별점">
+								                <%
+								            }
+					    				}
+							            %> --%>
+					    			</td>
+					    			<td class="recipe-views">
+					    				<img src="<%= contextPath %>/images/recipe/views_icon.png">
+					    				<span><%= recipe.getViews() %> views</span>
+					    			</td>
+					    		</tr>
+					    	</table>
 					    </a>
 					</td>
 					<%					
