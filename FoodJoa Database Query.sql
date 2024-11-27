@@ -219,7 +219,7 @@ CREATE TABLE mealkit_order(
     id			varchar(50) not null,
     mealkit_no	int not null,
     address		varchar(5) not null,
-    amount		int not null,
+    quantity		int not null,
     delivered	tinyint not null,
     refund		tinyint not null,
     post_date	timestamp not null,
@@ -282,6 +282,28 @@ VALUES
 ('user4', 'Fried Dumplings', 'Crispy fried dumplings filled with a savory pork filling.', 1, '8.99', 'fried_dumplings.jpg', 'user6, user8', 'China',  50, 0, NOW()),
 ('user5', 'Japchae', 'Sweet potato noodles stir-fried with vegetables and beef.', 2, '13.50', 'japchae.jpg', 'user2, user4', 'Korea',  110, 0, NOW());
 
+
+SELECT
+m.nickname, m.id, mk.title, mk.contents, mk.category, mk.price, mk.pictures, mk.post_date, 
+AVG(r.rating) AS avr_rating 
+FROM mealkit_wishlist mw 
+JOIN mealkit mk ON mw.mealkit_no = mk.no 
+JOIN member m ON mk.id = m.id 
+LEFT JOIN mealkit_review r ON mk.no = r.mealkit_no 
+WHERE mw.id = 'oTcuaqH712AhGERfeDDh7sKhFyWoPrKcNhIujhF73vk' AND mw.type = 0 
+GROUP BY m.nickname, m.id, mk.title, mk.contents, mk.category, mk.price, mk.pictures, mk.post_date;
+
+SELECT 
+mk.pictures, mk.title, mk.contents, mk.price, m.nickname, mr.average_rating 
+FROM mealkit_wishlist mw 
+JOIN mealkit mk ON mw.mealkit_no = mk.no 
+JOIN member m ON mk.id = m.id 
+LEFT JOIN ( 
+SELECT mealkit_no, AVG(rating) AS average_rating 
+FROM mealkit_review 
+GROUP BY rating 
+) mr ON mw.mealkit_no = mr.mealkit_no 
+WHERE mw.id = 'oTcuaqH712AhGERfeDDh7sKhFyWoPrKcNhIujhF73vk' AND mw.type = 0;
 
 
 -- -------------------------------------------------------------------------------------
@@ -359,3 +381,19 @@ LEFT OUTER JOIN member m
 ON c.id = m.id 
 WHERE m.nickname like '%나리%'
 ORDER BY c.post_date DESC;
+-- -------------------------------------------------------------------------------------
+
+
+-- recent_view  ----------------------------------------------------------
+DROP TABLE IF EXISTS recent_view;
+create table recent_view(
+	no			int primary key auto_increment,
+    id			varchar(50) not null,
+    item_no     int not null, 
+    type		tinyint not null,
+    viewed_at   TIMESTAMP not null,
+
+    foreign key(id) references member(id)
+);
+
+commit;

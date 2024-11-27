@@ -276,7 +276,7 @@
 				url: "<%= contextPath %>/Recipe/wishlist",
 				type: "POST",
 				data: {
-					id: "admin",
+					id: '<%= id %>',
 					recipeNo: <%= recipe.getNo() %>
 				},
 				dataType: "text",

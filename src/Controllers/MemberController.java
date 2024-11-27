@@ -22,7 +22,9 @@ import javax.servlet.http.HttpSession;
 import org.json.JSONObject;
 
 import Common.NaverLoginAPI;
+import DAOs.MealkitDAO;
 import DAOs.MemberDAO;
+import DAOs.RecipeDAO;
 import Services.MemberService;
 import VOs.MemberVO;
 
@@ -77,8 +79,7 @@ public class MemberController extends HttpServlet {
 		case "/deleteMember.me": openDeleteMember(request, response); break;
 		case "/deleteMemberPro.me": processDeleteMember(request, response); return;
 		case "/WishList.me": openWishList(request, response); break;
-		case "/RecentList.me": openRecentList(request, response); break;
-		case "/sendMyMealkit.me":openSendView(request, response); break;
+		case "/RecentList.me": openRecentList(request, response); break;	
 		case "/cartList.me" : openCartList(request, response); break;
 
 		case "/mypagemain.me": openMypagemainView(request, response); break;
@@ -86,6 +87,7 @@ public class MemberController extends HttpServlet {
 		case "/updatePro.me": processMemberUpdate(request, response); break;
 		case "/viewMyDelivery.me": openMyDeliveryView(request, response); break;
 		case "/viewMyRecipe.me" : openMyRecipeView(request, response); break;
+		case "/sendMyMealkit.me":openSendView(request, response); break;
 
 		default:
 			nextPage = "/main.jsp";
@@ -334,39 +336,60 @@ public class MemberController extends HttpServlet {
 
 	}
 	
-	    private void openWishList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	        // 세션에서 사용자 ID를 가져옴
-	        HttpSession session = request.getSession();
-	        String userId = (String) session.getAttribute("userId");
+	private void openWishList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	    // 세션에서 사용자 ID를 가져옴
+	    HttpSession session = request.getSession();
+	    String userId = (String) session.getAttribute("userId");
 
-	        // 사용자 ID가 존재하는지 확인
-	        if (userId != null) {
-	            try {
-	                // 서비스 호출하여 위시리스트 가져오기
-	                ArrayList<HashMap<String, Object>> wishList = memberService.getWishListInfos(userId);
-
-	                // 위시리스트 정보를 request에 저장
-	                request.setAttribute("wishList", wishList);
-
-	            } catch (Exception e) {
-	                // 오류 발생 시 처리
-	                request.setAttribute("error", "위시리스트를 가져오는 도중 오류가 발생했습니다.");
-	                e.printStackTrace();
-	            }
-	        } else {
-	            // 세션에 사용자 ID가 없는 경우 에러 메시지 설정
-	            request.setAttribute("error", "로그인이 필요합니다.");
-	        }
-
-	        // 포워딩할 페이지 설정
-	        request.setAttribute("center", "members/wishlist.jsp");
-	        nextPage = "/main.jsp";  // 메인 페이지로 이동하도록 설정
+	    if (userId == null) {
+	        // 사용자 ID가 없을 경우 로그인 페이지로 리다이렉트
+	        response.sendRedirect(request.getContextPath() + "/login.jsp");
+	        return;
 	    }
-	
+
+	    // MemberService 인스턴스 생성 및 위시리스트 정보 가져오기
+	    memberService.getWishListInfos(request, userId); // 서비스에서 레시피 및 밀키트 위시리스트 정보를 가져옴
+
+	    // 포워딩할 페이지 설정
+	    request.setAttribute("center", "members/wishlist.jsp");
+	    String nextPage = "/main.jsp"; // 메인 페이지로 이동하도록 설정
+
+	}
+
+
+
+
+
     
-    private void openRecentList(HttpServletRequest request, HttpServletResponse response) {
-        request.setAttribute("center", "members/recent.jsp");
-        nextPage ="/main.jsp";
+    private void openRecentList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    	 // 세션에서 사용자 ID를 가져옴
+        HttpSession session = request.getSession();
+        String userId = (String) session.getAttribute("userId");
+
+        if (userId == null) {
+            // 사용자 ID가 없을 경우 로그인 페이지로 리다이렉트
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+
+        // MemberService를 통해 최근 본 목록 데이터를 가져옴
+        try {
+            ArrayList<HashMap<String, Object>> recentList = memberService.getRecentViews(userId);
+            request.setAttribute("recentList", recentList); // 가져온 데이터를 요청 속성에 추가
+            
+            // recent.jsp로 포워딩
+            request.setAttribute("center", "members/recent.jsp");  // 중심 콘텐츠 설정
+            request.getRequestDispatcher("/main.jsp").forward(request, response);  // main.jsp에서 recent.jsp로 포워딩
+            
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 예외 발생 시 오류 페이지로 포워딩
+            request.setAttribute("errorMessage", "최근 본 목록을 가져오는 중 오류가 발생했습니다.");
+            request.setAttribute("center", "error.jsp");
+            request.getRequestDispatcher("/main.jsp").forward(request, response);
+            return;
+        }
 
     }
 

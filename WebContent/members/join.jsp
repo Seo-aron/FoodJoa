@@ -48,7 +48,7 @@
 	<div id="container">
 
 		<!-- 회원가입 폼 -->
-		<form action="<%= request.getContextPath() %>/Member/joinPro.me" class="login" method="post" enctype="multipart/form-data">
+		<form action="<%= request.getContextPath() %>/Member/joinPro.me" class="login" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
 			<h2 class="loginHeading">푸드조아 회원 가입</h2>
 
 			<div class="add">
@@ -64,6 +64,7 @@
 					<label for="profileFile" class="file-button">파일 선택</label>
 				</div>
 
+			
 				<!-- 나머지 사용자 정보 입력 -->
 				<div class="input-container">
 					<input type="text" id="name" name="name" class="form-control" placeholder="이름을 입력해주세요" required />
@@ -75,7 +76,7 @@
 					<input type="button" onclick="sample4_execDaumPostcode()" value="우편번호 찾기" class="form-control"><br>					
 					<input type="text" id="sample4_roadAddress" name="address2" placeholder="도로명주소" class="form-control">
 					<input type="text" id="sample4_detailAddress" placeholder="상세주소" name="address3" class="form-control">
-						
+			
 					
 				</div>
 
@@ -127,6 +128,45 @@
             }
         }).open();
     }
+    
+   
+
 </script>	
 </body>
+
+<script>
+function validateForm() {
+    var name = document.getElementById("name").value.trim();
+    var nickname = document.getElementById("nickname").value.trim();
+    var phone = document.getElementById("phone").value.trim();
+    var errorMessage = '';
+
+    // 이름 유효성 검사: 2~10자, 한글만 허용
+    var namePattern = /^[가-힣]{2,10}$/;
+    if (!namePattern.test(name)) {
+        errorMessage += '이름은 2글자 이상 10글자 이하의 한글만 입력 가능합니다. \n';
+    }
+
+    // 닉네임 유효성 검사: 2~10자, 한글 또는 영문만 허용
+    var nicknamePattern = /^[가-힣a-zA-Z]{2,10}$/;
+    if (!nicknamePattern.test(nickname)) {
+        errorMessage += '닉네임은 2글자 이상 10글자 이하의 한글 또는 영문만 입력 가능합니다. \n';
+    }
+
+    // 휴대폰 번호 유효성 검사: 정확히 11자리 숫자만 허용
+    var phonePattern = /^\d{11}$/;
+    if (!phonePattern.test(phone)) {
+        errorMessage += '휴대폰 번호는 11자리 숫자로 입력해야 합니다. \n';
+    }
+
+    // 유효성 검사 결과 처리
+    if (errorMessage) {
+        alert(errorMessage); // 에러 메시지 출력
+        return false; // 폼 제출 방지
+    }
+
+    // 유효성 검사 성공 시 폼 제출
+    return true;
+}
+</script>
 </html>

@@ -26,6 +26,7 @@ import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
 import Common.FileIOController;
 import Common.NaverLoginAPI;
+import DAOs.MealkitDAO;
 import DAOs.MemberDAO;
 import DAOs.RecipeDAO;
 import VOs.MemberVO;
@@ -34,10 +35,12 @@ public class MemberService {
 
 	  private MemberDAO memberDAO;
 	    private RecipeDAO recipeDAO; // RecipeDAO 객체 추가
+	    private MealkitDAO mealkitDAO;
 
 	    public MemberService() {
 	        memberDAO = new MemberDAO(); // MemberDAO 초기화
 	        recipeDAO = new RecipeDAO(); // RecipeDAO 초기화
+	        mealkitDAO = new MealkitDAO();
 	    }
     
 
@@ -328,11 +331,29 @@ public class MemberService {
 	}
 	
 
-	public ArrayList<HashMap<String, Object>> getWishListInfos(String id) {
-		
-	    RecipeDAO recipeDAO = new RecipeDAO();
-	    return recipeDAO.selectWishListInfos(id);
+	public void getWishListInfos(HttpServletRequest request, String userId) {
+	    // 레시피 위시리스트 정보 가져오기
+	    ArrayList<HashMap<String, Object>> recipeWishList = getRecipeWishList(userId);
+
+	    // 밀키트 위시리스트 정보 가져오기
+	    ArrayList<HashMap<String, Object>> mealKitWishList = getMealKitWishList(userId);
+
+	    // request에 각각 설정
+	    request.setAttribute("recipeWishListInfos", recipeWishList);
+	    request.setAttribute("mealKitWishListInfos", mealKitWishList);
 	}
+
+	private ArrayList<HashMap<String, Object>> getRecipeWishList(String userId) {
+	    // RecipeDAO에서 레시피 위시리스트 정보를 가져오는 메소드 호출
+	    return recipeDAO.selectrecipeInfos(userId); // recipeDAO에서 레시피 위시리스트 가져오기
+	}
+
+	private ArrayList<HashMap<String, Object>> getMealKitWishList(String userId) {
+	    // MealkitDAO에서 밀키트 위시리스트 정보를 가져오는 메소드 호출
+	    return mealkitDAO.selectMealKitInfos(userId, 0); // 0은 밀키트 위시리스트를 의미
+	}
+
+
 
 	public void getMemberProfile(HttpServletRequest request, String userId) throws ServletException, IOException, SQLException {
 	    // 회원 정보를 DAO에서 조회
@@ -353,4 +374,9 @@ public class MemberService {
 		String id = (String) session.getAttribute("userId");
 		return memberDAO.selectDelivers(id);
 	}
+	
+	 // 최근 본 목록 조회 서비스
+    public ArrayList<HashMap<String, Object>> getRecentViews(String userId) throws SQLException {
+        return memberDAO.getRecentView(userId);
+    }
 }

@@ -144,10 +144,7 @@ long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
          reader.readAsDataURL(event.target.files[0]);
       }
 
-      //탈퇴버튼 클릭시 알림창 표시
-      function withdraw() {
-         alert("탈퇴되었습니다");
-      }
+    
    </script>
 </head>
 

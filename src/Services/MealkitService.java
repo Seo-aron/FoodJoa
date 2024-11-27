@@ -62,10 +62,10 @@ public class MealkitService {
 	public void setMyMealkit(HttpServletRequest request, HttpServletResponse response) 
 			throws IOException {
 		int no = Integer.parseInt(request.getParameter("no"));
+		String id = (String) request.getSession().getAttribute("userId");
 		int type = Integer.parseInt(request.getParameter("type"));
 		
-		int result = mealkitDAO.addMyMealkit(no, type);
-		
+		int result = mealkitDAO.insertMealkitWishlist(no, id, type);
 		
 		String res = String.valueOf(result);
 
