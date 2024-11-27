@@ -141,16 +141,16 @@ create table community(
 
 drop table community_share;
 create table community_share(
-	no int primary key auto_increment,
-    id varchar(50) not null,
-    thumbnail varchar(255) not null,
-    title varchar(50) not null,
-    contents longtext not null,
-    lat double not null,
-    lng double not null,
-    type tinyint not null,
-    views int not null,
-	post_date timestamp not null,
+	no 				int primary key auto_increment,
+    id 				varchar(50) not null,
+    thumbnail 		varchar(255) not null,
+    title 			varchar(50) not null,
+    contents 		longtext not null,
+    lat 			double not null,
+    lng 			double not null,
+    type 			tinyint not null,
+    views 			int not null,
+	post_date 		timestamp not null,
 
 	FOREIGN KEY (id) REFERENCES member(id)
 );
