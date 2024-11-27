@@ -110,3 +110,5 @@ LEFT OUTER JOIN member m
 ON c.id = m.id 
 WHERE c.type = IF('재료나눔' LIKE '%이먹%', 0, IF('같이먹어요' LIKE '%이먹%',  1, -1)) 
 ORDER BY c.post_date DESC; 
+
+select * from mealkit;

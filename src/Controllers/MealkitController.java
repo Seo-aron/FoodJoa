@@ -6,18 +6,13 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.oreilly.servlet.MultipartRequest;
-import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
-
 import Services.MealkitService;
-import VOs.MealkitOrderVO;
 import VOs.MealkitReviewVO;
 import VOs.MealkitVO;
 
@@ -159,9 +154,12 @@ public class MealkitController extends HttpServlet {
 		ArrayList<MealkitReviewVO> reviewvo = mealkitService.getReviewInfo(request);
 		float ratingAvr = mealkitService.getRatingAvr(mealkitvo);
 		
+		String nickName = request.getParameter("nickName");
+		
 		request.setAttribute("mealkitvo", mealkitvo);
 		request.setAttribute("reviewvo", reviewvo);
 		request.setAttribute("ratingAvr", ratingAvr);
+		request.setAttribute("nickName", nickName);
 		
 		request.setAttribute("center", "mealkits/info.jsp");
 
@@ -171,7 +169,7 @@ public class MealkitController extends HttpServlet {
 	private void openMealkitView(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		ArrayList<MealkitVO> mealkits = mealkitService.getMealkitsList();
+		ArrayList<Map<String, Object>> mealkits = mealkitService.getMealkitsList();
 		Map<Integer, Float> ratingAvr = mealkitService.getAllRatingAvr(mealkits);
 		
 		String nowPage = request.getParameter("nowPage");

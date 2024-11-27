@@ -1,12 +1,6 @@
 @charset "UTF-8";
 
-body {
-	font-family: Arial, sans-serif;
-	margin: 0;
-	padding: 20px;
-}
-
-#container {
+#review-container {
 	padding: 20px;
 	border-radius: 8px;
 	width: 1200px;
@@ -27,7 +21,7 @@ td {
 	padding: 10px;
 }
 
-input[type="text"], input[type="file"], textarea {
+input[type="text"], input[type="file"] {
 	width: 100%;
 	padding: 10px;
 	border: 1px solid #ccc;
@@ -36,11 +30,14 @@ input[type="text"], input[type="file"], textarea {
 
 textarea{
 	margin-top: 5px;
-	text-align:	center;
 }
 
-input[type="button"] {
-	background-color: #28a745;
+.review-h2{
+	text-align: center;
+}
+
+.review-button{
+	background-color: #BF917E;
 	color: white;
 	border: none;
 	padding: 10px 15px;
@@ -52,12 +49,9 @@ input[type="button"] {
     display: block; 
 }
 
-input[type="button"]:hover {
-	background-color: #218838;
-}
-
-.review-h2{
-	text-align: center;
+.review-button:hover{
+	background-color: #9e6e58;
+	transition: background-color 0.3s ease;
 }
 
 .empathy-container {
@@ -66,7 +60,8 @@ input[type="button"]:hover {
 }
 
 .empathy-button {
-	background-color: #007bff;
+	width: 60px;
+	background-color: #BF917E;
 	color: white;
 	border: none;
 	padding: 8px 10px;
@@ -77,13 +72,20 @@ input[type="button"]:hover {
 }
 
 .empathy-button:hover {
-	background-color: #0056b3;
+	background-color: #9e6e58;
+	transition: background-color 0.3s ease;
 }
 
-#empathyInput {
+.empathyInput {
 	width: 50px;
-	text-align: center;
+	text-align: left;
 	border: 1px solid #ccc;
 	border-radius: 4px;
 	padding: 5px;
+}
+
+.review-contents{
+	width: 100%;
+	text-indent: 0;
+	text-align: left;
 }

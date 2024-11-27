@@ -14,8 +14,6 @@
 	response.setContentType("text/html;charset=utf-8");
 	
 	String contextPath = request.getContextPath();
-	
-    String id = (String) session.getAttribute("userId");
 %>
 
 <!DOCTYPE html>
@@ -63,7 +61,7 @@
 		int nowBlock = 0;
 		int beginPerPage = 0;
 		
-		ArrayList<MealkitVO> list = (ArrayList)request.getAttribute("mealkitList");
+		ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.getAttribute("mealkitList");
 		Map<Integer, Float> ratingAvr = (Map<Integer, Float>) request.getAttribute("ratingAvr");
 		
 		totalRecord = list.size();
@@ -98,30 +96,36 @@
 						if(i == totalRecord){
 							break;
 						}
-						
-						MealkitVO vo = list.get(i);
-						
-						List<String> picturesList = StringParser.splitString(vo.getPictures());
+						Map<String, Object> vo = list.get(i);
+
+					    // "pictures" 키로 문자열 가져오기
+					    String pictures = (String) vo.get("pictures");
+						List<String> picturesList = StringParser.splitString(pictures);
 					    String thumbnail = picturesList.get(0);
+					    
+					    int no = (int) vo.get("no");
+				        String id = (String) vo.get("id");
+				        String title = (String) vo.get("title");
+				        String contents = (String) vo.get("contents");
+				        String price = (String) vo.get("price");
+				        Object postDate = vo.get("post_date");
+				        int views = (int) vo.get("views");
+				        String nickName = (String) vo.get("nickname");
 						%>
 						<tr>
 					        <td>
-					            <a href="<%= contextPath %>/Mealkit/info?no=<%=vo.getNo()%>">
-					                <span>
-					                <%
-									   
-									%>
-					                    <img class="thumbnail" 
-					                    src="<%= contextPath %>/images/mealkit/thumbnails/<%=vo.getNo()%>/<%=vo.getId() %>/<%=thumbnail%>">
-					                    작성자: <%=vo.getId() %> &nbsp;&nbsp;&nbsp;&nbsp;
-					                    작성일: <%=vo.getPostDate() %> &nbsp;&nbsp;&nbsp;&nbsp;
-					                    평점:  <fmt:formatNumber value="<%=ratingAvr.get(vo.getNo()) %>" pattern="#.#" />&nbsp;&nbsp;&nbsp;&nbsp;
-					                    조회수: <%=vo.getViews() %>
-					                </span>
-					                <h3><%=vo.getTitle() %></h3>
-					                <p>가격: <%=vo.getPrice() %></p>
-					                <p>내용: <%=vo.getContents() %></p>
-					            </a>
+					            <a href="<%=contextPath%>/Mealkit/info?no=<%=no%>&nickName=<%=nickName%>">
+						            <span>
+						                <img class="thumbnail" 
+						                     src="<%=contextPath%>/images/mealkit/thumbnails/<%=no%>/<%=id%>/<%=thumbnail%>">
+						                작성자: <%=nickName%> &nbsp;&nbsp;&nbsp;&nbsp;
+						                작성일: <%=postDate%> &nbsp;&nbsp;&nbsp;&nbsp;
+						                평점: <fmt:formatNumber value="<%=ratingAvr.get(no)%>" pattern="#.#" /> &nbsp;&nbsp;&nbsp;&nbsp;
+						                조회수: <%=views%>
+						            </span>
+						            <h3><%=title%></h3>
+						            <p>가격: <%=price%></p>
+						            <p>내용: <%=contents%></p>
 					        </td>
 					    </tr>
 						

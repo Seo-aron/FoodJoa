@@ -32,7 +32,7 @@ public class MealkitService {
 		mealkitDAO = new MealkitDAO();
 	}
 	
-	public ArrayList<MealkitVO> getMealkitsList() {
+	public ArrayList<Map<String, Object>> getMealkitsList() {
 		
 		return mealkitDAO.selectMealkits();
 	}
@@ -150,7 +150,7 @@ public class MealkitService {
 	    String fileName = multipartRequest.getOriginalFileName("pictures");
 
 	    int no = Integer.parseInt(multipartRequest.getParameter("mealkit_no"));
-	    String id = multipartRequest.getParameter("id");
+	    String id = (String) request.getSession().getAttribute("userId");
 	    String contents = multipartRequest.getParameter("contents");
 	    int rating = Integer.parseInt(multipartRequest.getParameter("rating"));
 
@@ -280,18 +280,19 @@ public class MealkitService {
 		printWriter.close();
 	}
 
-	public Map<Integer, Float> getAllRatingAvr(ArrayList<MealkitVO> mealkits) {
-		Map<Integer, Float> ratingMap = new HashMap<>();
-		
-		for(MealkitVO mealkit : mealkits) {
-			int no = mealkit.getNo();
-			float ratingAvr = mealkitDAO.getRatingAvr(no);
-			
-			ratingMap.put(no, ratingAvr);
-		}
-		
-		return ratingMap;
+	public Map<Integer, Float> getAllRatingAvr(ArrayList<Map<String, Object>> mealkits) {
+	    Map<Integer, Float> ratingMap = new HashMap<>();
+	    
+	    for (Map<String, Object> mealkit : mealkits) {
+	        int no = (int) mealkit.get("no");
+	        float ratingAvr = mealkitDAO.getRatingAvr(no);
+	        
+	        ratingMap.put(no, ratingAvr);
+	    }
+	    
+	    return ratingMap;
 	}
+
 
 	public float getRatingAvr(MealkitVO mealkitvo) {
 		int no = mealkitvo.getNo();
@@ -323,7 +324,7 @@ public class MealkitService {
 
 	public void buyMealkit(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
-	    String id = request.getParameter("id");
+	    String id = (String) request.getSession().getAttribute("userId");
 	    int mealkitNo = Integer.parseInt(request.getParameter("mealkitNo"));
 	    int quantity = Integer.parseInt(request.getParameter("quantity"));
 	    int delivered = Integer.parseInt(request.getParameter("delivered"));

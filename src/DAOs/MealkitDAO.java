@@ -2,17 +2,13 @@ package DAOs;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 import Common.DBConnector;
-import VOs.MealkitOrderVO;
 import VOs.MealkitReviewVO;
 import VOs.MealkitVO;
-import VOs.MealkitWishListVO;
-import VOs.MemberVO;
 
 public class MealkitDAO {
 	private DBConnector dbConnector;
@@ -21,33 +17,36 @@ public class MealkitDAO {
 		dbConnector = new DBConnector();
 	}
 
-	public ArrayList<MealkitVO> selectMealkits() {
+	public ArrayList<Map<String, Object>> selectMealkits() {
 		
-		ArrayList<MealkitVO> mealkits = new ArrayList<MealkitVO>();
+		ArrayList<Map<String, Object>> mealkits = new ArrayList<>();
 		
-		String sql = "SELECT * FROM mealkit";
+		String sql = "SELECT mk.*, mem.nickname " 
+				+ "FROM mealkit mk JOIN member mem "
+                + "ON mk.id = mem.id";
 		
 		ResultSet rs = dbConnector.executeQuery(sql);
 		
 		try {
 			while(rs.next()) {
-				MealkitVO mealkit = new MealkitVO(
-						rs.getInt("no"), 
-						rs.getString("id"),
-						rs.getString("title"),
-						rs.getString("contents"),
-						rs.getInt("category"),
-						rs.getString("price"),
-						rs.getInt("stock"),
-						rs.getString("pictures"),
-						rs.getString("orders"),
-						rs.getString("origin"),
-						rs.getInt("views"),
-						rs.getInt("soldout"),
-						rs.getTimestamp("post_date"));
-				
-				mealkits.add(mealkit);
-						
+				Map<String, Object> mealkitData = new HashMap<>();
+					mealkitData.put("no", rs.getInt("no"));
+		            mealkitData.put("id", rs.getString("id"));
+		            mealkitData.put("title", rs.getString("title"));
+		            mealkitData.put("contents", rs.getString("contents"));
+		            mealkitData.put("category", rs.getInt("category"));
+		            mealkitData.put("price", rs.getString("price"));
+		            mealkitData.put("stock", rs.getInt("stock"));
+		            mealkitData.put("pictures", rs.getString("pictures"));
+		            mealkitData.put("orders", rs.getString("orders"));
+		            mealkitData.put("origin", rs.getString("origin"));
+		            mealkitData.put("views", rs.getInt("views"));
+		            mealkitData.put("soldout", rs.getInt("soldout"));
+		            mealkitData.put("post_date", rs.getTimestamp("post_date"));
+
+		            mealkitData.put("nickname", rs.getString("nickname"));
+
+		            mealkits.add(mealkitData);						
 			}
 		} catch (Exception e) {
 			System.out.println("MealkitDAO - selectMealkits 예외발생 ");
@@ -289,7 +288,7 @@ public class MealkitDAO {
 		return avr;
 	}
 
-	public ArrayList selectSearchList(String key, String word) {
+	public ArrayList<MealkitVO> selectSearchList(String key, String word) {
 		
 		ArrayList<MealkitVO> mealkits = new ArrayList<MealkitVO>();
 		String sql = "";
@@ -338,10 +337,9 @@ public class MealkitDAO {
 	}
 	
 	public ArrayList<HashMap<String, Object>> selectMealKitInfos(String userId, int type) {
-	    // 결과를 저장할 ArrayList 선언
+		
 	    ArrayList<HashMap<String, Object>> mealKitInfos = new ArrayList<HashMap<String, Object>>();
 	    
-	    // SQL 쿼리문 정의
 	    String sql = "SELECT "
 	    		+ "mk.pictures, mk.title, mk.contents, mk.price, m.nickname AS author_nickname, mr.average_rating "
 	    		+ "FROM mealkit_wishlist mw "
@@ -387,7 +385,7 @@ public class MealkitDAO {
 	}
 
 
-
+	// 결제 api 
 	public boolean saveOrder(String id, int mealkitNo, int quantity, int delivered, int refund) {
 
 		String sql = "INSERT INTO mealkit_order (id, mealkit_no, address, quantity, delivered, refund, post_date) " +

@@ -21,12 +21,16 @@
 	
 	<script src="https://code.jquery.com/jquery-latest.min.js"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="<%=contextPath%>/css/mealkit/review.css">
 	
 </head>
 <body>
-	<div id="container">
+	<div id="review-container">
 		<table>
+			<tr>
+				<td colspan="4" class="review-h2"><h2>리뷰</h2></td>
+			</tr>
 			<c:forEach var="review" items="${reviewvo}">
 				<tr>
 					<th>작성자</th>
@@ -41,7 +45,7 @@
 						<div class="empathy-container">
 							<button type="button" class="empathy-button" onclick="empathyCount(${review.no})">공감</button>
 							<input type="text" name="empathy" value="${review.empathy}" 
-							id="empathyInput_${review.no}" data-review-no="${review.no}" readonly>
+							class="empathyInput" data-review-no="${review.no}" readonly>
 						</div>
 					</td>
 				</tr>
@@ -54,16 +58,13 @@
 				<tr>
 					<th>내용</th>
 					<td colspan="3">
-						<textarea name="contents" rows="5" required>${review.contents}</textarea>
+						<textarea name="contents" class="review-contents" rows="5" required>${review.contents}</textarea>
 					</td>
 				</tr>
 			</c:forEach>
 			<tr>
-				<td class="review-h2"><h2>리뷰</h2></td>
-			</tr>
-			<tr>
 				<td colspan="4">
-					<input type="button" value="리뷰 작성" 
+					<input type="button" value="리뷰 작성" class="review-button"
 					onclick="location.href='<%=contextPath%>/Mealkit/reviewwrite?mealkit_no=${mealkit.no }'">
 				</td>
 			</tr>
