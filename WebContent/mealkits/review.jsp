@@ -23,11 +23,9 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 	<link rel="stylesheet" href="<%=contextPath%>/css/mealkit/review.css">
 	
-	
 </head>
 <body>
 	<div id="container">
-		<h2>리뷰</h2>
 		<table>
 			<c:forEach var="review" items="${reviewvo}">
 				<tr>
@@ -60,6 +58,9 @@
 					</td>
 				</tr>
 			</c:forEach>
+			<tr>
+				<td class="review-h2"><h2>리뷰</h2></td>
+			</tr>
 			<tr>
 				<td colspan="4">
 					<input type="button" value="리뷰 작성" 

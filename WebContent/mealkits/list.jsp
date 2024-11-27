@@ -1,5 +1,6 @@
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.Map" %>
+<%@ page import="Common.StringParser"%>
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="VOs.MealkitVO" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -13,6 +14,8 @@
 	response.setContentType("text/html;charset=utf-8");
 	
 	String contextPath = request.getContextPath();
+	
+    String id = (String) session.getAttribute("userId");
 %>
 
 <!DOCTYPE html>
@@ -78,8 +81,10 @@
 		}
 	%>
 	<div id="container">
-		<input type="button" id="newContent" value="글쓰기" 
-			onclick="location.href='<%=contextPath%>/Mealkit/write'"/>
+		<c:if test="${not empty sessionScope.userId}">
+			<input type="button" id="newContent" value="글쓰기" 
+				onclick="location.href='<%=contextPath%>/Mealkit/write'"/>
+		</c:if>
 		<table class="list">
 			<%
 				if(list.isEmpty()){
@@ -95,13 +100,17 @@
 						}
 						
 						MealkitVO vo = list.get(i);
-						String[] picturesArray = vo.getPictures().split(",");
-						String thumbnail = picturesArray[0]; 
+						
+						List<String> picturesList = StringParser.splitString(vo.getPictures());
+					    String thumbnail = picturesList.get(0);
 						%>
 						<tr>
 					        <td>
 					            <a href="<%= contextPath %>/Mealkit/info?no=<%=vo.getNo()%>">
 					                <span>
+					                <%
+									   
+									%>
 					                    <img class="thumbnail" 
 					                    src="<%= contextPath %>/images/mealkit/thumbnails/<%=vo.getNo()%>/<%=vo.getId() %>/<%=thumbnail%>">
 					                    작성자: <%=vo.getId() %> &nbsp;&nbsp;&nbsp;&nbsp;
@@ -150,7 +159,7 @@
 							if(nowBlock > 0){
 							%>
 								<a href="<%=contextPath%>/Mealkit/list?nowBlock=<%=nowBlock-1%>&nowPage=<%=((nowBlock-1) * pagePerBlock)%>">
-								이전 <%=pagePerBlock %>개
+								이전
 								</a>
 							<%
 							}
@@ -173,7 +182,7 @@
 							if(totalBlock > nowBlock + 1){
 							%>
 								<a href="<%=contextPath%>/Mealkit/list?nowBlock=<%=nowBlock+1%>&nowPage=<%=(nowBlock + 1) * pagePerBlock%>">
-									다음 <%=pagePerBlock %>개
+									다음
 								</a>
 							<%
 							}

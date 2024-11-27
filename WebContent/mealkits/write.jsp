@@ -28,7 +28,11 @@
             <table border="1">
                 <tr>
                     <th>글 제목</th>
-                    <td><input type="text" name="title" required></td>
+                    <td>
+                    	<input type="text" name="title" required>
+                    	<!-- id -->
+                    	<input type="hidden" name="id" value="<%=id%>">
+                    </td>
                 </tr>
                 <tr>
 				    <th>사진 추가</th>

@@ -87,7 +87,7 @@ CREATE TABLE mealkit_order(
 	no			int primary key auto_increment,
     id			varchar(50) not null,
     mealkit_no	int not null,
-    address		varchar(5) not null,
+    address		varchar(50) not null,
     quantity	int not null,
     delivered	tinyint not null,
     refund		tinyint not null,

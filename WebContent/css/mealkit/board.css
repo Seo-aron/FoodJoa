@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 #container {
-	width: 1000px;
+	width: 1200px;
 	display: flex;
 	margin: 20px auto;
 }
@@ -35,9 +35,8 @@
 .stock_count input {
 	position: relative;
 	width: 80px;
-	height: 40px;
+	height: 44px;
 	text-align: center;
-	border: 1px solid;
 	font-size: 18px;
 	outline: none;
 	padding-right: 20px;

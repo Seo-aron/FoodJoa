@@ -14,8 +14,9 @@
     String contextPath = request.getContextPath();
     
     MealkitVO mealkitvo = (MealkitVO) request.getAttribute("mealkitvo");
-    String updatePictures = request.getParameter("updatePictures");
-    System.out.println("editBoard.jsp에서 받은 bytePictures: " + updatePictures);
+    
+    // String updatePictures = (String) request.getAttribute("updatePictures");	// 파일명 (이미지 로드용)
+    // String bytePictures = (String) request.getAttribute("bytePictures");		// 0000파일명
 %>
 <c:set var="mealkit" value="${requestScope.mealkitvo}"/>
 
@@ -37,7 +38,7 @@
 				    <td>
 				    	<!-- 로그인정보를 세션에 저장해야 쓸 수 있음 -->
 				    	<!--<input type="text" name="id" value="${sessionScope.userId}" readonly>-->
-				    	<input type="text" name="id" value="user1" readonly>
+				    	<input type="text" name="id" value="admin" readonly>
 				    	<input type="hidden" name="no" value="${mealkit.no }">
 				    </td>
 				</tr>
@@ -51,8 +52,9 @@
 				        <div id="imagePreview"></div>
    						<input type="file" id="pictureFiles" name="pictureFiles" 
 							accept=".jpg,.jpeg,.png" multiple onchange="handleFileSelect(this.files)">
-						<button type="button" id="addFileBtn" onclick="triggerFileInput()">사진 추가</button>	
-						<input type="hidden" id="pictures" name="pictures" value="<%=updatePictures%>">
+						<button type="button" id="addFileBtn" onclick="triggerFileInput()">사진 추가</button>
+						<input type="text" id="pictures" name="pictures" value="${mealkit.pictures }">
+						<button type="button" onclick="clearInputValue()">삭제</button>
 					</td>
 				</tr>
                 <tr>
@@ -159,7 +161,9 @@
 		e.preventDefault();
 	
 		setOrdersString();
-		setPicturesString();
+		if(!$("#pictures").val()){
+			setPicturesString();
+		}
 	
 		const formData = new FormData();
 		formData.append('no', $("input[name='no']").val());
@@ -297,6 +301,11 @@
 	
 		document.getElementById('pictureFiles').value = '';
 	}
+	
+	function clearInputValue() {
+        // 'pictures' input의 value 값을 빈 문자열로 설정
+        document.getElementById('pictures').value = "";
+    }
 	
 	// 선택한 파일 제거
 	function removeSelectedFile(fileIdentifier) {

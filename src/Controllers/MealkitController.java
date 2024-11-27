@@ -56,7 +56,7 @@ public class MealkitController extends HttpServlet {
 		switch (action) {
 		case "/list": openMealkitView(request, response); break;
 		case "/info": openMealkitInfoView(request, response); break;
-		case "/mypage.pro": processMealkitMyPage(request, response); return;
+		case "/wish.pro": processWishMealkit(request, response); return;
 		case "/write": openAddMealkit(request, response); break;
 		case "/write.pro": processAddMealkit(request, response); return;
 		case "/reviewwrite": openAddReview(request, response); break;
@@ -66,12 +66,17 @@ public class MealkitController extends HttpServlet {
 		case "/update": openUpdateBoard(request, response); break;
 		case "/update.pro": processUpdate(request, response); return;
 		case "/searchlist.pro": processSearchList(request, response); break;
+		case "/buyMealkit.pro": processBuyMealkit(request, response); return;
 
 		default: break;
 		}
 
 		RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
 		dispatcher.forward(request, response);
+	}
+
+	private void processBuyMealkit(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		mealkitService.buyMealkit(request, response);
 	}
 
 	private void processSearchList(HttpServletRequest request, HttpServletResponse response) {
@@ -85,12 +90,16 @@ public class MealkitController extends HttpServlet {
 
 	private void openUpdateBoard(HttpServletRequest request, HttpServletResponse response) {
 		MealkitVO mealkitvo = mealkitService.getMealkitInfo(request);
-		String updatePictures = mealkitService.getBytePicturesParser(request);
+		//String updatePictures = mealkitService.getBytePicturesParser(request);
 		
-		System.out.println("getBytePicures(controller) : " + updatePictures);
+		// String bytePictures = request.getParameter("bytePictures");
+		
+		// System.out.println("getBytePicures(controller) : " + updatePictures);
+		// System.out.println("getBytePicures(controller) : " + bytePictures);
 		
 		request.setAttribute("mealkitvo", mealkitvo);
-		request.setAttribute("updatePictures", updatePictures);
+		//request.setAttribute("updatePictures", updatePictures);	// 파일명
+		// request.setAttribute("bytePictures", bytePictures);		// 0000파일명
 		request.setAttribute("center", "mealkits/editBoard.jsp");
 		
 		nextPage = "/main.jsp";
@@ -138,9 +147,9 @@ public class MealkitController extends HttpServlet {
 		nextPage = "/main.jsp";
 	}
 
-	private void processMealkitMyPage(HttpServletRequest request, HttpServletResponse response) 
+	private void processWishMealkit(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException{
-		mealkitService.setMyMealkit(request, response);
+		mealkitService.setWishMealkit(request, response);
 	}
 	
 	private void openMealkitInfoView(HttpServletRequest request, HttpServletResponse response)

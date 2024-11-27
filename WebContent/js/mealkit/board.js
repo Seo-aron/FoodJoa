@@ -28,15 +28,11 @@ $('.stock_minus').click(function() {
 	}
 });
 
-// 구매, 장바구니, 찜목록 버튼
-function buyMealkit(contextPath) {
-
-}
-
+// 장바구니, 찜목록 버튼
 function cartMealkit(contextPath) {
 	// 장바구니 type = 1
 	$.ajax({
-		url: contextPath + "/Mealkit/mypage.pro",
+		url: contextPath + "/Mealkit/wish.pro",
 		type: "POST",
 		async: true,
 		data: {
@@ -53,7 +49,7 @@ function cartMealkit(contextPath) {
 function wishMealkit(contextPath) {
 	// 찜하기 type = 0
 	$.ajax({
-		url: contextPath + "/Mealkit/mypage.pro",
+		url: contextPath + "/Mealkit/wish.pro",
 		type: "POST",
 		async: true,
 		data: {
