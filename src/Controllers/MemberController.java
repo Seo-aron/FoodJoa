@@ -26,7 +26,6 @@ import DAOs.MealkitDAO;
 import DAOs.MemberDAO;
 import DAOs.RecipeDAO;
 import Services.MemberService;
-import VOs.DeliveryInfoVO;
 import VOs.MemberVO;
 
 @WebServlet("/Member/*")
@@ -459,17 +458,17 @@ public class MemberController extends HttpServlet {
 		}
 
 		private void openMyDeliveryView(HttpServletRequest request, HttpServletResponse response) {
-			ArrayList<DeliveryInfoVO> deliverList = memberService.getDeliver(request);
+			ArrayList<HashMap<String, Object>> orderedMealkitList = memberService.getDeliveredMealkit(request);
 			
-			request.setAttribute("deliverList", deliverList);
+			request.setAttribute("orderedMealkitList", orderedMealkitList);
 			request.setAttribute("center", "members/mydelivery.jsp");
 			nextPage = "/main.jsp";
 		}
 		
 		private void openMySendView(HttpServletRequest request, HttpServletResponse response){ 
-			ArrayList<DeliveryInfoVO> vo = memberService.getSend(request);
+			ArrayList<HashMap<String, Object>> orderedMealkitList = memberService.getSendedMealkit(request);
 					  
-			request.setAttribute("vo", vo); 
+			request.setAttribute("orderedMealkitList", orderedMealkitList); 
 			request.setAttribute("center","members/sendmealkit.jsp"); 
 			nextPage = "/main.jsp"; 
 		}
