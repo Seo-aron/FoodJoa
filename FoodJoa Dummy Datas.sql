@@ -52,6 +52,10 @@ values('admin', 1, CURRENT_TIMESTAMP),
 
 
 
+-- mealkit
+
+
+
 -- community
 insert into community(id, title, contents, views, post_date)
 values

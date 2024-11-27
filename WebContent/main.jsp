@@ -23,6 +23,13 @@
 <head>
 	<meta charset="UTF-8">
 	<title><%= pageTitle %></title>
+	
+	<style>
+		#center-container {
+			margin: 0 auto;
+			width: 1200px;
+		}
+	</style>
 </head>
 
 <body>
@@ -32,7 +39,11 @@
 				<td><jsp:include page="includes/top.jsp"/></td>
 			</tr>
 			<tr>
-				<td><jsp:include page="${center}"/></td>
+				<td>
+					<div id="center-container">
+						<jsp:include page="${center}"/>
+					</div>
+				</td>
 			</tr>
 			<tr>
 				<td><jsp:include page="includes/bottom.jsp"/></td>
