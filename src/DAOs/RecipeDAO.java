@@ -119,7 +119,7 @@ public class RecipeDAO {
 		return recipe;
 	}
 	
-	public HashMap<String, Object> selectRecipeInfo(String no) {
+	public HashMap<String, Object> selectRecipeInfo(String no, String id) {
 		
 		String sql = "UPDATE recipe SET views=views+1 where no=?";
 		
@@ -170,6 +170,15 @@ public class RecipeDAO {
 		dbConnector.release();
 		
 		recipeHashMap.put("reviews", selectRecipeReviews(no));
+		
+		if (id != null && !id.equals("") && id.length() != 0) {			
+			sql = "INSERT INTO recent_view(id, item_no, type, view_date) "
+					+ "VALUES(?, ?, ?, CURRENT_TIMESTAMP)";
+			
+			int result = dbConnector.executeUpdate(sql, id, no, 0);
+			
+			dbConnector.release();
+		}
 		
 		return recipeHashMap;
 	}

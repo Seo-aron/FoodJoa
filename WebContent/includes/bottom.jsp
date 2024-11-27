@@ -29,7 +29,7 @@
 					<td>자주묻는질문</td>
 				</tr>
 				<div id="sns">
-					<a href="#"><img src="./images/bottom_image.png" alt=""></a>
+					<a href="#"><img src="${ contextPath }/images/bottom_image.png" alt=""></a>
 				</div>
 			</table>
 		</div>

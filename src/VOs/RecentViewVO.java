@@ -6,25 +6,26 @@ public class RecentViewVO {
 	
 	private int no;
 	private String id;
-	private int item_no;
 	private int type;
-	private Timestamp viewed_at;
+	private int item_no;
+	private Timestamp view_date;
 	
-	public RecentViewVO() {}
-	
-	public RecentViewVO(int no, String id, int item_no, int type) {
+	public RecentViewVO() {
+	}
+
+	public RecentViewVO(int no, String id, int type, int item_no, Timestamp view_date) {
+
+		this(no, id, type, item_no);
+		this.view_date = view_date;
+	}
+
+	public RecentViewVO(int no, String id, int type, int item_no) {
 		
 		this.no = no;
 		this.id = id;
-		this.item_no = item_no;
 		this.type = type;
+		this.item_no = item_no;
 	}
-	
-	public RecentViewVO(int no, String id, int item_no, int type, Timestamp viewed_at) {
-			
-			this(no, id, item_no, type);
-			this.viewed_at = viewed_at;
-		}
 
 	public int getNo() {
 		return no;
@@ -42,14 +43,6 @@ public class RecentViewVO {
 		this.id = id;
 	}
 
-	public int getItem_no() {
-		return item_no;
-	}
-
-	public void setItem_no(int item_no) {
-		this.item_no = item_no;
-	}
-
 	public int getType() {
 		return type;
 	}
@@ -58,15 +51,19 @@ public class RecentViewVO {
 		this.type = type;
 	}
 
-	public Timestamp getViewed_at() {
-		return viewed_at;
+	public int getItem_no() {
+		return item_no;
 	}
 
-	public void setViewed_at(Timestamp viewed_at) {
-		this.viewed_at = viewed_at;
+	public void setItem_no(int item_no) {
+		this.item_no = item_no;
 	}
-	
-	
-	
 
+	public Timestamp getView_date() {
+		return view_date;
+	}
+
+	public void setView_date(Timestamp view_date) {
+		this.view_date = view_date;
+	}
 }

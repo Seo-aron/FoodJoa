@@ -163,7 +163,7 @@ create table recent_view(
     id			varchar(50) not null,
     item_no     int not null, 
     type		tinyint not null,
-    viewed_at   TIMESTAMP not null,
+    view_date   TIMESTAMP not null,
 
     foreign key(id) references member(id) ON DELETE CASCADE
 );

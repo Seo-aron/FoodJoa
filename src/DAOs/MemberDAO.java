@@ -10,8 +10,10 @@ import java.util.HashMap;
 
 import Common.DBConnector;
 import VOs.DeliveryInfoVO;
+import VOs.MealkitVO;
 import VOs.MealkitWishListVO;
 import VOs.MemberVO;
+import VOs.RecipeVO;
 import VOs.RecipeWishListVO;
 
 public class MemberDAO {
@@ -258,74 +260,66 @@ public class MemberDAO {
 
 	
 	// 최근 본 목록 조회
-	public ArrayList<HashMap<String, Object>> getRecentView(String userId) throws SQLException {
-	    String sql = "SELECT rv.type, rv.viewed_at, " +
-	                 "       CASE " +
-	                 "           WHEN rv.type = 0 THEN r.title " +
-	                 "           WHEN rv.type = 1 THEN m.title " +
-	                 "       END AS title, " +
-	                 "       CASE " +
-	                 "           WHEN rv.type = 0 THEN r.thumbnail " +
-	                 "           WHEN rv.type = 1 THEN m.pictures " +
-	                 "       END AS thumbnail, " +
-	                 "       CASE " +
-	                 "           WHEN rv.type = 0 THEN r.description " +
-	                 "           WHEN rv.type = 1 THEN m.contents " +
-	                 "       END AS description, " +
-	                 "       CASE " +
-	                 "           WHEN rv.type = 0 THEN r.views " +
-	                 "           WHEN rv.type = 1 THEN m.views " +
-	                 "       END AS views, " +
-	                 "       CASE " +
-	                 "           WHEN rv.type = 0 THEN r.post_date " +
-	                 "           WHEN rv.type = 1 THEN m.post_date " +
-	                 "       END AS post_date, " +
-	                 "       CASE " +
-	                 "           WHEN rv.type = 0 THEN r.id " +
-	                 "           WHEN rv.type = 1 THEN m.id " +
-	                 "       END AS member_id " +
-	                 "FROM recent_view rv " +
-	                 "LEFT JOIN recipe r ON rv.item_no = r.no AND rv.type = 0 " +
-	                 "LEFT JOIN mealkit m ON rv.item_no = m.no AND rv.type = 1 " +
-	                 "WHERE rv.id = ? " +
-	                 "ORDER BY rv.viewed_at DESC " +
-	                 "LIMIT 20";
-
-	    ArrayList<HashMap<String, Object>> recentViews = new ArrayList<>();
-	    ResultSet resultSet = null;
-
-	    try {
-	        resultSet = dbConnector.executeQuery(sql, userId);
-
-	        while (resultSet.next()) {
-	            HashMap<String, Object> item = new HashMap<>();
-	            item.put("type", resultSet.getInt("type"));  // 0: recipe, 1: mealkit
-	            item.put("title", resultSet.getString("title"));
-	            item.put("thumbnail", resultSet.getString("thumbnail"));
-	            item.put("description", resultSet.getString("description"));
-	            item.put("views", resultSet.getInt("views"));
-	            item.put("viewedAt", resultSet.getTimestamp("viewed_at"));
-	            item.put("postDate", resultSet.getTimestamp("post_date"));
-	            item.put("memberId", resultSet.getString("member_id"));
-	            recentViews.add(item);
-	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    } finally {
-	        if (resultSet != null) {
-	            try {
-	                resultSet.close(); // ResultSet 해제
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	        dbConnector.release(); // DB 연결 해제
+	public ArrayList<HashMap<String, Object>> getRecentView(String userId, int type) {
+		
+		ArrayList<HashMap<String, Object>> recentViews = new ArrayList<>();
+	    String sql = "SELECT ";
+	    
+	    if (type == 0) {
+	    	sql += "r.title, r.thumbnail, r.description, r.category, ";
 	    }
+	    else {
+	    	sql += "k.title, k.contents, k.category, k.price, k.pictures, ";
+	    }
+	    sql += "m.nickname, m.profile ";
+	    sql += "FROM recent_view v ";
+	    if (type == 0 ) {
+	    	sql += "LEFT JOIN recipe r ON v.item_no = r.no ";
+	    	sql += "LEFT JOIN member m ON r.id=m.id ";
+	    	sql += "WHERE v.id=?";
+		    sql += "ORDER BY r.post_date DESC LIMIT 20";
+	    }
+	    else {
+	    	sql += "LEFT JOIN mealkit k ON v.item_no = k.no ";
+	    	sql += "LEFT JOIN member m ON k.id=m.id ";
+	    	sql += "WHERE v.id=?";
+		    sql += "ORDER BY k.post_date DESC LIMIT 20";
+	    }
+	    
+	    ResultSet resultSet = dbConnector.executeQuery(sql, userId);
+	    
+	    try {
+			while (resultSet.next()) {
+				HashMap<String, Object> recentView = new HashMap<String, Object>();
+				
+				if (type == 0) {
+					RecipeVO recipeVO = new RecipeVO();
 
+					recipeVO.setTitle(resultSet.getString("title"));
+					recipeVO.setThumbnail(resultSet.getString("thumbnail"));
+					recipeVO.setDescription(resultSet.getString("description"));
+					recipeVO.setCategory(resultSet.getInt("category"));
+					
+					recentView.put("recipeVO", recipeVO);
+				}
+				else {
+					MealkitVO mealkitVO = new MealkitVO();
+				}
+				
+				MemberVO memberVO = new MemberVO();
+				
+				memberVO.setNickname(resultSet.getString("nickname"));
+				memberVO.setProfile(resultSet.getString("profile"));
+				
+				recentViews.add(recentView);
+			}
+		}
+	    catch (SQLException e) {
+			e.printStackTrace();
+		}
+	    
 	    return recentViews;
 	}
-
-
 
 	public MemberVO getMemberProfile(String userId) throws SQLException {
 		MemberVO member = null;

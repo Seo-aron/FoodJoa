@@ -52,7 +52,9 @@ public class RecipeService {
 	
 	public HashMap<String, Object> getRecipeInfo(HttpServletRequest request) {
 		
-		return recipeDAO.selectRecipeInfo(request.getParameter("no"));
+		return recipeDAO.selectRecipeInfo(
+				request.getParameter("no"),
+				(String) request.getSession().getAttribute("userId"));
 	}
 	
 	public int processRecipeWrite(HttpServletRequest request) throws ServletException, IOException {

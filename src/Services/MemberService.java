@@ -385,6 +385,6 @@ public class MemberService {
 	
 	 // 최근 본 목록 조회 서비스
     public ArrayList<HashMap<String, Object>> getRecentViews(String userId) throws SQLException {
-        return memberDAO.getRecentView(userId);
+        return memberDAO.getRecentView(userId, 0);
     }
 }
