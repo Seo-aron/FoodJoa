@@ -33,6 +33,11 @@
 			width: 1200px;
 			margin: 0 auto;
 		}
+		
+		#imageContainer{
+			width: 400px;
+			height : 100%;
+		}
 	
 	</style>
 </head>
@@ -75,7 +80,7 @@
 			</tr>
 			<tr>
 				<td colspan="4">
-					<div>
+					<div id="imageContainer">
 						<img src="<%=contextPath%>/images/community/thumbnails/<%=share.getNo()%>/<%=share.getThumbnail()%>">
 					</div>
 				</td>

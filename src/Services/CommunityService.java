@@ -84,8 +84,10 @@ public class CommunityService {
 		return communitydao.selectCommunityShareList();
 	}
 	
-	public ArrayList<HashMap<String, Object>> getSearchedShareList(String key, String word) {
-		return communitydao.selectSearchedShareList(key, word);
+	public ArrayList<HashMap<String, Object>> getSearchedShareList(HttpServletRequest request) {
+		return communitydao.selectSearchedShareList(
+				request.getParameter("key"),
+				request.getParameter("word"));
 	}
 
 	public int insertCommunityShare(HttpServletRequest request) throws ServletException, IOException {

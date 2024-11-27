@@ -58,7 +58,7 @@
 		<table border="0" width=100% cellpadding="2" cellspacing="0">
 			<tr align="center" bgcolor="#99ff99">
 				<td class="col-no">글번호</td>
-				<td class="col-title">제목</td>
+				<td class="col-title" colspan="2">제목</td>
 				<td class="col-write">작성자</td>
 				<td class="col-views">조회수</td>
 				<td class="col-date">작성날짜</td>
@@ -68,7 +68,7 @@
 			if (shareList == null || shareList.size() == 0){				
 				%>
 				<tr align="center">
-					<td colspan="5">등록된 글이 없습니다.</td>
+					<td colspan="6">등록된 글이 없습니다.</td>
 				</tr>
 				<%
 			}
@@ -84,6 +84,15 @@
 					%>			
 					<tr align="center">
 						<td><%= share.getNo()%></td>
+						<td>
+							<% 
+							if(share.getType() == 0){
+								%> [재료나눔] <%
+							}else{
+								%> [같이먹어요] <%
+							}
+							%>
+						</td>						
 						<td>
 							<a href="<%=contextPath%>/Community/shareRead?no=<%=share.getNo()%>&nowPage=<%=nowPage%>&nowBlock=<%=nowBlock%>">
 								<%=share.getTitle()%>
@@ -139,6 +148,7 @@
 						<select name="key">
 							<option value="title">제목</option>								
 							<option value="nickname">작성자</option>								
+							<option value="type">말머리</option>								
 						</select>
 							<input type="text" name="word" id="word" placeholder="검색어를 입력해주세요">
 							<input type="submit" value="검색"/>

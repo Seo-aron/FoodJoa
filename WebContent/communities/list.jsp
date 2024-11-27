@@ -42,18 +42,41 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
 <style>
 	#container {
 		margin: 0 auto;
 		width: 1200px;
+		font-family: "Noto Serif KR", serif;
+        font-optical-sizing: auto;
+	}
+	
+	#top_container{
+		font-family: "Noto Serif KR", serif;
+        font-optical-sizing: auto;
+		margin-top: 40px;
+		text-align: center;
+	}
+	
+	input[type="text"] {
+    border-radius: 5px; 
+    border: 1px solid #ccc;
+    padding: 8px; 
+    width: 200px;
 	}
 	
 </style>
 </head>
 <body>
+	<div id="top_container">
+		<h1>COMMUNITY</h1>
+		<h2>자유게시판</h2>
+		<h3>자유롭게 의견을 작성해보세요!</h3>
+	</div>
 	<div id="container">
 		<table border="0" width=100% cellpadding="2" cellspacing="0">
-			<tr align="center" bgcolor="#99ff99">
+			<tr align="center" bgcolor="BF917E">
 				<td class="col-no">글번호</td>
 				<td class="col-title">제목</td>
 				<td class="col-write">작성자</td>

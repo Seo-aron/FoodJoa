@@ -13,7 +13,6 @@
 	
     <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=ug8ym1cpbw&submodules=geocoder"></script>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-	<script src="<%=contextPath%>/js/community/shareWrite.js"></script>
 	
 	<style>
 		#container {
@@ -24,7 +23,7 @@
 			width: 128px;
 			height: 128px;
 			overflow: hidden;
-		}ß
+		}
 		
 		#imageContainer img {
 			width: 100%;
@@ -90,7 +89,7 @@
         </form>
     </div>
     
-    
+    <script src="<%=contextPath%>/js/community/shareWrite.js"></script>
 	<script>
 		function onSubmit(event) {
 			event.preventDefault();
