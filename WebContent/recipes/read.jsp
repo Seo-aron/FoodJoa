@@ -26,6 +26,7 @@
 	ArrayList<String> reviewContents = new ArrayList<String>();
 	
 	String category = (String) request.getAttribute("category");
+	if (category == null) category = "0";
 	String currentPage = (String) request.getAttribute("currentPage");
 	String currentBlock = (String) request.getAttribute("currentBlock");
 	
@@ -253,7 +254,16 @@
 	
 	<script>
 		function onListButton() {
-			location.href = '<%= contextPath %>/Recipe/list?category=<%= category %>&currentPage=<%= currentPage %>&currentBlock=<%= currentBlock %>';
+			let href = '<%= contextPath %>/Recipe/list?category=<%= category %>';
+			<%
+			if (currentBlock != null && currentPage != null) {
+				%>
+				href += '&currentPage=<%= currentPage %>&currentBlock=<%= currentBlock %>';
+				<%
+			}
+			%>
+			
+			location.href = href;
 		}
 		
 		function onReviewButton() {
@@ -276,7 +286,7 @@
 				url: "<%= contextPath %>/Recipe/wishlist",
 				type: "POST",
 				data: {
-					id: "admin",
+					id: '<%= id %>',
 					recipeNo: <%= recipe.getNo() %>
 				},
 				dataType: "text",

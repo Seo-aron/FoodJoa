@@ -3,33 +3,74 @@
 #container {
 	margin: 0 auto;
 	width: 1200px;
-	border: 2px solid black;
 }
 
-.header{
-	width: 100%;
+.recipe-list-header {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	height: 40px;
 }
 
-.list_table {
+.recipe-list-search-area {
+	flex-grow: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+}
+
+.recipe-list-search-area>* {
+	margin: 0 10px;
+}
+
+.recipe-list-search-area #key {
+	width: 120px;
+	height: 40px;
+}
+
+.recipe-list-search-area #word {
+	width: 400px;
+	height: 40px;
+}
+
+.recipe-list-search-area #search-button {
+	width: 60px;
+	height: 40px;
+}
+
+.recipe-write-button {
+	position: absolute;
+	right: 0;
+}
+
+.recipe-write-button>input {
+	width: 128px;
+	height: 40px;
+	margin-right: 40px;
+}
+
+.recipe-list-table {
 	margin: 0 auto;
+	padding: 20px;
 	border-collapse: separate;
 	border-spacing: 20px;
 }
 
-.list_cell {
+.recipe-cell {
 	text-align: center;
-	width: 260px;
-	height: 400px;
 	padding: 0;
-	
-	border: 1px solid black;
+}
+
+.recipe-cell:hover {
+	background-color: #EAEAEA;
 }
 
 .cell-link {
     display: block;
     text-decoration: none;
     color: inherit;
-    padding: 10px;
 }
 
 .cell-link > span:not(.rating, .views) {
@@ -37,12 +78,17 @@
     margin-bottom: 5px;
 }
 
-.rating {
-    display: inline-block;
+.recipe-thumbnail {
+	margin: 0 auto;
+	width: 256px;
+	height: 256px;
+	overflow: hidden;
 }
 
-.views {
-    display: inline-block;
+.recipe-thumbnail img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
 
 .review_star {
@@ -50,17 +96,26 @@
     height: 20px;
 }
 
-.thumbnail {
-	margin: 0 auto;
-	width: 256px;
-	height: 256px;
-	overflow: hidden;
+.recipe-review img {
+	width: 10px;
+	height: 10px;
+	vertical-align: middle;
 }
 
-.thumbnail img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
+.recipe-review span {
+	font-size: 10px;
+	vertical-align: middle;
+}
+
+.recipe-views img {
+	width: 20px;
+	height: 10px;
+	vertical-align: middle;	
+}
+
+.recipe-views span {
+	font-size: 10px;
+	vertical-align: middle;
 }
 
 .paging-area {

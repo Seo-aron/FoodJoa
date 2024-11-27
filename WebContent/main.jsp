@@ -27,7 +27,7 @@
 
 <body>
 	<center>
-		<table width="100%" border="1">
+		<table width="100%">
 			<tr>
 				<td><jsp:include page="includes/top.jsp"/></td>
 			</tr>
