@@ -49,16 +49,130 @@
 		#container {
 			margin: 0 auto;
 			width: 1200px;
-		}		
+			font-family: "Noto Serif KR", serif;
+        	font-optical-sizing: auto;
+		}
+		#top_container{
+		font-family: "Noto Serif KR", serif;
+		text-align: center;
+		margin-bottom: 30px;
+	}
+	
+	#top_container > p{
+		color: #616161;
+	}
+	
+	input[type="text"] {
+	    border-radius: 5px; 
+	    border: 1px solid #ccc;
+	    padding: 8px; 
+	    width: 200px;
+	}
+	
+	form {
+	    display: flex;
+	    align-items: center;
+	    justify-content: center;
+	    margin: 20px 0;
+	    gap: 10px;
+	}
+	
+	form select {
+	    border: 1px solid #ced4da;
+	    border-radius: 5px;
+	    padding: 8px;
+	    font-size: 1rem;
+	    color: #495057;
+	    background-color: #f8f9fa;
+	    outline: none;
+	    cursor: pointer;
+	}
+	
+	form select:hover {
+	    background-color: #e9ecef;
+	}
+	
+	form input[type="text"] {
+	    border: 1px solid #ced4da;
+	    border-radius: 5px;
+	    padding: 8px 12px;
+	    font-size: 1rem;
+	    color: #495057;
+	    width: 250px;
+	    outline: none;
+	    transition: border-color 0.3s ease;
+	}
+	
+	form input[type="text"]:focus {
+	    border-color: #007bff;
+	    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+	}
+	
+	form input[type="submit"],
+	form input[type="button"] {
+	    background-color: #BF817E;
+	    border: none;
+	    border-radius: 5px;
+	    padding: 8px 16px;
+	    font-size: 1rem;
+	    color: white;
+	    cursor: pointer;
+	    transition: background-color 0.3s ease;
+	}
+	
+	form input[type="submit"]:hover,
+	form input[type="button"]:hover {
+	    background-color: #e9ecef;
+	}
+	
+	form input[type="submit"]:disabled,
+	form input[type="button"]:disabled {
+	    background-color: #adb5bd;
+	    cursor: not-allowed;
+	}
+
+	@media (max-width: 768px) {
+	    #container {
+	        width: 90%;
+	    }
+	
+	    form {
+	        flex-direction: column;
+	        gap: 15px;
+	    }
+	
+	    form input[type="text"] {
+	        width: 100%;
+	    }
+	}
+    
+    .list_table{
+		border-spacing: 0px 10px;
+    }
+    
+    .community_p1{
+    	font-size: 40px;
+    }
+    
+    .community_p2{
+    	font-size: 30px;
+    }
+    
 	</style>
 </head>
 
 <body>
+	<div id="top_container" align="center">
+		<p class="community_p1">COMMUNITY</p>
+		<p class="community_p2">나눔/같이먹어요 게시판</p>
+		<p>자유롭게 글을 작성해보세요</p>
+	</div>
 	<div id="container">
-		<table border="0" width=100% cellpadding="2" cellspacing="0">
-			<tr align="center" bgcolor="#99ff99">
+		<table class="list_table" width="100%">
+			<tr align="center" bgcolor="#e9ecef">
 				<td class="col-no">글번호</td>
-				<td class="col-title" colspan="2">제목</td>
+				<td class="col-title">분류</td>
+				<td class="col-title">제목</td>
 				<td class="col-write">작성자</td>
 				<td class="col-views">조회수</td>
 				<td class="col-date">작성날짜</td>
@@ -83,8 +197,8 @@
 								
 					%>			
 					<tr align="center">
-						<td><%= share.getNo()%></td>
-						<td>
+						<td width="10%"><%= share.getNo()%></td>
+						<td width="10%" align="center">
 							<% 
 							if(share.getType() == 0){
 								%> [재료나눔] <%
@@ -93,14 +207,14 @@
 							}
 							%>
 						</td>						
-						<td>
+						<td width="25%" align="left">
 							<a href="<%=contextPath%>/Community/shareRead?no=<%=share.getNo()%>&nowPage=<%=nowPage%>&nowBlock=<%=nowBlock%>">
 								<%=share.getTitle()%>
 							</a>
 						</td>
-						<td><%= member.getNickname() %></td>
-						<td><%= share.getViews()%></td>
-						<td><%= new SimpleDateFormat("yyyy-MM-dd").format(share.getPostDate()) %></td>
+						<td width="15%"><%= member.getNickname() %></td>
+						<td width="10%"><%= share.getViews()%></td>
+						<td width="15%"><%= new SimpleDateFormat("yyyy-MM-dd").format(share.getPostDate()) %></td>
 					</tr>
 					<%
 				}
@@ -148,7 +262,7 @@
 						<select name="key">
 							<option value="title">제목</option>								
 							<option value="nickname">작성자</option>								
-							<option value="type">말머리</option>								
+							<option value="type">분류</option>								
 						</select>
 							<input type="text" name="word" id="word" placeholder="검색어를 입력해주세요">
 							<input type="submit" value="검색"/>

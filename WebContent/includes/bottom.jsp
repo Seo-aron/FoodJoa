@@ -18,6 +18,79 @@
 	<title>Insert title here</title>
 </head>
 
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+<style>
+	#bottom_container {
+		margin: 0 auto;
+		width: 1200px;
+		font-family: "Noto Serif KR", serif;
+	    font-optical-sizing: auto;
+	}
+	
+	/* 기본 폰트 설정 */
+body {
+    font-family: "Noto Serif KR", serif;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff; /* 배경색: 화이트 */
+    color: #333333; /* 기본 글자색: 다크 그레이 */
+}
+
+#bottom_container {
+    margin: 0 auto;
+    width: 1200px;
+    text-align: center;
+    padding: 20px 0;
+    border-top: 1px solid #e0e0e0; /* 상단 경계선 */
+}
+
+#bottomMenu {
+    margin-bottom: 20px;
+}
+
+#bottomMenu table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#bottomMenu td {
+    font-size: 14px;
+    padding: 10px;
+    color: #666666; /* 텍스트 색상 */
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+#bottomMenu td:hover {
+    color: #000000; /* 호버 시 검정색 강조 */
+}
+
+#sns {
+    margin-top: 20px;
+}
+
+#sns a img {
+    width: 300px; /* 아이콘 크기 */
+    height: 100px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+#sns a img:hover {
+    transform: scale(1.1); /* 호버 시 확대 효과 */
+}
+
+#company {
+    font-size: 12px;
+    line-height: 1.6;
+    color: #888888; /* 텍스트 색상 */
+}
+
+#company p {
+    margin: 5px 0;
+}
+	
+</style>
 <body>
 	<div id="bottom_container">
 		<div id="bottomMenu">
@@ -29,7 +102,9 @@
 					<td>자주묻는질문</td>
 				</tr>
 				<div id="sns">
-					<a href="#"><img src="./images/bottom_image.png" alt=""></a>
+					<a href="#">
+						<img src="${contextPath}/images/mainpage/bottom_image.png" alt="하단이미지">
+					</a>
 				</div>
 			</table>
 		</div>
