@@ -32,7 +32,7 @@ CREATE TABLE recipe(
     orders 				varchar(255) not null,
     post_date			timestamp not null,
     
-    FOREIGN KEY (id) REFERENCES member(id)
+    FOREIGN KEY (id) REFERENCES member(id) ON DELETE CASCADE
 );
 
 drop table if exists recipe_review;
@@ -45,8 +45,8 @@ create table recipe_review(
     rating 			int not null,
     post_date		timestamp,
     
-    FOREIGN KEY (id) REFERENCES member(id),
-    FOREIGN KEY (recipe_no) REFERENCES recipe(no)
+    FOREIGN KEY (id) REFERENCES member(id) ON DELETE CASCADE,
+    FOREIGN KEY (recipe_no) REFERENCES recipe(no) ON DELETE CASCADE
 );
 
 drop table if exists recipe_wishlist;
@@ -56,8 +56,8 @@ create table recipe_wishlist(
     recipe_no 		int not null, 
     choice_date		timestamp not null, 
     
-    FOREIGN KEY (id) REFERENCES member(id),
-    FOREIGN KEY (recipe_no) REFERENCES recipe(no)
+    FOREIGN KEY (id) REFERENCES member(id) ON DELETE CASCADE,
+    FOREIGN KEY (recipe_no) REFERENCES recipe(no) ON DELETE CASCADE
 );
 
 
@@ -79,7 +79,7 @@ CREATE TABLE mealkit(
 	soldout       tinyint not null,
 	post_date     timestamp not null,
 
-    foreign key (id) references member(id)
+    foreign key (id) references member(id) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS mealkit_order;
@@ -93,8 +93,8 @@ CREATE TABLE mealkit_order(
     refund		tinyint not null,
     post_date	timestamp not null,
     
-    foreign key (id) references member(id),
-    foreign key (mealkit_no) references mealkit(no)
+    foreign key (id) references member(id) ON DELETE CASCADE,
+    foreign key (mealkit_no) references mealkit(no) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS mealkit_review;
@@ -108,8 +108,8 @@ CREATE TABLE mealkit_review(
     empathy		int not null,
     post_date	timestamp not null,
     
-    foreign key (id) references member(id),
-    foreign key (mealkit_no) references mealkit(no)
+    foreign key (id) references member(id) ON DELETE CASCADE,
+    foreign key (mealkit_no) references mealkit(no) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS mealkit_wishlist;
@@ -120,8 +120,8 @@ CREATE TABLE mealkit_wishlist(
     type		tinyint not null,
 	choice_date	timestamp not null,
     
-    foreign key (id) references member(id),
-    foreign key (mealkit_no) references mealkit(no)
+    foreign key (id) references member(id) ON DELETE CASCADE,
+    foreign key (mealkit_no) references mealkit(no) ON DELETE CASCADE
 );
 
 
@@ -136,7 +136,7 @@ create table community(
     views		int not null,
     post_date	timestamp not null,
     
-    foreign key(id) references member(id)
+    foreign key(id) references member(id) ON DELETE CASCADE
 );
 
 drop table IF EXISTS community_share;
@@ -152,5 +152,20 @@ create table community_share(
     views 			int not null,
 	post_date 		timestamp not null,
 
-	FOREIGN KEY (id) REFERENCES member(id)
+	FOREIGN KEY (id) REFERENCES member(id) ON DELETE CASCADE
 );
+
+
+
+DROP TABLE IF EXISTS recent_view;
+create table recent_view(
+	no			int primary key auto_increment,
+    id			varchar(50) not null,
+    item_no     int not null, 
+    type		tinyint not null,
+    viewed_at   TIMESTAMP not null,
+
+    foreign key(id) references member(id) ON DELETE CASCADE
+);
+
+COMMIT;

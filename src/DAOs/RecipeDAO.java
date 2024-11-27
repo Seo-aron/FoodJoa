@@ -389,63 +389,64 @@ public class RecipeDAO {
 		return result;
 	}
 	
-	public ArrayList<HashMap<String, Object>> selectWishListInfos(String id) {
-		
-		ArrayList<HashMap<String, Object>> wishListInfos = new ArrayList<HashMap<String, Object>>();
-		
-		String sql = "SELECT "
-				+ "recipeWithAvg.*, "
-				+ "m.nickname "
-				+ "FROM recipe_wishlist wish "
-				+ "LEFT JOIN ( "
-				+ "SELECT r.*, COALESCE(avg_rating.average_rating, 0) AS average_rating "
-				+ "FROM recipe r "
-				+ "LEFT JOIN ( "
-				+ "SELECT review.recipe_no, AVG(rating) AS average_rating "
-				+ "FROM recipe_review review "
-				+ "GROUP BY recipe_no "
-				+ ") avg_rating ON r.no = avg_rating.recipe_no "
-				+ ") recipeWithAvg ON wish.recipe_no = recipeWithAvg.no "
-				+ "LEFT JOIN member m ON wish.id=m.id "
-				+ "WHERE wish.id=?";
-		
-		ResultSet resultSet = dbConnector.executeQuery(sql, id);
-		
-		try {
-			while (resultSet.next()) {
-				HashMap<String, Object> wishListInfo = new HashMap<String, Object>();
-				
-				RecipeVO recipeVO = new RecipeVO(
-						resultSet.getInt("no"),
-						resultSet.getString("id"),
-						resultSet.getString("title"),
-						resultSet.getString("thumbnail"),
-						resultSet.getString("description"),
-						resultSet.getString("contents"),
-						resultSet.getInt("category"),
-						resultSet.getInt("views"),
-						resultSet.getString("ingredient"),
-						resultSet.getString("ingredient_amount"),
-						resultSet.getString("orders"),
-						resultSet.getTimestamp("post_date"));
-				
-				double averageRating = resultSet.getDouble("average_rating");
-				String nickname = resultSet.getString("nickname");
-				
-				wishListInfo.put("recipeVO", recipeVO);
-				wishListInfo.put("averageRating", averageRating);
-				wishListInfo.put("nickname", nickname);
-				
-				wishListInfos.add(wishListInfo);
-			}
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		dbConnector.release();
-		
-		return wishListInfos;
+	public ArrayList<HashMap<String, Object>> selectRecipeInfos(String userId) {
+	    
+	    ArrayList<HashMap<String, Object>> recipeInfos = new ArrayList<HashMap<String, Object>>();
+	    
+	    // 수정된 SQL 쿼리
+	    String sql = "SELECT "
+	            + "recipeWithAvg.*, "
+	            + "m.nickname AS author_nickname " // 레시피 작성자의 닉네임을 가져옴
+	            + "FROM recipe_wishlist wish "
+	            + "LEFT JOIN ( "
+	            + "SELECT r.*, COALESCE(avg_rating.average_rating, 0) AS average_rating "
+	            + "FROM recipe r "
+	            + "LEFT JOIN ( "
+	            + "SELECT review.recipe_no, AVG(rating) AS average_rating "
+	            + "FROM recipe_review review "
+	            + "GROUP BY recipe_no "
+	            + ") avg_rating ON r.no = avg_rating.recipe_no "
+	            + ") recipeWithAvg ON wish.recipe_no = recipeWithAvg.no "
+	            + "LEFT JOIN member m ON recipeWithAvg.id = m.id " // 수정된 부분: recipe의 작성자 id와 member를 연결
+	            + "WHERE wish.id=?";
+	    
+	    ResultSet resultSet = dbConnector.executeQuery(sql, userId);
+	    
+	    try {
+	        while (resultSet.next()) {
+	            HashMap<String, Object> recipeInfo = new HashMap<String, Object>();
+	            
+	            RecipeVO recipeVO = new RecipeVO(
+	                    resultSet.getInt("no"),
+	                    resultSet.getString("id"),
+	                    resultSet.getString("title"),
+	                    resultSet.getString("thumbnail"),
+	                    resultSet.getString("description"),
+	                    resultSet.getString("contents"),
+	                    resultSet.getInt("category"),
+	                    resultSet.getInt("views"),
+	                    resultSet.getString("ingredient"),
+	                    resultSet.getString("ingredient_amount"),
+	                    resultSet.getString("orders"),
+	                    resultSet.getTimestamp("post_date"));
+	            
+	            double averageRating = resultSet.getDouble("average_rating");
+	            String authorNickname = resultSet.getString("author_nickname"); // 작성자의 닉네임 가져오기
+	            
+	            recipeInfo.put("recipeVO", recipeVO);
+	            recipeInfo.put("averageRating", averageRating);
+	            recipeInfo.put("nickname", authorNickname); // 위시리스트에 작성자 닉네임 추가
+	            
+	            recipeInfos.add(recipeInfo);
+	        }
+	    }
+	    catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    
+	    dbConnector.release();
+	    
+	    return recipeInfos;
 	}
 
 	public ArrayList<HashMap<String, Object>> selectRecipesById(String id) {
@@ -556,6 +557,7 @@ public class RecipeDAO {
 				
 		return recipes;
 	}
+	
 } 
 
 

@@ -10,13 +10,22 @@
 
     String contextPath = request.getContextPath();
 
-    // 위시리스트 데이터 가져오기
-    ArrayList<HashMap<String, Object>> wishListInfos = 
-        (ArrayList<HashMap<String, Object>>) request.getAttribute("wishList");
-    if (wishListInfos == null) {
-        wishListInfos = new ArrayList<>(); // 데이터가 없으면 빈 리스트로 초기화
-    }
+    // 위시리스트 데이터 가져오기 
+    ArrayList<HashMap<String, Object>> recipeInfos = 
+        (ArrayList<HashMap<String, Object>>) request.getAttribute("recipeWishListInfos"); // 수정된 속성명
+    if (recipeInfos == null) {
+        recipeInfos = new ArrayList<>(); // 데이터가 없으면 빈 리스트로 초기화
+    } 
+        
+        
+    // 밀키트 위시리스트 데이터 가져오기 
+    ArrayList<HashMap<String, Object>> mealKitInfos = 
+        (ArrayList<HashMap<String, Object>>) request.getAttribute("mealKitWishListInfos"); // 밀키트 위시리스트
 
+    if (mealKitInfos == null) {
+        mealKitInfos = new ArrayList<>(); // 데이터가 없으면 빈 리스트로 초기화
+    }    
+    
     final int columnCount = 4; // 한 줄에 표시할 항목 수
 %>
 
@@ -57,26 +66,42 @@
         };
     </script>
     <style>
+    	
+    
     	#container {
     		width: 1200px;
+    		background-color: #FFEBEE;
     	}
     
-        .wishlist-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 4개의 열로 나누기 */
-            gap: 20px; /* 항목 간 간격 */
-        }
-
-        .wishlist-item {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: center;
-        }
-
-        .wishlist-item img {
-            max-width: 100%;
-            height: auto;
-        }
+       .wishlist-grid {
+		    display: grid;
+		    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+		    gap: 20px;
+		}
+		
+		.wishlist-item {
+		    border: 1px solid #ddd;
+		    border-radius: 5px;
+		    overflow: hidden;
+		    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+		    text-align: center;
+		    transition: transform 0.2s ease, box-shadow 0.2s ease;
+		}
+		
+		.wishlist-item:hover {
+		    transform: translateY(-5px);
+		    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+		}
+		
+		.wishlist-item img {
+		    max-width: 100%;
+		    height: auto;
+		    border-bottom: 1px solid #ddd;
+		}
+		
+		.wishlist-item div {
+		    margin: 10px 0;
+		}
     </style>
 </head>
 <body>
@@ -98,82 +123,84 @@
 	
 	    <!-- 전체보기 -->
 	    <div id="allTitle" style="display: block;">
-	        <h2>전체보기</h2>
 	    </div>
 	    <div id="allList" style="display: block;">
 	        <div class="wishlist-grid">
-	            <c:forEach var="item" items="${wishList}">
-	                <div class="wishlist-item">
-	                    <img src="${item.thumbnail}" alt="Thumbnail" width="100" height="100" />
-	                    <div>${item.name} (${item.type})</div>
-	                </div>
-	            </c:forEach>
+	            <c:forEach var="item" items="${recipeWishListInfos}">
+            <c:choose>
+                <c:when test="${item.recipeVO != null}">
+                    <div class="wishlist-item">
+                        <a href="recipeDetails.jsp?recipeNo=${item.recipeVO.no}">
+                            <img src="${pageContext.request.contextPath}/images/recipe/thumbnails/${item.recipeVO.no}/${item.recipeVO.thumbnail}" 
+                                 alt="${item.recipeVO.title}" />
+                            <div><b>${item.recipeVO.title}</b></div>
+                            <div>작성자: ${item.nickname}</div> <!-- 작성자 닉네임 -->
+                            <div>평점: ${item.averageRating}</div> <!-- 평점 -->
+                        </a>
+                    </div>
+                </c:when>
+            </c:choose>
+        </c:forEach>
+         <c:forEach var="item" items="${mealKitWishListInfos}">
+            <c:choose>
+                <c:when test="${item.mealkitVO != null}">
+                    <div class="wishlist-item">
+                        <a href="mealKitDetails.jsp?mealKitNo=${item.mealkitVO.no}">
+                            <div><b>${item.mealkitVO.title}</b></div>
+                            <div>작성자: ${item.nickname}</div> <!-- 작성자 닉네임 -->
+                            <div>평점: ${item.avgRating}</div> <!-- 평점 -->
+                        </a>
+                    </div>
+                </c:when>
+            </c:choose>
+        </c:forEach>
 	        </div>
 	    </div>
+	<!-- 레시피 목록 -->
+<div id="recipeTitle">
+</div>
+<div id="recipeList">
+    <div class="wishlist-grid">
+        <!-- 레시피 위시리스트 정보 출력 -->
+        <c:forEach var="item" items="${recipeWishListInfos}">
+            <c:choose>
+                <c:when test="${item.recipeVO != null}">
+                    <div class="wishlist-item">
+                        <a href="recipeDetails.jsp?recipeNo=${item.recipeVO.no}">
+                            <img src="${pageContext.request.contextPath}/images/recipe/thumbnails/${item.recipeVO.no}/${item.recipeVO.thumbnail}" 
+                                 alt="${item.recipeVO.title}" />
+                            <div><b>${item.recipeVO.title}</b></div>
+                            <div>작성자: ${item.nickname}</div> <!-- 작성자 닉네임 -->
+                            <div>평점: ${item.averageRating}</div> <!-- 평점 -->
+                        </a>
+                    </div>
+                </c:when>
+            </c:choose>
+        </c:forEach>
+    </div>
+</div>
+
+<!-- 밀키트 목록 -->
+<div id="productTitle">
+</div>
+<div id="productList">
+    <div class="wishlist-grid">
+        <!-- 밀키트 위시리스트 정보 출력 -->
+        <c:forEach var="item" items="${mealKitWishListInfos}">
+            <c:choose>
+                <c:when test="${item.mealkitVO != null}">
+                    <div class="wishlist-item">
+                        <a href="mealKitDetails.jsp?mealKitNo=${item.mealkitVO.no}">
+                            <div><b>${item.mealkitVO.title}</b></div>
+                            <div>작성자: ${item.nickname}</div> <!-- 작성자 닉네임 -->
+                            <div>평점: ${item.avgRating}</div> <!-- 평점 -->
+                        </a>
+                    </div>
+                </c:when>
+            </c:choose>
+        </c:forEach>
+    </div>
+</div>
 	
-	    <!-- 레시피 목록 -->
-	    <div id="recipeTitle" style="display: none;">
-	        <h2>레시피</h2>
-	    </div>
-	    <div id="recipeList" style="display: none;">
-	        <table class="list_table">
-	            <%
-	            if (wishListInfos.isEmpty()) {
-	            %>
-	                <tr>
-	                    <td colspan="<%= columnCount %>">등록된 레시피가 없습니다.</td>
-	                </tr>
-	            <%
-	            } else {
-	                for (int i = 0; i < wishListInfos.size(); i++) {
-	                    if (i % columnCount == 0) {
-	            %>
-	                <tr> <!-- 새로운 행 시작 -->
-	            <%
-	                    }
-	
-	                    // 레시피 정보 추출
-	                    HashMap<String, Object> recipeData = wishListInfos.get(i);
-	                    RecipeVO recipe = (RecipeVO) recipeData.get("recipeVO");
-	                    double rating = (double) recipeData.get("averageRating");
-	            %>
-	                    <td class="wishlist-item">
-	                        <a href="recipeDetails.jsp?recipeNo=<%= recipe.getNo() %>">
-	                            <img src="<%= contextPath %>/images/recipe/thumbnails/<%= recipe.getNo() %>/<%= recipe.getThumbnail() %>" 
-	                                 alt="Thumbnail">
-	                            <div><b><%= recipe.getTitle() %></b></div>
-	                            <div>작성자: <%= recipe.getId() %></div>
-	                            <div>평점: <%= String.format("%.1f", rating) %></div>
-	                        </a>
-	                    </td>
-	            <%
-	                    if ((i + 1) % columnCount == 0 || i == wishListInfos.size() - 1) {
-	            %>
-	                </tr> <!-- 현재 행 종료 -->
-	            <%
-	                    }
-	                }
-	            }
-	            %>
-	        </table>
-	    </div>
-	
-	    <!-- 상품 목록 -->
-	    <div id="productTitle" style="display: none;">
-	        <h2>상품</h2>
-	    </div>
-	    <div id="productList" style="display: none;">
-	        <div class="wishlist-grid">
-	            <c:forEach var="item" items="${wishList}">
-	                <c:if test="${item.type == 'product'}">
-	                    <div class="wishlist-item">
-	                        <img src="${item.thumbnail}" alt="Thumbnail" width="100" height="100" />
-	                        <div>${item.name} - ${item.description}</div>
-	                    </div>
-	                </c:if>
-	            </c:forEach>
-	        </div>
-	    </div>
-	</div>
 </body>
 </html>
