@@ -60,7 +60,7 @@ CREATE TABLE recipe(
     orders 				varchar(255) not null,
     post_date			timestamp not null,
     
-    FOREIGN KEY (id) REFERENCES member(id)
+    FOREIGN KEY (id) REFERENCES member(id) ON DELETE CASCADE
 );
 
 insert into recipe(id, title, thumbnail, 
@@ -89,7 +89,7 @@ create table recipe_review(
     rating 			int not null,
     post_date		timestamp,
     
-    FOREIGN KEY (id) REFERENCES member(id),
+    FOREIGN KEY (id) REFERENCES member(id) ON DELETE CASCADE, 
     FOREIGN KEY (recipe_no) REFERENCES recipe(no)
 );
 
@@ -143,8 +143,8 @@ create table recipe_wishlist(
     recipe_no 		int not null, 
     choice_date		timestamp not null, 
     
-    FOREIGN KEY (id) REFERENCES member(id),
-    FOREIGN KEY (recipe_no) REFERENCES recipe(no)
+    FOREIGN KEY (id) REFERENCES member(id) ON DELETE CASCADE,
+    FOREIGN KEY (recipe_no) REFERENCES recipe(no) 
 );
 
 insert into recipe_wishlist(id, recipe_no, choice_date) 
@@ -206,7 +206,7 @@ CREATE TABLE mealkit(
 	soldout       tinyint not null,
 	post_date     timestamp not null,
 
-    foreign key (id) references member(id)
+    foreign key (id) references member(id) ON DELETE CASCADE
 );
 SELECT * FROM mealkit;
 
@@ -224,7 +224,7 @@ CREATE TABLE mealkit_order(
     refund		tinyint not null,
     post_date	timestamp not null,
     
-    foreign key (id) references member(id),
+    foreign key (id) references member(id) ON DELETE CASCADE,
     foreign key (mealkit_no) references mealkit(no)
 );
 
@@ -249,7 +249,7 @@ CREATE TABLE mealkit_review(
     empathy		int not null,
     post_date	timestamp not null,
     
-    foreign key (id) references member(id),
+    foreign key (id) references member(id) ON DELETE CASCADE,
     foreign key (mealkit_no) references mealkit(no)
 );
 
@@ -265,7 +265,7 @@ CREATE TABLE mealkit_wishlist(
     mealkit_no	int not null,
     type		tinyint not null,
     
-    foreign key (id) references member(id),
+    foreign key (id) references member(id) ON DELETE CASCADE,
     foreign key (mealkit_no) references mealkit(no)
 );
 
@@ -320,7 +320,7 @@ create table community(
     views		int not null,
     post_date	timestamp not null,
     
-    foreign key(id) references member(id)
+    foreign key(id) references member(id) ON DELETE CASCADE
 );
 
 select * from community;
@@ -349,7 +349,7 @@ create table community_share(
     views int not null,
 	post_date timestamp not null,
 
-	FOREIGN KEY (id) REFERENCES member(id)
+	FOREIGN KEY (id) REFERENCES member(id) ON DELETE CASCADE
 );
 
 select * from community_share;
@@ -393,7 +393,9 @@ create table recent_view(
     type		tinyint not null,
     viewed_at   TIMESTAMP not null,
 
-    foreign key(id) references member(id)
+    foreign key(id) references member(id) ON DELETE CASCADE
 );
+
+select * from recent_view;
 
 commit;
