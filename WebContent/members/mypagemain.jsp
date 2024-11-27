@@ -45,7 +45,7 @@ long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
 <body>
    <div class="header">
       <h1>마이페이지</h1>
-      <a href="<%=contextPath%>/main.jsp">
+      <a href="<%=contextPath%>/mypagemain.me">
          <input type="button" class="logout-btn" value="로그아웃">
       </a>
    </div>
@@ -78,19 +78,19 @@ long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
          <div>
             <a href="<%=contextPath%>/members/myreceipe.jsp">
                <p align="center">내 레시피 관리</p>
-               <img src="../images/member/레시피.png" alt="레시피 이미지">
+               <img src="../images/member/receipe.png" alt="레시피 이미지">
             </a>
          </div>
          <div>
             <a href="<%=contextPath%>/members/myproduct.jsp">
                <p align="center">내 상품 관리</p>
-               <img src="../images/member/상품사진.png" alt="상품 이미지">
+               <img src="../images/member/product.png" alt="상품 이미지">
             </a>
          </div>
          <div>
             <a href="<%=contextPath%>/members/myreview.jsp">
                <p align="center">내 리뷰 관리</p>
-               <img src="../images/member/손모양.png" alt="리뷰 이미지">
+               <img src="../images/member/hand.png" alt="리뷰 이미지">
             </a>
 
          </div>

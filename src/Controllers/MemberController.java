@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import Common.NaverLoginAPI;
 import DAOs.MemberDAO;
 import Services.MemberService;
+import VOs.DeliveryInfoVO;
 import VOs.MemberVO;
 
 @WebServlet("/Member/*")
@@ -85,8 +86,10 @@ public class MemberController extends HttpServlet {
 		case "/update.me": openMemberUpdateView(request, response); break;
 		case "/updatePro.me": processMemberUpdate(request, response); break;
 		case "/viewMyDelivery.me": openMyDeliveryView(request, response); break;
+		case "/viewMySend.me": openMySendView(request, response); break;
 		case "/viewMyRecipe.me" : openMyRecipeView(request, response); break;
-
+		
+		
 		default:
 			nextPage = "/main.jsp";
 		}
@@ -95,7 +98,24 @@ public class MemberController extends HttpServlet {
 		dispatcher.forward(request, response);
 	}
 
-
+	
+	  private void openMySendView(HttpServletRequest request, HttpServletResponse
+	  response){ 
+	  ArrayList<DeliveryInfoVO> vo = memberService.getSend(request);
+	  
+	  request.setAttribute("vo", vo); 
+	  request.setAttribute("center","members/sendmealkit.jsp"); 
+	  nextPage = "/main.jsp"; }
+	 
+	
+	private void openMyDeliveryView(HttpServletRequest request, HttpServletResponse response) {
+		ArrayList<DeliveryInfoVO> deliverList = memberService.getDeliver(request);
+		
+		request.setAttribute("deliverList", deliverList);
+		request.setAttribute("center", "members/mydelivery.jsp");
+		nextPage = "/main.jsp";
+	}
+	
 	private void openCartList(HttpServletRequest request, HttpServletResponse response) {
 	    
 	    // center 부분에 해당하는 JSP 파일 설정
@@ -107,14 +127,6 @@ public class MemberController extends HttpServlet {
 
 	private void openMyRecipeView(HttpServletRequest request, HttpServletResponse response) {
 		request.setAttribute("center", "members/myreceipe.jsp");
-		nextPage = "/main.jsp";
-	}
-
-	private void openMyDeliveryView(HttpServletRequest request, HttpServletResponse response) {
-		MemberVO vo = memberService.getDeliver(request);
-		
-		request.setAttribute("vo", vo);
-		request.setAttribute("center", "members/mydelivery.jsp");
 		nextPage = "/main.jsp";
 	}
 
@@ -390,9 +402,7 @@ public class MemberController extends HttpServlet {
 	private void processMemberUpdate(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		int result = memberService.updateProfile(request);
-
-		request.setAttribute("center", "members/mypagemain.jsp");
-		nextPage = "/main.jsp";
+		nextPage = "/Member/mypagemain.me";
 	}
 
 	// 네이버 로그인 처리 메소드
