@@ -169,11 +169,13 @@
 					    			</td>
 					    		</tr>
 					    		<tr>
-					    			<td class="recipe-review">					    			
+					    			<td class="recipe-review" align="right">					    			
 					    				<img src="<%= contextPath %>/images/recipe/review_icon.png">
 					    				<span><%= reviewCount %> reviews</span>
+					    				&nbsp;
 					    			</td>
-					    			<td class="recipe-views">
+					    			<td class="recipe-views" align="left">
+					    				&nbsp;
 					    				<img src="<%= contextPath %>/images/recipe/views_icon.png">
 					    				<span><%= recipe.getViews() %> views</span>
 					    			</td>

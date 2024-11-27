@@ -4,6 +4,17 @@
 	margin: 0 auto;
 }
 
+.recipe-read-button-area input {
+	background-color: #BF817E;
+	border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: white;
+    cursor: pointer;
+    padding: 8px 16px;
+    margin: 10px 5px;
+}
+
 .recipe-list {
 	display: flex;
 	width: 100%;
@@ -169,6 +180,17 @@
 }
 
 /* 리뷰 영역 */
+.review-table {
+	border-spacing: 0px 15px;
+}
+
+.review-cell {
+	border: 1px solid #BF917E;
+	border-radius: 5px;
+	box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+	padding: 10px;
+}
+
 .review-title {
 	font-family: "Noto Serif KR", serif;
 	font-size: 25px;

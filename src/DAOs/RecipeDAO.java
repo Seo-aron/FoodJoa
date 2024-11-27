@@ -319,7 +319,7 @@ public class RecipeDAO {
 		
 		ArrayList<HashMap<String, Object>> reviews = new ArrayList<HashMap<String, Object>>();
 		
-		String sql = "SELECT r.*, m.nickname "
+		String sql = "SELECT r.*, m.nickname, m.profile "
 				+ "FROM recipe_review r "
 				+ "LEFT JOIN member m ON r.id=m.id "
 				+ "WHERE recipe_no=?";
@@ -341,9 +341,11 @@ public class RecipeDAO {
 						resultSet.getTimestamp("post_date"));
 				
 				String nickname = resultSet.getString("nickname");
+				String profile = resultSet.getString("profile");
 				
 				reviewMap.put("review", review);
 				reviewMap.put("nickname", nickname);
+				reviewMap.put("profile", profile);
 				
 				reviews.add(reviewMap);
 			}

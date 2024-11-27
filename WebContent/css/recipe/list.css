@@ -31,16 +31,36 @@
 .recipe-list-search-area #key {
 	width: 120px;
 	height: 40px;
+	border: 1px solid #ced4da;
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 1rem;
+    color: #495057;
+    background-color: #f8f9fa;
+    outline: none;
+    cursor: pointer;
 }
 
 .recipe-list-search-area #word {
 	width: 400px;
 	height: 40px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-size: 1rem;
+    color: #495057;
+    outline: none;
 }
 
 .recipe-list-search-area #search-button {
 	width: 60px;
 	height: 40px;
+	background-color: #BF817E;
+	border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: white;
+    cursor: pointer;
 }
 
 .recipe-write-button {
@@ -52,6 +72,12 @@
 	width: 128px;
 	height: 40px;
 	margin-right: 40px;
+	background-color: #BF817E;
+	border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: white;
+    cursor: pointer;
 }
 
 .recipe-list-table {

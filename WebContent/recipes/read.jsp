@@ -53,7 +53,7 @@
 	<div id="recipe-read-container">
 		<table width="100%">
 			<tr>
-				<td>
+				<td class="recipe-read-button-area" align="right">
 					<%
 					if (id != null && !id.equals("") && !id.equals(recipe.getId())) {
 						%><input type="button" value="리뷰 쓰기" onclick="onReviewButton()"><%
@@ -179,7 +179,7 @@
 			<tr>
 				<td>
 					<div class="review-title">리뷰 (<%= reviews.size() %>)</div>
-					<table width="100%" border="1">
+					<table class="review-table" width="100%">
 						<%
 						if (reviews == null || reviews.size() == 0) {
 							%>
@@ -192,55 +192,62 @@
 							for (int i = 0; i < reviews.size(); i++) {
 								RecipeReviewVO review = (RecipeReviewVO) (reviews.get(i).get("review"));
 								String reviewNickName = (String) (reviews.get(i).get("nickname"));
+								String reviewProfile = (String) (reviews.get(i).get("profile"));
+								System.out.println("review.getId() : " + review.getId());
 								%>
 								<tr>
-									<td rowspan="3" class="reviewer-profile" width="10%">
-										<div>
-											<img alt="프로필사진" src="<%= contextPath %>/images/recipe/test_thumbnail.png">
-										</div>
-										<div>
-											<p align="center"><%= reviewNickName %></p>
-										</div>
-									</td>
 									<td>
-										<ul class="review-star">
-										<%
-										int rating = review.getRating();
-										for (int startIndex = 1; startIndex <= 5; startIndex++) {
-											String starImage = (startIndex <= rating) ? "full_star.png" : "empty_star.png";
-											%>
-							                <li>
-							                	<img src="<%= contextPath %>/images/recipe/<%= starImage %>" alt="별점">
-							                </li>
-							                <%
-										}
-							            %>
-							            </ul>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<div class="review-pictures-area">
-										<%
-											List<String> pictures = StringParser.splitString(review.getPictures());
-										
-											for(String picture : pictures) {
-												%>
-												<div class="review-pictures">
-													<img src="<%= contextPath %>/images/recipe/reviews/<%= recipe.getNo() %>/<%= review.getId() %>/<%= picture %>">
-												</div>
-												<%
-											}
-										%>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<%-- <div class="review-contents"><%= review.getContents() %></div> --%>
-										<div class="review-contents">
-										<% reviewContents.add(review.getContents()); %>
-										</div>
+										<table class="review-cell" width="100%">
+											<tr>
+												<td rowspan="3" class="reviewer-profile" width="10%">
+													<div>
+														<img src="<%= contextPath %>/images/member/userProfiles/<%= review.getId() %>/<%= reviewProfile %>">
+													</div>
+													<div>
+														<p align="center"><%= reviewNickName %></p>
+													</div>
+												</td>
+												<td>
+													<ul class="review-star">
+													<%
+													int rating = review.getRating();
+													for (int startIndex = 1; startIndex <= 5; startIndex++) {
+														String starImage = (startIndex <= rating) ? "full_star.png" : "empty_star.png";
+														%>
+										                <li>
+										                	<img src="<%= contextPath %>/images/recipe/<%= starImage %>" alt="별점">
+										                </li>
+										                <%
+													}
+										            %>
+										            </ul>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<div class="review-pictures-area">
+													<%
+														List<String> pictures = StringParser.splitString(review.getPictures());
+													
+														for(String picture : pictures) {
+															%>
+															<div class="review-pictures">
+																<img src="<%= contextPath %>/images/recipe/reviews/<%= recipe.getNo() %>/<%= review.getId() %>/<%= picture %>">
+															</div>
+															<%
+														}
+													%>
+													</div>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<div class="review-contents">
+														<% reviewContents.add(review.getContents()); %>
+													</div>
+												</td>
+											</tr>
+										</table>
 									</td>
 								</tr>
 								<%
@@ -251,7 +258,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td>
+				<td class="recipe-read-button-area" align="right">
 					<%
 					if (id != null && !id.equals("") && !id.equals(recipe.getId())) {
 						%><input type="button" value="리뷰 쓰기" onclick="onReviewButton()"><%
