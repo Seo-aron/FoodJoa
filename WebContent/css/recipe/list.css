@@ -1,8 +1,11 @@
 @charset "UTF-8";
 
-#container {
+#recipe-list-container {
 	margin: 0 auto;
-	width: 1200px;
+}
+
+.list-title {	
+	font-family: "Noto Serif KR", serif;
 }
 
 .recipe-list-header {
@@ -96,25 +99,37 @@
     height: 20px;
 }
 
+.recipe-title {
+	font-family: "Noto Serif KR", serif;
+	font-size: 25px;
+}
+
+.recipe-nickname {
+	font-family: "Noto Serif KR", serif;
+	font-size: 20px;
+}
+
 .recipe-review img {
-	width: 10px;
-	height: 10px;
+	width: 15px;
+	height: 15px;
 	vertical-align: middle;
 }
 
 .recipe-review span {
-	font-size: 10px;
+	font-family: "Noto Serif KR", serif;
+	font-size: 15px;
 	vertical-align: middle;
 }
 
 .recipe-views img {
-	width: 20px;
-	height: 10px;
+	width: 25px;
+	height: 12px;
 	vertical-align: middle;	
 }
 
 .recipe-views span {
-	font-size: 10px;
+	font-family: "Noto Serif KR", serif;
+	font-size: 15px;
 	vertical-align: middle;
 }
 

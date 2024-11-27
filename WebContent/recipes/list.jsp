@@ -74,12 +74,13 @@
 		}
 	</script>
 	
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="<%=contextPath%>/css/recipe/list.css">
 </head>
 
 <body>
-	<div id="container">
-		<h1>
+	<div id="recipe-list-container">
+		<h1 class="list-title">
 			<%
 			int _catetory = (category == null || category.equals("")) ? 0 : Integer.parseInt(category);
 		
@@ -138,8 +139,23 @@
 					    <a href="javascript:openRecipeContent(<%= recipe.getNo() %>)" class="cell-link">
 					    	<table>
 					    		<tr>
-					    			<td class="recipe-thumbnail" colspan="2">
-					    				<img src="<%= contextPath %>/images/recipe/thumbnails/<%= recipe.getNo() %>/<%= recipe.getThumbnail() %>">	
+					    			<td colspan="2">
+					    				<div class="recipe-thumbnail">
+					    					<img src="<%= contextPath %>/images/recipe/thumbnails/<%= recipe.getNo() %>/<%= recipe.getThumbnail() %>">
+					    				</div>
+					    				<div class="recipe-review-star">
+					    					<%
+					    					String starImage = "";
+								            for (int j = 1; j <= 5; j++) {
+								                if (j <= rating) starImage = "full_star.png";
+								                else if (j > rating && j < rating + 1) starImage = "half_star.png";
+								                else starImage = "empty_star.png";
+								                %>
+								                <img class="review_star" src="<%= contextPath %>/images/recipe/<%= starImage %>" alt="별점">
+								                <%
+								            }
+					    					%>
+					    				</div>
 					    			</td>
 					    		</tr>
 					    		<tr>
@@ -156,22 +172,6 @@
 					    			<td class="recipe-review">					    			
 					    				<img src="<%= contextPath %>/images/recipe/review_icon.png">
 					    				<span><%= reviewCount %> reviews</span>
-					    				<%-- <%
-					    				if (rating < 1) {
-					    					%>등록된 리뷰가 없습니다.<%
-					    				}
-					    				else {
-								            String starImage = "";
-								            for (int j = 1; j <= 5; j++) {
-								                if (j <= rating) starImage = "full_star.png";
-								                else if (j > rating && j < rating + 1) starImage = "half_star.png";
-								                else starImage = "empty_star.png";
-								                %>
-								                <img class="review_star" src="<%= contextPath %>/images/recipe/<%= starImage %>" alt="별점">
-								                <%
-								            }
-					    				}
-							            %> --%>
 					    			</td>
 					    			<td class="recipe-views">
 					    				<img src="<%= contextPath %>/images/recipe/views_icon.png">

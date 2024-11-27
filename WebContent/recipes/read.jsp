@@ -45,11 +45,12 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 	<script src="<%= contextPath %>/js/common/common.js"></script>
 	
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="<%=contextPath%>/css/recipe/read.css">    
 </head>
 
 <body>
-	<div id="container">
+	<div id="recipe-read-container">
 		<table width="100%">
 			<tr>
 				<td>
@@ -70,7 +71,8 @@
 				</td>
 			</tr>
 			<tr>
-				<td>			
+				<td>
+					<hr>
 					<ul class="recipe-list">
 					    <li class="profile-img">
 					    	<div>
@@ -80,7 +82,7 @@
 					    <li class="recipe-title">
 					        <%= recipe.getTitle() %>
 					    </li>
-					    <li class="recipe-id">
+					    <li class="recipe-nickname">
 					        <%= nickname %>
 					    </li>
 					    <li class="recipe-info">
@@ -91,6 +93,7 @@
 					        <p>조회수 : <%= recipe.getViews() %></p>
 					    </li>
 					</ul>
+					<hr>
 				</td>	
 			</tr>
 			<tr>
@@ -100,7 +103,9 @@
 						<div id="wishlist">
 							<%
 							if (id != null && !id.equals("") && !id.equals(recipe.getId())) {
-								%><button id="wishlist-button">레시피 찜하기</button><%
+								%>
+								<img src="<%= contextPath %>/images/recipe/heart.png">
+								<%
 							}
 							%>
 						</div>
@@ -122,47 +127,58 @@
 			<tr>
 				<td>
 					<div id="ingredient">
-						<p>사용한 재료</p>
-						<%
-						List<String> parsedIngredient = StringParser.splitString(recipe.getIngredient());
-						List<String> parsedIngredientAmount = StringParser.splitString(recipe.getIngredientAmount());
-						
-						for (int i = 0; i < parsedIngredient.size(); i++) {
-							String ingredient = parsedIngredient.get(i);
-							String ingredientAmout = parsedIngredientAmount.get(i);
-							%>
-							<p>
-								<span><%= ingredient %></span>
-								<span><%= ingredientAmout %></span>
-							</p>
+						<p class="ingredient-title">사용한 재료</p>
+						<table width="100%">
+							<tr bgcolor="#e9ecef">
+								<td width="8%"></td>
+								<td width="62%">재료 이름</td>
+								<td width="30%">재료 량</td>
+							</tr>
 							<%
-						}
-						%>
+							List<String> parsedIngredient = StringParser.splitString(recipe.getIngredient());
+							List<String> parsedIngredientAmount = StringParser.splitString(recipe.getIngredientAmount());
+							
+							for (int i = 0; i < parsedIngredient.size(); i++) {
+								String ingredient = parsedIngredient.get(i);
+								String ingredientAmout = parsedIngredientAmount.get(i);
+								%>
+								<tr>
+									<td width="5%" align="center"><%= i + 1 %></td>
+									<td width="65%"><%= ingredient %></td>
+									<td width="30%"><%= ingredientAmout %></td>
+								</tr>
+								<%
+							}
+							%>
+						</table>
 					</div>
 				</td>
 			</tr>
 			<tr>
 				<td>
 					<div id="orders">
-						<p>조리 순서</p>
-						<%
-						List<String> parsedOrders = StringParser.splitString(recipe.getOrders());
-					
-						for (int i = 0; i < parsedOrders.size(); i++) {
-							String orders = parsedOrders.get(i);
-							%>
-							<p>
-								<span><%=orders%></span>
-							</p>
+						<p class="orders-title">조리 순서</p>
+						<table width="100%">
 							<%
-						}
-						%>
+							List<String> parsedOrders = StringParser.splitString(recipe.getOrders());
+						
+							for (int i = 0; i < parsedOrders.size(); i++) {
+								String orders = parsedOrders.get(i);
+								%>
+								<tr>
+									<td align="center" width="8%"><%= i + 1 %></td>
+									<td width="92%"><%=orders%></td>
+								</tr>
+								<%
+							}
+							%>
+						</table>
 					</div>
 				</td>
 			</tr>
 			<tr>
-				<td align="center">
-					<p>레시피 리뷰</p>
+				<td>
+					<div class="review-title">리뷰 (<%= reviews.size() %>)</div>
 					<table width="100%" border="1">
 						<%
 						if (reviews == null || reviews.size() == 0) {
@@ -235,8 +251,12 @@
 				</td>
 			</tr>
 			<tr>
-				<td>					
-					<input type="button" value="리뷰 쓰기" onclick="onReviewButton()">
+				<td>
+					<%
+					if (id != null && !id.equals("") && !id.equals(recipe.getId())) {
+						%><input type="button" value="리뷰 쓰기" onclick="onReviewButton()"><%
+					}
+					%>
 					<input type="button" value="목록" onclick="onListButton()">
 					<%
 					if (recipe.getId().equals(id)) {
@@ -280,8 +300,7 @@
 			}
 		}
 	
-		/* id 파라미터 부분 로그인 완성 되면 수정 필요 */
-		$("#wishlist-button").click(function() {
+		$("#wishlist").click(function() {
 			$.ajax({
 				url: "<%= contextPath %>/Recipe/wishlist",
 				type: "POST",
