@@ -277,62 +277,73 @@ public class MemberDAO {
 	    return member; // 회원 반환
 }
 	
-	 // 최근 본 목록 조회
-    public ArrayList<HashMap<String, Object>> getRecentView(String userId) throws SQLException {
-        String sql = "SELECT rv.type, rv.viewed_at, " +
-                     "       CASE " +
-                     "           WHEN rv.type = 0 THEN r.title " +
-                     "           WHEN rv.type = 1 THEN m.title " +
-                     "       END AS title, " +
-                     "       CASE " +
-                     "           WHEN rv.type = 0 THEN r.thumbnail " +
-                     "           WHEN rv.type = 1 THEN m.pictures " +
-                     "       END AS thumbnail, " +
-                     "       CASE " +
-                     "           WHEN rv.type = 0 THEN r.description " +
-                     "           WHEN rv.type = 1 THEN m.contents " +
-                     "       END AS description, " +
-                     "       CASE " +
-                     "           WHEN rv.type = 0 THEN r.views " +
-                     "           WHEN rv.type = 1 THEN m.views " +
-                     "       END AS views " +
-                     "FROM recent_view rv " +
-                     "LEFT JOIN recipe r ON rv.item_no = r.no AND rv.type = 0 " +
-                     "LEFT JOIN mealkit m ON rv.item_no = m.no AND rv.type = 1 " +
-                     "WHERE rv.id = ? " +
-                     "ORDER BY rv.viewed_at DESC " +
-                     "LIMIT 20";
+	// 최근 본 목록 조회
+	public ArrayList<HashMap<String, Object>> getRecentView(String userId) throws SQLException {
+	    String sql = "SELECT rv.type, rv.viewed_at, " +
+	                 "       CASE " +
+	                 "           WHEN rv.type = 0 THEN r.title " +
+	                 "           WHEN rv.type = 1 THEN m.title " +
+	                 "       END AS title, " +
+	                 "       CASE " +
+	                 "           WHEN rv.type = 0 THEN r.thumbnail " +
+	                 "           WHEN rv.type = 1 THEN m.pictures " +
+	                 "       END AS thumbnail, " +
+	                 "       CASE " +
+	                 "           WHEN rv.type = 0 THEN r.description " +
+	                 "           WHEN rv.type = 1 THEN m.contents " +
+	                 "       END AS description, " +
+	                 "       CASE " +
+	                 "           WHEN rv.type = 0 THEN r.views " +
+	                 "           WHEN rv.type = 1 THEN m.views " +
+	                 "       END AS views, " +
+	                 "       CASE " +
+	                 "           WHEN rv.type = 0 THEN r.post_date " +
+	                 "           WHEN rv.type = 1 THEN m.post_date " +
+	                 "       END AS post_date, " +
+	                 "       CASE " +
+	                 "           WHEN rv.type = 0 THEN r.id " +
+	                 "           WHEN rv.type = 1 THEN m.id " +
+	                 "       END AS member_id " +
+	                 "FROM recent_view rv " +
+	                 "LEFT JOIN recipe r ON rv.item_no = r.no AND rv.type = 0 " +
+	                 "LEFT JOIN mealkit m ON rv.item_no = m.no AND rv.type = 1 " +
+	                 "WHERE rv.id = ? " +
+	                 "ORDER BY rv.viewed_at DESC " +
+	                 "LIMIT 20";
 
-        ArrayList<HashMap<String, Object>> recentViews = new ArrayList<>();
-        ResultSet resultSet = null;
+	    ArrayList<HashMap<String, Object>> recentViews = new ArrayList<>();
+	    ResultSet resultSet = null;
 
-        try {
-            resultSet = dbConnector.executeQuery(sql, userId);
+	    try {
+	        resultSet = dbConnector.executeQuery(sql, userId);
 
-            while (resultSet.next()) {
-            	HashMap<String, Object> item = new HashMap<>();
-                item.put("type", resultSet.getInt("type"));  // 0: recipe, 1: mealkit
-                item.put("title", resultSet.getString("title"));
-                item.put("thumbnail", resultSet.getString("thumbnail"));
-                item.put("description", resultSet.getString("description"));
-                item.put("views", resultSet.getInt("views"));
-                item.put("viewedAt", resultSet.getTimestamp("viewed_at"));
-                recentViews.add(item);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close(); // ResultSet 해제
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            dbConnector.release(); // DB 연결 해제
-        }
+	        while (resultSet.next()) {
+	            HashMap<String, Object> item = new HashMap<>();
+	            item.put("type", resultSet.getInt("type"));  // 0: recipe, 1: mealkit
+	            item.put("title", resultSet.getString("title"));
+	            item.put("thumbnail", resultSet.getString("thumbnail"));
+	            item.put("description", resultSet.getString("description"));
+	            item.put("views", resultSet.getInt("views"));
+	            item.put("viewedAt", resultSet.getTimestamp("viewed_at"));
+	            item.put("postDate", resultSet.getTimestamp("post_date"));
+	            item.put("memberId", resultSet.getString("member_id"));
+	            recentViews.add(item);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        if (resultSet != null) {
+	            try {
+	                resultSet.close(); // ResultSet 해제
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	        dbConnector.release(); // DB 연결 해제
+	    }
 
-        return recentViews;
-    }
+	    return recentViews;
+	}
+
 	
 }
