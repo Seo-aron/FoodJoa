@@ -29,6 +29,7 @@ import Common.NaverLoginAPI;
 import DAOs.MealkitDAO;
 import DAOs.MemberDAO;
 import DAOs.RecipeDAO;
+import VOs.DeliveryInfoVO;
 import VOs.MemberVO;
 
 public class MemberService {
@@ -368,11 +369,18 @@ public class MemberService {
 	    }
 	}
 
-	public MemberVO getDeliver(HttpServletRequest request) {
-	
+	public ArrayList<DeliveryInfoVO> getDeliver(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		String id = (String) session.getAttribute("userId");
-		return memberDAO.selectDelivers(id);
+		return memberDAO.selectDeliver(id);
+	}
+
+
+
+	public ArrayList<DeliveryInfoVO> getSend(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		String id = (String) session.getAttribute("userId");
+		return memberDAO.selectSend(id);
 	}
 	
 	 // 최근 본 목록 조회 서비스

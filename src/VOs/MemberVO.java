@@ -102,5 +102,4 @@ public class MemberVO {
 	public void setJoin_date(Timestamp join_date) {
 		this.join_date = join_date;
 	}
-
 }

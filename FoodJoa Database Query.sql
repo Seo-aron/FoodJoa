@@ -14,6 +14,27 @@ CREATE TABLE member(
     profile 	varchar(50) not null,
     join_date 	timestamp not null
 );
+SELECT A.id, A.nickname, B.pictures, C.address, C.amount, C.delivered, C.refund  
+FROM MEMBER A	
+JOIN MEALKIT B 
+ON A.ID = B.ID 
+JOIN MEALKIT_ORDER C 
+ON B.ID = C.ID  
+WHERE A.id='WR1ZpRIM2ktSXjEzf0nI5NMU9JU_ASY6UXjh6ROLA4o'; 
+
+insert mealkit_order(id,mealkit_no,address,amount,delivered,refund,post_date)values
+('WR1ZpRIM2ktSXjEzf0nI5NMU9JU_ASY6UXjh6ROLA4o',1,'부산시',1,1,1,20241125),
+('WR1ZpRIM2ktSXjEzf0nI5NMU9JU_ASY6UXjh6ROLA4o',2,'부산시',1,1,1,20241125),
+('WR1ZpRIM2ktSXjEzf0nI5NMU9JU_ASY6UXjh6ROLA4o',3,'부산시',1,1,1,20241125);
+
+insert mealkit(no,id,title,contents,category,price,stock,pictures,orders,origin,views,soldout,post_date)values
+(1,'WR1ZpRIM2ktSXjEzf0nI5NMU9JU_ASY6UXjh6ROLA4o','국밥','맛있어요',1,'3000','3','bob.png','1..어쩌구....2......','국산',3029,1,'2024-11-27 15:30:45'),
+(2,'WR1ZpRIM2ktSXjEzf0nI5NMU9JU_ASY6UXjh6ROLA4o','국밥','맛있어요',1,'3000','3','bob.png','1..어쩌구....2......','국산',3029,1,'2024-11-27 15:30:45'),
+(3,'WR1ZpRIM2ktSXjEzf0nI5NMU9JU_ASY6UXjh6ROLA4o','국밥','맛있어요',1,'3000','3','bob.png','1..어쩌구....2......','국산',3029,1,'2024-11-27 15:30:45');
+
+select * from member;
+select * from mealkit;
+select * from mealkit_order;
 
 SELECT * FROM member;
 
@@ -29,7 +50,7 @@ values ('review1', '리뷰자1', '리1', '01012345678', '부산시 부산진구'
     ('review2', '리뷰자2', '리2', '01012345678', '부산시 부산진구', 'admin_image.png', CURRENT_TIMESTAMP),
     ('review3', '리뷰자3', '리3', '01012345678', '부산시 부산진구', 'admin_image.png', CURRENT_TIMESTAMP),
     ('review4', '리뷰자4', '리4', '01012345678', '부산시 부산진구', 'admin_image.png', CURRENT_TIMESTAMP);
-
+select * from member;
 
 UPDATE member SET profile="test.png", name="관리자", nickname="고나리자1234", phone="01012341234", address="부산진구" WHERE id="admin";
 
@@ -39,7 +60,7 @@ JOIN MEALKIT B
 ON A.ID = B.ID
 JOIN MEALKIT_ORDER C 
 ON B.ID = C.ID
-WHERE A.id='admin';
+WHERE A.id='WR1ZpRIM2ktSXjEzf0nI5NMU9JU_ASY6UXjh6ROLA4o';
 
 -- -------------------------------------------------------------------------------------
 
@@ -227,12 +248,19 @@ CREATE TABLE mealkit_order(
     foreign key (id) references member(id) ON DELETE CASCADE,
     foreign key (mealkit_no) references mealkit(no)
 );
-
+insert mealkit_order(id,mealkit_no,address,amount,delivered,refund,post_date)
+values('wonvoo',1,'경주시',1,1,1,24/11/25),
+	   ('wonvoo1',1,'성남시',2,1,1,24/11/25),
+       ('wonvoo2',1,'화성시',3,1,1,24/11/25),
+       ('wonvoo3',1,'부산시',4,1,1,24/11/25),
+       ('wonvoo4',1,'서울시',5,1,1,24/11/25),
+       ('wonvoo5',1,'제주시',6,1,1,24/11/25),
+       ('wonvoo6',1,'시흥시',7,1,1,24/11/25);
 SELECT * FROM mealkit_order;
 DESC mealkit_order;
 
 SELECT *
-FROM mealkit m
+FROM mealkit mmealkitmealkitmember
 LEFT JOIN mealkit_order o
 ON m.no = o.mealkit_no
 WHERE m.id='admin';

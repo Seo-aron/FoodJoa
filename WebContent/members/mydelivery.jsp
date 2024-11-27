@@ -1,3 +1,4 @@
+<%@page import="VOs.DeliveryInfoVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
@@ -5,6 +6,9 @@
 	request.setCharacterEncoding("UTF-8");
 	response.setContentType("text/html; charset=utf-8");
 	String contextPath = request.getContextPath();
+        
+	String id = (String) session.getAttribute("id"); 
+	DeliveryInfoVO vo = new DeliveryInfoVO();
 %>
 <!DOCTYPE html>
 <html>
@@ -18,20 +22,15 @@
 	<a href="<%=contextPath%>/Member/viewMyDelivery.me"></a>
 	<h1>배송조회 페이지<h1><br>
 
-		<div>
-			<h3>배송 준비중</h3><br>
-				 <img src="../images/member/아래화살표.png"">제품 이름 , 사진, 수량
-		</div>
-		<div>
-			<h3>배송중</h3><br> 
-				<img src="../images/member/아래화살표.png"">제품 이름 , 사진, 수량
-		</div>
-		<div>
-			<h3>배송완료</h3><br> 
-				제품 이름 , 사진, 수량
-				멤버,밀키트,밀키트오더 조인
-				select A 
-                              
+		<h2><%=vo.getNickname()%>님의 소중한 배송조회 </h2>
+			<img src="<%=contextPath%>/images/mealkit/<%=vo.getPictures()%>">
+			주소:<%=vo.getAddress()%> 수량:<%=vo.getAmount()%>
+			배송여부	<%=vo.getDelivered()%><br>
+			환불여부	<%=vo.getRefund()%><br>
+			
+			
+			
+			  
  				
  		</div>
 </body>

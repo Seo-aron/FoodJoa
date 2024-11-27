@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import Common.DBConnector;
+import VOs.DeliveryInfoVO;
 import VOs.MealkitWishListVO;
 import VOs.MemberVO;
 import VOs.RecipeWishListVO;
@@ -17,6 +18,7 @@ public class MemberDAO {
 
 	private DBConnector dbConnector;
 	private Object type;
+	private ResultSet resultSet;
 
 	public MemberDAO() {
 		dbConnector = new DBConnector();
@@ -24,23 +26,23 @@ public class MemberDAO {
 
 	public Timestamp selectJoinDate(String id) {
 
-	      Timestamp result = null;
+		Timestamp result = null;
 
-	      String sql = "SELECT join_date FROM member WHERE id = ?";
+		String sql = "SELECT join_date FROM member WHERE id = ?";
 
-	      try {
-	         ResultSet resultSet = dbConnector.executeQuery(sql, id);
-	         if (resultSet.next()) {
-	            result = resultSet.getTimestamp("join_date");
-	         }
-	      } catch (SQLException e) {
-	         e.printStackTrace();
-	         System.out.println("selectJoinDate() SQLException 발생");
-	      } finally {
-	         dbConnector.release();
-	      }
-	      return result;
-	   }
+		try {
+			ResultSet resultSet = dbConnector.executeQuery(sql, id);
+			if (resultSet.next()) {
+				result = resultSet.getTimestamp("join_date");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("selectJoinDate() SQLException 발생");
+		} finally {
+			dbConnector.release();
+		}
+		return result;
+	}
 
 	public MemberVO selectMembers() {
 		MemberVO members = new MemberVO();
@@ -128,17 +130,12 @@ public class MemberDAO {
 	public int insertMember(MemberVO vo) {
 		String sql = "INSERT INTO member (id, name, nickname, phone, address, profile, join_date) "
 				+ "VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
-		
-		int result = dbConnector.executeUpdate(sql,
-				vo.getId(),
-				vo.getName(),
-				vo.getNickname(),
-				vo.getPhone(),
-				vo.getAddress(),
-				vo.getProfile());
-		
+
+		int result = dbConnector.executeUpdate(sql, vo.getId(), vo.getName(), vo.getNickname(), vo.getPhone(),
+				vo.getAddress(), vo.getProfile());
+
 		dbConnector.release();
-		
+
 		return result;
 	}
 
@@ -236,46 +233,29 @@ public class MemberDAO {
 		return result; // 삭제 성공 시 1 반환, 실패 시 0 반환
 	}
 
-	public MemberVO selectDelivers(String id) {
-		MemberVO deliver = null;
-		String sql = "SELECT A.id, A.nickname, B.pictures, C.address, C.amount, C.delivered, C.refund " + 
-				"FROM MEMBER A " + 
-				"JOIN MEALKIT B " + 
-				"ON A.ID = B.ID " + 
-				"JOIN MEALKIT_ORDER C " + 
-				"ON B.ID = C.ID " + 
-				"WHERE A.id=?"; 
-		ResultSet rs = dbConnector.executeQuery(sql, id);
-		return null;
-		
+	public ArrayList<DeliveryInfoVO> selectDeliver(String id) {
+		ArrayList<DeliveryInfoVO> delivery = new ArrayList<>();
+//		delivery = null;
+//		String sql = "SELECT A.id, A.nickname, B.pictures, C.address, C.amount, C.delivered, C.refund "
+//				+ "FROM MEMBER A " + "JOIN MEALKIT B " + "ON A.ID = B.ID " + "JOIN MEALKIT_ORDER C " + "ON B.ID = C.ID "
+//				+ "WHERE A.id=?";
+//		ResultSet resultSet = dbConnector.executeQuery(sql, id);
+//		try {
+//			while (resultSet.next()) {
+//				DeliveryInfoVO memberDelivery = new DeliveryInfoVO(resultSet.getString("id"),
+//						resultSet.getString("nickname"), resultSet.getString("pictures"),
+//						resultSet.getString("address"), resultSet.getInt("amount"), resultSet.getInt("delivered"),
+//						resultSet.getInt("refund"));
+//				delivery.add(memberDelivery);
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} finally {
+//			dbConnector.release();
+//		}
+		return delivery;
 	}
-	
-	public MemberVO getMemberProfile(String userId) throws SQLException {
-	    MemberVO member = null;
-	    String sql = "SELECT * FROM member WHERE id=?";
-	    
-	    ResultSet resultSet = dbConnector.executeQuery(sql, userId);
-	    
-	    try {
-	        if (resultSet.next()) {
-	            member = new MemberVO(
-	                resultSet.getString("id"), 
-	                resultSet.getString("name"),
-	                resultSet.getString("nickname"), 
-	                resultSet.getString("phone"), 
-	                resultSet.getString("address"),
-	                resultSet.getString("profile"), 
-	                resultSet.getTimestamp("join_date")
-	            );
-	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    } finally {
-	        dbConnector.release(); // 자원 해제
-	    }
 
-	    return member; // 회원 반환
-}
 	
 	// 최근 본 목록 조회
 	public ArrayList<HashMap<String, Object>> getRecentView(String userId) throws SQLException {
@@ -345,5 +325,57 @@ public class MemberDAO {
 	    return recentViews;
 	}
 
-	
+
+
+	public MemberVO getMemberProfile(String userId) throws SQLException {
+		MemberVO member = null;
+		String sql = "SELECT * FROM member WHERE id=?";
+
+		ResultSet resultSet = dbConnector.executeQuery(sql, userId);
+
+		try {
+			if (resultSet.next()) {
+				member = new MemberVO(resultSet.getString("id"), resultSet.getString("name"),
+						resultSet.getString("nickname"), resultSet.getString("phone"), resultSet.getString("address"),
+						resultSet.getString("profile"), resultSet.getTimestamp("join_date"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			dbConnector.release(); // 자원 해제
+		}
+
+		return member; // 회원 반환
+	}
+
+	public ArrayList<DeliveryInfoVO> selectSend(String id) {
+		ArrayList<DeliveryInfoVO> send = new ArrayList<>();
+	//	String sql = "SELECT A.id, A.address, A.quantity, A.delivered, A.refund, B.contents, B.category, B.price, B.stock, B.pictures, B.nickname" + 
+	//			" FROM mealkit_order" + "LEFT JOIN  mealkit " + "ON  a.id = b.id" +  "where A.id=?";
+	//	ResultSet resultSet = dbConnector.executeQuery(sql, id);
+	//	try {
+	//		while (resultSet.next()) {
+	//			DeliveryInfoVO memberSend = new DeliveryInfoVO(
+	//					resultSet.getString("id"),
+	//					resultSet.getString("nickname"),
+	//					resultSet.getString("pictrues"),
+	//					resultSet.getString("address"),
+	//					resultSet.getInt("amount"),
+	//					resultSet.getInt("delivered"),
+	//					resultSet.getInt("refund"),
+	//					resultSet.getInt("quantity"),
+	//					resultSet.getString("contents"),
+	//					resultSet.getInt("category"),
+	//					resultSet.getString("price"),
+	//					resultSet.getInt("stock"));
+	//			send.add(memberSend);
+	//		}
+	//			
+	//	} catch (Exception e) {
+	//		e.printStackTrace();
+	//	} finally {
+	//		dbConnector.release();
+	//	}
+		return send;
+	}
 }

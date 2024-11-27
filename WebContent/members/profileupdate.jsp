@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
             previewContainer.innerHTML = '<span style="color: red;">이미지 파일만 선택 가능합니다.</span>';
         }
     });
+<<<<<<< HEAD
 
     // jQuery 이벤트 등록
     $(".btn-submit").click(function(event){
@@ -62,6 +63,44 @@ document.addEventListener('DOMContentLoaded', function () {
             $("#phone").val() == "" ||
             $("#address").val() == ""){
              alert("모두 작성하여 주세요!"); // 경고창으로 메시지 표시
+=======
+    // jQuery 이벤트 등록
+    $(".btn-submit").click(function(event){
+    	 // 입력 필드 값 가져오기
+        const name = document.getElementById('name').value.trim();
+        const nickname = document.getElementById('nickname').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const address = document.getElementById('address').value.trim();
+        
+        
+        // 이름 유효성 검사: 2자 이상, 10자 이하
+        if (name.length < 2 || name.length > 10) {
+            alert('이름은 2자 이상, 10자 이하로 입력해주세요.');
+            event.preventDefault();
+            return;
+        }
+
+        // 닉네임 유효성 검사: 2자 이상, 10자 이하
+        if (nickname.length < 2 || nickname.length > 10) {
+            alert('닉네임은 2자 이상, 10자 이하로 입력해주세요.');
+            event.preventDefault();
+            return;
+        }
+
+        // 전화번호 유효성 검사: 숫자만 입력되었는지 확인
+        const phoneRegex = /^\d{10,11}$/; // 10~11자리 숫자만 허용
+        if (!phoneRegex.test(phone)) {
+            alert('전화번호는 10~11자리 숫자로 입력해주세요.');
+            event.preventDefault();
+            return;
+        }
+
+        // 주소 유효성 검사: 빈 값 확인
+        if (address === '') {
+            alert('주소를 입력해주세요.');
+            event.preventDefault();
+            return;
+>>>>>>> eef282372296fe3afb6d7e7a2243b21580026549
         } else {
              alert("수정 완료되었습니다!"); // 수정 완료 메시지 표시
             $(this).closest("form").submit();
@@ -77,10 +116,17 @@ document.addEventListener('DOMContentLoaded', function () {
 </head>
 <body>
     <div class="form-container">
+<<<<<<< HEAD
         <h2>정보 수정</h2>
         <!-- JavaScript로 미리보기 기능 구현 -->
         <form action="<%=contextPath%>/Member/updatePro.me" method="post" enctype="multipart/form-data" id="updateForm" >
            <input type="hidden" id="origin-profile" name="origin-profile" value="<%=vo.getProfile()%>">
+=======
+        <h2>나의 정보 수정</h2>
+        <!-- JavaScript로 미리보기 기능 구현 -->
+        <form action="<%=contextPath%>/Member/updatePro.me" method="post" enctype="multipart/form-data" id="updateForm" >
+        	<input type="hidden" id="origin-profile" name="origin-profile" value="<%=vo.getProfile()%>">
+>>>>>>> eef282372296fe3afb6d7e7a2243b21580026549
             <br>
             <br>
             <!-- 이미지 미리보기가 표시될 컨테이너 -->
@@ -106,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <input type="text" id="address" name="address" value="${vo.address}" required>
             </div>
             <div class="btn-container">
-                <button type="button" class="btn-submit">제출</button>
+                <button type="button" class="btn-submit" id="updateForm()">제출</button>
                 <button type="button" class="btn-cancel">취소</button>
             </div>
         </form>
