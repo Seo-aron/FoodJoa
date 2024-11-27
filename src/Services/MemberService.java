@@ -346,7 +346,7 @@ public class MemberService {
 
 	private ArrayList<HashMap<String, Object>> getRecipeWishList(String userId) {
 	    // RecipeDAO에서 레시피 위시리스트 정보를 가져오는 메소드 호출
-	    return recipeDAO.selectrecipeInfos(userId); // recipeDAO에서 레시피 위시리스트 가져오기
+	    return recipeDAO.selectRecipeInfos(userId); // recipeDAO에서 레시피 위시리스트 가져오기
 	}
 
 	private ArrayList<HashMap<String, Object>> getMealKitWishList(String userId) {
