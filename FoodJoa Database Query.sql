@@ -139,7 +139,7 @@ create table community(
     foreign key(id) references member(id)
 );
 
-drop table community_share;
+drop table IF EXISTS community_share;
 create table community_share(
 	no 				int primary key auto_increment,
     id 				varchar(50) not null,
