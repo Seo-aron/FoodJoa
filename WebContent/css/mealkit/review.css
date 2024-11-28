@@ -84,8 +84,23 @@ textarea{
 	padding: 5px;
 }
 
-.review-contents{
-	width: 100%;
-	text-indent: 0;
-	text-align: left;
+.contents-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    height: 200px;
+}
+
+.review-image {
+    max-width: 50%;
+    height: 100%;
+    width: 270px;
+}
+
+.review-contents {
+    flex: 1;
+    margin: 0;
+    resize: none;
+    height: 100%;
+    width: auto;
 }

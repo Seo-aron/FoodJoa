@@ -46,11 +46,17 @@ public class MealkitService {
 		return mealkitDAO.InfoMealkit(no);
 	}
 
-	public ArrayList<MealkitReviewVO> getReviewInfo(HttpServletRequest request) {
+	public ArrayList<Map<String, Object>> getReviewInfo(HttpServletRequest request) {
 		
 		int no = Integer.parseInt(request.getParameter("no"));
 		
 		return mealkitDAO.InfoReview(no);
+	}
+	
+	public String getNickName(HttpServletRequest request) {
+		String id = (String) request.getSession().getAttribute("userId");
+		
+		return mealkitDAO.selectNickName(id);
 	}
 
 	public void setWishMealkit(HttpServletRequest request, HttpServletResponse response) 
@@ -147,12 +153,14 @@ public class MealkitService {
 		MultipartRequest multipartRequest = new MultipartRequest(request, path + File.separator + "temp", maxSize, "UTF-8",
 				new DefaultFileRenamePolicy());
 	    
-	    String fileName = multipartRequest.getOriginalFileName("pictures");
-
 	    int no = Integer.parseInt(multipartRequest.getParameter("mealkit_no"));
 	    String id = (String) request.getSession().getAttribute("userId");
 	    String contents = multipartRequest.getParameter("contents");
 	    int rating = Integer.parseInt(multipartRequest.getParameter("rating"));
+	    String fileName = multipartRequest.getOriginalFileName("pictures");
+	    
+	    // 리뷰 작성자의 닉네임
+	    String nickName = multipartRequest.getParameter("nickname");
 
 	    MealkitReviewVO vo = new MealkitReviewVO();
 	    vo.setId(id);
@@ -168,9 +176,6 @@ public class MealkitService {
 				"reviews" + File.separator + String.valueOf(reviewNo) + File.separator + id;
 		
 		FileIOController.moveFile(srcPath, destinationPath, fileName);
-		
-
-	    System.out.println("사진이름" + vo.getPictures());
 	    
 	    PrintWriter printWriter = response.getWriter();
 	    if (reviewNo > 0) {

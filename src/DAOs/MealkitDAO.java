@@ -94,27 +94,31 @@ public class MealkitDAO {
 		return mealkit;
 	}
 	
-	public ArrayList<MealkitReviewVO> InfoReview(int no) {
+	public ArrayList<Map<String, Object>> InfoReview(int no) {
 		
-		ArrayList<MealkitReviewVO> reviews = new ArrayList<MealkitReviewVO>();
+		ArrayList<Map<String, Object>> reviews = new ArrayList<>();
 		
-		String sql = "SELECT * FROM mealkit_review WHERE mealkit_no = ?";
+		String sql = "SELECT mr.*, mem.nickname FROM mealkit_review mr JOIN member mem "
+				+ "ON mr.id = mem.id "
+				+ "WHERE mr.mealkit_no = ?";
 		
 		ResultSet rs = dbConnector.executeQuery(sql, no);
 		
 		try {
 			while(rs.next()) {
-				MealkitReviewVO review = new MealkitReviewVO(
-						rs.getInt("no"), 
-						rs.getString("id"),
-						rs.getInt("mealkit_no"),
-						rs.getString("pictures"),
-						rs.getString("contents"),
-						rs.getInt("rating"),
-						rs.getInt("empathy"),
-						rs.getTimestamp("post_date"));
+				Map<String, Object> reviewsData = new HashMap<>();
+				reviewsData.put("no", rs.getInt("no"));
+				reviewsData.put("id", rs.getString("id"));
+				reviewsData.put("mealkit_no", rs.getInt("mealkit_no"));
+				reviewsData.put("pictures", rs.getString("pictures"));
+				reviewsData.put("contents", rs.getString("contents"));
+				reviewsData.put("rating", rs.getInt("rating"));
+				reviewsData.put("empathy", rs.getInt("empathy"));
+				reviewsData.put("post_date", rs.getTimestamp("post_date"));
 				
-				reviews.add(review);
+				reviewsData.put("nickname", rs.getString("nickname"));
+				
+				reviews.add(reviewsData);
 						
 			}
 		} catch (Exception e) {
@@ -211,6 +215,28 @@ public class MealkitDAO {
 		dbConnector.release();
 		
 		return review_no;
+	}
+
+	public String selectNickName(String id) {
+		
+		String nickName = null;
+		
+		String sql = "SELECT nickname FROM member WHERE id = ?";
+		
+		ResultSet rs = dbConnector.executeQuery(sql, id);
+		
+		try {
+			if(rs.next()) {
+				nickName = rs.getString("nickname");
+			}
+		} catch (SQLException e) {
+			System.out.println("MealkitDAO - selectNickName 예외발생");
+			e.printStackTrace();
+		}
+		
+		dbConnector.release();
+		
+		return nickName;
 	}
 
 	public int updateEmpathy(int empathyCount, int mealkit_no, int no) {

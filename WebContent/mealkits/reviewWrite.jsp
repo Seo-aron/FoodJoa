@@ -8,8 +8,8 @@
 	response.setContentType("text/html; charset=utf-8");
 	
 	String contextPath = request.getContextPath();
-	// 작성자 명 
-    String nickname = (String) session.getAttribute("nickname");
+	
+    String nickName = (String) request.getAttribute("nickName");
 %>
 <c:set var="mealkit" value="${requestScope.mealkitvo}" />
 <!DOCTYPE html>
@@ -62,7 +62,7 @@
                 <tr>
                     <th>작성자</th>
                     <td>
-                        <input type="text" name="id" value="user2" readonly>
+                        <input type="text" name="nickname" value="<%=nickName %>" readonly>
                         <input type="hidden" name="mealkit_no" value="${mealkit_no }">
                     </td>
                     <td>

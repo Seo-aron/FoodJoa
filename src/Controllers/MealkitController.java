@@ -118,7 +118,9 @@ public class MealkitController extends HttpServlet {
 	private void openAddReview(HttpServletRequest request, HttpServletResponse response) {
 		
 		String mealkit_no = request.getParameter("mealkit_no");
-	    
+		String nickName = mealkitService.getNickName(request);
+		
+		request.setAttribute("nickName", nickName);
 	    request.setAttribute("mealkit_no", mealkit_no);
 		request.setAttribute("center", "mealkits/reviewWrite.jsp");
 		
@@ -151,7 +153,7 @@ public class MealkitController extends HttpServlet {
 			throws ServletException, IOException {
 
 		MealkitVO mealkitvo = mealkitService.getMealkitInfo(request);
-		ArrayList<MealkitReviewVO> reviewvo = mealkitService.getReviewInfo(request);
+		ArrayList<Map<String, Object>> reviewvo = mealkitService.getReviewInfo(request);
 		float ratingAvr = mealkitService.getRatingAvr(mealkitvo);
 		
 		String nickName = request.getParameter("nickName");

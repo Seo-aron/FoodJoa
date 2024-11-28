@@ -38,11 +38,44 @@
 	</script>
 	<style>
 	#container {
-		width: 1000px;
+		width: 1200px;
 	}
 	
+	#search-container {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex; /* 검색 폼과 글쓰기 버튼을 같은 줄에 배치하기 위해 flex 사용 */
+    justify-content: center; /* 검색 폼을 화면 중앙에 배치 */
+    align-items: center; /* 세로 정렬 */
+	}
+	
+	.search-form-container {
+	    display: flex;
+	    align-items: center; /* 세로로 가운데 정렬 */
+	    gap: 10px; /* 요소 간 간격 */
+	}
+	
+	.search-form-container select,
+	.search-form-container input {
+	    padding: 5px;
+	    font-size: 14px;
+	    margin: 0; /* 기본 여백 제거 */
+	}
+	
+	.write-button-container {
+	    margin-left: 20px; /* 검색 폼과 버튼 간격 */
+	}
+	
+	#newContent {
+	    padding: 5px 10px;
+	    font-size: 14px;
+	    cursor: pointer;
+	    margin-right: 40px;
+	}
+
 	.list {
-		width: 1000px;
+		width: 1200px;
 	}
 	.thumbnail {
 		width: 256px;
@@ -79,81 +112,77 @@
 		}
 	%>
 	<div id="container">
-		<c:if test="${not empty sessionScope.userId}">
-			<input type="button" id="newContent" value="글쓰기" 
-				onclick="location.href='<%=contextPath%>/Mealkit/write'"/>
-		</c:if>
+		<!-- 검색 기능 -->
+		<div id="search-container">
+			<form action="<%=contextPath%>/Mealkit/searchlist.pro" method="post" name="frmSearch" 
+				onsubmit="fnSearch(); return false;">
+				 <div class="search-form-container">
+		            <select name="key">
+		                <option value="title">밀키트 명</option>
+		                <option value="name">작성자</option>
+		            </select>
+		            
+		            <input type="text" name="word" id="word" />
+		            <input type="submit" value="검색" />
+		        </div>
+			</form>
+				<!-- 글쓰기 -->
+			<c:if test="${not empty sessionScope.userId}">
+				<input type="button" id="newContent" value="글쓰기" 
+					onclick="location.href='<%=contextPath%>/Mealkit/write'"/>
+			</c:if>
+		</div>
+		
 		<table class="list">
 			<%
-				if(list.isEmpty()){
-					%>
-					<tr>
-						<td> 등록된 글이 없습니다.</td>
-					</tr>
-					<%
-				} else{
-					for(int i=beginPerPage; i<(beginPerPage+numPerPage); i++){
-						if(i == totalRecord){
-							break;
-						}
-						Map<String, Object> vo = list.get(i);
-
-					    // "pictures" 키로 문자열 가져오기
-					    String pictures = (String) vo.get("pictures");
-						List<String> picturesList = StringParser.splitString(pictures);
-					    String thumbnail = picturesList.get(0);
-					    
-					    int no = (int) vo.get("no");
-				        String id = (String) vo.get("id");
-				        String title = (String) vo.get("title");
-				        String contents = (String) vo.get("contents");
-				        String price = (String) vo.get("price");
-				        Object postDate = vo.get("post_date");
-				        int views = (int) vo.get("views");
-				        String nickName = (String) vo.get("nickname");
-						%>
-						<tr>
-					        <td>
-					            <a href="<%=contextPath%>/Mealkit/info?no=<%=no%>&nickName=<%=nickName%>">
-						            <span>
-						                <img class="thumbnail" 
-						                     src="<%=contextPath%>/images/mealkit/thumbnails/<%=no%>/<%=id%>/<%=thumbnail%>">
-						                작성자: <%=nickName%> &nbsp;&nbsp;&nbsp;&nbsp;
-						                작성일: <%=postDate%> &nbsp;&nbsp;&nbsp;&nbsp;
-						                평점: <fmt:formatNumber value="<%=ratingAvr.get(no)%>" pattern="#.#" /> &nbsp;&nbsp;&nbsp;&nbsp;
-						                조회수: <%=views%>
-						            </span>
-						            <h3><%=title%></h3>
-						            <p>가격: <%=price%></p>
-						            <p>내용: <%=contents%></p>
-					        </td>
-					    </tr>
-						
-						<%
+			if(list.isEmpty()){
+				%>
+				<tr>
+					<td> 등록된 글이 없습니다.</td>
+				</tr>
+				<%
+			} else{
+				for(int i=beginPerPage; i<(beginPerPage+numPerPage); i++){
+					if(i == totalRecord){
+						break;
 					}
-				}
-			%>
-			    
-			<!--검색 기능 및 페이지 처리 부분-->
-			<tr>
-				<form action="<%=contextPath%>/Mealkit/searchlist.pro" method="post" name="frmSearch" 
-				onsubmit="fnSearch(); return false;">
-					<td colspan="2">
-						<div id="key_select">
-							<select name="key">
-								<option value="title">제목</option>
-								<option value="name">작성자</option>
-							</select>
-						</div>
-					</td>
-					<td>
-						<div id="search_input">
-							<input type="text" name="word" id="word" />
-							<input type="submit" value="검색" />
-						</div>
-					</td>
-				</form>
-			</tr>
+					Map<String, Object> vo = list.get(i);
+
+				    // "pictures" 키로 문자열 가져오기
+				    String pictures = (String) vo.get("pictures");
+					List<String> picturesList = StringParser.splitString(pictures);
+				    String thumbnail = picturesList.get(0);
+				    
+				    int no = (int) vo.get("no");
+			        String id = (String) vo.get("id");
+			        String title = (String) vo.get("title");
+			        String contents = (String) vo.get("contents");
+			        String price = (String) vo.get("price");
+			        Object postDate = vo.get("post_date");
+			        int views = (int) vo.get("views");
+			        String nickName = (String) vo.get("nickname");
+					%>
+				<tr>
+			        <td>
+			            <a href="<%=contextPath%>/Mealkit/info?no=<%=no%>&nickName=<%=nickName%>">
+				            <span>
+				                <img class="thumbnail" 
+				                     src="<%=contextPath%>/images/mealkit/thumbnails/<%=no%>/<%=id%>/<%=thumbnail%>">
+				                작성자: <%=nickName%> &nbsp;&nbsp;&nbsp;&nbsp;
+				                작성일: <%=postDate%> &nbsp;&nbsp;&nbsp;&nbsp;
+				                평점: <fmt:formatNumber value="<%=ratingAvr.get(no)%>" pattern="#.#" /> &nbsp;&nbsp;&nbsp;&nbsp;
+				                조회수: <%=views%>
+				            </span>
+				            <h3><%=title%></h3>
+				            <p>가격: <%=price%></p>
+				            <p>내용: <%=contents%></p>
+			        </td>
+			    </tr>
+						
+				<%
+				} // for
+			} // esle
+			%>			    
 			<!--페이징-->
 			<tr align="center">
 				<td>
