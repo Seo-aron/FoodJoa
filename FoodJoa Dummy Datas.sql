@@ -95,3 +95,11 @@ values
 ('admin', 'daegu', 'go', 500, now()),
 ('admin', 'ulsan', 'do', 70, now()),
 ('admin', 'gwangju', 'abcdefg', 90, now());
+
+insert into community_share(id, thumbnail, title, contents, lat, lng, type, views, post_date)
+values
+('admin','test_thumbnail.png', 'seoul', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 0, 3, now()),
+('admin','test_thumbnail.png', 'seoul1', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 1, 3, now()),
+('admin','test_thumbnail.png', 'seoul2', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 1, 3, now()),
+('admin','test_thumbnail.png', 'seoul3', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 1, 3, now()),
+('admin','test_thumbnail.png', 'seoul4', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 0, 3, now());

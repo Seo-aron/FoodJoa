@@ -12,6 +12,8 @@ function handleFileSelect(files) {
 		reader.readAsDataURL(file);
 
 		reader.onload = function(e) {
+			imageContainer.innerHTML = '';
+			
 			const img = document.createElement('img');
 			img.src = e.target.result;
 

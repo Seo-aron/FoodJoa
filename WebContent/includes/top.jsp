@@ -217,7 +217,7 @@ a {
 				<li><a href="#">자유게시판</a>
 					<ul>
 						<li><a href="<%=contextPath%>/Community/list">자유 게시판</a></li>
-						<li><a href="<%=contextPath%>/Community/shareList">나눔/번개 게시판</a></li>
+						<li><a href="<%=contextPath%>/Community/shareList">나눔/같이 먹어요</a></li>
 					</ul></li>
 				<li><a href="<%= contextPath %>/Member/mypagemain.me">마이페이지</a></li>
 			</ul>

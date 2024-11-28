@@ -37,7 +37,7 @@ public class CommunityService {
 		
 		CommunityVO communityVO = new CommunityVO();
 	
-		String id = "admin";
+		String id = (String)request.getSession().getAttribute("userId");
 		String title = request.getParameter("title");
 		String contents = request.getParameter("contents");
 		

@@ -1,3 +1,4 @@
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="VOs.CommunityVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -20,24 +21,29 @@
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>	
 	
 	<style>
+	* {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Noto Serif KR", serif;
+    }
 	
-	/* 기본 스타일 */
+	body {
+        background-color: #ffffff;
+        color: #333333;
+        line-height: 1.6;
+        padding: 20px;
+    }
+    
 	#container {
-	    font-family: Arial, sans-serif;
-	    background-color: #f0f0f0;
-	    max-width: 800px;
-	    margin: 0 auto;
-	    padding: 20px;
-	}
-	
-	/* 폼 스타일 */
-	.form-container {
-	    background: #fff;
-	    padding: 20px;
-	    border-radius: 5px;
-	    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-	    margin-bottom: 20px;
-	}
+        width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
 	
 	label {
 	    font-weight: bold;
@@ -57,43 +63,99 @@
 	    border-radius: 5px;
 	    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	}
+	
+	h1 {
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        color: #333333;
+        margin-bottom: 30px;
+    }
+     .community_p1{
+    	font-size: 40px;
+    }
+    
+    .community_p2{
+    	font-size: 30px;
+    }
+    
+    input[type="button"],
+    input[type="submit"]
+    								{
+    	background-color: #BF817E;
+	    border: none;
+	    border-radius: 5px;
+	    padding: 8px 16px;
+	    font-size: 1rem;
+	    color: white;
+	    cursor: pointer;
+	    transition: background-color 0.3s ease;
+    }
+    
+     input[type="button"]:hover {
+        background-color: #f5f5f5;
+    }
+
+    input[type="button"]:active {
+        background-color: #e0e0e0;
+    }
+    
+    table {
+        width: 100%;
+        border-spacing: 0 15px;
+    }
+    
+    td {
+        padding: 10px;
+        vertical-align: top;
+    }
+
+    td[colspan="4"] {
+        padding-top: 20px;
+    }
 		
 	</style>
 </head>
 
 <body>
+	<div id="container">
+	<div id="top_container" align="center">
+		<p class="community_p1">COMMUNITY</p>
+		<p class="community_p2">자유게시판</p>
+		<p>자유롭게 글을 작성해보세요</p>
+	</div>
 	<table>
 		<tr>
-			<td colspan="3">
+			<td colspan="3" align="right">
 				<input type="button" value="목록" id="list" onclick="onListButton()">
 				<%
 				if (id != null && id.equals(vo.getId())) {
 					%>
-					<input type="submit" value="수정" id="update" onclick="onUpdateButton()">
-					<input type="submit" value="삭제" id="delete" onclick="onDeleteButton()">
+					<input type="button" value="수정" id="update" onclick="onUpdateButton()">
+					<input type="button" value="삭제" id="delete" onclick="onDeleteButton()">
 					<%
 				}
 				%>
 			</td>
 		</tr>
 		<tr>
-			<td>
-				<%= vo.getTitle() %>
+			<td width="40%">
+				제목 : <%= vo.getTitle() %>
 			</td>
-			<td>
-				<%= vo.getId() %>
+			<td width="45%">
+				아이디 : <%= vo.getId() %>
 			</td>
-			<td>
-				<%= vo.getPostDate() %>
-			</td>
-		</tr>
-		<tr>
-			<td colspan="3">
-				<%= vo.getContents() %>
+			<td width="15%">
+				작성 날짜 :<br> <%=new SimpleDateFormat("yyyy-MM-dd").format(vo.getPostDate())%>
 			</td>
 		</tr>
 		<tr>
 			<td colspan="3">
+				내용 : <%= vo.getContents() %>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3" align="right">
 				<input type="button" value="목록" id="list" onclick="onListButton()">
 				<%
 				if (id != null && id.equals(vo.getId())) {
@@ -106,7 +168,7 @@
 			</td>
 		</tr>
 	</table>
-	
+	</div>
 	<form name="frmUpdate">
 		<input type="hidden" name="no">
 		<input type="hidden" name="id">
@@ -128,7 +190,7 @@
 			document.frmUpdate.no.value = <%= vo.getNo() %>;
 			document.frmUpdate.id.value = "<%= vo.getId() %>";
 			document.frmUpdate.title.value = "<%= vo.getTitle() %>";
-			document.frmUpdate.contents.value = "<%= vo.getContents() %>";
+			document.frmUpdate.contents.value = `<%= vo.getContents() %>`;
 			document.frmUpdate.views.value = <%= vo.getViews()%>;
 			
 			document.frmUpdate.submit();

@@ -47,8 +47,27 @@ function onSubmit(event, contextPath) {
 
 
 function handleFileSelect(files) {
-	
-	selectedRealFile = files[0];
+
+	let file = files[0];
+	const imageContainer = document.getElementById('imageContainer');
+
+	if (file.type.startsWith('image/')) {
+		
+		const reader = new FileReader();
+
+		reader.readAsDataURL(file);
+
+		reader.onload = function(e) {
+			imageContainer.innerHTML = '';
+			
+			const img = document.createElement('img');
+			img.src = e.target.result;
+
+			img.dataset.filename = file.name;
+
+			imageContainer.appendChild(img);
+		}			
+	}
 }
 
 

@@ -53,8 +53,12 @@ public class CommunityDAO {
 
 			connection = dataSource.getConnection();
 
-			String sql = "select * from community order by post_date desc";
-
+			String sql = "select c.*, m.nickname "
+					+ "FROM community c "
+					+ "LEFT OUTER JOIN member m "
+					+ "ON c.id = m.id "
+					+ "order by post_date desc";
+			
 			preparedStatement = connection.prepareStatement(sql);
 
 			resultSet = preparedStatement.executeQuery();
