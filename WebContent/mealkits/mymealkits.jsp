@@ -37,18 +37,18 @@
 			border-collapse: collapse;
 		}
 		
-		.recipe-container {
+		.mealkit-container {
 			border: 1px solid black;
 			margin-bottom: 10px;
 		}
 		
-		.recipe-thumbnail {
+		.mealkit-thumbnail {
 			width: 300px;
 			height: 200px;
 			overflow: hidden;
 		}
 		
-		.recipe-thumbnail img {
+		.mealkit-thumbnail img {
 			width: 100%;
 			height: 100%;
 			object-fit: cover;
@@ -92,7 +92,7 @@
 			if (mealkits == null || mealkits.size() == 0) {
 				%>
 				<tr>
-					<td>작성한 레시피가 없습니다.</td>
+					<td>작성한 밀키트 상품이 없습니다.</td>
 				</tr>
 				<%
 			}
