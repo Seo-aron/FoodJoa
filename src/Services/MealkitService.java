@@ -341,4 +341,8 @@ public class MealkitService {
 	    out.close();
 	}
 
+	public ArrayList<HashMap<String, Object>> getMealkitsListById(HttpServletRequest request) {
+		return mealkitDAO.selectMealkitsById((String) request.getSession().getAttribute("userId"));
+	}
+
 }

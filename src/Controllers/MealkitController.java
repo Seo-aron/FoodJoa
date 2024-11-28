@@ -3,6 +3,7 @@ package Controllers;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
@@ -61,13 +62,23 @@ public class MealkitController extends HttpServlet {
 		case "/update": openUpdateBoard(request, response); break;
 		case "/update.pro": processUpdate(request, response); return;
 		case "/searchlist.pro": processSearchList(request, response); break;
-		case "/buyMealkit.pro": processBuyMealkit(request, response); return;
+		case "/buyMealkit.pro": processBuyMealkit(request, response); return;		
+		case "/myMealkits": openMyMealkitView(request, response); break;
 
 		default: break;
 		}
 
 		RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
 		dispatcher.forward(request, response);
+	}
+
+	private void openMyMealkitView(HttpServletRequest request, HttpServletResponse response) {
+		ArrayList<HashMap<String, Object>> mealkits = mealkitService.getMealkitsListById(request);
+
+		request.setAttribute("mealkits", mealkits);
+		request.setAttribute("center", "mealkits/mymealkits.jsp");
+
+		nextPage = "/main.jsp";
 	}
 
 	private void processBuyMealkit(HttpServletRequest request, HttpServletResponse response) throws IOException {

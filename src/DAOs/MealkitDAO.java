@@ -2,6 +2,7 @@ package DAOs;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.util.Map;
 import Common.DBConnector;
 import VOs.MealkitReviewVO;
 import VOs.MealkitVO;
+import VOs.RecipeVO;
 
 public class MealkitDAO {
 	private DBConnector dbConnector;
@@ -420,6 +422,56 @@ public class MealkitDAO {
 		int result = dbConnector.executeUpdate(sql, id, mealkitNo, id, quantity);
 		
 		return result == 1;
+	}
+
+	public ArrayList<HashMap<String, Object>> selectMealkitsById(String id) {
+		
+		ArrayList<HashMap<String, Object>> mealkits = new ArrayList<HashMap<String,Object>>();
+		
+		String sql = "SELECT m.*, COALESCE(avg_rating.average_rating, 0) AS average_rating "
+				+ "FROM mealkit m "
+				+ "LEFT JOIN ( "
+				+ "SELECT mealkit_no, AVG(rating) AS average_rating "
+				+ "FROM mealkit_review "
+				+ "GROUP BY mealkit_no "
+				+ ") avg_rating ON m.no = avg_rating.mealkit_no "
+				+ "WHERE m.id=?";
+		
+		ResultSet rs = dbConnector.executeQuery(sql, id);
+		
+		try {
+			while(rs.next()) {
+				
+				HashMap<String, Object> mealkit = new HashMap<String, Object>();
+				
+				MealkitVO mealkitVO = new MealkitVO(
+						rs.getInt("no"),
+						rs.getString("id"),
+						rs.getString("title"),
+						rs.getString("contents"),
+						rs.getInt("category"),
+						rs.getString("price"),
+						rs.getInt("stock"),
+						rs.getString("pictures"),
+						rs.getString("orders"),
+						rs.getString("origin"),
+						rs.getInt("views"),
+						rs.getInt("soldout"),
+						rs.getTimestamp("post_date"));
+				
+				float averageRating = rs.getFloat("average_rating");
+				
+				mealkit.put("mealkitVO", mealkitVO);
+				mealkit.put("averageRating", averageRating);
+				
+				mealkits.add(mealkit);
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return mealkits;
 	}
 
 }
