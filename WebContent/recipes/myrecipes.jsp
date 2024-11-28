@@ -28,64 +28,12 @@
 	
 	<script src="https://code.jquery.com/jquery-latest.min.js"></script>
 	
-	<style>
-		#container {
-			width: 1200px;
-		}
-		
-		table {
-			border-collapse: collapse;
-		}
-		
-		.recipe-container {
-			border: 1px solid black;
-			margin-bottom: 10px;
-		}
-		
-		.recipe-thumbnail {
-			width: 300px;
-			height: 200px;
-			overflow: hidden;
-		}
-		
-		.recipe-thumbnail img {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-		}
-		
-		.title-area {
-			padding: 10px;
-		}
-		
-		.description-area {
-			padding: 10px;
-		}
-		
-		.rating-area, .views-area {
-			padding: 10px;
-			text-align: right;
-		}
-		
-		.rating-star {
-			width: 24px;
-			height: 24px;
-		}
-		
-		.button-area {
-			text-align: right;
-			padding: 5px;
-		}
-		
-		.button-area input {
-			width: 60px;
-			height: 44px;
-		}
-	</style>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="<%=contextPath%>/css/recipe/myrecipes.css">	
 </head>
 
 <body>
-	<div id="container">
+	<div id="myrecipe-container">
 		<h1>내 레시피 관리</h1>
 		<table width="100%">
 			<%
@@ -121,7 +69,7 @@
 									</tr>
 									<tr>
 										<td class="description-area" rowspan="2">
-											<%= recipeVO.getDescription() %>
+											<p><%= recipeVO.getDescription() %></p>
 										</td>
 										<td class="views-area">
 											조회수 : <%= recipeVO.getViews() %>
