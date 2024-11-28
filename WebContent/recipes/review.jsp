@@ -21,113 +21,77 @@
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 	<script src="<%= contextPath %>/js/common/common.js"></script>
 	
-	<style type="text/css">
-		#container {
-			width: 1200px;
-			margin: 0 auto;
-		}
-		
-		#thumbnail {
-			width: 64px;
-			height: 64px;
-		}
-		
-		#pictureFiles {
-		    color: transparent;
-		    width: 128px;
-		    height: 128px;
-
-			background-image: url('../images/recipe/file_select_button.png');
-			background-repeat: no-repeat;
-			background-position: center;
-			background-size: cover;
-			
-			cursor: pointer;
-		}
-		
-		#pictureFiles::-webkit-file-upload-button {
-		    visibility: hidden;
-		}
-		
-		.preview_image {
-			width: 128px;
-			height: 128px;
-			border: 1px solid black;
-		}
-        
-		li {
-			list-style-type: none;
-			margin-left: 0;
-		}
-		
-		.stars li {
-			float: left;
-		}
-		
-		.star-button {
-			background-image: url('../images/recipe/full_star.png');
-			background-repeat: no-repeat;
-			background-position: center;
-			background-size: cover;
-			width: 32px;
-			height: 32px;
-			border: none;
-			cursor: pointer;
-		}
-		
-		#contents {
-			width: 100%;
-			height: 500px;
-		}
-	</style>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="<%=contextPath%>/css/recipe/review.css">
 </head>
 
 <body>
-	<div id="container">
+	<div id="recipe-review-container">
+		<h1>레시피 리뷰 작성</h1>
 		<form id="frmReview" action="#" method="post" enctype="multipart/form-data">
 			<input type="hidden" id="recipe_no" name="recipe_no" value="<%= recipe.getNo() %>">
 			
-			<table width="100%" border="1">
+			<table width="100%">
 				<tr>
-					<td>
-						<img id="thumbnail"
-							src="<%= contextPath %>/images/recipe/thumbnails/<%= recipe.getNo() %>/<%= recipe.getThumbnail() %>">
-						<%= recipe.getTitle() %>
+					<td align="center">
+						<div class="thumbnail-area">						
+							<img src="<%= contextPath %>/images/recipe/thumbnails/<%= recipe.getNo() %>/<%= recipe.getThumbnail() %>">
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td align="center">
+						<div class="title-area">
+							<%= recipe.getTitle() %>
+						</div>
 					</td>
 				</tr>
 				<tr>
 					<td>
-						<ul class="stars">
-							<li><button class="star-button" onclick="setRating(event, 1)"></button></li>
-							<li><button class="star-button" onclick="setRating(event, 2)"></button></li>
-							<li><button class="star-button" onclick="setRating(event, 3)"></button></li>
-							<li><button class="star-button" onclick="setRating(event, 4)"></button></li>
-							<li><button class="star-button" onclick="setRating(event, 5)"></button></li>
-						</ul>
-						<input type="hidden" id="rating" name="rating" value="5">
+						<div class="rating-star-area">
+							<div class="rating-star-label">
+								평점 선택
+							</div>
+								<img src="<%= contextPath %>/images/recipe/full_star.png" onclick="setRating(event, 1)">
+								<img src="<%= contextPath %>/images/recipe/full_star.png" onclick="setRating(event, 2)">
+								<img src="<%= contextPath %>/images/recipe/full_star.png" onclick="setRating(event, 3)">
+								<img src="<%= contextPath %>/images/recipe/full_star.png" onclick="setRating(event, 4)">
+								<img src="<%= contextPath %>/images/recipe/full_star.png" onclick="setRating(event, 5)">
+							<input type="hidden" id="rating" name="rating" value="5">
+						</div>
 					</td>
 				</tr>
 				<tr>
 					<td>
-						리뷰 사진 업로드<br>
-						<ul>
-						</ul>
-    					<div id="imagePreview"></div>
-   						<input type="file" id="pictureFiles" name="pictureFiles" 
-							accept=".jpg,.jpeg,.png" multiple onchange="handleFileSelect(this.files)">
+						<p class="review-picture-label">리뷰 사진 업로드</p>
+						<div class="preview-area">
+	    					<ul id="imagePreview">
+	    						<li>
+	    							<input type="file" id="pictureFiles" name="pictureFiles" 
+										accept=".jpg,.jpeg,.png" multiple onchange="handleFileSelect(this.files)">
+	    						</li>
+	    					</ul>
+    					</div>
 							
 						<input type="hidden" id="pictures" name="pictures">
 					</td>
 				</tr>
 				<tr>
-					<td>
-						<textarea id="contents" name="contents"></textarea>
+					<td>					
+						<div class="review-contents-label">
+							리뷰 내용 작성
+						</div>
+						<div class="reivew-contents-area">	
+							<textarea id="contents" name="contents"></textarea>
+						</div>
 					</td>
 				</tr>
 				<tr>
-					<td>
-						<input type="button" value="리뷰 쓰기" onclick="onSubmit(event,'<%= contextPath %>')">
-						<input type="button" value="취소" onclick="onCancleButton(event)">
+					<td align="right">
+						<div class="review-button-area">
+							<input type="button" value="리뷰 쓰기" onclick="onSubmit(event,'<%= contextPath %>')">
+							<input type="button" value="취소" onclick="onCancleButton(event)">
+						</div>
 					</td>
 				</tr>
 			</table>
@@ -139,15 +103,15 @@
 	<script>
 		function setRating(event, ratingValue) {
 			event.preventDefault();
-	
+			
 			let emptyStarPath = '<%= contextPath %>/images/recipe/empty_star.png';
 			let fullStarPath = '<%= contextPath %>/images/recipe/full_star.png';
 	
-			let startButtons = $(".star-button");
+			let startButtons = $(".rating-star-area img");
 			startButtons.each(function(index, element) {
 	
 				let path = (index < ratingValue) ? fullStarPath : emptyStarPath;
-				$(element).css('background-image', 'url(' + path + ')');
+				$(element).attr('src', path);
 			});
 	
 			document.getElementsByName('rating')[0].value = ratingValue;

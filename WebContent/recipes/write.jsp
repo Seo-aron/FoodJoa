@@ -21,110 +21,131 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 	<script src="<%= contextPath %>/js/common/common.js"></script>
 	
-	<style>
-		#container {			
-			margin: 0 auto;
-			border: 2px solid black;
-			width: 1200px;
-		}
-	
-		input[type=button] {
-			float: right !important;
-		}
-		
-		select option[value=""] {
-			display: none;
-		}
-		
-		.tox-toolbar-overlord {
-			width: 100%;
-		}
-		
-		.thumbnail-container {
-			width: 256px;
-			height: 256px;
-		}
-		
-		.thumbnail-container div {
-			width: 100%;
-			height: 100%;
-			overflow: hidden;
-		}
-		
-		.thumbnail-container img {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-		}
-	</style>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">	
+	<link rel="stylesheet" href="<%=contextPath%>/css/recipe/write.css">    
 </head>
 
 <body>
-	<div id="container">
+	<div id="recipe-container">
 		<form action="<%= contextPath %>/Recipe/writePro" method="post" id="frmWrite" enctype="multipart/form-data">
-			<table border="1" width="100%">
+			<table width="100%">
 				<tr>
-					<td colspan="2">
-						<input type="button" class="write" value="레시피 작성" onclick="onSubmit(event)">
+					<td colspan="2" align="right">
+						<input type="button" class="recipe-write-button" value="레시피 작성" onclick="onSubmit(event)">
+						<input type="button" class="recipe-cancle-button" value="취소" onclick="onCancleButton(event)">
 					</td>
 				</tr>
 				<tr>
-					<td rowspan="3" class="thumbnail-container">
-						<div>
-							<input type="file" name="file" id="imageInput" accept=".png,.jpeg,.jpg" style="display: none;">
-							<img id="imagePreview" src="<%= contextPath %>/images/recipe/file_select_button.png"
-							 style="cursor: pointer;">
+					<td style="vertical-align: top;">
+						<div class="recipe-label">
+							음식 유형
 						</div>
 					</td>
-					<td>
-						<input type="text" id="title" name="title" placeholder="제목 입력">
+					<td align="left">
+						<div class="category-area">
+							<select name="category">
+								<option value="" disabled hidden selected>음식 유형을 선택하세요.</option>
+								<option value="1">한식</option>
+								<option value="2">일식</option>
+								<option value="3">중식</option>
+								<option value="4">양식</option>
+								<option value="5">자취요리</option>
+							</select>
+						</div>
 					</td>
 				</tr>
 				<tr>
-					<td>
-						<input type="text" id="description" name="description" placeholder="간단 소개글 입력">
+					<td style="vertical-align: top;">
+						<div class="recipe-label">
+							음식 사진
+						</div>
+					</td>
+					<td align="center">
+						<div class="thumbnail-area">
+							<input type="file" name="file" id="imageInput" accept=".png,.jpeg,.jpg" style="display: none;">
+							<img id="imagePreview" src="<%= contextPath %>/images/recipe/file_select_button.png"
+								style="cursor: pointer;">
+						</div>
 					</td>
 				</tr>
 				<tr>
-					<td>
-						<select name="category">
-							<option value="" disabled hidden selected>음식 종류를 선택하세요.</option>
-							<option value="1">한식</option>
-							<option value="2">일식</option>
-							<option value="3">중식</option>
-							<option value="4">양식</option>
-							<option value="5">자취요리</option>
-						</select>
-					</td>					
-				</tr>
-				<tr>
-					<td colspan="2">
-						<textarea id="contentsArea" width="100%"></textarea>
-						<input type="hidden" name="contents" required>
+					<td style="vertical-align: top;">
+						<div class="recipe-label">
+							레시피 제목
+						</div>
+					</td>
+					<td align="center">
+						<div class="title-area">
+							<input type="text" id="title" name="title" placeholder="제목 입력">
+						</div>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2">
-						<p>사용한 재료 작성</p>
-						<div class="ingredients-container">
-	        			</div>
-						<p><input type="button" class="add-ingredient" value="재료 추가하기"></p>
+					<td style="vertical-align: top;">
+						<div class="recipe-label">
+							간단 소개글
+						</div>
+					</td>
+					<td align="center">
+						<div class="description-area">
+							<input type="text" id="description" name="description" placeholder="간단 소개글 입력">
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td style="vertical-align: top;">
+						<div class="recipe-label">
+							상세 내용
+						</div>
+					</td>
+					<td align="center">
+						<div class="contents-area">
+							<textarea id="contents-field" width="100%"></textarea>
+							<input type="hidden" name="contents" required>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td style="vertical-align: top;">
+						<div class="recipe-label">
+							사용한 재료
+						</div>
+					</td>
+					<td align="center">
 						<input type="hidden" id="ingredient" name="ingredient">
 						<input type="hidden" id="ingredient_amount" name="ingredient_amount">
+						
+						<div class="ingredients-container">
+							<table width="100%">
+							</table>
+						</div>
+						<div class="ingredients-button-area">
+							<button type="button" class="ingredient-new-button">재료 추가하기</button>
+						</div>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2">
-						<p>간단 조리 순서 작성</p>
-						<div class="orders-container">
-	        			</div>
-						<p><input type="button" class="add-orders" value="순서 추가하기"></p>
+					<td style="vertical-align: top;">
+						<div class="recipe-label">
+							간단 조리 순서
+						</div>
+					</td>
+					<td align="center">
 						<input type="hidden" id="orders" name="orders">
+						
+						<div class="orders-container">
+							<table width="100%">
+							</table>
+						</div>
+						<div class="orders-button-area">
+							<button type="button" class="orders-new-button">순서 추가하기</button>
+						</div>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2">
-						<input type="button" class="write" value="레시피 작성" onclick="onSubmit(event)">
+					<td colspan="2" align="right">
+						<input type="button" class="recipe-write-button" value="레시피 작성" onclick="onSubmit(event)">
+						<input type="button" class="recipe-cancle-button" value="취소" onclick="onCancleButton(event)">
 					</td>
 				</tr>
 			</table>
@@ -139,7 +160,7 @@
 		    setIngredientString();
 		    setOrdersString();
 		    
-		    const editorContent = tinymce.get('contentsArea').getContent();
+		    const editorContent = tinymce.get('contents-field').getContent();
 			const base64Compressed = compressContent(editorContent);
  
 			document.getElementsByName('contents')[0].value = base64Compressed;
@@ -147,26 +168,34 @@
 		    document.getElementById('frmWrite').submit();
 		}
 		
+		function onCancleButton(e) {
+		    e.preventDefault();
+		    
+		    history.go(-1);
+		}
+		
 		const imageInput = document.getElementById('imageInput');
 		const imagePreview = document.getElementById('imagePreview');
 
 		imagePreview.addEventListener('click', () => {
-		  imageInput.click();
+			imageInput.click();
 		});
 
 		imageInput.addEventListener('change', (event) => {
-		  const file = event.target.files[0];
-		  if (file) {
-		    const reader = new FileReader();
-		    reader.onload = (e) => {
-		      imagePreview.src = e.target.result;
-		    };
-		    reader.readAsDataURL(file);
-		  }
+			const file = event.target.files[0];
+			if (file) {
+				const reader = new FileReader();
+				
+				reader.onload = (e) => {
+					imagePreview.src = e.target.result;
+				};
+				
+				reader.readAsDataURL(file);
+			}
 		});
 	
 		tinymce.init({
-	        selector: "#contentsArea", // TinyMCE를 적용할 textarea 요소의 선택자를 지정
+	        selector: "#contents-field", // TinyMCE를 적용할 textarea 요소의 선택자를 지정
 	        statusbar: false,
 	        height: 500,
 	        toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | bullist numlist",

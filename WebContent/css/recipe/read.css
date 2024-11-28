@@ -5,6 +5,7 @@
 }
 
 .recipe-read-button-area input {
+	font-family: "Noto Serif KR", serif;
 	background-color: #BF817E;
 	border: none;
     border-radius: 5px;
@@ -235,7 +236,12 @@
 	height: 32px;
 }
 
+.review-pictures-area ul {
+	list-style-type: none;
+}
+
 .review-pictures {
+	float: left;
 	width: 128px;
 	height: 128px;
 	overflow: hidden;

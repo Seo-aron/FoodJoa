@@ -193,7 +193,6 @@
 								RecipeReviewVO review = (RecipeReviewVO) (reviews.get(i).get("review"));
 								String reviewNickName = (String) (reviews.get(i).get("nickname"));
 								String reviewProfile = (String) (reviews.get(i).get("profile"));
-								System.out.println("review.getId() : " + review.getId());
 								%>
 								<tr>
 									<td>
@@ -226,17 +225,19 @@
 											<tr>
 												<td>
 													<div class="review-pictures-area">
-													<%
-														List<String> pictures = StringParser.splitString(review.getPictures());
-													
-														for(String picture : pictures) {
-															%>
-															<div class="review-pictures">
-																<img src="<%= contextPath %>/images/recipe/reviews/<%= recipe.getNo() %>/<%= review.getId() %>/<%= picture %>">
-															</div>
-															<%
-														}
-													%>
+														<ul>
+														<%
+															List<String> pictures = StringParser.splitString(review.getPictures());
+														
+															for(String picture : pictures) {
+																%>
+																<li class="review-pictures">
+																	<img src="<%= contextPath %>/images/recipe/reviews/<%= recipe.getNo() %>/<%= review.getId() %>/<%= picture %>">
+																</li>
+																<%
+															}
+														%>
+														</ul>
 													</div>
 												</td>
 											</tr>

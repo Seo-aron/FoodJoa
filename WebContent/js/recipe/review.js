@@ -56,6 +56,7 @@ function handleFileSelect(files) {
 				reader.readAsDataURL(file);
 	
 				reader.onload = function(e) {
+					const li = document.createElement('li');
 					const img = document.createElement('img');
 					img.src = e.target.result;
 	
@@ -63,14 +64,15 @@ function handleFileSelect(files) {
 					img.classList.add('preview_image');
 	
 					img.addEventListener('click', function() {
-						imagePreview.removeChild(img);
+						imagePreview.removeChild(img.parentElement);
 						removeSelectedFile(fileIdentifier);
 						document.getElementById('pictureFiles').value = '';
 					});
 	
 					img.style.cursor = 'pointer';
-	
-					imagePreview.appendChild(img);
+					
+					li.appendChild(img);
+					imagePreview.appendChild(li);
 				}				
 			} 
 		}

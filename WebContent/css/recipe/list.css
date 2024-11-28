@@ -29,6 +29,7 @@
 }
 
 .recipe-list-search-area #key {
+	font-family: "Noto Serif KR", serif;
 	width: 120px;
 	height: 40px;
 	border: 1px solid #ced4da;
@@ -42,6 +43,7 @@
 }
 
 .recipe-list-search-area #word {
+	font-family: "Noto Serif KR", serif;
 	width: 400px;
 	height: 40px;
     border: 1px solid #ced4da;
@@ -53,6 +55,7 @@
 }
 
 .recipe-list-search-area #search-button {
+	font-family: "Noto Serif KR", serif;
 	width: 60px;
 	height: 40px;
 	background-color: #BF817E;
@@ -69,6 +72,7 @@
 }
 
 .recipe-write-button>input {
+	font-family: "Noto Serif KR", serif;
 	width: 128px;
 	height: 40px;
 	margin-right: 40px;
