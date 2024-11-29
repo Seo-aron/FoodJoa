@@ -43,6 +43,9 @@
 					<div id="center-container">
 						<jsp:include page="${center}"/>
 					</div>
+					<div>
+						<jsp:include page="includes/sideMenu.jsp" />
+					</div>
 				</td>
 			</tr>
 			<tr>
