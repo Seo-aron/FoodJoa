@@ -367,7 +367,7 @@ public class RecipeDAO {
 		
 		String sql = "SELECT "
 				+ "r.title, r.category, "
-				+ "rv.recipe_no, rv.pictures, rv.contents, rv.rating, rv.post_date, "
+				+ "rv.no, rv.recipe_no, rv.pictures, rv.contents, rv.rating, rv.post_date, "
 				+ "m.nickname "
 				+ "FROM recipe_review rv "
 				+ "JOIN recipe r "
@@ -388,6 +388,7 @@ public class RecipeDAO {
 				recipeVO.setCategory(resultSet.getInt("category"));
 				
 				RecipeReviewVO reviewVO = new RecipeReviewVO();
+				reviewVO.setNo(resultSet.getInt("no"));
 				reviewVO.setRecipeNo(resultSet.getInt("recipe_no"));
 				reviewVO.setPictures(resultSet.getString("pictures"));
 				reviewVO.setContents(resultSet.getString("contents"));

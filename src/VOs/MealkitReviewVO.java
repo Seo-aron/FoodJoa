@@ -74,7 +74,7 @@ public class MealkitReviewVO {
 		this.contents = contents;
 	}
 
-	public float getRating() {
+	public int getRating() {
 		return rating;
 	}
 

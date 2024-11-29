@@ -37,6 +37,13 @@ public class MealkitService {
 		return mealkitDAO.selectMealkits();
 	}
 
+	public MealkitVO getMealkit(HttpServletRequest request) {
+		
+		int no = Integer.parseInt(request.getParameter("no"));
+		
+		return mealkitDAO.InfoMealkit(no);
+	}
+
 	public MealkitVO getMealkitInfo(HttpServletRequest request) {
 		
 		int no = Integer.parseInt(request.getParameter("no"));
@@ -137,8 +144,10 @@ public class MealkitService {
 	    printWriter.close();
 	}
 
-	public void setWriteReview(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public int setWriteReview(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+		String id = (String) request.getSession().getAttribute("userId");
+		
 		ServletContext application = request.getServletContext();
 
 		String path = application.getRealPath(File.separator + "images");
@@ -146,47 +155,33 @@ public class MealkitService {
 
 		MultipartRequest multipartRequest = new MultipartRequest(request, path + File.separator + "temp", maxSize, "UTF-8",
 				new DefaultFileRenamePolicy());
-	    
-	    String fileName = multipartRequest.getOriginalFileName("pictures");
 
-	    int no = Integer.parseInt(multipartRequest.getParameter("mealkit_no"));
-	    String id = multipartRequest.getParameter("id");
-	    String contents = multipartRequest.getParameter("contents");
-	    int rating = Integer.parseInt(multipartRequest.getParameter("rating"));
-
-	    MealkitReviewVO vo = new MealkitReviewVO();
-	    vo.setId(id);
-	    vo.setMealkitNo(no);
-	    vo.setContents(contents);
-	    vo.setRating(rating);
-	    vo.setPictures(fileName);
-
-	    int reviewNo = mealkitDAO.insertNewReview(vo);
-
-		String srcPath = path + File.separator + "temp" + File.separator;
-		String destinationPath = path + File.separator + "mealkit" + File.separator +
-				"reviews" + File.separator + String.valueOf(reviewNo) + File.separator + id;
-		
-		FileIOController.moveFile(srcPath, destinationPath, fileName);
-		
-
-	    System.out.println("사진이름" + vo.getPictures());
-	    
-	    PrintWriter printWriter = response.getWriter();
-	    if (reviewNo > 0) {
-	    	String contextPath = request.getContextPath();
-	    	
-	        printWriter.println("<script>");
-	        printWriter.println("alert('리뷰가 작성되었습니다.');");
-	        printWriter.println("location.href='" + contextPath + "/Mealkit/info?no=" + no + "';");
-	        printWriter.println("</script>");
-	        printWriter.close();
-	    } else {
-	        printWriter.println("<script>");
-	        printWriter.println("alert('리뷰 작성에 실패했습니다.');");
-	        printWriter.println("</script>");
-	        printWriter.close();
-	    }
+		String mealkitNo = multipartRequest.getParameter("mealkit_no");
+        String pictures = multipartRequest.getParameter("pictures");
+        String contents = multipartRequest.getParameter("contents");
+        String rating = multipartRequest.getParameter("rating");
+        
+        System.out.println("pictures : " + pictures);
+        
+        List<String> fileNames = StringParser.splitString(pictures);
+        
+        for(String fileName : fileNames) {
+    		
+    		String srcPath = path + File.separator + "temp";
+    		String destinationPath = path + File.separator + "mealkit" + File.separator +
+    				"reviews" + File.separator + String.valueOf(mealkitNo) + File.separator + id;
+    		
+    		FileIOController.moveFile(srcPath, destinationPath, fileName);
+        }
+        
+        MealkitReviewVO review = new MealkitReviewVO();
+        review.setId(id);
+        review.setMealkitNo(Integer.parseInt(mealkitNo));
+        review.setPictures(pictures);
+        review.setContents(contents);
+        review.setRating(Integer.parseInt(rating));
+        
+		return mealkitDAO.insertNewReview(review);
 	}
 
 	public void setPlusEmpathy(HttpServletRequest request, HttpServletResponse response) throws IOException {

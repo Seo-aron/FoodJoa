@@ -174,44 +174,22 @@ public class MealkitDAO {
 	}
 
 	public int insertNewReview(MealkitReviewVO vo) {
-		int mealkit_no = 0;
-		int review_no = 0;
 		
-		String sql = "SELECT no FROM mealkit WHERE no = ?";
+		int result = 0;
 		
-		ResultSet rs = dbConnector.executeQuery(sql, vo.getMealkitNo());
+		String sql = "INSERT INTO mealkit_review(id, mealkit_no, pictures, contents, rating, post_date) "
+				+ "VALUES(?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
 		
-		try {
-			if(rs.next()) {
-				mealkit_no = rs.getInt("no");
-			}
-		} catch (SQLException e) {
-			System.out.println("MealkitDAO - insertNewReview 예외발생 ");
-			e.printStackTrace();
-		}
-		
-		sql = "INSERT INTO mealkit_review(id, mealkit_no, pictures, contents, rating, empathy, post_date) "
-				+ "VALUES(?,?,?,?,?,0,NOW())";
-
-		dbConnector.executeUpdate(sql, vo.getId(), mealkit_no, vo.getPictures(), vo.getContents(),vo.getRating());
-		
-		// review_no를 가져오기
-		sql = "SELECT no FROM mealkit_review WHERE id = ? AND mealkit_no = ? ORDER BY post_date DESC LIMIT 1";
-		
-		rs = dbConnector.executeQuery(sql, vo.getId(), mealkit_no);
-		
-		try {
-			if(rs.next()) {
-				review_no = rs.getInt("no");
-			}
-		} catch (SQLException e) {
-			System.out.println("MealkitDAO - insertNewReview 예외발생 ");
-			e.printStackTrace();
-		}
+		result = dbConnector.executeUpdate(sql,
+				vo.getId(),
+				vo.getMealkitNo(),
+				vo.getPictures(),
+				vo.getContents(),
+				vo.getRating());
 		
 		dbConnector.release();
 		
-		return review_no;
+		return result;
 	}
 
 	public int updateEmpathy(int empathyCount, int mealkit_no, int no) {
@@ -405,7 +383,7 @@ public class MealkitDAO {
 		
 		String sql = "SELECT "
 				+ "k.title, k.category, "
-				+ "kr.no AS kr_no, kr.pictures AS kr_pictures, kr.contents AS kr_contents, kr.rating, kr.post_date, "
+				+ "kr.no, kr.mealkit_no, kr.pictures, kr.contents, kr.rating, kr.post_date, "
 				+ "m.nickname "
 				+ "FROM mealkit_review kr "
 				+ "JOIN mealkit k "
@@ -426,9 +404,10 @@ public class MealkitDAO {
 				mealkitVO.setCategory(resultSet.getInt("category"));
 				
 				MealkitReviewVO reviewVO = new MealkitReviewVO();
-				reviewVO.setNo(resultSet.getInt("kr_no"));
-				reviewVO.setPictures(resultSet.getString("kr_pictures"));
-				reviewVO.setContents(resultSet.getString("kr_contents"));
+				reviewVO.setNo(resultSet.getInt("no"));
+				reviewVO.setMealkitNo(resultSet.getInt("mealkit_no"));
+				reviewVO.setPictures(resultSet.getString("pictures"));
+				reviewVO.setContents(resultSet.getString("contents"));
 				reviewVO.setRating(resultSet.getInt("rating"));
 				reviewVO.setPostDate(resultSet.getTimestamp("post_date"));
 				

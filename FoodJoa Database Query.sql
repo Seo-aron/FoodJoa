@@ -105,7 +105,6 @@ CREATE TABLE mealkit_review(
     pictures	text not null,
     contents	text not null,
     rating		int not null,
-    empathy		int not null,
     post_date	timestamp not null,
     
     foreign key (id) references member(id) ON DELETE CASCADE,

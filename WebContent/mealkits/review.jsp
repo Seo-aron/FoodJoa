@@ -64,7 +64,7 @@
 			<tr>
 				<td colspan="4">
 					<input type="button" value="리뷰 작성" 
-					onclick="location.href='<%=contextPath%>/Mealkit/reviewwrite?mealkit_no=${mealkit.no }'">
+					onclick="location.href='<%=contextPath%>/Mealkit/reviewwrite?no=${mealkit.no }'">
 				</td>
 			</tr>
 		</table>

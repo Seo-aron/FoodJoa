@@ -122,9 +122,9 @@ public class MealkitController extends HttpServlet {
 
 	private void openAddReview(HttpServletRequest request, HttpServletResponse response) {
 		
-		String mealkit_no = request.getParameter("mealkit_no");
+		MealkitVO mealkit = mealkitService.getMealkit(request);
 	    
-	    request.setAttribute("mealkit_no", mealkit_no);
+	    request.setAttribute("mealkit", mealkit);
 		request.setAttribute("center", "mealkits/reviewWrite.jsp");
 		
 		nextPage = "/main.jsp";
