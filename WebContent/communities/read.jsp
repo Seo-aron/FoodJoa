@@ -1,3 +1,5 @@
+<%@page import="VOs.MemberVO"%>
+<%@page import="java.util.HashMap"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="VOs.CommunityVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -7,7 +9,10 @@
 	request.setCharacterEncoding("UTF-8");
 	String contextPath = request.getContextPath();
 	
-	CommunityVO vo = (CommunityVO)request.getAttribute("vo");
+	HashMap<String, Object> community = (HashMap<String, Object>)request.getAttribute("community");
+	
+	CommunityVO communityVO = (CommunityVO)community.get("communityVO");
+	MemberVO memberVO = (MemberVO)community.get("memberVO");
 	
 	String id = (String) session.getAttribute("userId");
 %>
@@ -35,7 +40,7 @@
 			<td colspan="3" align="right">
 				<input type="button" value="목록" id="list" onclick="onListButton()">
 				<%
-				if (id != null && id.equals(vo.getId())) {
+				if (id != null && id.equals(communityVO.getId())) {
 					%>
 					<input type="button" value="수정" id="update" onclick="onUpdateButton()">
 					<input type="button" value="삭제" id="delete" onclick="onDeleteButton()">
@@ -46,25 +51,25 @@
 		</tr>
 		<tr>
 			<td width="40%">
-				제목 : <%= vo.getTitle() %>
+				제목 : <%= communityVO.getTitle() %>
 			</td>
 			<td width="45%">
-				아이디 : <%= vo.getId() %>
+				닉네임 : <%= memberVO.getNickname()%>
 			</td>
 			<td width="15%">
-				작성 날짜 :<br> <%=new SimpleDateFormat("yyyy-MM-dd").format(vo.getPostDate())%>
+				작성 날짜 :<br> <%=new SimpleDateFormat("yyyy-MM-dd").format(communityVO.getPostDate())%>
 			</td>
 		</tr>
 		<tr>
 			<td colspan="3">
-				내용 : <%= vo.getContents() %>
+				내용 : <%= communityVO.getContents() %>
 			</td>
 		</tr>
 		<tr>
 			<td colspan="3" align="right">
 				<input type="button" value="목록" id="list" onclick="onListButton()">
 				<%
-				if (id != null && id.equals(vo.getId())) {
+				if (id != null && id.equals(communityVO.getId())) {
 					%>
 					<input type="button" value="수정" id="update" onclick="onUpdateButton()">
 					<input type="button" value="삭제" id="delete" onclick="onDeleteButton()">
@@ -75,9 +80,8 @@
 		</tr>
 	</table>
 	</div>
-	<form name="frmUpdate">
+	<form name="frmUpdate" method="post">
 		<input type="hidden" name="no">
-		<input type="hidden" name="id">
 		<input type="hidden" name="title">
 		<input type="hidden" name="contents">
 		<input type="hidden" name="views">
@@ -91,13 +95,12 @@
 		}
 	
 		function onUpdateButton() {
-			document.frmUpdate.action = "<%= contextPath %>/Community/update?no=<%= vo.getNo() %>";
+			document.frmUpdate.action = "<%= contextPath %>/Community/update";
 			
-			document.frmUpdate.no.value = <%= vo.getNo() %>;
-			document.frmUpdate.id.value = "<%= vo.getId() %>";
-			document.frmUpdate.title.value = "<%= vo.getTitle() %>";
-			document.frmUpdate.contents.value = `<%= vo.getContents() %>`;
-			document.frmUpdate.views.value = <%= vo.getViews()%>;
+			document.frmUpdate.no.value = "<%= communityVO.getNo()%>";
+			document.frmUpdate.title.value = "<%= communityVO.getTitle() %>";
+			document.frmUpdate.contents.value = `<%= communityVO.getContents() %>`;
+			document.frmUpdate.views.value = <%= communityVO.getViews()%>;
 			
 			document.frmUpdate.submit();
 		}
@@ -107,7 +110,7 @@
 				url: "<%= contextPath%>/Community/deletePro",
 				type: "post",
 				data : {
-					no: <%= vo.getNo()%>
+					no: <%= communityVO.getNo()%>
 				},
 				dataType: "text",
 				success: function(responsedData){

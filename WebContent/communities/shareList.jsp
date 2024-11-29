@@ -83,7 +83,9 @@
 								
 					%>			
 					<tr align="center">
-						<td width="10%"><%= share.getNo()%></td>
+						<td width="10%">
+							<%=totalRecord - i%>
+						</td>
 						<td width="10%" align="center">
 							<% 
 							if(share.getType() == 0){
@@ -107,7 +109,7 @@
 			}
 			%>
 			<tr>
-				<td colspan="5" align="center">
+				<td colspan="6" align="center">
 					<%
 					if (totalRecord > 0) {
 						
@@ -142,7 +144,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan="5" align="center">&nbsp;&nbsp;&nbsp;&nbsp;
+				<td colspan="6" align="center">&nbsp;&nbsp;&nbsp;&nbsp;
 					<form action="<%=contextPath%>/Community/shareSearchList" method="post"
 					  name="frmSearch" onsubmit="fnSearch(); return false;">
 						<select name="key">

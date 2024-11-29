@@ -26,3 +26,14 @@ LEFT JOIN member m
 ON o.id=m.id 
 WHERE k.id='admin' AND o.delivered=0 
 ORDER BY o.post_date DESC;
+
+select * from community;
+select * from member;
+
+select c.*, m.nickname, m.profile
+FROM community c
+LEFT OUTER JOIN member m
+ON c.id = m.id
+order by post_date desc;
+
+select count(*) from community_share;

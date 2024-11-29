@@ -85,7 +85,7 @@ public class CommunityController extends HttpServlet {
 		HttpSession session = request.getSession();
 		String loginid = (String)session.getAttribute("id");
 	
-		ArrayList<CommunityVO> communities = communityService.getCommunityList();
+		ArrayList<HashMap<String, Object>> communities = communityService.getCommunityList();
 		
 		String nowPage = request.getParameter("nowPage");
 		String nowBlock = request.getParameter("nowBlock");
@@ -118,9 +118,11 @@ public class CommunityController extends HttpServlet {
 			throws ServletException, IOException{
 		
 		String no = request.getParameter("no");
-		CommunityVO vo = communityService.openCommunityRead(no);
-
-		request.setAttribute("vo", vo);
+		//CommunityVO vo = communityService.HashMap<String, Object>openCommunityRead(no);
+		
+		HashMap<String, Object> community = communityService.openCommunityRead(no);
+		
+		request.setAttribute("community", community);
 		request.setAttribute("center", "communities/read.jsp");
 		
 		nextPage = "/main.jsp";
@@ -130,12 +132,11 @@ public class CommunityController extends HttpServlet {
 	private void openCommunityUpdateView(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException{
 	
-		CommunityVO vo = new CommunityVO(
-				Integer.parseInt(request.getParameter("no")),
-				request.getParameter("id"),
-				request.getParameter("title"),
-				request.getParameter("contents"),
-				Integer.parseInt(request.getParameter("views")));
+		CommunityVO vo = new CommunityVO();
+		vo.setNo(Integer.parseInt(request.getParameter("no")));
+		vo.setTitle(request.getParameter("title"));
+		vo.setContents(request.getParameter("contents"));
+		vo.setViews(Integer.parseInt(request.getParameter("views")));
 		
 		request.setAttribute("vo", vo);
 		request.setAttribute("center", "communities/update.jsp");
@@ -166,7 +167,7 @@ public class CommunityController extends HttpServlet {
 		
 		out.close();
 		
-	}	
+	}
 	
 	private void processCommunitySearch(HttpServletRequest request, HttpServletResponse response) {
 

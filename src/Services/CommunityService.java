@@ -25,10 +25,9 @@ public class CommunityService {
 	public CommunityService() {
 		
 		communitydao = new CommunityDAO();
-		
 	}
 
-	public ArrayList<CommunityVO> getCommunityList() {
+	public ArrayList<HashMap<String, Object>> getCommunityList() {
 		
 		return communitydao.communityListAll();
 	}
@@ -49,7 +48,7 @@ public class CommunityService {
 		
 	}
 
-	public CommunityVO openCommunityRead(String no) {
+	public HashMap<String, Object> openCommunityRead(String no) {
 		
 		return communitydao.readCommunity(no);
 	}
@@ -58,7 +57,7 @@ public class CommunityService {
 		
 		CommunityVO vo = new CommunityVO(
 				Integer.parseInt(request.getParameter("no")),
-				request.getParameter("id"),
+				(String)request.getSession().getAttribute("userId"),
 				request.getParameter("title"),
 				request.getParameter("contents"),
 				Integer.parseInt(request.getParameter("views")));

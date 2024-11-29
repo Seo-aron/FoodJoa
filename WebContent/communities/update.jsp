@@ -6,6 +6,8 @@
 	String contextPath = request.getContextPath();
 
 	CommunityVO vo = (CommunityVO) request.getAttribute("vo");
+	
+	String id = (String)session.getAttribute("userId");
 %>    
 <!DOCTYPE html>
 <html>
@@ -55,7 +57,6 @@
 				type: "post",
 				data: {
 					no: <%= vo.getNo() %>,
-					id: "<%= vo.getId() %>",
 					title: $("#title").val(),
 					contents: $("#contents").val(),
 					views: <%= vo.getViews() %>

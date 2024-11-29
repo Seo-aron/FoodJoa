@@ -1,3 +1,5 @@
+<%@page import="VOs.MemberVO"%>
+<%@page import="java.util.HashMap"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.sql.Timestamp"%>
 <%@page import="VOs.CommunityVO"%>
@@ -7,8 +9,8 @@
     
 <% 
 	String contextPath = request.getContextPath();
-	ArrayList<CommunityVO> communities = (ArrayList<CommunityVO>)request.getAttribute("communities");
-	
+	ArrayList<HashMap<String, Object>> communities = (ArrayList<HashMap<String, Object>>)request.getAttribute("communities");
+
 	String id = (String) session.getAttribute("userId");
 	
 	int totalRecord = communities.size();
@@ -57,8 +59,8 @@
 	<div id="container">
 		<table class="list_table" width="100%">
 			<tr align="center" bgcolor="#e9ecef">
-				<td class="col-no" width="10%">글번호</td>
-				<td class="col-title" width="50%">제목</td>
+				<td class="col-no" width="15%">글번호</td>
+				<td class="col-title" width="45%">제목</td>
 				<td class="col-write" width="15%">작성자</td>
 				<td class="col-views" width="10%">조회수</td>
 				<td class="col-date" width="15%">작성날짜</td>
@@ -79,14 +81,15 @@
 						break;
 					}
 					
-					CommunityVO vo = communities.get(i);					
+					CommunityVO community = (CommunityVO)communities.get(i).get("community");
+					MemberVO member = (MemberVO)communities.get(i).get("member");
 					%>			
 					<tr align="center">
-						<td><%= vo.getNo()%></td>
-						<td><a href="<%=contextPath%>/Community/read?no=<%=vo.getNo()%>"> <%=vo.getTitle()%></a></td>
-						<td><%= vo.getId()%></td>
-						<td><%= vo.getViews()%></td>
-						<td><%= new SimpleDateFormat("yyyy-MM-dd").format(vo.getPostDate()) %></td>
+						<td><%=totalRecord - i%></td>
+						<td align="left"><a href="<%=contextPath%>/Community/read?no=<%=community.getNo()%>"> <%=community.getTitle()%></a></td>
+						<td><%= member.getNickname()%></td>
+						<td><%= community.getViews()%></td>
+						<td><%= new SimpleDateFormat("yyyy-MM-dd").format(community.getPostDate()) %></td>
 					</tr>
 					<%
 				}

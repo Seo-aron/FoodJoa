@@ -46,8 +46,8 @@ public class CommunityDAO {
 		}
 	}
 
-	public ArrayList<CommunityVO> communityListAll() {
-		ArrayList<CommunityVO> communities = new ArrayList<CommunityVO>();
+	public ArrayList<HashMap<String, Object>> communityListAll() {
+		ArrayList<HashMap<String, Object>> communities = new ArrayList<HashMap<String, Object>>();
 
 		try {
 
@@ -60,17 +60,27 @@ public class CommunityDAO {
 					+ "order by post_date desc";
 			
 			preparedStatement = connection.prepareStatement(sql);
-
 			resultSet = preparedStatement.executeQuery();
 
 			while (resultSet.next()) {
 
-				CommunityVO community = new CommunityVO(resultSet.getInt("no"), resultSet.getString("id"),
-						resultSet.getString("title"), resultSet.getString("contents"), resultSet.getInt("views"),
+				HashMap<String, Object> data = new HashMap<String, Object>();
+				CommunityVO community = new CommunityVO(
+						resultSet.getInt("no"),
+						resultSet.getString("id"),
+						resultSet.getString("title"),
+						resultSet.getString("contents"),
+						resultSet.getInt("views"),
 						resultSet.getTimestamp("post_date"));
 
-				communities.add(community);
-
+				MemberVO member = new MemberVO();
+				member.setNickname(resultSet.getString("nickname"));
+				
+				data.put("community", community);
+				data.put("member", member);
+				
+				communities.add(data);
+				
 			}
 		}
 
@@ -81,6 +91,8 @@ public class CommunityDAO {
 		}
 
 		return communities;
+
+		
 	}
 	
 	public void insertCommunity(CommunityVO communityVO) {
@@ -109,34 +121,48 @@ public class CommunityDAO {
 
 	}
 
-	public CommunityVO readCommunity(String no) {
+	public HashMap<String, Object> readCommunity(String no) {
 
-		CommunityVO vo = null;
 		String sql = null;
+		
+		HashMap<String, Object> community = new HashMap<String, Object>();
 		
 		try {
 			connection = dataSource.getConnection();
 			
-			sql = "update community set views=views+1  where no=?";
+			sql = "update community set views=views+1  where no=? ";
+			
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, Integer.parseInt(no));
 			
 			preparedStatement.executeUpdate();
 			
-			sql = "select * from community where no=?";
+			sql = "SELECT c.*, m.nickname "
+				+ "FROM community c "
+				+ "LEFT OUTER JOIN member m "
+				+ "ON c.id = m.id "
+				+ "WHERE c.no=? ";
+			
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, Integer.parseInt(no));
 			resultSet = preparedStatement.executeQuery();
 			
 			if(resultSet.next()) {
+					
+				CommunityVO	communityVO = new CommunityVO(
+						
+							resultSet.getInt("no"),
+							resultSet.getString("id"),
+							resultSet.getString("title"),
+							resultSet.getString("contents"),
+							resultSet.getInt("views"),
+							resultSet.getTimestamp("post_date"));
 				
-				vo = new CommunityVO(
-						resultSet.getInt("no"),
-						resultSet.getString("id"),
-						resultSet.getString("title"),
-						resultSet.getString("contents"),
-						resultSet.getInt("views"),
-						resultSet.getTimestamp("post_date"));
+				MemberVO memberVO = new MemberVO();
+				memberVO.setNickname(resultSet.getString("nickname"));
+				
+				community.put("communityVO", communityVO);
+				community.put("memberVO", memberVO);
 			}
 		
 		} catch (Exception e) {
@@ -145,7 +171,7 @@ public class CommunityDAO {
 			release();
 		}
 		
-		return vo;
+		return community;
 	}
 
 	public int updateCommunity(CommunityVO vo) {
@@ -155,11 +181,12 @@ public class CommunityDAO {
 		try {
 			connection = dataSource.getConnection();
 			
-			String sql = "update community set title=?, contents=? where no=?";
+			String sql = "update community set title=?, contents=? where no=? and id=?";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, vo.getTitle());
 			preparedStatement.setString(2, vo.getContents());
 			preparedStatement.setInt(3, vo.getNo());
+			preparedStatement.setString(4, vo.getId());
 			
 			result = preparedStatement.executeUpdate();
 			
