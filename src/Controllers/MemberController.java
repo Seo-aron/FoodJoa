@@ -88,7 +88,7 @@ public class MemberController extends HttpServlet {
 		case "/viewMyDelivery.me": openMyDeliveryView(request, response); break;
 		case "/viewMySend.me": openMySendView(request, response); break;
 		case "/viewMyRecipe.me" : openMyRecipeView(request, response); break;
-
+		case "/myReviews": openMyReviewsView(request, response); break;
 
 		default:
 			nextPage = "/main.jsp";
@@ -477,5 +477,19 @@ public class MemberController extends HttpServlet {
 			request.setAttribute("center", "members/myreceipe.jsp");
 			nextPage = "/main.jsp";
 		}
+		
+	// 건용 추가----
+	private void openMyReviewsView (HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		HashMap<String, Object> reviews = memberService.getReviews(request);
+		
+		request.setAttribute("reviews", reviews);
+		
+		request.setAttribute("pageTitle", "내 리뷰 관리");
+		request.setAttribute("center", "members/myreview.jsp");
+		
+		nextPage = "/main.jsp";
+	}
     
 }

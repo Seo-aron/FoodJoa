@@ -26,3 +26,26 @@ LEFT JOIN member m
 ON o.id=m.id 
 WHERE k.id='admin' AND o.delivered=0 
 ORDER BY o.post_date DESC;
+
+SELECT
+r.title, r.category, 
+rv.no AS rv_no, rv.pictures, rv.contents, rv.rating, rv.post_date,
+m.nickname
+FROM recipe_review rv
+JOIN recipe r
+ON rv.recipe_no=r.no
+JOIN member m
+ON r.id=m.id
+WHERE rv.id='review1'
+ORDER BY rv.post_date DESC;
+
+SELECT 
+k.title, k.contents, k.pictures, k.category, 
+mr.post_date,
+m.nickname 
+FROM mealkit_review mr
+JOIN mealkit k 
+ON mr.mealkit_no=k.no
+JOIN member m 
+ON k.id=m.id
+WHERE mr.id='review1';

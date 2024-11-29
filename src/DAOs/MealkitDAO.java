@@ -398,4 +398,54 @@ public class MealkitDAO {
 		return result == 1;
 	}
 
+
+	public ArrayList<HashMap<String, Object>> selectMealkitReviewsById(String id) {
+		
+		ArrayList<HashMap<String, Object>> reviews = new ArrayList<HashMap<String,Object>>();
+		
+		String sql = "SELECT "
+				+ "k.title, k.category, "
+				+ "kr.no AS kr_no, kr.pictures AS kr_pictures, kr.contents AS kr_contents, kr.rating, kr.post_date, "
+				+ "m.nickname "
+				+ "FROM mealkit_review kr "
+				+ "JOIN mealkit k "
+				+ "ON kr.mealkit_no=k.no "
+				+ "JOIN member m "
+				+ "ON k.id=m.id "
+				+ "WHERE kr.id=? "
+				+ "ORDER BY kr.post_date DESC";
+		
+		ResultSet resultSet = dbConnector.executeQuery(sql, id);
+		
+		try {
+			while (resultSet.next()) {
+				HashMap<String, Object> review = new HashMap<String, Object>();
+				
+				MealkitVO mealkitVO = new MealkitVO();
+				mealkitVO.setTitle(resultSet.getString("title"));
+				mealkitVO.setCategory(resultSet.getInt("category"));
+				
+				MealkitReviewVO reviewVO = new MealkitReviewVO();
+				reviewVO.setNo(resultSet.getInt("kr_no"));
+				reviewVO.setPictures(resultSet.getString("kr_pictures"));
+				reviewVO.setContents(resultSet.getString("kr_contents"));
+				reviewVO.setRating(resultSet.getInt("rating"));
+				reviewVO.setPostDate(resultSet.getTimestamp("post_date"));
+				
+				MemberVO memberVO = new MemberVO();
+				memberVO.setNickname(resultSet.getString("nickname"));
+				
+				review.put("mealkit", mealkitVO);
+				review.put("review", reviewVO);
+				review.put("member", memberVO);
+				
+				reviews.add(review);
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return reviews;
+	}
 }

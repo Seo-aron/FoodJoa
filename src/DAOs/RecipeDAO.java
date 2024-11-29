@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import Common.DBConnector;
+import VOs.MemberVO;
 import VOs.RecipeReviewVO;
 import VOs.RecipeVO;
 import VOs.RecipeWishListVO;
@@ -356,6 +357,56 @@ public class RecipeDAO {
 		}
 		
 		dbConnector.release();
+		
+		return reviews;
+	}
+	
+	public ArrayList<HashMap<String, Object>> selectRecipeReviewsById(String id) {
+		
+		ArrayList<HashMap<String, Object>> reviews = new ArrayList<HashMap<String,Object>>();
+		
+		String sql = "SELECT "
+				+ "r.title, r.category, "
+				+ "rv.recipe_no, rv.pictures, rv.contents, rv.rating, rv.post_date, "
+				+ "m.nickname "
+				+ "FROM recipe_review rv "
+				+ "JOIN recipe r "
+				+ "ON rv.recipe_no=r.no "
+				+ "JOIN member m "
+				+ "ON r.id=m.id "
+				+ "WHERE rv.id=? "
+				+ "ORDER BY rv.post_date DESC";
+		
+		ResultSet resultSet = dbConnector.executeQuery(sql, id);
+		
+		try {
+			while (resultSet.next()) {
+				HashMap<String, Object> review = new HashMap<String, Object>();
+				
+				RecipeVO recipeVO = new RecipeVO();
+				recipeVO.setTitle(resultSet.getString("title"));
+				recipeVO.setCategory(resultSet.getInt("category"));
+				
+				RecipeReviewVO reviewVO = new RecipeReviewVO();
+				reviewVO.setRecipeNo(resultSet.getInt("recipe_no"));
+				reviewVO.setPictures(resultSet.getString("pictures"));
+				reviewVO.setContents(resultSet.getString("contents"));
+				reviewVO.setRating(resultSet.getInt("rating"));
+				reviewVO.setPostDate(resultSet.getTimestamp("post_date"));
+				
+				MemberVO memberVO = new MemberVO();
+				memberVO.setNickname(resultSet.getString("nickname"));
+				
+				review.put("recipe", recipeVO);
+				review.put("review", reviewVO);
+				review.put("member", memberVO);
+				
+				reviews.add(review);
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
 		return reviews;
 	}

@@ -390,4 +390,19 @@ public class MemberService {
     public ArrayList<HashMap<String, Object>> getRecentViews(String userId) throws SQLException {
         return memberDAO.getRecentView(userId, 0);
     }
+    
+    public HashMap<String, Object> getReviews(HttpServletRequest request) {
+    	
+    	String id = (String) request.getSession().getAttribute("userId");
+    	
+    	HashMap<String, Object> reviews = new HashMap<String, Object>();
+    	
+    	ArrayList<HashMap<String, Object>> recipeReviews = recipeDAO.selectRecipeReviewsById(id);
+    	ArrayList<HashMap<String, Object>> mealkitReviews = mealkitDAO.selectMealkitReviewsById(id);
+    	
+    	reviews.put("recipe", recipeReviews);
+    	reviews.put("mealkit", mealkitReviews);
+    	
+    	return reviews;
+    }
 }
