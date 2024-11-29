@@ -18,7 +18,8 @@
 	<meta charset="UTF-8">
 	<title>${mealkitvo.title }</title>
 	
-    <script src="https://code.jquery.com/jquery-latest.min.js"></script>	
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+	
 	<style type="text/css">
 		#container{
 			width: 1200px;

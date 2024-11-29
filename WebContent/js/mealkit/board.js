@@ -6,7 +6,11 @@ $('.bxslider').bxSlider({
 	mode: 'fade',
 	captions: true,
 	slideWidth: 530,
-	adaptiveHeight: true
+	adaptiveHeight: true,
+});
+
+$('.bx-wrapper').css({
+    'box-shadow': 'none'
 });
 
 // 수량 증가 감소 버튼
@@ -30,14 +34,13 @@ $('.stock_minus').click(function() {
 
 // 장바구니, 찜목록 버튼
 function cartMealkit(contextPath) {
-	// 장바구니 type = 1
 	$.ajax({
-		url: contextPath + "/Mealkit/wish.pro",
+		url: contextPath + "/Mealkit/cart.pro",
 		type: "POST",
 		async: true,
 		data: {
 			no: mealkitNo,
-			type: 1
+			quantity: stockInput
 		},
 		success: function(response) {
 			if (response === "1") alert("장바구니에 추가되었습니다.");
@@ -47,14 +50,12 @@ function cartMealkit(contextPath) {
 }
 
 function wishMealkit(contextPath) {
-	// 찜하기 type = 0
 	$.ajax({
 		url: contextPath + "/Mealkit/wish.pro",
 		type: "POST",
 		async: true,
 		data: {
-			no: mealkitNo,
-			type: 0
+			no: mealkitNo
 		},
 		success: function(response) {
 			if (response === "1") alert("찜목록에 추가되었습니다.");

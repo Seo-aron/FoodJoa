@@ -1,0 +1,48 @@
+@charset "UTF-8";
+
+#container {
+	width: 1200px;
+	font-family: "Noto Serif KR", serif;
+}
+
+#search-container {
+	width: 100%;
+	padding: 10px;
+	box-sizing: border-box;
+	display: flex; /* 검색 폼과 글쓰기 버튼을 같은 줄에 배치하기 위해 flex 사용 */
+	justify-content: center; /* 검색 폼을 화면 중앙에 배치 */
+	align-items: center; /* 세로 정렬 */
+}
+
+.search-form-container {
+	display: flex;
+	align-items: center; /* 세로로 가운데 정렬 */
+	gap: 10px; /* 요소 간 간격 */
+}
+
+.search-form-container select, .search-form-container input {
+	padding: 5px;
+	font-size: 14px;
+	margin: 0; /* 기본 여백 제거 */
+}
+
+.write-button-container {
+	margin-left: 20px; /* 검색 폼과 버튼 간격 */
+}
+
+#newContent {
+	padding: 5px 10px;
+	font-size: 14px;
+	cursor: pointer;
+	margin-right: 40px;
+}
+
+.list {
+	width: 1200px;
+}
+
+.thumbnail {
+	border-radius: 10px;
+	width: 256px;
+	height: 256px;
+}

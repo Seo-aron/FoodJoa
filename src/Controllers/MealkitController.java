@@ -21,7 +21,6 @@ import VOs.MealkitVO;
 public class MealkitController extends HttpServlet {
 
 	private MealkitService mealkitService;
-	private PrintWriter printWriter;
 	private String nextPage;
 
 	@Override
@@ -52,12 +51,12 @@ public class MealkitController extends HttpServlet {
 		switch (action) {
 		case "/list": openMealkitView(request, response); break;
 		case "/info": openMealkitInfoView(request, response); break;
+		case "/cart.pro": processCartMealkit(request, response); break;
 		case "/wish.pro": processWishMealkit(request, response); return;
 		case "/write": openAddMealkit(request, response); break;
 		case "/write.pro": processAddMealkit(request, response); return;
 		case "/reviewwrite": openAddReview(request, response); break;
 		case "/reviewwrite.pro": processAddReview(request, response); return;
-		case "/empathy.pro": processEmpathy(request, response); return;
 		case "/delete.pro": processDelete(request, response); return;
 		case "/update": openUpdateBoard(request, response); break;
 		case "/update.pro": processUpdate(request, response); return;
@@ -74,8 +73,10 @@ public class MealkitController extends HttpServlet {
 
 	private void openMyMealkitView(HttpServletRequest request, HttpServletResponse response) {
 		ArrayList<HashMap<String, Object>> mealkits = mealkitService.getMealkitsListById(request);
-
+		String nickName = mealkitService.getNickName(request);
+		
 		request.setAttribute("mealkits", mealkits);
+		request.setAttribute("nickName", nickName);
 		request.setAttribute("center", "mealkits/mymealkits.jsp");
 
 		nextPage = "/main.jsp";
@@ -121,11 +122,6 @@ public class MealkitController extends HttpServlet {
 		mealkitService.delMealkit(request, response);
 	}
 
-	private void processEmpathy(HttpServletRequest request, HttpServletResponse response) 
-			throws IOException {
-		mealkitService.setPlusEmpathy(request, response);
-	}
-
 	private void openAddReview(HttpServletRequest request, HttpServletResponse response) {
 		
 		String mealkit_no = request.getParameter("mealkit_no");
@@ -159,6 +155,11 @@ public class MealkitController extends HttpServlet {
 			throws ServletException, IOException{
 		mealkitService.setWishMealkit(request, response);
 	}
+
+	private void processCartMealkit(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException{
+		mealkitService.setCartMealkit(request, response);
+	}
 	
 	private void openMealkitInfoView(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -181,8 +182,10 @@ public class MealkitController extends HttpServlet {
 
 	private void openMealkitView(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
+		int category = Integer.parseInt(request.getParameter("category"));
 
-		ArrayList<Map<String, Object>> mealkits = mealkitService.getMealkitsList();
+		ArrayList<Map<String, Object>> mealkits = mealkitService.getMealkitsList(category);
 		Map<Integer, Float> ratingAvr = mealkitService.getAllRatingAvr(mealkits);
 		
 		String nowPage = request.getParameter("nowPage");
@@ -190,6 +193,7 @@ public class MealkitController extends HttpServlet {
 
 		request.setAttribute("mealkitList", mealkits);
 		request.setAttribute("ratingAvr", ratingAvr);
+		request.setAttribute("category", category);
 		request.setAttribute("center", "mealkits/list.jsp");
 		request.setAttribute("nowPage", nowPage);
 		request.setAttribute("nowBlock", nowBlock);

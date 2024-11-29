@@ -2,6 +2,7 @@
 <%@ page import="Common.StringParser"%>
 <%@ page import="VOs.MealkitVO"%>
 <%@ page import="VOs.MemberVO"%>
+<%@ page import="java.text.NumberFormat" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -19,6 +20,11 @@
 	String nickName = (String) request.getAttribute("nickName");
 	
 	List<String> parsedOrders = StringParser.splitString(mealkitvo.getOrders());
+	
+	 String priceString = mealkitvo.getPrice();
+	 int price = Integer.parseInt(priceString); 
+	 NumberFormat numberFormat = NumberFormat.getInstance();
+	 String formattedPrice = numberFormat.format(price);
 %>
 <c:set var="mealkit" value="${requestScope.mealkitvo}"/>
 
@@ -88,7 +94,7 @@
 				<!-- 나중에 평점 수정 -->
 				<strong>평점: <fmt:formatNumber value="${ratingAvr}" pattern="#.#" /></strong><hr>
 			</span>
-			<h2>가격: ${mealkit.price }</h2><hr>
+			<h2>가격: <%= formattedPrice %> 원</h2><hr>
 			<br>
 			
 			<!-- 수량 정하는 박스 -->

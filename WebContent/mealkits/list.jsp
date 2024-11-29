@@ -3,6 +3,7 @@
 <%@ page import="Common.StringParser"%>
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="VOs.MealkitVO" %>
+<%@ page import="java.text.NumberFormat" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -14,6 +15,15 @@
 	response.setContentType("text/html;charset=utf-8");
 	
 	String contextPath = request.getContextPath();
+	
+	int category = (int) request.getAttribute("category");
+	String strCategory = null;
+	
+	if(category == 0){ strCategory = "전체 밀키트 게시글"; }
+	else if (category == 1){ strCategory = "한식 밀키트 게시글"; }
+	else if (category == 2){ strCategory = "일식 밀키트 게시글"; }
+	else if (category == 3){ strCategory = "중식 밀키트 게시글"; }
+	else if (category == 4){ strCategory = "양식 밀키트 게시글"; }
 %>
 
 <!DOCTYPE html>
@@ -21,6 +31,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>나만의 음식 판매</title>
+	
+	<link rel="stylesheet" type="text/css" href="<%=contextPath%>/css/mealkit/list.css">
 	
 	<script type="text/javascript">
 		function fnSearch() {
@@ -36,52 +48,6 @@
 			}
 		}
 	</script>
-	<style>
-	#container {
-		width: 1200px;
-	}
-	
-	#search-container {
-    width: 100%;
-    padding: 10px;
-    box-sizing: border-box;
-    display: flex; /* 검색 폼과 글쓰기 버튼을 같은 줄에 배치하기 위해 flex 사용 */
-    justify-content: center; /* 검색 폼을 화면 중앙에 배치 */
-    align-items: center; /* 세로 정렬 */
-	}
-	
-	.search-form-container {
-	    display: flex;
-	    align-items: center; /* 세로로 가운데 정렬 */
-	    gap: 10px; /* 요소 간 간격 */
-	}
-	
-	.search-form-container select,
-	.search-form-container input {
-	    padding: 5px;
-	    font-size: 14px;
-	    margin: 0; /* 기본 여백 제거 */
-	}
-	
-	.write-button-container {
-	    margin-left: 20px; /* 검색 폼과 버튼 간격 */
-	}
-	
-	#newContent {
-	    padding: 5px 10px;
-	    font-size: 14px;
-	    cursor: pointer;
-	    margin-right: 40px;
-	}
-
-	.list {
-		width: 1200px;
-	}
-	.thumbnail {
-		width: 256px;
-		height: 256px;
-	}
-	</style>
 </head>
 <body>
 	<%
@@ -113,6 +79,7 @@
 	%>
 	<div id="container">
 		<!-- 검색 기능 -->
+		<h1><%=strCategory %></h1>
 		<div id="search-container">
 			<form action="<%=contextPath%>/Mealkit/searchlist.pro" method="post" name="frmSearch" 
 				onsubmit="fnSearch(); return false;">
@@ -157,10 +124,14 @@
 			        String id = (String) vo.get("id");
 			        String title = (String) vo.get("title");
 			        String contents = (String) vo.get("contents");
-			        String price = (String) vo.get("price");
 			        Object postDate = vo.get("post_date");
 			        int views = (int) vo.get("views");
 			        String nickName = (String) vo.get("nickname");
+			        
+			        String price = (String) vo.get("price");
+					int price_ = Integer.parseInt(price); 
+					NumberFormat numberFormat = NumberFormat.getInstance();
+					String formattedPrice = numberFormat.format(price_);
 					%>
 				<tr>
 			        <td>
@@ -174,8 +145,9 @@
 				                조회수: <%=views%>
 				            </span>
 				            <h3><%=title%></h3>
-				            <p>가격: <%=price%></p>
+				            <p>가격: <%=formattedPrice%> 원</p>
 				            <p>내용: <%=contents%></p>
+				            <br>
 			        </td>
 			    </tr>
 						

@@ -29,7 +29,7 @@
                 <tr>
                     <th>글 제목</th>
                     <td>
-                    	<input type="text" name="title" required>
+                    	<input type="text" class="title" name="title" required>
                     	<!-- id -->
                     	<input type="hidden" name="id" value="<%=id%>">
                     </td>
@@ -47,31 +47,30 @@
                 <tr>
                     <th>카테고리</th>
                     <td>
-                        <select name="category" required>
+                        <select class="category" name="category" required>
                         	<option value="">선택하세요</option>
-                            <option value="0">한식</option>
-                            <option value="1">중식</option>
+                            <option value="1">한식</option>
                             <option value="2">일식</option>
-                            <option value="3">양식</option>
-                            <option value="4">분식</option>
+                            <option value="3">중식</option>
+                            <option value="4">양식</option>
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <th>간단 소개글</th>
-                    <td><textarea name="contents" rows="4" required></textarea></td>
+                    <td><textarea name="contents" class="contents" rows="4" required></textarea></td>
                 </tr>
                 <tr>
 					<th>가격</th>
-				    <td><input type="text" name="price" required min="0">원</td>
+				    <td><input type="text" name="price" class="price" required min="0">원</td>
 				</tr>
                 <tr>
                     <th>재고 수량</th>
-                    <td><input type="number" name="stock" required min="0">개</td>
+                    <td><input type="number" name="stock" class="stock" required min="0">개</td>
                 </tr>
                 <tr>
-					<td colspan="2">
-						<p>간단 조리 순서 작성</p>
+					<th>간단 조리 순서</th>
+					<td>
 						<div class="orders-container"></div>
 						<p><input type="button" class="add-orders" value="순서 추가하기"></p>
 						<input type="hidden" id="orders" name="orders">
@@ -79,14 +78,10 @@
 				</tr>
                 <tr>
                     <th>원산지 표기</th>
-                    <td><input type="text" name="origin" required></td>
+                    <td><input type="text" name="origin" class="origin" required></td>
                 </tr>
-                <tr>
-                <td colspan="2">
-					<input type="button" class="write" value="작성 완료" onclick="onSubmit(event, '<%=contextPath%>')">
-				</td>
-			</tr>
             </table>
+            <input type="button" class="write" value="작성 완료" onclick="onSubmit(event, '<%=contextPath%>')">
         </form>
     </div>
     

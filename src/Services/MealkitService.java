@@ -32,9 +32,9 @@ public class MealkitService {
 		mealkitDAO = new MealkitDAO();
 	}
 	
-	public ArrayList<Map<String, Object>> getMealkitsList() {
+	public ArrayList<Map<String, Object>> getMealkitsList(int category) {
 		
-		return mealkitDAO.selectMealkits();
+		return mealkitDAO.selectMealkits(category);
 	}
 
 	public MealkitVO getMealkitInfo(HttpServletRequest request) {
@@ -61,11 +61,11 @@ public class MealkitService {
 
 	public void setWishMealkit(HttpServletRequest request, HttpServletResponse response) 
 			throws IOException {
+		
 		int no = Integer.parseInt(request.getParameter("no"));
 		String id = (String) request.getSession().getAttribute("userId");
-		int type = Integer.parseInt(request.getParameter("type"));
 		
-		int result = mealkitDAO.insertMealkitWishlist(no, id, type);
+		int result = mealkitDAO.insertMealkitWishlist(no, id);
 		
 		String res = String.valueOf(result);
 
@@ -75,6 +75,26 @@ public class MealkitService {
 		printWriter.close();
 		
 		return;
+	}
+
+	public void setCartMealkit(HttpServletRequest request, HttpServletResponse response) 
+			throws IOException {
+		
+		int no = Integer.parseInt(request.getParameter("no"));
+		int quantity = Integer.parseInt(request.getParameter("quantity"));
+		String id = (String) request.getSession().getAttribute("userId");
+		
+		int result = mealkitDAO.insertMealkitCartlist(no, quantity, id);
+		
+		String res = String.valueOf(result);
+
+		printWriter = response.getWriter();
+		printWriter.print(res);
+		printWriter.flush();
+		printWriter.close();
+		
+		return;
+		
 	}
 
 	public void setWriteMealkit(HttpServletRequest request, HttpServletResponse response) 
@@ -192,22 +212,6 @@ public class MealkitService {
 	        printWriter.println("</script>");
 	        printWriter.close();
 	    }
-	}
-
-	public void setPlusEmpathy(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-		int empathyCount = Integer.parseInt(request.getParameter("empathyCount"));
-		int mealkit_no = Integer.parseInt(request.getParameter("mealkit_no"));
-		int no = Integer.parseInt(request.getParameter("no"));
-			
-		int result = mealkitDAO.updateEmpathy(empathyCount, mealkit_no, no);
-
-		printWriter = response.getWriter();
-
-		String go = String.valueOf(result);
-		
-		printWriter.print(go);
-
 	}
 
 	public void delMealkit(HttpServletRequest request, HttpServletResponse response) throws IOException {

@@ -50,7 +50,6 @@
 	
 	<script src="https://code.jquery.com/jquery-latest.min.js"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-	<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="<%=contextPath%>/css/mealkit/review.css">
 	
 </head>
@@ -81,7 +80,6 @@
 		        int mealkitNo = (int) vo.get("mealkit_no");
 			    String contents = (String) vo.get("contents");
 			    int rating = (int) vo.get("rating");
-			    int empathy = (int) vo.get("empathy");
 			    Object postDate = vo.get("post_date");
 			    String nickName = (String) vo.get("nickname");
 		%>
@@ -92,13 +90,6 @@
 					</td>
 					<td>
 						<span>평점: <%=rating %></span>
-					</td>
-					<td>
-						<div class="empathy-container">
-							<button type="button" class="empathy-button" onclick="empathyCount(<%=no%>)">공감</button>
-							<input type="text" name="empathy" value="<%=empathy %>" id="empathyInput_<%=no %>" 
-								class="empathyInput" data-review-no="<%=no %>" readonly>
-						</div>
 					</td>
 				</tr>
 				<tr>
@@ -123,35 +114,5 @@
 			</tr>
 		</table>
 	</div>
-	
-	<script>	
-		function empathyCount(no) {	
-			let empathyValue = parseInt($('#empathyInput_' + no + '').val());
-			let mealkit_no = parseInt($('input[name=mealkit_no]').val());
-
-			$.ajax({
-				url: '<%= contextPath %>/Mealkit/empathy.pro',
-				type: 'POST',
-				async: true,
-				data: {
-					empathyCount: empathyValue,
-					mealkit_no: mealkit_no,
-					no: no
-				},
-				dataType:"text",
-				success: function(response) {
-					if (response === "1") {
-						alert('공감 했습니다 ');
-						empathyValue++;
-						$('#empathyInput_' + no).val(empathyValue);
-						
-					} else {
-						alert('공감 실패: ');
-					}
-				}
-			});
-		}  
-	</script>
-	
 </body>
 </html>

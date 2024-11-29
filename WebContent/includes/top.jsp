@@ -180,12 +180,12 @@
 						<li><a href="<%= contextPath %>/Recipe/list?category=4">양식 요리</a></li>
 						<li><a href="<%= contextPath %>/Recipe/list?category=5">자취 요리</a></li>
 					</ul></li>
-				<li><a href="#">나만의 음식 판매</a>
+				<li><a href="<%=contextPath%>/Mealkit/list?category=0">나만의 음식 판매</a>
 					<ul>
-						<li><a href="<%=contextPath%>/Mealkit/list">1</a></li>
-						<li><a href="#">2</a></li>
-						<li><a href="#">3</a></li>
-						<li><a href="#">4</a></li>
+						<li><a href="<%=contextPath%>/Mealkit/list?category=1">한식 제품</a></li>
+						<li><a href="<%=contextPath%>/Mealkit/list?category=2">일식 제품</a></li>
+						<li><a href="<%=contextPath%>/Mealkit/list?category=3">중식 제품</a></li>
+						<li><a href="<%=contextPath%>/Mealkit/list?category=4">양식 제품</a></li>
 					</ul></li>
 				<li><a href="#">자유게시판</a>
 					<ul>

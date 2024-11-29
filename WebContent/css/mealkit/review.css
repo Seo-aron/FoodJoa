@@ -54,36 +54,6 @@ textarea{
 	transition: background-color 0.3s ease;
 }
 
-.empathy-container {
-	display: flex;
-	align-items: center;
-}
-
-.empathy-button {
-	width: 60px;
-	background-color: #BF917E;
-	color: white;
-	border: none;
-	padding: 8px 10px;
-	border-radius: 5px;
-	cursor: pointer;
-	font-size: 14px;
-	margin-right: 10px;
-}
-
-.empathy-button:hover {
-	background-color: #9e6e58;
-	transition: background-color 0.3s ease;
-}
-
-.empathyInput {
-	width: 50px;
-	text-align: left;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-	padding: 5px;
-}
-
 .contents-container {
     display: flex;
     align-items: flex-start;

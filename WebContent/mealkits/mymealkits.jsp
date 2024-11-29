@@ -1,6 +1,9 @@
-<%@page import="VOs.MealkitVO"%>
-<%@page import="java.util.HashMap"%>
-<%@page import="java.util.ArrayList"%>
+<%@ page import="VOs.MealkitVO"%>
+<%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.util.List"%>
+<%@ page import="Common.StringParser"%>
+<%@ page import="java.util.HashMap"%>
+<%@ page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
@@ -17,6 +20,7 @@
 	ArrayList<HashMap<String, Object>> mealkits = (ArrayList<HashMap<String, Object>>) request.getAttribute("mealkits");
 	
 	String id = (String) session.getAttribute("userId");
+	String nickName = (String) request.getAttribute("nickName");
 %>
 
 <!DOCTYPE html>
@@ -27,61 +31,7 @@
 	<title>Insert title here</title>
 	
 	<script src="https://code.jquery.com/jquery-latest.min.js"></script>
-	
-	<style>
-		#container {
-			width: 1200px;
-		}
-		
-		table {
-			border-collapse: collapse;
-		}
-		
-		.mealkit-container {
-			border: 1px solid black;
-			margin-bottom: 10px;
-		}
-		
-		.mealkit-thumbnail {
-			width: 300px;
-			height: 200px;
-			overflow: hidden;
-		}
-		
-		.mealkit-thumbnail img {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-		}
-		
-		.title-area {
-			padding: 10px;
-		}
-		
-		.description-area {
-			padding: 10px;
-		}
-		
-		.rating-area, .views-area {
-			padding: 10px;
-			text-align: right;
-		}
-		
-		.rating-star {
-			width: 24px;
-			height: 24px;
-		}
-		
-		.button-area {
-			text-align: right;
-			padding: 5px;
-		}
-		
-		.button-area input {
-			width: 60px;
-			height: 44px;
-		}
-	</style>
+	<link rel="stylesheet" href="<%=contextPath%>/css/mealkit/mymealkits.css">
 </head>
 
 <body>
@@ -99,7 +49,17 @@
 			else {
 				for(int i = 0; i < mealkits.size(); i++) {
 					MealkitVO mealkitVO = (MealkitVO) mealkits.get(i).get("mealkitVO");
+					
+					String pictures = (String) mealkitVO.getPictures();
+					List<String> picturesList = StringParser.splitString(pictures);
+				    String thumbnail = picturesList.get(0);
+				    
 					float averageRating = (float) mealkits.get(i).get("averageRating");
+					
+					String priceString = mealkitVO.getPrice();
+				    int price = Integer.parseInt(priceString);
+				    NumberFormat numberFormat = NumberFormat.getInstance();
+				    String formattedPrice = numberFormat.format(price);
 					%>
 					<tr>
 						<td>
@@ -108,7 +68,9 @@
 									<tr>
 										<td rowspan="3" width="300px">
 											<div class="mealkit-thumbnail">
-												<img src="<%= contextPath %>/images/mealkit/thumbnails/<%= mealkitVO.getNo() %>/<%= mealkitVO.getPictures() %>">
+												<a href="<%=contextPath%>/Mealkit/info?no=<%=mealkitVO.getNo()%>&nickName=<%=nickName%>">
+													<img src="<%= contextPath %>/images/mealkit/thumbnails/<%= mealkitVO.getNo() %>/<%= mealkitVO.getId() %>/<%= thumbnail %>">
+												</a>
 											</div>
 										</td>
 										<td class="title-area" width="718px">
@@ -123,9 +85,11 @@
 										<td class="description-area" rowspan="2">
 											<%= mealkitVO.getContents() %>
 										</td>
-										<td class="views-area">
-											조회수 : <%= mealkitVO.getViews() %>
+										<td class="views-price-area">
+										    <div>조회수 : <%= mealkitVO.getViews() %></div>
+										    <div>가격 : <%= formattedPrice %> 원</div>
 										</td>
+
 									</tr>
 									<tr>
 										<td class="button-area">
