@@ -163,7 +163,6 @@
 	<div id="center">
 		<table>
             <tr>
-                <!-- 오늘의 레시피 랭킹 -->
                 <td>
                 	<img alt="" src="">
                     <오늘의 레시피 랭킹>
@@ -173,8 +172,6 @@
                         <li><img src="${contextPath}/images/mainpage/foodrank3.jpg" alt="레시피랭킹3"></li>
                     </ul>
                 </td>
-
-                <!-- 오늘 뭐 먹지? 데일리 추천 -->
                 <td>
                 	<img alt="" src="">
                     <오늘의 추천 요리>
@@ -182,7 +179,6 @@
                 </td>
             </tr>
             <tr>
-                <!-- 오늘의 마켓 랭킹 -->
                 <td>
                 	<img alt="" src="">
                     <오늘의 마켓 랭킹>
@@ -192,8 +188,6 @@
                         <li><img src="${contextPath}/images/mainpage/marketrank3.jpg" alt="마켓랭킹3"></li>
                     </ul>
                 </td>
-
-                <!-- 오늘의 웰빙 요리 -->
                 <td>
                 	<img alt="" src=""> 
                     <오늘의 웰빙 요리>

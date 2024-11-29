@@ -44,121 +44,7 @@
 <head>
 	<meta charset="UTF-8">	
 	<title>Insert title here</title>
-	
-	<style>
-		#container {
-			margin: 0 auto;
-			width: 1200px;
-			font-family: "Noto Serif KR", serif;
-        	font-optical-sizing: auto;
-		}
-		#top_container{
-		font-family: "Noto Serif KR", serif;
-		text-align: center;
-		margin-bottom: 30px;
-	}
-	
-	#top_container > p{
-		color: #616161;
-	}
-	
-	input[type="text"] {
-	    border-radius: 5px; 
-	    border: 1px solid #ccc;
-	    padding: 8px; 
-	    width: 200px;
-	}
-	
-	form {
-	    display: flex;
-	    align-items: center;
-	    justify-content: center;
-	    margin: 20px 0;
-	    gap: 10px;
-	}
-	
-	form select {
-	    border: 1px solid #ced4da;
-	    border-radius: 5px;
-	    padding: 8px;
-	    font-size: 1rem;
-	    color: #495057;
-	    background-color: #f8f9fa;
-	    outline: none;
-	    cursor: pointer;
-	}
-	
-	form select:hover {
-	    background-color: #e9ecef;
-	}
-	
-	form input[type="text"] {
-	    border: 1px solid #ced4da;
-	    border-radius: 5px;
-	    padding: 8px 12px;
-	    font-size: 1rem;
-	    color: #495057;
-	    width: 250px;
-	    outline: none;
-	    transition: border-color 0.3s ease;
-	}
-	
-	form input[type="text"]:focus {
-	    border-color: #007bff;
-	    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-	}
-	
-	form input[type="submit"],
-	form input[type="button"] {
-	    background-color: #BF817E;
-	    border: none;
-	    border-radius: 5px;
-	    padding: 8px 16px;
-	    font-size: 1rem;
-	    color: white;
-	    cursor: pointer;
-	    transition: background-color 0.3s ease;
-	}
-	
-	form input[type="submit"]:hover,
-	form input[type="button"]:hover {
-	    background-color: #e9ecef;
-	}
-	
-	form input[type="submit"]:disabled,
-	form input[type="button"]:disabled {
-	    background-color: #adb5bd;
-	    cursor: not-allowed;
-	}
-
-	@media (max-width: 768px) {
-	    #container {
-	        width: 90%;
-	    }
-	
-	    form {
-	        flex-direction: column;
-	        gap: 15px;
-	    }
-	
-	    form input[type="text"] {
-	        width: 100%;
-	    }
-	}
-    
-    .list_table{
-		border-spacing: 0px 10px;
-    }
-    
-    .community_p1{
-    	font-size: 40px;
-    }
-    
-    .community_p2{
-    	font-size: 30px;
-    }
-    
-	</style>
+	<link rel="stylesheet" href="<%=contextPath%>/css/community/sharelist.css">
 </head>
 
 <body>
@@ -170,11 +56,11 @@
 	<div id="container">
 		<table class="list_table" width="100%">
 			<tr align="center" bgcolor="#e9ecef">
-				<td class="col-no">글번호</td>
-				<td class="col-title">분류</td>
-				<td class="col-title">제목</td>
+				<td class="col-no" width="5%">글번호</td>
+				<td class="col-title" width="5%">분류</td>
+				<td class="col-title" width="40%">제목</td>
 				<td class="col-write">작성자</td>
-				<td class="col-views">조회수</td>
+				<td class="col-views" width="5%">조회수</td>
 				<td class="col-date">작성날짜</td>
 			</tr>
 			

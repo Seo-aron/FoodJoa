@@ -117,7 +117,7 @@ public class CommunityDAO {
 		try {
 			connection = dataSource.getConnection();
 			
-			sql = "update community set views=views+1 where no=?";
+			sql = "update community set views=views+1  where no=?";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, Integer.parseInt(no));
 			
