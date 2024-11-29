@@ -19,15 +19,19 @@ public class MealkitDAO {
 		dbConnector = new DBConnector();
 	}
 
-	public ArrayList<Map<String, Object>> selectMealkits() {
+	public ArrayList<Map<String, Object>> selectMealkits(int category) {
 		
 		ArrayList<Map<String, Object>> mealkits = new ArrayList<>();
 		
 		String sql = "SELECT mk.*, mem.nickname " 
 				+ "FROM mealkit mk JOIN member mem "
-                + "ON mk.id = mem.id";
+                + "ON mk.id = mem.id ";
 		
-		ResultSet rs = dbConnector.executeQuery(sql);
+		if (category != 0) sql += "WHERE mk.category=? ";
+		
+		sql += "ORDER BY mk.post_date DESC";
+		
+		ResultSet rs = (category != 0 ? dbConnector.executeQuery(sql, category) : dbConnector.executeQuery(sql));
 		
 		try {
 			while(rs.next()) {
@@ -115,7 +119,6 @@ public class MealkitDAO {
 				reviewsData.put("pictures", rs.getString("pictures"));
 				reviewsData.put("contents", rs.getString("contents"));
 				reviewsData.put("rating", rs.getInt("rating"));
-				reviewsData.put("empathy", rs.getInt("empathy"));
 				reviewsData.put("post_date", rs.getTimestamp("post_date"));
 				
 				reviewsData.put("nickname", rs.getString("nickname"));
@@ -133,19 +136,25 @@ public class MealkitDAO {
 		return reviews;
 	}
 
-	public int insertMealkitWishlist(int no, String id, int type) {
+	public int insertMealkitWishlist(int no, String id) {
 		
-		System.out.println("no " + no);
-		System.out.println("id " + id);
-		System.out.println("type " + type);
-		/*
-		String sql = "INSERT INTO mealkit_wishlist(id, mealkit_no, type, choice_date) "
+		String sql = "INSERT INTO mealkit_wishlist(id, mealkit_no, choice_date) "
+				+ "VALUES(?, ?, CURRENT_TIMESTAMP)";
+		
+		int result = dbConnector.executeUpdate(sql, id, no);
+		
+		dbConnector.release();
+		
+		return result;
+	}
+	
+
+	public int insertMealkitCartlist(int no, int quantity, String id) {
+		
+		String sql = "INSERT INTO mealkit_wishlist(id, mealkit_no, quantity choice_date) "
 				+ "VALUES(?, ?, ?, CURRENT_TIMESTAMP)";
-		*/
-		String sql = "INSERT INTO mealkit_wishlist(id, mealkit_no, type) "
-				+ "VALUES(?, ?, ?)";
 		
-		int result = dbConnector.executeUpdate(sql, id, no, type);
+		int result = dbConnector.executeUpdate(sql, id, no, quantity);
 		
 		dbConnector.release();
 		
@@ -195,10 +204,10 @@ public class MealkitDAO {
 			e.printStackTrace();
 		}
 		
-		sql = "INSERT INTO mealkit_review(id, mealkit_no, pictures, contents, rating, empathy, post_date) "
-				+ "VALUES(?,?,?,?,?,0,NOW())";
+		sql = "INSERT INTO mealkit_review(id, mealkit_no, pictures, contents, rating, post_date) "
+				+ "VALUES(?,?,?,?,?,NOW())";
 
-		dbConnector.executeUpdate(sql, vo.getId(), mealkit_no, vo.getPictures(), vo.getContents(),vo.getRating());
+		dbConnector.executeUpdate(sql, vo.getId(), mealkit_no, vo.getPictures(), vo.getContents(), vo.getRating());
 		
 		// review_no를 가져오기
 		sql = "SELECT no FROM mealkit_review WHERE id = ? AND mealkit_no = ? ORDER BY post_date DESC LIMIT 1";
@@ -239,17 +248,6 @@ public class MealkitDAO {
 		dbConnector.release();
 		
 		return nickName;
-	}
-
-	public int updateEmpathy(int empathyCount, int mealkit_no, int no) {
-		
-		String sql = "UPDATE mealkit_review SET empathy = ? + 1 WHERE mealkit_no = ? AND no = ?";
-		
-		int result = dbConnector.executeUpdate(sql, empathyCount, mealkit_no, no);
-		
-		dbConnector.release();
-		
-		return result;
 	}
 
 	public int deleteMealkit(int no) {

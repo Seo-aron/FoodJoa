@@ -114,6 +114,7 @@ ORDER BY c.post_date DESC;
 select * from mealkit;
 select * from mealkit_review;
 select * from member;
+SELECT mk.*, mem.nickname FROM mealkit mk JOIN member mem ON mk.id = mem.id WHERE mk.category=1;
 
 SELECT mk.*, mem.nickname FROM mealkit mk JOIN member mem ON mk.id = mem.id;
 SELECT mr.*, mem.nickname FROM mealkit_review mr JOIN member mem ON mr.id = mem.id WHERE mealkit_no = 2;

@@ -68,7 +68,7 @@ CREATE TABLE mealkit(
     no            int primary key auto_increment,
 	id            varchar(50) not null,
 	title         varchar(50) not null,
-	contents       text not null,
+	contents      text not null,
 	category      tinyint not null,
 	price         varchar(10) not null,
     stock		  int not null,
@@ -105,7 +105,6 @@ CREATE TABLE mealkit_review(
     pictures	text not null,
     contents	text not null,
     rating		int not null,
-    empathy		int not null,
     post_date	timestamp not null,
     
     foreign key (id) references member(id) ON DELETE CASCADE,
