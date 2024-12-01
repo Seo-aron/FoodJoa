@@ -7,23 +7,22 @@ public class MealkitWishListVO {
     private int no;
 	private String id;
 	private int mealkitNo;
-	private int type;
-    private Timestamp choiceDate;
+    private Timestamp choice_date;
+    
+    public MealkitWishListVO() {
+	}
 	
-	public MealkitWishListVO(int no, String id, int mealkitNo, int type) {
+	public MealkitWishListVO(int no, String id, int mealkitNo) {
 		this.no = no;
 		this.id = id;
 		this.mealkitNo = mealkitNo;
-		this.type = type;
 	}
 
-	public MealkitWishListVO(int no, String id, int mealkitNo, int type, Timestamp choiceDate) {
-		super();
+	public MealkitWishListVO(int no, String id, int mealkitNo, Timestamp choice_date) {
 		this.no = no;
 		this.id = id;
 		this.mealkitNo = mealkitNo;
-		this.type = type;
-		this.choiceDate = choiceDate;
+		this.choice_date = choice_date;
 	}
 
 	public int getNo() {
@@ -50,20 +49,12 @@ public class MealkitWishListVO {
 		this.mealkitNo = mealkitNo;
 	}
 
-	public int getType() {
-		return type;
-	}
-
-	public void setType(int type) {
-		this.type = type;
-	}
-
 	public Timestamp getChoiceDate() {
-		return choiceDate;
+		return choice_date;
 	}
 
-	public void setChoiceDate(Timestamp choiceDate) {
-		this.choiceDate = choiceDate;
+	public void setChoiceDate(Timestamp choice_date) {
+		this.choice_date = choice_date;
 	}
 
 }

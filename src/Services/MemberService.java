@@ -351,8 +351,9 @@ public class MemberService {
 
 	private ArrayList<HashMap<String, Object>> getMealKitWishList(String userId) {
 	    // MealkitDAO에서 밀키트 위시리스트 정보를 가져오는 메소드 호출
-	    return mealkitDAO.selectMealKitInfos(userId, 0); // 0은 밀키트 위시리스트를 의미
+	    return mealkitDAO.selectMealKitInfos(userId); // 0은 밀키트 위시리스트를 의미
 	}
+
 
 
 
@@ -383,8 +384,22 @@ public class MemberService {
 		return memberDAO.selectSend(id);
 	}
 	
-	 // 최근 본 목록 조회 서비스
-    public ArrayList<HashMap<String, Object>> getRecentViews(String userId) throws SQLException {
-        return memberDAO.getRecentView(userId, 0);
+
+    // 최근 본 목록을 조회하는 메소드
+    public ArrayList<HashMap<String, Object>> getRecentViews(String userId, int type) {
+        return memberDAO.getRecentView(userId, type); // DAO 호출
     }
-}
+
+
+
+	public int deleteWishRecipe(String userId, String recipeNo) {
+	    return recipeDAO.deleteWishRecipe(userId, recipeNo);		
+	}
+	
+	public ArrayList<HashMap<String, Object>> cartListInfos(String userId) {
+       
+        return mealkitDAO.selectCartList(userId);
+	}
+		
+	}
+

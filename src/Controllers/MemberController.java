@@ -79,8 +79,9 @@ public class MemberController extends HttpServlet {
 		case "/logout.me" : processMemberLogOut(request, response); return;
 		case "/deleteMember.me": openDeleteMember(request, response); break;
 		case "/deleteMemberPro.me": processDeleteMember(request, response); return;
-		case "/WishList.me": openWishList(request, response); break;
-		case "/RecentList.me": openRecentList(request, response); break;	
+		case "/wishList.me": openWishList(request, response); break;
+		case "/deleteWishRecipe.me" : deleteWishRecipe(request, response); break;
+		case "/recentList.me": openRecentList(request, response); break;	
 		case "/cartList.me" : openCartList(request, response); break;
 
 		case "/mypagemain.me": openMypagemainView(request, response); break;
@@ -99,7 +100,6 @@ public class MemberController extends HttpServlet {
 		dispatcher.forward(request, response);
 	}
 
-	
 		private void openMemberJoinView(HttpServletRequest request, HttpServletResponse response)
 				throws ServletException, IOException {
 	
@@ -350,7 +350,8 @@ public class MemberController extends HttpServlet {
 		}
 		
 		private void openWishList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		    // 세션에서 사용자 ID를 가져옴
+		    
+			// 세션에서 사용자 ID를 가져옴
 		    HttpSession session = request.getSession();
 		    String userId = (String) session.getAttribute("userId");
 
@@ -368,47 +369,71 @@ public class MemberController extends HttpServlet {
 		    String nextPage = "/main.jsp"; // 메인 페이지로 이동하도록 설정
 
 		}
- 
-	    private void openRecentList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-	    	 // 세션에서 사용자 ID를 가져옴
-	        HttpSession session = request.getSession();
-	        String userId = (String) session.getAttribute("userId");
-
-	        if (userId == null) {
-	            // 사용자 ID가 없을 경우 로그인 페이지로 리다이렉트
-	            response.sendRedirect(request.getContextPath() + "/login.jsp");
-	            return;
-	        }
-
-	        // MemberService를 통해 최근 본 목록 데이터를 가져옴
-	        try {
-	            ArrayList<HashMap<String, Object>> recentList = memberService.getRecentViews(userId);
-	            request.setAttribute("recentList", recentList); // 가져온 데이터를 요청 속성에 추가
-	            
-	            // recent.jsp로 포워딩
-	            request.setAttribute("center", "members/recent.jsp");  // 중심 콘텐츠 설정
-	            request.getRequestDispatcher("/main.jsp").forward(request, response);  // main.jsp에서 recent.jsp로 포워딩
-	            
-	            
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	            // 예외 발생 시 오류 페이지로 포워딩
-	            request.setAttribute("errorMessage", "최근 본 목록을 가져오는 중 오류가 발생했습니다.");
-	            request.setAttribute("center", "error.jsp");
-	            request.getRequestDispatcher("/main.jsp").forward(request, response);
-	            return;
-	        }
-
-	    }
 		
-		private void openCartList(HttpServletRequest request, HttpServletResponse response) {
+
+		private void deleteWishRecipe(HttpServletRequest request, HttpServletResponse response){
+
+			System.out.println("삭제하러옴");
+	        // 파라미터 값 받기 (id, recipeNo)
+	        String userId = request.getParameter("userId");
+	        String recipeNo = request.getParameter("recipeNo");
+
+	        // 서비스에서 위시리스트 삭제 처리
+	        int result = memberService.deleteWishRecipe(userId, recipeNo);
+
+	        // 삭제 결과에 따른 응답
+	        if (result == 1) {
+	            // 삭제 성공
+	        	System.out.println("삭제 성공!");
+	        } else if (result == 0) {
+	            // 삭제 실패 (레시피가 존재하지 않음)
+	        	System.out.println("삭제 실패: 해당 레시피는 위시리스트에 없습니다.");
+	        } else {
+	            // DB 통신 실패
+	        	System.out.println("DB 통신 오류가 발생했습니다.");
+	        }
+	    }
+ 
+		private void openRecentList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		    String userId = (String) request.getSession().getAttribute("userId"); // 세션에서 userId 가져오기
 		    
+		    // JSP에서 전달된 'type' 값 받기
+		    String typeParam = request.getParameter("filter"); // "filter" 파라미터로 전달된 값 받기 (0 또는 1)
+		    
+		    int type = 0; // 기본값은 0 (레시피)
+		    if (typeParam != null) {
+		        type = Integer.parseInt(typeParam); // 전달된 값이 있다면 int로 변환
+		    }
+
+		    // 최근 본 목록을 서비스에서 가져오기
+		    ArrayList<HashMap<String, Object>> recentViews = memberService.getRecentViews(userId, type);
+
+		    // 가져온 데이터를 request에 설정하여 JSP로 전달
+		    if (type == 0) {
+		        request.setAttribute("recentViews", recentViews); // 레시피 최근 본 목록
+		    } else {
+		        request.setAttribute("recentViews", recentViews); // 밀키트 최근 본 목록
+		    }
+
 		    // center 부분에 해당하는 JSP 파일 설정
-		    request.setAttribute("center", "members/cartlist.jsp");
+		    request.setAttribute("center", "members/recent.jsp");
 		    
 		    // 메인 페이지로 이동
 		    nextPage = "/main.jsp";
 		}
+
+	
+		private void openCartList(HttpServletRequest request, HttpServletResponse response) {
+		    
+			  String userId = (String) request.getSession().getAttribute("userId");
+
+		        ArrayList<HashMap<String, Object>> cartListInfos = memberService.cartListInfos(userId); // 서비스에서 데이터 가져오기
+		        request.setAttribute("cartListInfos", cartListInfos);
+		        request.setAttribute("center", "members/cartlist.jsp");
+		    
+		        nextPage = "/main.jsp";
+		}
+		
 
 		//혜원 파트
 		//------------------------------------------------------------------------------------------

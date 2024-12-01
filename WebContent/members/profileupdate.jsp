@@ -52,18 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
             previewContainer.innerHTML = '<span style="color: red;">이미지 파일만 선택 가능합니다.</span>';
         }
     });
-<<<<<<< HEAD
 
-    // jQuery 이벤트 등록
-    $(".btn-submit").click(function(event){
-        event.preventDefault();
-        
-        if ($("#name").val() == "" || 
-            $("#nickname").val() == "" ||
-            $("#phone").val() == "" ||
-            $("#address").val() == ""){
-             alert("모두 작성하여 주세요!"); // 경고창으로 메시지 표시
-=======
     // jQuery 이벤트 등록
     $(".btn-submit").click(function(event){
     	 // 입력 필드 값 가져오기
@@ -100,13 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('주소를 입력해주세요.');
             event.preventDefault();
             return;
->>>>>>> eef282372296fe3afb6d7e7a2243b21580026549
-        } else {
-             alert("수정 완료되었습니다!"); // 수정 완료 메시지 표시
-            $(this).closest("form").submit();
-        }
-    });
-
+  
     $(".btn-cancel").click(function(event) {
         event.preventDefault(); // 기본 클릭 이벤트 방지
         window.location.href = "<%=request.getContextPath()%>/Member/mypagemain.me";
@@ -116,17 +99,11 @@ document.addEventListener('DOMContentLoaded', function () {
 </head>
 <body>
     <div class="form-container">
-<<<<<<< HEAD
         <h2>정보 수정</h2>
         <!-- JavaScript로 미리보기 기능 구현 -->
         <form action="<%=contextPath%>/Member/updatePro.me" method="post" enctype="multipart/form-data" id="updateForm" >
            <input type="hidden" id="origin-profile" name="origin-profile" value="<%=vo.getProfile()%>">
-=======
-        <h2>나의 정보 수정</h2>
-        <!-- JavaScript로 미리보기 기능 구현 -->
-        <form action="<%=contextPath%>/Member/updatePro.me" method="post" enctype="multipart/form-data" id="updateForm" >
-        	<input type="hidden" id="origin-profile" name="origin-profile" value="<%=vo.getProfile()%>">
->>>>>>> eef282372296fe3afb6d7e7a2243b21580026549
+
             <br>
             <br>
             <!-- 이미지 미리보기가 표시될 컨테이너 -->

@@ -128,19 +128,15 @@ public class MealkitDAO {
 		return reviews;
 	}
 
-	public int insertMealkitWishlist(int no, String id, int type) {
+	public int insertMealkitWishlist(int no, String id) {
 		
 		System.out.println("no " + no);
 		System.out.println("id " + id);
-		System.out.println("type " + type);
-		/*
-		String sql = "INSERT INTO mealkit_wishlist(id, mealkit_no, type, choice_date) "
-				+ "VALUES(?, ?, ?, CURRENT_TIMESTAMP)";
-		*/
-		String sql = "INSERT INTO mealkit_wishlist(id, mealkit_no, type) "
-				+ "VALUES(?, ?, ?)";
 		
-		int result = dbConnector.executeUpdate(sql, id, no, type);
+		String sql = "INSERT INTO mealkit_wishlist(id, mealkit_no, choice_date) "
+				+ "VALUES(?, ?, CURRENT_TIMESTAMP)";
+		
+		int result = dbConnector.executeUpdate(sql, id, no);
 		
 		dbConnector.release();
 		
@@ -336,8 +332,8 @@ public class MealkitDAO {
 		
 		return mealkits;
 	}
-	
-	public ArrayList<HashMap<String, Object>> selectMealKitInfos(String userId, int type) {
+
+	public ArrayList<HashMap<String, Object>> selectMealKitInfos(String userId) {
 	    // 결과를 저장할 ArrayList 선언
 	    ArrayList<HashMap<String, Object>> mealKitInfos = new ArrayList<HashMap<String, Object>>();
 	    
@@ -352,9 +348,9 @@ public class MealkitDAO {
 	    		+ "FROM mealkit_review "
 	    		+ "GROUP BY rating "
 	    		+ ") mr ON mw.mealkit_no = mr.mealkit_no "
-	    		+ "WHERE mw.id = ? AND mw.type = ?";
+	    		+ "WHERE mw.id = ?";
 	    
-		ResultSet resultSet = dbConnector.executeQuery(sql, userId, type);
+		ResultSet resultSet = dbConnector.executeQuery(sql, userId);
 
 		try {
 			while (resultSet.next()) {
@@ -397,5 +393,47 @@ public class MealkitDAO {
 		
 		return result == 1;
 	}
+
+	public ArrayList<HashMap<String, Object>> selectCartList(String userId) {
+	    // 결과를 저장할 ArrayList 선언
+	    ArrayList<HashMap<String, Object>> cartListInfos = new ArrayList<HashMap<String, Object>>();
+	    
+	    // SQL 쿼리문 정의
+	    String sql = "SELECT "
+	    		+ "mk.pictures, mk.title, m.nickname AS author_nickname, mk.price "
+	    		+ "FROM mealkit_cart mc "
+	    		+ "JOIN mealkit mk ON mc.mealkit_no = mk.no "
+	    		+ "JOIN member m ON mk.id = m.id "
+	    		+ "WHERE mc.id=?";
+	    
+		ResultSet resultSet = dbConnector.executeQuery(sql, userId);
+
+		try {
+			while (resultSet.next()) {
+				HashMap<String, Object> cartListInfo = new HashMap<String, Object>();
+				
+				MealkitVO mealkitVO = new MealkitVO();
+				mealkitVO.setPictures(resultSet.getString("pictures"));
+				mealkitVO.setTitle(resultSet.getString("title"));
+				mealkitVO.setPrice(resultSet.getString("price"));
+				
+				String authorNickname  = resultSet.getString("author_nickname");
+				
+				cartListInfo.put("mealkitVO", mealkitVO);
+				cartListInfo.put("nickname", authorNickname);
+				
+				cartListInfos.add(cartListInfo);
+				
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		dbConnector.release();
+
+		return cartListInfos;
+	}
+	
 
 }

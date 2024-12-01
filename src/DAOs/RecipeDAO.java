@@ -398,7 +398,7 @@ public class RecipeDAO {
 		return result;
 	}
 	
-	public ArrayList<HashMap<String, Object>> selectRecipeInfos(String userId) {
+public ArrayList<HashMap<String, Object>> selectRecipeInfos(String userId) {
 	    
 	    ArrayList<HashMap<String, Object>> recipeInfos = new ArrayList<HashMap<String, Object>>();
 	    
@@ -567,41 +567,35 @@ public class RecipeDAO {
 		return recipes;
 	}
 	
-} 
+	public int deleteWishRecipe(String userId, String recipeNo) {
+	    // 위시리스트에 해당 레시피가 있는지 확인
+	    String sql = "SELECT * FROM recipe_wishlist WHERE id=? AND recipe_no=?";
+	    
+	    // 확인 쿼리 실행
+	    ResultSet resultSet = dbConnector.executeQuery(sql, userId, Integer.parseInt(recipeNo));
 
+	    try {
+	        if (!resultSet.next()) {
+	            // 위시리스트에 해당 레시피가 없으면 삭제할 항목이 없음
+	            return 0; // 삭제 실패
+	        }
 
+	        // 해당 레시피가 있으면 삭제
+	        String sqlDelete = "DELETE FROM recipe_wishlist WHERE id=? AND recipe_no=?";
+	        
+	        // 삭제 쿼리 실행
+	        int result = dbConnector.executeUpdate(sqlDelete, userId, Integer.parseInt(recipeNo));
 
+	        return result > 0 ? 1 : 0; // 삭제 성공 (1) / 실패 (0)
 
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return 0; // DB 통신 실패
+	    } finally {
+	        dbConnector.release(); // 자원 해제
+	    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	}
+}
 
 

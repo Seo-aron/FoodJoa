@@ -261,6 +261,7 @@ public class MemberDAO {
 	
 	// 최근 본 목록 조회
 	public ArrayList<HashMap<String, Object>> getRecentView(String userId, int type) {
+
 		
 		ArrayList<HashMap<String, Object>> recentViews = new ArrayList<>();
 	    String sql = "SELECT ";
@@ -288,6 +289,8 @@ public class MemberDAO {
 	    
 	    ResultSet resultSet = dbConnector.executeQuery(sql, userId);
 	    
+	  
+	    
 	    try {
 			while (resultSet.next()) {
 				HashMap<String, Object> recentView = new HashMap<String, Object>();
@@ -301,17 +304,30 @@ public class MemberDAO {
 					recipeVO.setCategory(resultSet.getInt("category"));
 					
 					recentView.put("recipeVO", recipeVO);
+				
 				}
 				else {
 					MealkitVO mealkitVO = new MealkitVO();
+					//sql += "k.title, k.contents, k.category, k.price, k.pictures, ";
+					mealkitVO.setTitle(resultSet.getString("title"));
+					mealkitVO.setContents(resultSet.getString("contents"));
+					mealkitVO.setCategory(resultSet.getInt("category"));
+					mealkitVO.setPrice(resultSet.getString("price"));
+					mealkitVO.setPictures(resultSet.getString("pictures"));
+					
+					recentView.put("mealkitVO", mealkitVO); 
+		
 				}
 				
 				MemberVO memberVO = new MemberVO();
 				
 				memberVO.setNickname(resultSet.getString("nickname"));
 				memberVO.setProfile(resultSet.getString("profile"));
+				recentView.put("memberVO", memberVO);
 				
 				recentViews.add(recentView);
+				
+				;
 			}
 		}
 	    catch (SQLException e) {

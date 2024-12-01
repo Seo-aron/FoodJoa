@@ -3,6 +3,7 @@ package Services;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,9 +58,8 @@ public class MealkitService {
 			throws IOException {
 		int no = Integer.parseInt(request.getParameter("no"));
 		String id = (String) request.getSession().getAttribute("userId");
-		int type = Integer.parseInt(request.getParameter("type"));
 		
-		int result = mealkitDAO.insertMealkitWishlist(no, id, type);
+		int result = mealkitDAO.insertMealkitWishlist(no, id);
 		
 		String res = String.valueOf(result);
 
