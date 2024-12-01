@@ -20,54 +20,8 @@
 	
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bxslider@4.2.17/dist/jquery.bxslider.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bxslider@4.2.17/dist/jquery.bxslider.min.js"></script>
-	
-	<style>	
-		* {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        a {
-            text-decoration: none;
-        }
-        
-        #center>table{
-        	margin : 0 auto;
-        }
-        
-		.rank {
-            margin: 0 auto;
-            padding: 20px;
-            width: 1200px;
-        }
-
-        .rank table {
-            border-spacing: 50px;
-            margin: 0 auto;
-        }
-
-        td {
-            vertical-align: top;
-            width: 300px;
-        }
-
-        .content-wrapper {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            padding: 20px;
-        }
-
-        .main-content {
-            flex: 1;
-        }
-        
-        .bx-wrapper .bx-controls-direction a {
-			z-index: 500;
-		} 
-	</style>
+    <script src="https://cdn.jsdelivr.net/npm/bxslider@4.2.17/dist/jquery.bxslider.min.js"></script>	
+	<link rel="stylesheet" href="<%= contextPath %>/css/includes/center.css">
 	
 	<!-- BX slider -->
 	<script>

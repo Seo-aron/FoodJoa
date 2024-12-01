@@ -1,0 +1,46 @@
+@charset "UTF-8";
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+a {
+	text-decoration: none;
+}
+
+#center>table {
+	margin: 0 auto;
+}
+
+.rank {
+	margin: 0 auto;
+	padding: 20px;
+	width: 1200px;
+}
+
+.rank table {
+	border-spacing: 50px;
+	margin: 0 auto;
+}
+
+td {
+	vertical-align: top;
+	width: 300px;
+}
+
+.content-wrapper {
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+	padding: 20px;
+}
+
+.main-content {
+	flex: 1;
+}
+
+.bx-wrapper .bx-controls-direction a {
+	z-index: 500;
+}
