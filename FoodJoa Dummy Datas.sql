@@ -1,11 +1,17 @@
 
 -- member
 insert into member
-values('admin', '관리자', '고나리자', '01012345678', '부산시 부산진구', 'admin_image.png', CURRENT_TIMESTAMP),
-	('review1', '리뷰자1', '리1', '01012345678', '부산시 부산진구', 'admin_image.png', CURRENT_TIMESTAMP),
-    ('review2', '리뷰자2', '리2', '01012345678', '부산시 부산진구', 'admin_image.png', CURRENT_TIMESTAMP),
-    ('review3', '리뷰자3', '리3', '01012345678', '부산시 부산진구', 'admin_image.png', CURRENT_TIMESTAMP),
-    ('review4', '리뷰자4', '리4', '01012345678', '부산시 부산진구', 'admin_image.png', CURRENT_TIMESTAMP);
+values('admin', '관리자', '고나리자', '01012345678', '47296 부산 부산진구 신천대로50번길 79 5층, 6층(부전동)', 'admin_image.png', CURRENT_TIMESTAMP),
+	('review1', '김리뷰', '리뷰어1', '01012345678', '47296 부산 부산진구 신천대로50번길 79 5층, 6층(부전동)', 'admin_image.png', CURRENT_TIMESTAMP),
+    ('review2', '이리뷰', '리뷰어2', '01012345678', '47296 부산 부산진구 신천대로50번길 79 5층, 6층(부전동)', 'admin_image.png', CURRENT_TIMESTAMP),
+    ('review3', '박리뷰', '리뷰어3', '01012345678', '47296 부산 부산진구 신천대로50번길 79 5층, 6층(부전동)', 'admin_image.png', CURRENT_TIMESTAMP),
+    ('review4', '최리뷰', '리뷰어4', '01012345678', '47296 부산 부산진구 신천대로50번길 79 5층, 6층(부전동)', 'admin_image.png', CURRENT_TIMESTAMP),
+    
+    ('tQi32Qj0iONPLRZ16-5sX4-Gq_p8Jg_T33r-HdtLEFE', '이건용', '은익', '01012345678', '47296 부산 부산진구 신천대로50번길 79 5층, 6층(부전동)', 'admin_image.png', CURRENT_TIMESTAMP),
+    ('hanaId', '이하나', '나리', '01012345678', '47296 부산 부산진구 신천대로50번길 79 5층, 6층(부전동)', 'admin_image.png', CURRENT_TIMESTAMP),
+    ('aronId', '서아론', '아론', '01012345678', '47296 부산 부산진구 신천대로50번길 79 5층, 6층(부전동)', 'admin_image.png', CURRENT_TIMESTAMP),
+    ('hyewonId', '이혜원', '혜원', '01012345678', '47296 부산 부산진구 신천대로50번길 79 5층, 6층(부전동)', 'admin_image.png', CURRENT_TIMESTAMP),
+    ('minseokId', '최민석', '민석', '01012345678', '47296 부산 부산진구 신천대로50번길 79 5층, 6층(부전동)', 'admin_image.png', CURRENT_TIMESTAMP);
 
 
 
