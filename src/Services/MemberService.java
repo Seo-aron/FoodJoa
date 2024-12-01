@@ -23,6 +23,7 @@ import org.json.JSONObject;
 
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
+import com.sun.deploy.nativesandbox.comm.Request;
 
 import Common.FileIOController;
 import Common.NaverLoginAPI;
@@ -381,13 +382,21 @@ public class MemberService {
 		HttpSession session = request.getSession();
 		String id = (String) session.getAttribute("userId");
 		
-		String deliverd = request.getParameter("deliverd");
+		String deliverd = (String) request.getParameter("deliverd");
 		
-		return memberDAO.selectSendedMealkit(id, deliverd);
+		return memberDAO.selectSendedMealkit(id,  "0"); //0 1 2
 	}
 	
 	 // 최근 본 목록 조회 서비스
     public ArrayList<HashMap<String, Object>> getRecentViews(String userId) throws SQLException {
         return memberDAO.getRecentView(userId, 0);
+    }
+    
+    public ArrayList<Integer> getCountOrderDelivered(HttpServletRequest request) {
+    	return mealkitDAO.selectCountOrderDelivered((String) request.getSession().getAttribute("userId"));
+    }
+    
+    public ArrayList<Integer> getCountDelivered(HttpServletRequest request) {
+    	return mealkitDAO.selectCountDelivered((String) request.getSession().getAttribute("userId"));
     }
 }

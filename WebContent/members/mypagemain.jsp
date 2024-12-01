@@ -1,3 +1,4 @@
+<%@page import="java.util.ArrayList"%>
 <%@page import="VOs.MemberVO"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -19,6 +20,14 @@ String contextPath = request.getContextPath();
 String userId = (String) session.getAttribute("userId");   
 
 MemberDAO memberDAO = new MemberDAO();
+
+ArrayList<Integer> orderCounts = (ArrayList<Integer>) request.getAttribute("orderCounts");
+
+int totalOrderCount = 0;
+
+for(int i = 0; i < orderCounts.size(); i++) {
+	totalOrderCount  += orderCounts.get(i);
+}
 
 // 가입 날짜 가져오기
 Timestamp joinDate = memberDAO.selectJoinDate(userId);
@@ -100,16 +109,22 @@ long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
       <div class="info-section">
          <div>주문/배송조회</div>
          <div style="display: flex;">
-            <span>주문건수 : 0</span> | <span>배송준비중 : 1</span> | <span>배송중 : 2</span> | <span>배송완료 : 0</span>
+            <span>주문건수 : <%= totalOrderCount %></span> &nbsp;&nbsp; | &nbsp;&nbsp;   
+            <span>배송준비중 : <%= orderCounts.get(0) %></span> &nbsp;&nbsp; | &nbsp;&nbsp;
+            <span>배송중 : <%= orderCounts.get(1) %></span> &nbsp;&nbsp; | &nbsp;&nbsp;
+            <span>배송완료 : <%= orderCounts.get(2) %></span>
             <a href="<%=contextPath%>/Member/viewMyDelivery.me" style="margin-left: auto;">더보기</a>
          </div>
       </div>
 
       <div class="info-section">
          <div>내 마켓 발송 현황</div>
-         <div style="display: flex;">
-            <span>주문건수 : 0 </span> | <span>배송준비중 : 1 </span> | <span>배송중 : 2 </span> | <span>배송완료 : 0 </span>
-            <a href="<%=contextPath%>/Member/sendMyMealkit.me" style="margin-left: auto;">더보기</a>
+        <div style="display: flex;">
+            <span>주문건수 : <%= totalOrderCount %></span> &nbsp;&nbsp; | &nbsp;&nbsp;   
+            <span>배송준비중 : <%= orderCounts.get(0) %></span> &nbsp;&nbsp; | &nbsp;&nbsp;
+            <span>배송중 : <%= orderCounts.get(1) %></span> &nbsp;&nbsp; | &nbsp;&nbsp;
+            <span>배송완료 : <%= orderCounts.get(2) %></span>
+            <a href="<%=contextPath%>/Member/viewMySend.me" style="margin-left: auto;">더보기</a>
          </div>
       </div>
 

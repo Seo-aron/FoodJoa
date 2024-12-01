@@ -379,7 +379,7 @@ public class MemberDAO {
 		
 		String sql = "SELECT "
 				+ "k.title, k.contents, k.category, k.price, k.stock, k.pictures, "
-				+ "o.address, o.quantity, o.refund, "
+				+ "o.address, o.quantity, o.delivered, o.refund, "
 				+ "m.nickname, m.profile "
 				+ "FROM mealkit k "
 				+ "INNER JOIN mealkit_order o "
@@ -406,6 +406,7 @@ public class MemberDAO {
 				MealkitOrderVO orderVO = new MealkitOrderVO();
 				orderVO.setAddress(resultSet.getString("address"));
 				orderVO.setQuantity(resultSet.getInt("quantity"));
+				orderVO.setDelivered(resultSet.getInt("delivered"));
 				orderVO.setRefund(resultSet.getInt("refund"));
 
 				MemberVO memberVO = new MemberVO();

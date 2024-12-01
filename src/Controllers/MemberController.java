@@ -428,8 +428,11 @@ public class MemberController extends HttpServlet {
 
 				// 서비스 메서드를 호출하여 회원 정보 처리
 				memberService.getMemberProfile(request, userId);
+				
+				ArrayList<Integer> orderCounts = memberService.getCountOrderDelivered(request);
 
 				// 처리 후 마이페이지로 이동
+				request.setAttribute("orderCounts", orderCounts);
 				request.setAttribute("center", "members/mypagemain.jsp");
 				request.getRequestDispatcher("main.jsp").forward(request, response);
 			} catch (Exception e) {
@@ -458,6 +461,10 @@ public class MemberController extends HttpServlet {
 		}
 
 		private void openMyDeliveryView(HttpServletRequest request, HttpServletResponse response) {
+			
+			HttpSession session = request.getSession();
+			String id = (String) session.getAttribute("userId");
+			
 			ArrayList<HashMap<String, Object>> orderedMealkitList = memberService.getDeliveredMealkit(request);
 			
 			request.setAttribute("orderedMealkitList", orderedMealkitList);
@@ -466,8 +473,12 @@ public class MemberController extends HttpServlet {
 		}
 		
 		private void openMySendView(HttpServletRequest request, HttpServletResponse response){ 
+			
+			HttpSession session = request.getSession();
+			String id = (String) session.getAttribute("userId");
+					
 			ArrayList<HashMap<String, Object>> orderedMealkitList = memberService.getSendedMealkit(request);
-					  
+			
 			request.setAttribute("orderedMealkitList", orderedMealkitList); 
 			request.setAttribute("center","members/sendmealkit.jsp"); 
 			nextPage = "/main.jsp"; 
