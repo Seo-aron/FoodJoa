@@ -121,7 +121,7 @@ String id = (String) session.getAttribute("userId");
 								<tr>
 									<td class="myreview-button-area" colspan="2" align="right">
 										<input type="button" value="수정" onclick="onRecipeReviewUpdate(<%= reviewVO.getNo() %>)">
-										<input type="button" value="삭제" onclick="onRecipeReviewDelete(<%= reviewVO.getNo() %>)">
+										<input type="button" value="삭제" onclick="onRecipeReviewDelete(<%= recipeVO.getNo() %>, <%= reviewVO.getNo() %>)">
 									</td>
 								</tr>
 							</table>
@@ -220,17 +220,63 @@ String id = (String) session.getAttribute("userId");
 	</div>
 	
 	
-	<script>
-		function changeMyReview(type) {
-			if (type == 0) {
-				$('.myreview-recipe').css('display', 'block');
-				$('.myreview-mealkit').css('display', 'none');
-			}
-			else {
-				$('.myreview-recipe').css('display', 'none');
-				$('.myreview-mealkit').css('display', 'block');
+	<script>	
+		function onRecipeReviewUpdate(reviewNo) {
+			location.href = '<%= contextPath %>/Recipe/reviewUpdate?no=' + reviewNo;
+		}
+		
+		function onRecipeReviewDelete(recipeNo, reviewNo) {
+			if (confirm('정말로 삭제하시겠습니까?')) {
+				$.ajax({
+					url: '<%= contextPath %>/Recipe/reviewDeletePro',
+				    type: "POST",
+				    data: {
+				    	no: reviewNo,
+				    	recipeNo: recipeNo
+				    },
+				    dataType: "text",
+				    success: function(responseData, status, jqxhr) {
+						if(responseData == "1") {
+							alert('리뷰를 삭제했습니다.');
+							location.href = '<%= contextPath %>/Recipe/read?no=' + recipeNo;	
+						}
+						else {
+							alert('리뷰 삭제에 실패했습니다.');
+						}
+				    },
+				    error: function(xhr, status, error) {
+				        console.log("error", error);
+						alert('통신 에러');
+				    }
+				});
 			}
 		}
+		
+		function onRecipeMealkitUpdate(reviewNo) {
+			
+		}
+		
+		function onRecipeMealkitDelete(reviewNo) {
+			
+		}
+	
+		let categoryButtons = $(".myreview-category-area input");
+		const categoryButtonStyles = [
+	        { border: 'none', backgroundColor: '#BF917E', color: 'white' },
+	        { border: '1px solid #BF917E', backgroundColor: 'white', color: '#BF917E' }
+	    ];
+		
+		function changeMyReview(type) {
+			$('.myreview-recipe').css('display', type == 0 ? 'block' : 'none');
+			$('.myreview-mealkit').css('display', type == 0 ? 'none' : 'block');
+
+			$.each(categoryButtons, function(index, button) {
+		        var style = categoryButtonStyles[type === index ? 0 : 1];
+		        $(button).css(style);
+		    });
+		}
+		
+		window.onload = changeMyReview(0);
 	</script>
 </body>
 </html>

@@ -5,6 +5,23 @@
  	margin: 0 auto;
  }
  
+ .myreview-category-area {
+ 	margin: 10px 0px;
+ }
+ 
+ .myreview-category-area input {
+ 	font-family: "Noto Serif KR", serif;
+ 	font-size: 1rem;
+ 	padding: 8px 16px;
+ 	border-radius: 5px;
+ 	cursor: pointer;
+ }
+ 
+ .myreview-recipe table,
+ .myreview-mealkit table {
+ 	border-spacing: 0px 10px;
+ }
+ 
  .myreview-cell {
  	border: 1px solid #BF917E;
  	border-radius: 5px;

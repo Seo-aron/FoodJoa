@@ -60,3 +60,11 @@ ON c.id = m.id
 order by post_date desc;
 
 select count(*) from community_share;
+
+SELECT 
+r.title, r.thumbnail,
+rv.* 
+FROM recipe_review rv 
+LEFT JOIN recipe r 
+ON rv.recipe_no=r.no 
+WHERE rv.no=1;

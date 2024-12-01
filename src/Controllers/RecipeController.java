@@ -61,8 +61,11 @@ public class RecipeController extends HttpServlet {
 		case "/updatePro": processRecipeUpdate(request, response); break;
 		case "/deletePro": processRecipeDelete(request, response); break;
 		case "/wishlist": processRecipeWishlist(request, response); return;
-		case "/review": if (openRecipeReviewView(request, response)) return; break;
-		case "/reviewWrite": processReviewWrite(request, response); return;
+		case "/reviewWrite": if (openRecipeReviewView(request, response)) return; break;
+		case "/reviewWritePro": processReviewWrite(request, response); return;
+		case "/reviewUpdate": openRecipeReviewUpdateView(request, response); break;
+		case "/reviewUpdatePro": processRecipeReviewUpdate(request, response); return;
+		case "/reviewDeletePro": processRecipeReviewDelete(request, response); return;
 		case "/search": processRecipeSearch(request, response); break;
 
 		case "/myRecipes": openMyRecipeView(request, response); break;
@@ -197,7 +200,52 @@ public class RecipeController extends HttpServlet {
 	private void processReviewWrite(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		recipeService.processReviewWrite(request);
+		int result = recipeService.processReviewWrite(request);
+		
+		printWriter = response.getWriter();
+
+		printWriter.print(result);
+
+		printWriter.close();
+		printWriter = null;
+	}
+	
+	private void openRecipeReviewUpdateView(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		HashMap<String, Object> review = recipeService.getRecipeReview(request);
+
+		request.setAttribute("review", review);
+		request.setAttribute("pageTitle", "내 리뷰 수정");
+		request.setAttribute("center", "recipes/reviewUpdate.jsp");
+
+		nextPage = "/main.jsp";
+	}
+	
+	private void processRecipeReviewUpdate(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		int result = recipeService.processReviewUpdate(request);
+
+		printWriter = response.getWriter();
+
+		printWriter.print(result);
+
+		printWriter.close();
+		printWriter = null;
+	}
+	
+	private void processRecipeReviewDelete(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		int result = recipeService.processReviewDelete(request);
+
+		printWriter = response.getWriter();
+
+		printWriter.print(result);
+
+		printWriter.close();
+		printWriter = null;
 	}
 
 	private void openMyRecipeView(HttpServletRequest request, HttpServletResponse response)

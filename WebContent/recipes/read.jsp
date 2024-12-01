@@ -56,7 +56,7 @@
 				<td class="recipe-read-button-area" align="right">
 					<%
 					if (id != null && !id.equals("") && !id.equals(recipe.getId())) {
-						%><input type="button" value="리뷰 쓰기" onclick="onReviewButton()"><%
+						%><input type="button" value="리뷰 쓰기" onclick="onReviewWriteButton()"><%
 					}
 					%>
 					<input type="button" value="목록" onclick="onListButton()">
@@ -262,7 +262,7 @@
 				<td class="recipe-read-button-area" align="right">
 					<%
 					if (id != null && !id.equals("") && !id.equals(recipe.getId())) {
-						%><input type="button" value="리뷰 쓰기" onclick="onReviewButton()"><%
+						%><input type="button" value="리뷰 쓰기" onclick="onReviewWriteButton()"><%
 					}
 					%>
 					<input type="button" value="목록" onclick="onListButton()">
@@ -294,8 +294,8 @@
 			location.href = href;
 		}
 		
-		function onReviewButton() {
-			location.href = '<%= contextPath %>/Recipe/review?recipe_no=<%= recipe.getNo() %>';
+		function onReviewWriteButton() {
+			location.href = '<%= contextPath %>/Recipe/reviewWrite?recipe_no=<%= recipe.getNo() %>';
 		}
 		
 		function onUpdateButton() {

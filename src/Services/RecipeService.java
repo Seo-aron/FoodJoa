@@ -192,16 +192,13 @@ public class RecipeService {
         String contents = multipartRequest.getParameter("contents");
         String rating = multipartRequest.getParameter("rating");
         
-        System.out.println("pictures : " + pictures);
-        
         List<String> fileNames = StringParser.splitString(pictures);
-        
-        for(String fileName : fileNames) {
-    		
-    		String srcPath = path + File.separator + "temp";
-    		String destinationPath = path + File.separator + "recipe" + File.separator +
-    				"reviews" + File.separator + String.valueOf(recipeNo) + File.separator + id;
-    		
+
+		String srcPath = path + File.separator + "temp";
+		String destinationPath = path + File.separator + "recipe" + File.separator +
+				"reviews" + File.separator + String.valueOf(recipeNo) + File.separator + id;
+		
+        for (String fileName : fileNames) {
     		FileIOController.moveFile(srcPath, destinationPath, fileName);
         }
         
@@ -221,5 +218,78 @@ public class RecipeService {
 				request.getParameter("category"),
 				request.getParameter("key"),
 				request.getParameter("word"));
+	}
+	
+	public HashMap<String, Object> getRecipeReview(HttpServletRequest request) {
+		return recipeDAO.selectRecipeReview((String) request.getParameter("no"));
+	}
+	
+	public int processReviewUpdate(HttpServletRequest request) throws ServletException, IOException {
+
+		String id = (String) request.getSession().getAttribute("userId");
+		
+		ServletContext application = request.getServletContext();
+
+		String path = application.getRealPath(File.separator + "images");
+		int maxSize = 1024 * 1024 * 1024;
+
+		MultipartRequest multipartRequest = new MultipartRequest(request, path + File.separator + "temp", maxSize, "UTF-8",
+				new DefaultFileRenamePolicy());
+
+		String recipeNo = multipartRequest.getParameter("recipe_no");
+		String originPictures = multipartRequest.getParameter("origin_pictures");
+		String originSelectedPictures = multipartRequest.getParameter("origin_selected_pictures");
+        String pictures = multipartRequest.getParameter("pictures");
+		
+		RecipeReviewVO review = new RecipeReviewVO(
+				Integer.parseInt(multipartRequest.getParameter("no")),
+				id,
+				Integer.parseInt(recipeNo),
+				originSelectedPictures + pictures,
+				multipartRequest.getParameter("contents"),
+				Integer.parseInt(multipartRequest.getParameter("rating"))
+				);
+		
+		int result = recipeDAO.updateRecipeReview(review);
+		
+		if (result == 1) {
+			String srcPath = path + File.separator + "temp";
+			String destinationPath = path + File.separator + "recipe" + File.separator +
+					"reviews" + File.separator + String.valueOf(recipeNo) + File.separator + id;
+			
+			List<String> originFileNames = StringParser.splitString(originPictures);
+			List<String> originSelectedFileNames = StringParser.splitString(originSelectedPictures);
+			
+			for (String fileName : originFileNames) {
+				if (!originSelectedFileNames.contains(fileName)) {
+					FileIOController.deleteFile(destinationPath, fileName);
+				}
+			}
+			
+			List<String> fileNames = StringParser.splitString(pictures);
+	
+	        for (String fileName : fileNames) {
+	    		FileIOController.moveFile(srcPath, destinationPath, fileName);
+	        }
+		}
+		
+		return result;
+	}
+	
+	public int processReviewDelete(HttpServletRequest request) {
+		
+		int result = 0;
+		
+		result = recipeDAO.deleteRecipeReview(
+				request.getParameter("no"),
+				(String) request.getSession().getAttribute("userId"));
+		
+		if (result == 1) {
+			String path = request.getServletContext().getRealPath(File.separator + "images");			
+			String destinationPath = path + File.separator + "recipe" + File.separator +
+					"reviews" + File.separator + String.valueOf(recipeNo) + File.separator + id;
+		}
+		
+		return result;
 	}
 }

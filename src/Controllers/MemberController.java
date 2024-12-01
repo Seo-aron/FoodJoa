@@ -88,6 +88,8 @@ public class MemberController extends HttpServlet {
 		case "/viewMyDelivery.me": openMyDeliveryView(request, response); break;
 		case "/viewMySend.me": openMySendView(request, response); break;
 		case "/viewMyRecipe.me" : openMyRecipeView(request, response); break;
+		
+		//-- 건용 작성
 		case "/myReviews": openMyReviewsView(request, response); break;
 
 		default:

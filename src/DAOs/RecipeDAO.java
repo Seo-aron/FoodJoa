@@ -366,8 +366,8 @@ public class RecipeDAO {
 		ArrayList<HashMap<String, Object>> reviews = new ArrayList<HashMap<String,Object>>();
 		
 		String sql = "SELECT "
-				+ "r.title, r.category, "
-				+ "rv.no, rv.recipe_no, rv.pictures, rv.contents, rv.rating, rv.post_date, "
+				+ "r.no AS r_no, r.title, r.category, "
+				+ "rv.no AS rv_no, rv.recipe_no, rv.pictures, rv.contents, rv.rating, rv.post_date, "
 				+ "m.nickname "
 				+ "FROM recipe_review rv "
 				+ "JOIN recipe r "
@@ -384,11 +384,12 @@ public class RecipeDAO {
 				HashMap<String, Object> review = new HashMap<String, Object>();
 				
 				RecipeVO recipeVO = new RecipeVO();
+				recipeVO.setNo(resultSet.getInt("r_no"));
 				recipeVO.setTitle(resultSet.getString("title"));
 				recipeVO.setCategory(resultSet.getInt("category"));
 				
 				RecipeReviewVO reviewVO = new RecipeReviewVO();
-				reviewVO.setNo(resultSet.getInt("no"));
+				reviewVO.setNo(resultSet.getInt("rv_no"));
 				reviewVO.setRecipeNo(resultSet.getInt("recipe_no"));
 				reviewVO.setPictures(resultSet.getString("pictures"));
 				reviewVO.setContents(resultSet.getString("contents"));
@@ -410,6 +411,48 @@ public class RecipeDAO {
 		}
 		
 		return reviews;
+	}
+	
+	public HashMap<String, Object> selectRecipeReview(String reviewNo) {
+		
+		HashMap<String, Object> review = new HashMap<String, Object>();
+		
+		String sql = "SELECT "
+				+ "r.title, r.thumbnail, "
+				+ "rv.* "
+				+ "FROM recipe_review rv "
+				+ "LEFT JOIN recipe r "
+				+ "ON rv.recipe_no=r.no "
+				+ "WHERE rv.no=?";
+		
+		ResultSet resultSet = dbConnector.executeQuery(sql, Integer.parseInt(reviewNo));
+		
+		try {
+			if (resultSet.next()) {
+				RecipeVO recipeVO = new RecipeVO();
+				recipeVO.setTitle(resultSet.getString("title"));
+				recipeVO.setThumbnail(resultSet.getString("thumbnail"));
+				
+				RecipeReviewVO reviewVO = new RecipeReviewVO(
+						resultSet.getInt("no"), 
+						resultSet.getString("id"), 
+						resultSet.getInt("recipe_no"), 
+						resultSet.getString("pictures"), 
+						resultSet.getString("contents"), 
+						resultSet.getInt("rating"), 
+						resultSet.getTimestamp("post_date"));
+				
+				review.put("recipeVO", recipeVO);
+				review.put("reviewVO", reviewVO);
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		dbConnector.release();
+		
+		return review;
 	}
 	
 	public boolean isExistRecipeReview(String id, String recipeNo) {
@@ -446,6 +489,38 @@ public class RecipeDAO {
 				review.getPictures(),
 				review.getContents(),
 				review.getRating());
+		
+		dbConnector.release();
+		
+		return result;
+	}
+	
+	public int updateRecipeReview(RecipeReviewVO review) {
+		
+		int result = 0;
+		
+		String sql = "UPDATE recipe_review SET pictures=?, contents=?, rating=? WHERE no=? AND id=? AND recipe_no=?";
+		
+		result = dbConnector.executeUpdate(sql,
+				review.getPictures(),
+				review.getContents(),
+				review.getRating(),
+				review.getNo(),
+				review.getId(),
+				review.getRecipeNo());
+		
+		dbConnector.release();
+		
+		return result;
+	}
+	
+	public int deleteRecipeReview(String no, String id) {
+		
+		int result = 0;
+		
+		String sql = "DELETE FROM recipe_review WHERE no=? AND id=?";
+		
+		result = dbConnector.executeUpdate(sql, Integer.parseInt(no), id);
 		
 		dbConnector.release();
 		

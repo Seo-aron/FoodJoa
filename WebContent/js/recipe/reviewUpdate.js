@@ -1,4 +1,5 @@
 
+let originSelectedFileNames = [];
 let selectedFileNames = [];
 let selectedRealFiles = [];
 
@@ -10,7 +11,10 @@ function onSubmit(event, contextPath) {
 	let recipeNo = $("#recipe_no").val();
 	
 	const formData = new FormData();
+	formData.append('no', $("#no").val());
 	formData.append('recipe_no', $("#recipe_no").val());
+	formData.append('origin_pictures', $("#origin_pictures").val());
+	formData.append('origin_selected_pictures', combineStrings(originSelectedFileNames));
 	formData.append('pictures', $("#pictures").val());
 	formData.append('contents', $("#contents").val());
 	formData.append('rating', $("#rating").val());
@@ -20,23 +24,23 @@ function onSubmit(event, contextPath) {
 	});
 
 	$.ajax({
-	    url: contextPath + '/Recipe/reviewWritePro',
+	    url: contextPath + '/Recipe/reviewUpdatePro',
 	    type: "POST",
 	    data: formData,
 	    processData: false,
 	    contentType: false,
 	    success: function(responseData, status, jqxhr) {
-			if (responseData == "1") {
-				alert('리뷰를 작성했습니다.');
+			if(responseData == "1") {
+				alert('리뷰를 수정했습니다.');
 				location.href = contextPath + '/Recipe/read?no=' + recipeNo;	
 			}
 			else {
-				alert('리뷰 작성에 실패했습니다.');
+				alert('리뷰 수정에 실패했습니다.');
 			}
 	    },
 	    error: function(xhr, status, error) {
 	        console.log("error", error);
-			alert('리뷰를 작성에 실패했습니다.');
+			alert('통신 에러');
 	    }
 	});
 }
@@ -56,7 +60,7 @@ function handleFileSelect(files) {
 		if (file.type.startsWith('image/')) {
 			let fileName = file.name;
 			
-			if (!selectedFileNames.includes(fileName)) {
+			if (!selectedFileNames.includes(fileName) && !originSelectedFileNames.includes(fileName)) {
 				selectedFileNames.push(fileName);
 				selectedRealFiles.push(file);
 	

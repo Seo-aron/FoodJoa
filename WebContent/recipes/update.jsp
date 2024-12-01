@@ -245,18 +245,19 @@
 		const imagePreview = document.getElementById('imagePreview');
 
 		imagePreview.addEventListener('click', () => {
-		  imageInput.click();
+	  		imageInput.click();
 		});
 
 		imageInput.addEventListener('change', (event) => {
-		  const file = event.target.files[0];
-		  if (file) {
-		    const reader = new FileReader();
-		    reader.onload = (e) => {
-		      imagePreview.src = e.target.result;
-		    };
-		    reader.readAsDataURL(file);
-		  }
+			const file = event.target.files[0];
+			
+			if (file) {
+			const reader = new FileReader();
+				reader.onload = (e) => {
+					imagePreview.src = e.target.result;
+				};
+				reader.readAsDataURL(file);
+			}
 		});
 
 		function decompressContents() {
