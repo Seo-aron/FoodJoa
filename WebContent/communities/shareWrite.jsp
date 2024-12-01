@@ -13,33 +13,22 @@
 	
     <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=ug8ym1cpbw&submodules=geocoder"></script>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-	
-	<style>
-		#container {
-			width: 1200px;
-		}
-		
-		#imageContainer {
-			width: 128px;
-			height: 128px;
-			overflow: hidden;
-		}
-		
-		#imageContainer img {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-		}
-	</style>
+
+	<link rel="stylesheet" href="<%=contextPath%>/css/community/sharewrite.css">
+
 </head>
 
 <body>
-	<h1>재료 나눔 게시글 작성</h1>
+	<div id="top_container" align="center">
+		<p class="community_p1">COMMUNITY</p>
+		<p class="community_p2">재료 나눔/같이 먹어요 게시판</p>
+		<p>자유롭게 글을 작성해보세요</p>
+	</div>
 	<div id="container">
 		<form id="frmWrite" action="<%= contextPath %>/Community/shareWrite.pro" method="POST" enctype="multipart/form-data">
 			<table width="100%">
 	        	<tr>
-	        		<td colspan="0">
+	        		<td colspan="2" align="right">
 						<input type="button" class="write" value="작성" onclick="onSubmit(event)">
 					</td>
 				</tr>	
@@ -58,6 +47,10 @@
                     <td><input type="text" name="title" required placeholder="제목을 입력하세요"></td>
                 </tr>
                 <tr>
+                    <th>내용</th>
+                    <td><textarea name="contents" rows="4" placeholder="내용을 입력하세요"required></textarea></td>
+                </tr>
+				<tr>
 				    <th>사진 추가</th>
 				    <td>
 				        <input type="file" name="thumbnail" accept=".png, .jpg, .jpeg" 
@@ -66,21 +59,17 @@
 				    </td>
 				</tr>
                 <tr>
-                    <th>내용</th>
-                    <td><textarea name="contents" rows="4" placeholder="내용을 입력하세요"required></textarea></td>
-                </tr>
-                <tr>
                     <th>지도</th>
                     <td>
                     	<input type="hidden" id="lat" name="lat">
                     	<input type="hidden" id="lng" name="lng">
-						<input type="text" id="naverAddress" >
+						<input type="text" id="naverAddress" placeholder="도로명 주소를 입력해주세요">
 						<input type="button" id="naverSearch" value="검색">
                     	<div id="map" style="width:100%;height:400px;"></div>
 					</td>
                 </tr>
                 <tr>
-	                <td colspan="2">
+	                <td colspan="2" align="right">
 						<input type="button" class="write" value="작성" onclick="onSubmit(event)">
 						<input type="reset" class="write" value="취소">
 					</td>

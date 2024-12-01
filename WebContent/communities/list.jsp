@@ -1,3 +1,5 @@
+<%@page import="VOs.MemberVO"%>
+<%@page import="java.util.HashMap"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.sql.Timestamp"%>
 <%@page import="VOs.CommunityVO"%>
@@ -7,8 +9,8 @@
     
 <% 
 	String contextPath = request.getContextPath();
-	ArrayList<CommunityVO> communities = (ArrayList<CommunityVO>)request.getAttribute("communities");
-	
+	ArrayList<HashMap<String, Object>> communities = (ArrayList<HashMap<String, Object>>)request.getAttribute("communities");
+
 	String id = (String) session.getAttribute("userId");
 	
 	int totalRecord = communities.size();
@@ -44,121 +46,9 @@
 <title>Insert title here</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
-<style>
-	#container {
-		margin: 0 auto;
-		width: 1200px;
-		font-family: "Noto Serif KR", serif;
-        font-optical-sizing: auto;
-	}
-	
-	#top_container{
-		font-family: "Noto Serif KR", serif;
-		text-align: center;
-		margin-bottom: 30px;
-	}
-	
-	#top_container > p{
-		color: #616161;
-	}
-	
-	input[type="text"] {
-	    border-radius: 5px; 
-	    border: 1px solid #ccc;
-	    padding: 8px; 
-	    width: 200px;
-	}
-	
-	form {
-	    display: flex;
-	    align-items: center;
-	    justify-content: center;
-	    margin: 20px 0;
-	    gap: 10px;
-	}
-	
-	form select {
-	    border: 1px solid #ced4da;
-	    border-radius: 5px;
-	    padding: 8px;
-	    font-size: 1rem;
-	    color: #495057;
-	    background-color: #f8f9fa;
-	    outline: none;
-	    cursor: pointer;
-	}
-	
-	form select:hover {
-	    background-color: #e9ecef;
-	}
-	
-	form input[type="text"] {
-	    border: 1px solid #ced4da;
-	    border-radius: 5px;
-	    padding: 8px 12px;
-	    font-size: 1rem;
-	    color: #495057;
-	    width: 250px;
-	    outline: none;
-	    transition: border-color 0.3s ease;
-	}
-	
-	form input[type="text"]:focus {
-	    border-color: #007bff;
-	    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-	}
-	
-	form input[type="submit"],
-	form input[type="button"] {
-	    background-color: #BF817E;
-	    border: none;
-	    border-radius: 5px;
-	    padding: 8px 16px;
-	    font-size: 1rem;
-	    color: white;
-	    cursor: pointer;
-	    transition: background-color 0.3s ease;
-	}
-	
-	form input[type="submit"]:hover,
-	form input[type="button"]:hover {
-	    background-color: #e9ecef;
-	}
-	
-	form input[type="submit"]:disabled,
-	form input[type="button"]:disabled {
-	    background-color: #adb5bd;
-	    cursor: not-allowed;
-	}
+<link rel="stylesheet" href="<%=contextPath%>/css/community/list.css">
 
-	@media (max-width: 768px) {
-	    #container {
-	        width: 90%;
-	    }
-	
-	    form {
-	        flex-direction: column;
-	        gap: 15px;
-	    }
-	
-	    form input[type="text"] {
-	        width: 100%;
-	    }
-	}
-    
-    .list_table{
-		border-spacing: 0px 10px;
-    }
-    
-    .community_p1{
-    	font-size: 40px;
-    }
-    
-    .community_p2{
-    	font-size: 30px;
-    }
-	
-</style>
+
 </head>
 <body>
 	<div id="top_container">
@@ -169,8 +59,8 @@
 	<div id="container">
 		<table class="list_table" width="100%">
 			<tr align="center" bgcolor="#e9ecef">
-				<td class="col-no" width="10%">글번호</td>
-				<td class="col-title" width="50%">제목</td>
+				<td class="col-no" width="15%">글번호</td>
+				<td class="col-title" width="45%">제목</td>
 				<td class="col-write" width="15%">작성자</td>
 				<td class="col-views" width="10%">조회수</td>
 				<td class="col-date" width="15%">작성날짜</td>
@@ -191,20 +81,21 @@
 						break;
 					}
 					
-					CommunityVO vo = communities.get(i);					
+					CommunityVO community = (CommunityVO)communities.get(i).get("community");
+					MemberVO member = (MemberVO)communities.get(i).get("member");
 					%>			
 					<tr align="center">
-						<td><%= vo.getNo()%></td>
-						<td><a href="<%=contextPath%>/Community/read?no=<%=vo.getNo()%>"> <%=vo.getTitle()%></a></td>
-						<td><%= vo.getId()%></td>
-						<td><%= vo.getViews()%></td>
-						<td><%= new SimpleDateFormat("yyyy-MM-dd").format(vo.getPostDate()) %></td>
+						<td><%=totalRecord - i%></td>
+						<td align="left"><a href="<%=contextPath%>/Community/read?no=<%=community.getNo()%>"> <%=community.getTitle()%></a></td>
+						<td><%= member.getNickname()%></td>
+						<td><%= community.getViews()%></td>
+						<td><%= new SimpleDateFormat("yyyy-MM-dd").format(community.getPostDate()) %></td>
 					</tr>
 					<%
 				}
 			}
 			%>
-			<tr>
+			<tr class="page_number">
 				<td colspan="5" align="center">
 					<%
 					if (totalRecord > 0) {

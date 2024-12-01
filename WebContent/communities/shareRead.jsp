@@ -27,27 +27,21 @@
 
     <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=ug8ym1cpbw&submodules=geocoder"></script>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<link rel="stylesheet" href="<%=contextPath%>/css/community/shareread.css">
+	    
     
-	<style>
-		#container {
-			width: 1200px;
-			margin: 0 auto;
-		}
-		
-		#imageContainer{
-			width: 400px;
-			height : 100%;
-		}
-	
-	</style>
 </head>
 
 <body>
-	<h1>재료 나눔 게시글 읽기</h1>
+	<div id="top_container" align="center">
+		<p class="community_p1">COMMUNITY</p>
+		<p class="community_p2">나눔 / 같이 먹어요</p>
+		<p>자유롭게 글을 작성해보세요</p>
+	</div>
 	<div id="container">
 		<table width="100%">
 			<tr>
-				<td colspan="4">
+				<td colspan="4" align="right">
 					<input type="button" value="목록" onclick="onListButton()">
 					<%
 					if(id != null && id.equals(share.getId())){
@@ -61,28 +55,23 @@
 			</tr>
 			<tr>
 				<td>
-					<%=share.getTitle() %>
-				</td>
-				<td>
-					<img src="<%= contextPath %>/images/member/userProfiles/<%= share.getId() %>/<%= member.getProfile() %>">
-				</td>
-				<td>
-					<%=member.getNickname()%>
-				</td>
-				<td>
-					<p>
-						<%=share.getViews()%>
-					</p>
-					<p>
-						<%= new SimpleDateFormat("yyyy-MM-dd").format(share.getPostDate()) %>
-					</p>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="4">
-					<div id="imageContainer">
-						<img src="<%=contextPath%>/images/community/thumbnails/<%=share.getNo()%>/<%=share.getThumbnail()%>">
+					<div class="image_profile">
+						<img src="<%= contextPath %>/images/member/userProfiles/<%= share.getId() %>/<%= member.getProfile() %>">
 					</div>
+				</td>
+				<td>
+					제목 : <%=share.getTitle() %>
+				</td>
+				<td>
+					작성자 : <%=member.getNickname()%>
+				</td>
+				<td>
+					<p>
+						조회수 : <%=share.getViews()%>
+					</p>
+					<p>
+						작성날짜 : <%= new SimpleDateFormat("yyyy-MM-dd").format(share.getPostDate()) %>
+					</p>
 				</td>
 			</tr>
 			<tr>
@@ -94,6 +83,13 @@
 			</tr>
 			<tr>
 				<td colspan="4">
+					<div id="imageContainer">
+						<img src="<%=contextPath%>/images/community/thumbnails/<%=share.getNo()%>/<%=share.getThumbnail()%>">
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
 					<input type="hidden" id="lat" value="<%=share.getLat()%>">
 					<input type="hidden" id="lng" value="<%=share.getLng()%>">
 				
@@ -101,7 +97,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan="4">
+				<td colspan="4" align="right">
 					<input type="button" value="목록" onclick="onListButton()">		
 				</td>
 			</tr>

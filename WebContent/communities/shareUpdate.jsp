@@ -14,16 +14,13 @@
 <html>
 <head>
 	<meta charset="UTF-8">
+	
 	<title>Insert title here</title>
 	
     <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=ug8ym1cpbw&submodules=geocoder"></script>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-	
-	<style>
-		#container {
-			width: 1200px;
-		}
-	</style>
+    
+    <link rel="stylesheet" href="<%=contextPath%>/css/community/shareupdate.css">
 </head>
 
 <body>
@@ -36,8 +33,9 @@
 			<input type="hidden" id="nowPage" name="nowPage">
 			<table width="100%">
 	        	<tr>
-	        		<td colspan="0">
+	        		<td colspan="2" align="right">
 						<input type="button" class="write" value="수정" onclick="onSubmit(event, '<%= contextPath %>')">
+						<input type="reset" class="write" value="취소" onclick="onCancle(event)">
 					</td>
 				</tr>	
 	            <tr>
@@ -77,9 +75,9 @@
 					</td>
                 </tr>
                 <tr>
-	                <td colspan="2">>
+	                <td colspan="2" align="right">
 						<input type="button" class="write" value="수정" onclick="onSubmit(event, '<%= contextPath %>')">
-						<input type="reset" class="write" value="취소">
+						<input type="reset" class="write" value="취소" onclick="onCancle(event)">
 					</td>
 				</tr>
             </table>
@@ -100,6 +98,12 @@
 			$("#title").val('<%= share.getTitle() %>');
 			$("#origin-thumbnail").val('<%= share.getThumbnail() %>');
 			
+			var $img = $('<img>', {
+			    src: '<%= contextPath %>/images/community/thumbnails/<%= share.getNo() %>/<%= share.getThumbnail() %>'
+			});
+
+			$('#imageContainer').append($img);
+			
 			let lat = '<%= share.getLat() %>';
 			let lng = '<%= share.getLng() %>';
 			
@@ -109,6 +113,11 @@
 			point = new naver.maps.Point(Number(lng), Number(lat));
 			
 			searchCoordinateToAddress(point);
+		}
+		
+		function onCancle(event){
+			event.preventDefault();
+			history.go(-1);			
 		}
 	</script>
 </body>

@@ -49,3 +49,14 @@ ON mr.mealkit_no=k.no
 JOIN member m 
 ON k.id=m.id
 WHERE mr.id='review1';
+
+select * from community;
+select * from member;
+
+select c.*, m.nickname, m.profile
+FROM community c
+LEFT OUTER JOIN member m
+ON c.id = m.id
+order by post_date desc;
+
+select count(*) from community_share;
