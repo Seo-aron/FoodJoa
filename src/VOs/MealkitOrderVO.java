@@ -12,6 +12,9 @@ public class MealkitOrderVO {
     private int refund;
     private Timestamp postDate;
     
+    public MealkitOrderVO() {
+	}
+    
     // postDate없는 생성자  
 	public MealkitOrderVO(int no, String id, int mealkitNo, String address, int quantity, int delivered, int refund) {
 

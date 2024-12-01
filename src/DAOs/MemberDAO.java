@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import Common.DBConnector;
-import VOs.DeliveryInfoVO;
+import VOs.MealkitOrderVO;
 import VOs.MealkitVO;
 import VOs.MealkitWishListVO;
 import VOs.MemberVO;
@@ -235,29 +235,6 @@ public class MemberDAO {
 		return result; // 삭제 성공 시 1 반환, 실패 시 0 반환
 	}
 
-	public ArrayList<DeliveryInfoVO> selectDeliver(String id) {
-		ArrayList<DeliveryInfoVO> delivery = new ArrayList<>();
-//		delivery = null;
-//		String sql = "SELECT A.id, A.nickname, B.pictures, C.address, C.amount, C.delivered, C.refund "
-//				+ "FROM MEMBER A " + "JOIN MEALKIT B " + "ON A.ID = B.ID " + "JOIN MEALKIT_ORDER C " + "ON B.ID = C.ID "
-//				+ "WHERE A.id=?";
-//		ResultSet resultSet = dbConnector.executeQuery(sql, id);
-//		try {
-//			while (resultSet.next()) {
-//				DeliveryInfoVO memberDelivery = new DeliveryInfoVO(resultSet.getString("id"),
-//						resultSet.getString("nickname"), resultSet.getString("pictures"),
-//						resultSet.getString("address"), resultSet.getInt("amount"), resultSet.getInt("delivered"),
-//						resultSet.getInt("refund"));
-//				delivery.add(memberDelivery);
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} finally {
-//			dbConnector.release();
-//		}
-		return delivery;
-	}
-
 	
 	// 최근 본 목록 조회
 	public ArrayList<HashMap<String, Object>> getRecentView(String userId, int type) {
@@ -358,34 +335,111 @@ public class MemberDAO {
 		return member; // 회원 반환
 	}
 
-	public ArrayList<DeliveryInfoVO> selectSend(String id) {
-		ArrayList<DeliveryInfoVO> send = new ArrayList<>();
-	//	String sql = "SELECT A.id, A.address, A.quantity, A.delivered, A.refund, B.contents, B.category, B.price, B.stock, B.pictures, B.nickname" + 
-	//			" FROM mealkit_order" + "LEFT JOIN  mealkit " + "ON  a.id = b.id" +  "where A.id=?";
-	//	ResultSet resultSet = dbConnector.executeQuery(sql, id);
-	//	try {
-	//		while (resultSet.next()) {
-	//			DeliveryInfoVO memberSend = new DeliveryInfoVO(
-	//					resultSet.getString("id"),
-	//					resultSet.getString("nickname"),
-	//					resultSet.getString("pictrues"),
-	//					resultSet.getString("address"),
-	//					resultSet.getInt("amount"),
-	//					resultSet.getInt("delivered"),
-	//					resultSet.getInt("refund"),
-	//					resultSet.getInt("quantity"),
-	//					resultSet.getString("contents"),
-	//					resultSet.getInt("category"),
-	//					resultSet.getString("price"),
-	//					resultSet.getInt("stock"));
-	//			send.add(memberSend);
-	//		}
-	//			
-	//	} catch (Exception e) {
-	//		e.printStackTrace();
-	//	} finally {
-	//		dbConnector.release();
-	//	}
-		return send;
+
+	public ArrayList<HashMap<String, Object>> selectDeliveredMealkit(String id) {
+		
+		ArrayList<HashMap<String, Object>> orderedMealkitList = new ArrayList<HashMap<String,Object>>();
+		
+		String sql = "SELECT "
+				+ "o.address, o.quantity, o.delivered, o.refund, "
+				+ "k.title, k.contents, k.category, k.price, k.pictures, "
+				+ "m.nickname, m.profile "
+				+ "FROM mealkit_order o "
+				+ "LEFT JOIN mealkit k "
+				+ "ON o.mealkit_no=k.no "
+				+ "LEFT JOIN member m "
+				+ "ON k.id=m.id "
+				+ "WHERE o.id=? "
+				+ "ORDER BY o.post_date DESC";
+		
+		ResultSet resultSet = dbConnector.executeQuery(sql, id);
+		
+		try {
+			while (resultSet.next()) {
+				HashMap<String, Object> orderedMealkit = new HashMap<String, Object>();
+				
+				MealkitOrderVO orderVO = new MealkitOrderVO();
+				orderVO.setAddress(resultSet.getString("address"));
+				orderVO.setQuantity(resultSet.getInt("quantity"));
+				orderVO.setDelivered(resultSet.getInt("delivered"));				
+				orderVO.setRefund(resultSet.getInt("refund"));			
+								
+				MealkitVO mealkitVO = new MealkitVO();				
+				mealkitVO.setTitle(resultSet.getString("title"));
+				mealkitVO.setContents(resultSet.getString("contents"));
+				mealkitVO.setCategory(resultSet.getInt("category"));
+				mealkitVO.setPrice(resultSet.getString("price"));
+				mealkitVO.setPictures(resultSet.getString("pictures"));
+				
+				MemberVO memberVO = new MemberVO();
+				memberVO.setNickname(resultSet.getString("nickname"));
+				memberVO.setProfile(resultSet.getString("profile"));
+
+				orderedMealkit.put("orderVO", orderVO);
+				orderedMealkit.put("mealkitVO", mealkitVO);
+				orderedMealkit.put("memberVO", memberVO);
+				
+				orderedMealkitList.add(orderedMealkit);
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return orderedMealkitList;
+	}
+	
+	public ArrayList<HashMap<String, Object>> selectSendedMealkit(String id, String delivered) {
+		
+		ArrayList<HashMap<String, Object>> orderedMealkitList = new ArrayList<>();
+		
+		String sql = "SELECT "
+				+ "k.title, k.contents, k.category, k.price, k.stock, k.pictures, "
+				+ "o.address, o.quantity, o.delivered, o.refund, "
+				+ "m.nickname, m.profile "
+				+ "FROM mealkit k "
+				+ "INNER JOIN mealkit_order o "
+				+ "ON k.no=o.mealkit_no "
+				+ "LEFT JOIN member m "
+				+ "ON o.id=m.id "
+				+ "WHERE k.id=? AND o.delivered=? "
+				+ "ORDER BY o.post_date DESC";
+		
+		ResultSet resultSet = dbConnector.executeQuery(sql, id, Integer.parseInt(delivered));
+		
+		try {
+			while (resultSet.next()) {
+				HashMap<String, Object> orderedMealkit = new HashMap<String, Object>();
+
+				MealkitVO mealkitVO = new MealkitVO();
+				mealkitVO.setTitle(resultSet.getString("title"));
+				mealkitVO.setContents(resultSet.getString("contents"));
+				mealkitVO.setCategory(resultSet.getInt("category"));
+				mealkitVO.setPrice(resultSet.getString("price"));
+				mealkitVO.setStock(resultSet.getInt("stock"));
+				mealkitVO.setPictures(resultSet.getString("pictures"));
+
+				MealkitOrderVO orderVO = new MealkitOrderVO();
+				orderVO.setAddress(resultSet.getString("address"));
+				orderVO.setQuantity(resultSet.getInt("quantity"));
+				orderVO.setDelivered(resultSet.getInt("delivered"));
+				orderVO.setRefund(resultSet.getInt("refund"));
+
+				MemberVO memberVO = new MemberVO();
+				memberVO.setNickname(resultSet.getString("nickname"));
+				memberVO.setProfile(resultSet.getString("profile"));
+
+				orderedMealkit.put("orderVO", orderVO);
+				orderedMealkit.put("mealkitVO", mealkitVO);
+				orderedMealkit.put("memberVO", memberVO);
+
+				orderedMealkitList.add(orderedMealkit);
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return orderedMealkitList;
 	}
 }

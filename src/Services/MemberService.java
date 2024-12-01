@@ -29,7 +29,6 @@ import Common.NaverLoginAPI;
 import DAOs.MealkitDAO;
 import DAOs.MemberDAO;
 import DAOs.RecipeDAO;
-import VOs.DeliveryInfoVO;
 import VOs.MemberVO;
 
 public class MemberService {
@@ -370,18 +369,22 @@ public class MemberService {
 	    }
 	}
 
-	public ArrayList<DeliveryInfoVO> getDeliver(HttpServletRequest request) {
+	public ArrayList<HashMap<String, Object>> getDeliveredMealkit(HttpServletRequest request) {
+		
 		HttpSession session = request.getSession();
 		String id = (String) session.getAttribute("userId");
-		return memberDAO.selectDeliver(id);
+		
+		return memberDAO.selectDeliveredMealkit(id);
 	}
 
-
-
-	public ArrayList<DeliveryInfoVO> getSend(HttpServletRequest request) {
+	public ArrayList<HashMap<String, Object>> getSendedMealkit(HttpServletRequest request) {
+		
 		HttpSession session = request.getSession();
 		String id = (String) session.getAttribute("userId");
-		return memberDAO.selectSend(id);
+		
+		String deliverd = (String) request.getParameter("deliverd");
+		
+		return memberDAO.selectSendedMealkit(id,  "0"); //0 1 2
 	}
 	
 
@@ -389,8 +392,6 @@ public class MemberService {
     public ArrayList<HashMap<String, Object>> getRecentViews(String userId, int type) {
         return memberDAO.getRecentView(userId, type); // DAO 호출
     }
-
-
 
 	public int deleteWishRecipe(String userId, String recipeNo) {
 	    return recipeDAO.deleteWishRecipe(userId, recipeNo);		
@@ -401,5 +402,13 @@ public class MemberService {
         return mealkitDAO.selectCartList(userId);
 	}
 		
-	}
+    public ArrayList<Integer> getCountOrderDelivered(HttpServletRequest request) {
+    	return mealkitDAO.selectCountOrderDelivered((String) request.getSession().getAttribute("userId"));
+    }
+    
+    public ArrayList<Integer> getCountDelivered(HttpServletRequest request) {
+    	return mealkitDAO.selectCountDelivered((String) request.getSession().getAttribute("userId"));
+    }
+
+}
 

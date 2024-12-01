@@ -434,6 +434,59 @@ public class MealkitDAO {
 
 		return cartListInfos;
 	}
+
+	public ArrayList<Integer> selectCountOrderDelivered(String id) {
+		
+		ArrayList<Integer> counts = new ArrayList<Integer>();
+		
+		String sql = "";
+		
+		for (int i = 0; i < 3; i++) {
+			sql = "SELECT COUNT(*) " + 
+					"FROM mealkit_order o " + 
+					"WHERE o.delivered=? AND o.id=?";
+			
+			ResultSet resultSet = dbConnector.executeQuery(sql, i, id);
+			
+			try {
+				if (resultSet.next()) {
+					counts.add(resultSet.getInt(1));
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+			dbConnector.release();
+		}
+		
+		return counts;
+	}
 	
+public ArrayList<Integer> selectCountDelivered(String id) {
+		
+		ArrayList<Integer> counts = new ArrayList<Integer>();
+		
+		String sql = "";
+		
+		for (int i = 0; i < 3; i++) {
+			sql = "SELECT COUNT(*) " + 
+					"FROM mealkit_order o " + 
+					"WHERE o.delivered=? AND o.id=?";
+			
+			ResultSet resultSet = dbConnector.executeQuery(sql, i, id);
+			
+			try {
+				if (resultSet.next()) {
+					counts.add(resultSet.getInt(1));
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+			dbConnector.release();
+		}
+		
+		return counts;
+	}
 
 }
