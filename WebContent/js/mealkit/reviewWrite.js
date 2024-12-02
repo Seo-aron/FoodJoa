@@ -7,10 +7,11 @@ function onSubmit(event, contextPath) {
 
 	setPicturesString();
 
-	let recipeNo = $("#recipe_no").val();
-	
+	let mealkitNo = $("#mealkit_no").val();
+	let nickName = $("#nickname").val();
+
 	const formData = new FormData();
-	formData.append('mealkit_no', $("#recipe_no").val());
+	formData.append('mealkit_no', $("#mealkit_no").val());
 	formData.append('pictures', $("#pictures").val());
 	formData.append('contents', $("#contents").val());
 	formData.append('rating', $("#rating").val());
@@ -26,7 +27,7 @@ function onSubmit(event, contextPath) {
 	    processData: false,
 	    contentType: false,
 	    success: function(responseData, status, jqxhr) {
-			location.href = contextPath + '/Mealkit/info?no=' + recipeNo;
+			location.href = contextPath + '/Mealkit/info?no=' + mealkitNo + '&nickName=' + nickName;
 	    },
 	    error: function(xhr, status, error) {
 	        console.log("error", error);

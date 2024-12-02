@@ -206,7 +206,7 @@ String id = (String) session.getAttribute("userId");
 								<tr>
 									<td class="myreview-button-area" colspan="2" align="right">
 										<input type="button" value="수정" onclick="onMealkitReviewUpdate(<%= reviewVO.getNo() %>)">
-										<input type="button" value="삭제" onclick="onMealkitReviewDelete(<%= reviewVO.getNo() %>)">
+										<input type="button" value="삭제" onclick="onMealkitReviewDelete(<%= reviewVO.getNo() %>, <%= mealkitVO.getNo()%>)">
 									</td>
 								</tr>
 							</table>
@@ -252,12 +252,32 @@ String id = (String) session.getAttribute("userId");
 			}
 		}
 		
-		function onRecipeMealkitUpdate(reviewNo) {
-			
+		function onMealkitReviewUpdate(reviewNo) {
+			location.href = '<%= contextPath %>/Mealkit/reviewUpdate?no=' + reviewNo;
 		}
 		
-		function onRecipeMealkitDelete(reviewNo) {
-			
+		function onMealkitReviewDelete(reviewNo, mealkitNo) {
+			if (confirm('정말로 삭제하시겠습니까?')) {
+				$.ajax({
+					url: '<%= contextPath %>/Mealkit/reviewDelete.pro',
+				    type: "POST",
+				    async: true,
+				    data: {
+				    	no: reviewNo,
+				    	mealkitNo: mealkitNo
+				    },
+				    dataType: "text",
+				    success: function(responseData) {
+						if(responseData == "1") {
+							alert('리뷰를 삭제했습니다.');
+							location.reload();
+						}
+						else {
+							alert('리뷰 삭제에 실패했습니다.');
+						}
+				    }
+				});
+			}
 		}
 	
 		let categoryButtons = $(".myreview-category-area input");

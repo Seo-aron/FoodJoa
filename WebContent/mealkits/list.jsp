@@ -137,34 +137,33 @@
 				    String formattedPostDate = dateFormat.format(postDate);
 					%>
 				<tr>
-    <td colspan="2">
-        <a href="<%=contextPath%>/Mealkit/info?no=<%=no%>&nickName=<%=nickName%>" class="row-link">
-            <div style="display: flex; align-items: flex-start;">
-                <!-- 이미지 영역 -->
-                <div>
-                    <img class="thumbnail" 
-                         src="<%=contextPath%>/images/mealkit/thumbnails/<%=no%>/<%=id%>/<%=thumbnail%>">
-                </div>
-                <!-- 텍스트 정보 영역 -->
-                <div class="info-container" style="margin-left: 16px;">
-                    <!-- 작성자, 작성일, 평점, 조회수 -->
-                    <span>
-                        작성자: <%=nickName%> &nbsp;&nbsp;&nbsp;&nbsp;
-                        작성일: <%=formattedPostDate%> &nbsp;&nbsp;&nbsp;&nbsp;
-                        평점: <fmt:formatNumber value="<%=ratingAvr.get(no)%>" pattern="#.#" /> &nbsp;&nbsp;&nbsp;&nbsp;
-                        조회수: <%=views%>
-                    </span>
-                    <br>
-                    <h2><strong><%=title%></strong></h2>
-                    <h3><%=formattedPrice%> 원</h3>
-                    <br>
-                    <p>설명: <%=contents%></p>
-                </div>
-            </div>
-        </a>
-    </td>
-</tr>
-
+				    <td colspan="2">
+				        <a href="<%=contextPath%>/Mealkit/info?no=<%=no%>&nickName=<%=nickName%>" class="row-link">
+				            <div style="display: flex; align-items: flex-start;">
+				                <!-- 이미지 영역 -->
+				                <div>
+				                    <img class="thumbnail" 
+				                         src="<%=contextPath%>/images/mealkit/thumbnails/<%=no%>/<%=id%>/<%=thumbnail%>">
+				                </div>
+				                <!-- 텍스트 정보 영역 -->
+				                <div class="info-container" style="margin-left: 16px;">
+				                    <!-- 작성자, 작성일, 평점, 조회수 -->
+				                    <span>
+				                        작성자: <%=nickName%> &nbsp;&nbsp;&nbsp;&nbsp;
+				                        작성일: <%=formattedPostDate%> &nbsp;&nbsp;&nbsp;&nbsp;
+				                        평점: <fmt:formatNumber value="<%=ratingAvr.get(no)%>" pattern="#.#" /> &nbsp;&nbsp;&nbsp;&nbsp;
+				                        조회수: <%=views%>
+				                    </span>
+				                    <br>
+				                    <h2><strong><%=title%></strong></h2>
+				                    <h3><%=formattedPrice%> 원</h3>
+				                    <br>
+				                    <p>설명: <%=contents%></p>
+				                </div>
+				            </div>
+				        </a>
+				    </td>
+				</tr>
 				<%
 				} // for
 			} // esle

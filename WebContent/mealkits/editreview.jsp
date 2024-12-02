@@ -1,6 +1,7 @@
 <%@page import="java.util.List"%>
 <%@page import="Common.StringParser"%>
 <%@page import="VOs.MealkitVO"%>
+<%@page import="VOs.MealkitReviewVO"%>
 <%@page import="VOs.RecipeVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -11,10 +12,11 @@
 
 	String contextPath = request.getContextPath();
 	
-	MealkitVO mealkit = (MealkitVO) request.getAttribute("mealkit");
+	// MealkitVO mealkit = (MealkitVO) request.getAttribute("mealkit");
+	MealkitReviewVO review = (MealkitReviewVO) request.getAttribute("reviewvo");
 	String nickName = (String) request.getAttribute("nickName");
 	
-	List<String> pictures = StringParser.splitString(mealkit.getPictures());
+	List<String> pictures = StringParser.splitString(review.getPictures());
 %>
 
 <!DOCTYPE html>
@@ -33,9 +35,9 @@
 
 <body>
 	<div id="recipe-review-container">
-		<h1>밀키트 리뷰 작성</h1>
+		<h1>밀키트 리뷰 수정</h1>
 		<form id="frmReview" action="#" method="post" enctype="multipart/form-data">
-			<input type="hidden" id="mealkit_no" name="mealkit_no" value="<%= mealkit.getNo() %>">
+			<input type="hidden" id="recipe_no" name="recipe_no" value="<%= mealkit.getNo() %>">
 			<input type="hidden" id="nickname" name="nickname" value="<%=nickName%>"/>
 					
 			<table width="100%">
@@ -106,7 +108,7 @@
 	</div>
 	
 	
-	<script src="<%= contextPath %>/js/mealkit/reviewWrite.js"></script>
+	<script src="<%= contextPath %>/js/mealkit/editreview.js"></script>
 	<script>
 		function setRating(event, ratingValue) {
 			event.preventDefault();

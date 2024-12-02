@@ -351,4 +351,27 @@ public class MealkitService {
 	    
 	    return mealkitDAO.selectCountDelivered(userId); // DAO 호출
 	}
+
+	public void delMealkitReview(HttpServletRequest request, HttpServletResponse response) 
+			throws IOException {
+
+    	int no = Integer.parseInt(request.getParameter("no"));
+    	int mealkitNo = Integer.parseInt(request.getParameter("mealkitNo"));
+    	
+    	int result = mealkitDAO.deleteMealkitReview(no, mealkitNo);
+    	
+    	PrintWriter out = response.getWriter();
+    	out.print(result);
+    	out.close();
+	}
+
+	public String getMealkitNickName(MealkitVO mealkit) {
+		return mealkitDAO.selectMealkitNickName(mealkit);
+	}
+
+	public MealkitReviewVO updateReviewMealkit(HttpServletRequest request) {
+		int reviewNo = Integer.parseInt(request.getParameter("reviewNo"));
+		
+		return mealkitDAO.selectReview(reviewNo);
+	}
 }

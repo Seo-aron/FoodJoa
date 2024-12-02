@@ -21,6 +21,10 @@ td {
 	padding: 10px;
 }
 
+li {
+    list-style-type: none;
+}
+
 input[type="text"], input[type="file"] {
 	width: 100%;
 	padding: 10px;
@@ -62,9 +66,8 @@ textarea{
 }
 
 .review-image {
-    max-width: 50%;
-    height: 100%;
-    width: 270px;
+    height: 200px;
+    width: 200px;
 }
 
 .review-contents {

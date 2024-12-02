@@ -385,6 +385,7 @@ public class MealkitDAO {
 				HashMap<String, Object> review = new HashMap<String, Object>();
 
 				MealkitVO mealkitVO = new MealkitVO();
+				mealkitVO.setNo(resultSet.getInt("mealkit_no"));
 				mealkitVO.setTitle(resultSet.getString("title"));
 				mealkitVO.setCategory(resultSet.getInt("category"));
 
@@ -503,7 +504,7 @@ public class MealkitDAO {
 		return counts;
 	}
 
-//발송 
+	//발송 
 	public ArrayList<Integer> selectCountDelivered(String id) {
 
 		ArrayList<Integer> counts = new ArrayList<Integer>();
@@ -601,6 +602,66 @@ public class MealkitDAO {
 		String sql = "UPDATE mealkit_order SET delivered = ?, refund = ? WHERE no = ?";
 		dbConnector.executeUpdate(sql, Integer.parseInt(deliveryStatus), Integer.parseInt(refundStatus),
 				Integer.parseInt(orderId));
+	}
+
+	public int deleteMealkitReview(int no, int mealkitNo) {
+		
+		String sql = "DELETE FROM mealkit_review WHERE mealkit_no = ? AND no = ?";
+		
+		int result = dbConnector.executeUpdate(sql, mealkitNo, no);
+		
+		dbConnector.release();
+		
+		return result;
+	}
+
+	public String selectMealkitNickName(MealkitVO mealkit) {
+		String nickName = null;
+		
+		String sql = "SELECT nickName FROM member JOIN mealkit "
+				+ "ON member.id = mealkit.id "
+				+ "WHERE mealkit.no = ?";
+		
+		ResultSet rs = dbConnector.executeQuery(sql, mealkit.getNo());
+		
+		try {
+			if(rs.next()) nickName = rs.getString("nickName");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("DAO" + nickName);
+		dbConnector.release();
+		
+		return nickName;
+	}
+
+	public MealkitReviewVO selectReview(int reviewNo) {
+		
+		MealkitReviewVO reviewvo = null;
+		
+		String sql = "SELECT * FROM mealkit_review WHERE no = ?";
+		
+		ResultSet rs = dbConnector.executeQuery(sql, reviewNo);
+		
+		try {
+			if(rs.next()) {
+				reviewvo = new MealkitReviewVO(
+						rs.getInt("no"),
+						rs.getString("id"),
+						rs.getInt("mealkit_no"),
+						rs.getString("pictures"),
+						rs.getString("contents"),
+						rs.getInt("rating"));
+			}
+		} catch (SQLException e) {
+			System.out.println("MealkitDAO - selectReview 예외발생");
+			e.printStackTrace();
+		}
+		
+		dbConnector.release();
+		
+		return reviewvo;
 	}
 
 }

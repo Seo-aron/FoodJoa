@@ -16,29 +16,6 @@
 	String id = (String) session.getAttribute("userId");
 	
 	ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.getAttribute("reviewvo");
-	
-	int totalRecord = 0;
-	int numPerPage = 3;
-	int pagePerBlock = 10;
-	int totalPage = 0;
-	int totalBlock = 0;
-	int nowPage = 0;
-	int nowBlock = 0;
-	int beginPerPage = 0;
-	
-	totalRecord = list.size();
-	
-	if(request.getAttribute("nowPage") != null){
-		nowPage = Integer.parseInt(request.getAttribute("nowPage").toString());
-	}
-	
-	beginPerPage = nowPage * numPerPage;
-	totalPage = (int)Math.ceil((double)totalRecord / numPerPage);
-	totalBlock = (int)Math.ceil((double)totalPage / pagePerBlock);
-	
-	if(request.getAttribute("nowBlock") != null){
-		nowBlock = Integer.parseInt(request.getAttribute("nowBlock").toString());
-	}
 %>
 <c:set var="mealkit" value="${requestScope.mealkitvo}" />
 
@@ -68,12 +45,10 @@
 			</tr>
 		<%
 		} else{
-			for(int i=beginPerPage; i<(beginPerPage+numPerPage); i++){
-				if(i == totalRecord){ break; }
-				
+			for(int i=0; i<list.size(); i++){
 				Map<String, Object> vo = list.get(i);
-
-				String picture = (String) vo.get("pictures");
+			    
+				List<String> pictures = StringParser.splitString((String) vo.get("pictures"));
 				
 				int no = (int) vo.get("no");
 		        String reviewId = (String) vo.get("id");
@@ -96,9 +71,19 @@
 					<th>사진</th>
 					<td colspan="3">
 						<div class="contents-container">
-							<img src="<%= contextPath %>/images/mealkit/reviews/<%=no %>/<%=reviewId %>/<%=picture %>" 
-								class="review-image" alt="<%=picture%>">
-							<textarea name="contents" class="review-contents" rows="5" required><%=contents %></textarea>
+								<ul class="review-bxslider">
+								    <%
+								        for (String picture : pictures) {
+								    %>
+								        <li>
+								            <img src="<%= contextPath %>/images/mealkit/reviews/<%=mealkitNo %>/<%=reviewId %>/<%= picture %>" 
+												class="review-image" alt="<%= picture %>">
+								        </li>
+								    <%
+								        }
+								    %>
+								</ul>
+							<textarea name="contents" class="review-contents" rows="5" readonly required><%=contents %></textarea>
 						</div>
 					</td>
 				</tr>

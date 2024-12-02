@@ -3,8 +3,8 @@
 
 // bxslider 
 $('.bxslider').bxSlider({
-	mode: 'fade',
-	captions: true,
+	infiniteLoop: false,
+	hideControlOnEnd: true,
 	slideWidth: 530,
 	adaptiveHeight: true,
 });

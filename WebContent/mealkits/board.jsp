@@ -58,7 +58,8 @@
 			        for (String picture : pictures) {
 			    %>
 			        <li>
-			            <img src="<%= contextPath %>/images/mealkit/thumbnails/<%= mealkitvo.getNo() %>/<%= mealkitvo.getId() %>/<%= picture %>" title="<%= picture %>" />
+			            <img src="<%= contextPath %>/images/mealkit/thumbnails/<%= mealkitvo.getNo() %>/<%= mealkitvo.getId() %>/<%= picture %>" 
+			            	title="<%= picture %>" />
 			        </li>
 			    <%
 			        }
@@ -159,10 +160,19 @@
             return; // 로그인하지 않은 경우 결제 진행 차단
         }
         
+        let cartItems = [];
+        
         const title = "<%=mealkitvo.getTitle()%>";
         const price = "<%=mealkitvo.getPrice()%>";
-        const quantity = parseInt($('#stock').val());
+        const quantity = $('#stock').val();
         const mealkitNo = "<%=mealkitvo.getNo()%>";
+        
+        cartItems.push({
+            title: title,
+            price: price,
+            quantity: quantity,
+            mealkitNo: mealkitNo
+        });
         
         // 하나의 주문에 대한 총 금액
         cartItems.forEach(item => {
