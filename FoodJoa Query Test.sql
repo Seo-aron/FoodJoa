@@ -71,3 +71,18 @@ WHERE rv.no=1;
 
 insert into member
 values('E5WfZ9Dw6uy3PzDsAkaKOEdHtykh5sgibCaIt7BqYqM', '고나리자', '고나리자', '01000000000', '부산시 부산진구', 'admin_image.png', CURRENT_TIMESTAMP);
+
+SELECT c.*, m.nickname 
+FROM community_share c 
+LEFT OUTER JOIN member m 
+ON c.id = m.id 
+WHERE c.type = IF('재료나눔' LIKE '%이먹%', 0, IF('같이먹어요' LIKE '%이먹%',  1, -1)) 
+ORDER BY c.post_date DESC; 
+
+select * from mealkit;
+select * from mealkit_review;
+select * from member;
+SELECT mk.*, mem.nickname FROM mealkit mk JOIN member mem ON mk.id = mem.id WHERE mk.category=1;
+
+SELECT mk.*, mem.nickname FROM mealkit mk JOIN member mem ON mk.id = mem.id;
+SELECT mr.*, mem.nickname FROM mealkit_review mr JOIN member mem ON mr.id = mem.id WHERE mealkit_no = 2;

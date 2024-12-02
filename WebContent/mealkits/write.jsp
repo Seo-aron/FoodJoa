@@ -25,17 +25,22 @@
     <div id="container">
         <h2>밀키트 게시글 작성</h2>
         <form action="<%=contextPath%>/Mealkit/write.pro" method="post" id="frmWrite" enctype="multipart/form-data">
-            <table border="1">
+            <table class="write-form">
                 <tr>
                     <th>글 제목</th>
                     <td>
-                    	<input type="text" name="title" required>
+                    	<input type="text" class="title" name="title" placeholder="ex) 김치볶음밥 밀키트" required>
                     	<!-- id -->
                     	<input type="hidden" name="id" value="<%=id%>">
                     </td>
                 </tr>
                 <tr>
-				    <th>사진 추가</th>
+				    <th>
+				    	사진 추가
+				    	 <small class="notice-text">
+				    	 ※ 사진은 최대 5장까지<br>업로드 가능합니다.<br>※ 해당 사진을 클릭하면<br>삭제됩니다.
+				    	 </small>
+				    </th>
 				    <td>
 				        <div id="imagePreview"></div>
    						<input type="file" id="pictureFiles" name="pictureFiles" 
@@ -47,31 +52,30 @@
                 <tr>
                     <th>카테고리</th>
                     <td>
-                        <select name="category" required>
+                        <select class="category" name="category" required>
                         	<option value="">선택하세요</option>
-                            <option value="0">한식</option>
-                            <option value="1">중식</option>
+                            <option value="1">한식</option>
                             <option value="2">일식</option>
-                            <option value="3">양식</option>
-                            <option value="4">분식</option>
+                            <option value="3">중식</option>
+                            <option value="4">양식</option>
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <th>간단 소개글</th>
-                    <td><textarea name="contents" rows="4" required></textarea></td>
+                    <td><textarea name="contents" class="contents" rows="4" placeholder="해당 밀키트의 조리법을 적어주세요" required></textarea></td>
                 </tr>
                 <tr>
 					<th>가격</th>
-				    <td><input type="text" name="price" required min="0">원</td>
+				    <td><input type="text" name="price" class="price" required min="0">원</td>
 				</tr>
                 <tr>
                     <th>재고 수량</th>
-                    <td><input type="number" name="stock" required min="0">개</td>
+                    <td><input type="number" name="stock" class="stock" required min="0"> 개</td>
                 </tr>
                 <tr>
-					<td colspan="2">
-						<p>간단 조리 순서 작성</p>
+					<th>간단 조리 순서</th>
+					<td>
 						<div class="orders-container"></div>
 						<p><input type="button" class="add-orders" value="순서 추가하기"></p>
 						<input type="hidden" id="orders" name="orders">
@@ -79,14 +83,10 @@
 				</tr>
                 <tr>
                     <th>원산지 표기</th>
-                    <td><input type="text" name="origin" required></td>
+                    <td><input type="text" name="origin" class="origin" placeholder="ex) 쌀(국내산), 소고기(미국산), ..." required></td>
                 </tr>
-                <tr>
-                <td colspan="2">
-					<input type="button" class="write" value="작성 완료" onclick="onSubmit(event, '<%=contextPath%>')">
-				</td>
-			</tr>
             </table>
+            <input type="button" class="write" value="작성 완료" onclick="onSubmit(event, '<%=contextPath%>')">
         </form>
     </div>
     

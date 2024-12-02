@@ -32,9 +32,9 @@ public class MealkitService {
 		mealkitDAO = new MealkitDAO();
 	}
 	
-	public ArrayList<MealkitVO> getMealkitsList() {
+	public ArrayList<Map<String, Object>> getMealkitsList(int category) {
 		
-		return mealkitDAO.selectMealkits();
+		return mealkitDAO.selectMealkits(category);
 	}
 
 	public MealkitVO getMealkit(HttpServletRequest request) {
@@ -53,20 +53,26 @@ public class MealkitService {
 		return mealkitDAO.InfoMealkit(no);
 	}
 
-	public ArrayList<MealkitReviewVO> getReviewInfo(HttpServletRequest request) {
+	public ArrayList<Map<String, Object>> getReviewInfo(HttpServletRequest request) {
 		
 		int no = Integer.parseInt(request.getParameter("no"));
 		
 		return mealkitDAO.InfoReview(no);
 	}
+	
+	public String getNickName(HttpServletRequest request) {
+		String id = (String) request.getSession().getAttribute("userId");
+		
+		return mealkitDAO.selectNickName(id);
+	}
 
 	public void setWishMealkit(HttpServletRequest request, HttpServletResponse response) 
 			throws IOException {
+		
 		int no = Integer.parseInt(request.getParameter("no"));
 		String id = (String) request.getSession().getAttribute("userId");
-		int type = Integer.parseInt(request.getParameter("type"));
 		
-		int result = mealkitDAO.insertMealkitWishlist(no, id, type);
+		int result = mealkitDAO.insertMealkitWishlist(no, id);
 		
 		String res = String.valueOf(result);
 
@@ -76,6 +82,26 @@ public class MealkitService {
 		printWriter.close();
 		
 		return;
+	}
+
+	public void setCartMealkit(HttpServletRequest request, HttpServletResponse response) 
+			throws IOException {
+		
+		int no = Integer.parseInt(request.getParameter("no"));
+		int quantity = Integer.parseInt(request.getParameter("quantity"));
+		String id = (String) request.getSession().getAttribute("userId");
+		
+		int result = mealkitDAO.insertMealkitCartlist(no, quantity, id);
+		
+		String res = String.valueOf(result);
+
+		printWriter = response.getWriter();
+		printWriter.print(res);
+		printWriter.flush();
+		printWriter.close();
+		
+		return;
+		
 	}
 
 	public void setWriteMealkit(HttpServletRequest request, HttpServletResponse response) 
@@ -155,7 +181,7 @@ public class MealkitService {
 
 		MultipartRequest multipartRequest = new MultipartRequest(request, path + File.separator + "temp", maxSize, "UTF-8",
 				new DefaultFileRenamePolicy());
-
+		
 		String mealkitNo = multipartRequest.getParameter("mealkit_no");
         String pictures = multipartRequest.getParameter("pictures");
         String contents = multipartRequest.getParameter("contents");
@@ -182,22 +208,6 @@ public class MealkitService {
         review.setRating(Integer.parseInt(rating));
         
 		return mealkitDAO.insertNewReview(review);
-	}
-
-	public void setPlusEmpathy(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-		int empathyCount = Integer.parseInt(request.getParameter("empathyCount"));
-		int mealkit_no = Integer.parseInt(request.getParameter("mealkit_no"));
-		int no = Integer.parseInt(request.getParameter("no"));
-			
-		int result = mealkitDAO.updateEmpathy(empathyCount, mealkit_no, no);
-
-		printWriter = response.getWriter();
-
-		String go = String.valueOf(result);
-		
-		printWriter.print(go);
-
 	}
 
 	public void delMealkit(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -275,18 +285,19 @@ public class MealkitService {
 		printWriter.close();
 	}
 
-	public Map<Integer, Float> getAllRatingAvr(ArrayList<MealkitVO> mealkits) {
-		Map<Integer, Float> ratingMap = new HashMap<>();
-		
-		for(MealkitVO mealkit : mealkits) {
-			int no = mealkit.getNo();
-			float ratingAvr = mealkitDAO.getRatingAvr(no);
-			
-			ratingMap.put(no, ratingAvr);
-		}
-		
-		return ratingMap;
+	public Map<Integer, Float> getAllRatingAvr(ArrayList<Map<String, Object>> mealkits) {
+	    Map<Integer, Float> ratingMap = new HashMap<>();
+	    
+	    for (Map<String, Object> mealkit : mealkits) {
+	        int no = (int) mealkit.get("no");
+	        float ratingAvr = mealkitDAO.getRatingAvr(no);
+	        
+	        ratingMap.put(no, ratingAvr);
+	    }
+	    
+	    return ratingMap;
 	}
+
 
 	public float getRatingAvr(MealkitVO mealkitvo) {
 		int no = mealkitvo.getNo();
@@ -318,7 +329,7 @@ public class MealkitService {
 
 	public void buyMealkit(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
-	    String id = request.getParameter("id");
+	    String id = (String) request.getSession().getAttribute("userId");
 	    int mealkitNo = Integer.parseInt(request.getParameter("mealkitNo"));
 	    int quantity = Integer.parseInt(request.getParameter("quantity"));
 	    int delivered = Integer.parseInt(request.getParameter("delivered"));
@@ -328,6 +339,10 @@ public class MealkitService {
 	    PrintWriter out = response.getWriter();
 	    out.print(result);
 	    out.close();
+	}
+
+	public ArrayList<HashMap<String, Object>> getMealkitsListById(HttpServletRequest request) {
+		return mealkitDAO.selectMealkitsById((String) request.getSession().getAttribute("userId"));
 	}
 
 }

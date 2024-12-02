@@ -82,7 +82,7 @@ long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
             </a>
          </div>
          <div>
-            <a href="<%=contextPath%>/members/myproduct.jsp">
+            <a href="<%=contextPath%>/Mealkit/myMealkits">
                <p align="center">내 상품 관리</p>
                <img src="../images/member/product.png" alt="상품 이미지">
             </a>

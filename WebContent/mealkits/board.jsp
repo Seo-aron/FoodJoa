@@ -2,6 +2,7 @@
 <%@ page import="Common.StringParser"%>
 <%@ page import="VOs.MealkitVO"%>
 <%@ page import="VOs.MemberVO"%>
+<%@ page import="java.text.NumberFormat" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -16,8 +17,14 @@
     String id = (String) session.getAttribute("userId");
 	String bytePictures = request.getParameter("bytePictures");
 	MealkitVO mealkitvo = (MealkitVO) request.getAttribute("mealkitvo");
+	String nickName = (String) request.getAttribute("nickName");
 	
 	List<String> parsedOrders = StringParser.splitString(mealkitvo.getOrders());
+	
+	 String priceString = mealkitvo.getPrice();
+	 int price = Integer.parseInt(priceString); 
+	 NumberFormat numberFormat = NumberFormat.getInstance();
+	 String formattedPrice = numberFormat.format(price);
 %>
 <c:set var="mealkit" value="${requestScope.mealkitvo}"/>
 
@@ -36,10 +43,11 @@
 	<title>Insert title here</title>
 </head>
 <body>
-	<div id="container">
+	<div id="board-container">
 		<!-- editBoard.jsp로 넘길 데이터 -->
 		<input type="hidden" id="mealkitNo" value="${mealkit.no}">
 		<input type="hidden" id="bytePictures" value="<%=bytePictures%>">
+		
 		<div class="info_image">
 			<%
 			    List<String> pictures = StringParser.splitString(mealkitvo.getPictures());
@@ -57,7 +65,7 @@
 			    %>
 			</ul>
 			<div class="orders_text">
-				<p>조리 순서</p>
+				<h3>조리 순서</h3>
 				<%
 					for (int i = 0; i < parsedOrders.size(); i++) {
 					String orders = parsedOrders.get(i);
@@ -69,47 +77,51 @@
 				}
 				%>
 			</div>
-					
-			<div class="origin_text">
-				<h3>원산지</h3>
-				<p>${mealkit.origin }</p>
-			</div>	
+
 		</div>
 		
 		<div class="info_text">
 			<span>
+				<button class="wishlist_button" type="button" onclick="wishMealkit('<%=contextPath%>')">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+				    	<path stroke="#000" d="M16.471 3c-1.838 0-3.466.915-4.471 2.321C10.995 3.915 9.367 3 7.529 3 4.475 3 2 5.522 2 8.633 2 13.367 12 21 12 21s10-7.633 10-12.367C22 5.523 19.525 3 16.471 3"></path>
+				 	</svg>
+				</button>
 				<h1>${mealkit.title }</h1>
 				<hr>
-				<strong>글쓴이: ${mealkit.id }</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<strong>글쓴이: <%=nickName%></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<strong>게시일: ${mealkit.postDate }</strong><br>
 				<!-- 나중에 평점 수정 -->
 				<strong>평점: <fmt:formatNumber value="${ratingAvr}" pattern="#.#" /></strong><hr>
 			</span>
-			<h2>가격: ${mealkit.price }</h2><hr><br>
+			<h2>가격: <%= formattedPrice %> 원</h2><hr>
+			<br>
 			
 			<!-- 수량 정하는 박스 -->
-			<div class="stock_count">
-				<input type="text" name="stock" id="stock" value="1" readonly>
-				<input type="hidden" id="mealkitStock" value="${mealkit.stock}">
-				<div class="stock_controls">
-					<button class="stock_plus" type="button">&#9650;</button>
-					<button class="stock_minus" type="button">&#9660;</button>
+			<span class="stock-wrapper">
+				<div class="stock_count">
+					<input type="text" name="stock" id="stock" value="1" readonly>
+					<input type="hidden" id="mealkitStock" value="${mealkit.stock}">
+					<div class="stock_controls">
+						<button class="stock_plus" type="button">&#9650;</button>
+						<button class="stock_minus" type="button">&#9660;</button>
+					</div>
 				</div>
-			</div>
+				<div class="origin-text">
+					<p><b>원산지</b></p>
+					<p>${mealkit.origin }</p>
+				</div>
+			</span>
 			<br>
-			<div class="button_row">
-				<button id="payment">구매하기</button>
-				<button class="cart_button" type="button" onclick="cartMealkit('<%=contextPath%>')">장바구니</button>
-				<button class="wishlist_button" type="button" onclick="wishMealkit('<%=contextPath%>')">찜하기</button>
-			</div>
-			
 			<!-- 간단 소개글  -->
 			<div class="contents_text">
-				<textarea style="border: 1px width: 100%; height: 150px; " readonly >
-			        ${mealkit.contents}
-			    </textarea>
+				<textarea readonly >${mealkit.contents}</textarea>
 			</div>
-			
+			<!-- 구매, 장바구니 버튼 -->
+			<div class="button_row">
+				<button class="cart_button" type="button" onclick="cartMealkit('<%=contextPath%>')">장바구니</button>
+				<button class="buy_button" id="payment">구매하기</button>
+			</div>
 			<!-- 수정 삭제 버튼 -->
             <div class="edit_delete_buttons">
             	<c:if test="${sessionScope.userId == mealkit.id}">

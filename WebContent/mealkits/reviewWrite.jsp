@@ -11,10 +11,14 @@
 
 	String contextPath = request.getContextPath();
 	
+<<<<<<< HEAD
 	//RecipeVO recipe = (RecipeVO) request.getAttribute("recipe");
 	MealkitVO mealkit = (MealkitVO) request.getAttribute("mealkit");
 	
 	List<String> pictures = StringParser.splitString(mealkit.getPictures());
+=======
+    String nickName = (String) request.getAttribute("nickName");
+>>>>>>> aron
 %>
 
 <!DOCTYPE html>
@@ -32,6 +36,7 @@
 </head>
 
 <body>
+<<<<<<< HEAD
 	<div id="recipe-review-container">
 		<h1>레시피 리뷰 작성</h1>
 		<form id="frmReview" action="#" method="post" enctype="multipart/form-data">
@@ -123,6 +128,51 @@
 			document.getElementsByName('rating')[0].value = ratingValue;
 		}
 	</script>
+=======
+    <div id="container">
+        <h2>리뷰 작성</h2>
+        <form action="<%=contextPath %>/Mealkit/reviewwrite.pro" method="post" enctype="multipart/form-data">
+            <table>
+                <tr>
+                    <th>작성자</th>
+                    <td>
+                        <input type="text" name="nickname" value="<%=nickName %>" readonly>
+                        <input type="hidden" name="mealkit_no" value="${mealkit_no }">
+                    </td>
+                    <td>
+                        평점:
+                        <div id="rating_buttons">
+                            <div class="rating_button" id="rating1" onclick="setRating(1)">1</div>
+                            <div class="rating_button" id="rating2" onclick="setRating(2)">2</div>
+                            <div class="rating_button" id="rating3" onclick="setRating(3)">3</div>
+                            <div class="rating_button" id="rating4" onclick="setRating(4)">4</div>
+                            <div class="rating_button" id="rating5" onclick="setRating(5)">5</div>
+                        </div>
+                        <input type="hidden" name="rating" value="" id="ratingInput">
+                    </td>
+                </tr>
+                <tr>
+                    <th>사진</th>
+                    <td colspan="3">
+                        <input type="file" name="pictures" accept="image/*" required>
+                    </td>
+                </tr>
+                <tr>
+                    <th>내용</th>
+                    <td colspan="3">
+                        <textarea name="contents" rows="5" style="width: 100%;" required></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <button type="submit">작성</button>
+                        <button type="button" onclick="confirmCancel()">취소</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+>>>>>>> aron
 </body>
 
 </html>

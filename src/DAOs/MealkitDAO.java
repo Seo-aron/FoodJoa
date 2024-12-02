@@ -4,15 +4,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 import Common.DBConnector;
-import VOs.MealkitOrderVO;
 import VOs.MealkitReviewVO;
 import VOs.MealkitVO;
-import VOs.MealkitWishListVO;
 import VOs.MemberVO;
+import VOs.RecipeVO;
 
 public class MealkitDAO {
 	private DBConnector dbConnector;
@@ -21,33 +20,40 @@ public class MealkitDAO {
 		dbConnector = new DBConnector();
 	}
 
-	public ArrayList<MealkitVO> selectMealkits() {
+	public ArrayList<Map<String, Object>> selectMealkits(int category) {
 		
-		ArrayList<MealkitVO> mealkits = new ArrayList<MealkitVO>();
+		ArrayList<Map<String, Object>> mealkits = new ArrayList<>();
 		
-		String sql = "SELECT * FROM mealkit";
+		String sql = "SELECT mk.*, mem.nickname " 
+				+ "FROM mealkit mk JOIN member mem "
+                + "ON mk.id = mem.id ";
 		
-		ResultSet rs = dbConnector.executeQuery(sql);
+		if (category != 0) sql += "WHERE mk.category=? ";
+		
+		sql += "ORDER BY mk.post_date DESC";
+		
+		ResultSet rs = (category != 0 ? dbConnector.executeQuery(sql, category) : dbConnector.executeQuery(sql));
 		
 		try {
 			while(rs.next()) {
-				MealkitVO mealkit = new MealkitVO(
-						rs.getInt("no"), 
-						rs.getString("id"),
-						rs.getString("title"),
-						rs.getString("contents"),
-						rs.getInt("category"),
-						rs.getString("price"),
-						rs.getInt("stock"),
-						rs.getString("pictures"),
-						rs.getString("orders"),
-						rs.getString("origin"),
-						rs.getInt("views"),
-						rs.getInt("soldout"),
-						rs.getTimestamp("post_date"));
-				
-				mealkits.add(mealkit);
-						
+				Map<String, Object> mealkitData = new HashMap<>();
+					mealkitData.put("no", rs.getInt("no"));
+		            mealkitData.put("id", rs.getString("id"));
+		            mealkitData.put("title", rs.getString("title"));
+		            mealkitData.put("contents", rs.getString("contents"));
+		            mealkitData.put("category", rs.getInt("category"));
+		            mealkitData.put("price", rs.getString("price"));
+		            mealkitData.put("stock", rs.getInt("stock"));
+		            mealkitData.put("pictures", rs.getString("pictures"));
+		            mealkitData.put("orders", rs.getString("orders"));
+		            mealkitData.put("origin", rs.getString("origin"));
+		            mealkitData.put("views", rs.getInt("views"));
+		            mealkitData.put("soldout", rs.getInt("soldout"));
+		            mealkitData.put("post_date", rs.getTimestamp("post_date"));
+
+		            mealkitData.put("nickname", rs.getString("nickname"));
+
+		            mealkits.add(mealkitData);						
 			}
 		} catch (Exception e) {
 			System.out.println("MealkitDAO - selectMealkits 예외발생 ");
@@ -95,27 +101,30 @@ public class MealkitDAO {
 		return mealkit;
 	}
 	
-	public ArrayList<MealkitReviewVO> InfoReview(int no) {
+	public ArrayList<Map<String, Object>> InfoReview(int no) {
 		
-		ArrayList<MealkitReviewVO> reviews = new ArrayList<MealkitReviewVO>();
+		ArrayList<Map<String, Object>> reviews = new ArrayList<>();
 		
-		String sql = "SELECT * FROM mealkit_review WHERE mealkit_no = ?";
+		String sql = "SELECT mr.*, mem.nickname FROM mealkit_review mr JOIN member mem "
+				+ "ON mr.id = mem.id "
+				+ "WHERE mr.mealkit_no = ?";
 		
 		ResultSet rs = dbConnector.executeQuery(sql, no);
 		
 		try {
 			while(rs.next()) {
-				MealkitReviewVO review = new MealkitReviewVO(
-						rs.getInt("no"), 
-						rs.getString("id"),
-						rs.getInt("mealkit_no"),
-						rs.getString("pictures"),
-						rs.getString("contents"),
-						rs.getInt("rating"),
-						rs.getInt("empathy"),
-						rs.getTimestamp("post_date"));
+				Map<String, Object> reviewsData = new HashMap<>();
+				reviewsData.put("no", rs.getInt("no"));
+				reviewsData.put("id", rs.getString("id"));
+				reviewsData.put("mealkit_no", rs.getInt("mealkit_no"));
+				reviewsData.put("pictures", rs.getString("pictures"));
+				reviewsData.put("contents", rs.getString("contents"));
+				reviewsData.put("rating", rs.getInt("rating"));
+				reviewsData.put("post_date", rs.getTimestamp("post_date"));
 				
-				reviews.add(review);
+				reviewsData.put("nickname", rs.getString("nickname"));
+				
+				reviews.add(reviewsData);
 						
 			}
 		} catch (Exception e) {
@@ -128,19 +137,25 @@ public class MealkitDAO {
 		return reviews;
 	}
 
-	public int insertMealkitWishlist(int no, String id, int type) {
+	public int insertMealkitWishlist(int no, String id) {
 		
-		System.out.println("no " + no);
-		System.out.println("id " + id);
-		System.out.println("type " + type);
-		/*
-		String sql = "INSERT INTO mealkit_wishlist(id, mealkit_no, type, choice_date) "
+		String sql = "INSERT INTO mealkit_wishlist(id, mealkit_no, choice_date) "
+				+ "VALUES(?, ?, CURRENT_TIMESTAMP)";
+		
+		int result = dbConnector.executeUpdate(sql, id, no);
+		
+		dbConnector.release();
+		
+		return result;
+	}
+	
+
+	public int insertMealkitCartlist(int no, int quantity, String id) {
+		
+		String sql = "INSERT INTO mealkit_wishlist(id, mealkit_no, quantity choice_date) "
 				+ "VALUES(?, ?, ?, CURRENT_TIMESTAMP)";
-		*/
-		String sql = "INSERT INTO mealkit_wishlist(id, mealkit_no, type) "
-				+ "VALUES(?, ?, ?)";
 		
-		int result = dbConnector.executeUpdate(sql, id, no, type);
+		int result = dbConnector.executeUpdate(sql, id, no, quantity);
 		
 		dbConnector.release();
 		
@@ -192,15 +207,26 @@ public class MealkitDAO {
 		return result;
 	}
 
-	public int updateEmpathy(int empathyCount, int mealkit_no, int no) {
+	public String selectNickName(String id) {
 		
-		String sql = "UPDATE mealkit_review SET empathy = ? + 1 WHERE mealkit_no = ? AND no = ?";
+		String nickName = null;
 		
-		int result = dbConnector.executeUpdate(sql, empathyCount, mealkit_no, no);
+		String sql = "SELECT nickname FROM member WHERE id = ?";
+		
+		ResultSet rs = dbConnector.executeQuery(sql, id);
+		
+		try {
+			if(rs.next()) {
+				nickName = rs.getString("nickname");
+			}
+		} catch (SQLException e) {
+			System.out.println("MealkitDAO - selectNickName 예외발생");
+			e.printStackTrace();
+		}
 		
 		dbConnector.release();
 		
-		return result;
+		return nickName;
 	}
 
 	public int deleteMealkit(int no) {
@@ -267,7 +293,7 @@ public class MealkitDAO {
 		return avr;
 	}
 
-	public ArrayList selectSearchList(String key, String word) {
+	public ArrayList<MealkitVO> selectSearchList(String key, String word) {
 		
 		ArrayList<MealkitVO> mealkits = new ArrayList<MealkitVO>();
 		String sql = "";
@@ -316,10 +342,9 @@ public class MealkitDAO {
 	}
 	
 	public ArrayList<HashMap<String, Object>> selectMealKitInfos(String userId, int type) {
-	    // 결과를 저장할 ArrayList 선언
+		
 	    ArrayList<HashMap<String, Object>> mealKitInfos = new ArrayList<HashMap<String, Object>>();
 	    
-	    // SQL 쿼리문 정의
 	    String sql = "SELECT "
 	    		+ "mk.pictures, mk.title, mk.contents, mk.price, m.nickname AS author_nickname, mr.average_rating "
 	    		+ "FROM mealkit_wishlist mw "
@@ -365,17 +390,18 @@ public class MealkitDAO {
 	}
 
 
-
+	// 결제 api 
 	public boolean saveOrder(String id, int mealkitNo, int quantity, int delivered, int refund) {
 
 		String sql = "INSERT INTO mealkit_order (id, mealkit_no, address, quantity, delivered, refund, post_date) " +
                  "VALUES (?, ?, (SELECT address FROM member WHERE id = ?), ?, 0, 0, NOW())";
-		
 		int result = dbConnector.executeUpdate(sql, id, mealkitNo, id, quantity);
+		
+		sql = "UPDATE mealkit SET stock = stock - ? WHERE no = ?";
+		dbConnector.executeUpdate(sql, quantity, mealkitNo);
 		
 		return result == 1;
 	}
-
 
 	public ArrayList<HashMap<String, Object>> selectMealkitReviewsById(String id) {
 		
@@ -426,5 +452,55 @@ public class MealkitDAO {
 		}
 		
 		return reviews;
+	}
+
+	public ArrayList<HashMap<String, Object>> selectMealkitsById(String id) {
+		
+		ArrayList<HashMap<String, Object>> mealkits = new ArrayList<HashMap<String,Object>>();
+		
+		String sql = "SELECT m.*, COALESCE(avg_rating.average_rating, 0) AS average_rating "
+				+ "FROM mealkit m "
+				+ "LEFT JOIN ( "
+				+ "SELECT mealkit_no, AVG(rating) AS average_rating "
+				+ "FROM mealkit_review "
+				+ "GROUP BY mealkit_no "
+				+ ") avg_rating ON m.no = avg_rating.mealkit_no "
+				+ "WHERE m.id=?";
+		
+		ResultSet rs = dbConnector.executeQuery(sql, id);
+		
+		try {
+			while(rs.next()) {
+				
+				HashMap<String, Object> mealkit = new HashMap<String, Object>();
+				
+				MealkitVO mealkitVO = new MealkitVO(
+						rs.getInt("no"),
+						rs.getString("id"),
+						rs.getString("title"),
+						rs.getString("contents"),
+						rs.getInt("category"),
+						rs.getString("price"),
+						rs.getInt("stock"),
+						rs.getString("pictures"),
+						rs.getString("orders"),
+						rs.getString("origin"),
+						rs.getInt("views"),
+						rs.getInt("soldout"),
+						rs.getTimestamp("post_date"));
+				
+				float averageRating = rs.getFloat("average_rating");
+				
+				mealkit.put("mealkitVO", mealkitVO);
+				mealkit.put("averageRating", averageRating);
+				
+				mealkits.add(mealkit);
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return mealkits;
 	}
 }

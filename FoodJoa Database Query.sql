@@ -68,7 +68,7 @@ CREATE TABLE mealkit(
     no            int primary key auto_increment,
 	id            varchar(50) not null,
 	title         varchar(50) not null,
-	contents       text not null,
+	contents      text not null,
 	category      tinyint not null,
 	price         varchar(10) not null,
     stock		  int not null,

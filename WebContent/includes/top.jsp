@@ -62,20 +62,24 @@
 						<li><a href="<%= contextPath %>/Recipe/list?category=3">중식 요리</a></li>
 						<li><a href="<%= contextPath %>/Recipe/list?category=4">양식 요리</a></li>
 						<li><a href="<%= contextPath %>/Recipe/list?category=5">자취 요리</a></li>
-					</ul></li>
-				<li><a href="#">나만의 음식 판매</a>
+					</ul>
+				</li>
+				<li>
+					<a href="<%=contextPath%>/Mealkit/list?category=0">나만의 음식 판매</a>
 					<ul>
-						<li><a href="<%=contextPath%>/Mealkit/list">한식 요리</a></li>
-						<li><a href="#">일식 요리</a></li>
-						<li><a href="#">중식 요리</a></li>
-						<li><a href="#">양식 요리</a></li>
-						<li><a href="#">자취 요리</a></li>
-					</ul></li>
-				<li><a href="#">자유게시판</a>
+						<li><a href="<%=contextPath%>/Mealkit/list?category=1">한식 제품</a></li>
+						<li><a href="<%=contextPath%>/Mealkit/list?category=2">일식 제품</a></li>
+						<li><a href="<%=contextPath%>/Mealkit/list?category=3">중식 제품</a></li>
+						<li><a href="<%=contextPath%>/Mealkit/list?category=4">양식 제품</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="#">자유게시판</a>
 					<ul>
 						<li><a href="<%=contextPath%>/Community/list">자유 게시판</a></li>
 						<li><a href="<%=contextPath%>/Community/shareList">나눔/같이 먹어요</a></li>
-					</ul></li>
+					</ul>
+				</li>
 				<li><a href="<%= contextPath %>/Member/mypagemain.me">마이페이지</a></li>
 			</ul>
 		</nav>
