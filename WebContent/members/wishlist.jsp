@@ -10,23 +10,21 @@
 
     String contextPath = request.getContextPath();
 
-    // 위시리스트 데이터 가져오기 
     ArrayList<HashMap<String, Object>> recipeInfos = 
-        (ArrayList<HashMap<String, Object>>) request.getAttribute("recipeWishListInfos"); // 수정된 속성명
+        (ArrayList<HashMap<String, Object>>) request.getAttribute("recipeWishListInfos");
     if (recipeInfos == null) {
-        recipeInfos = new ArrayList<>(); // 데이터가 없으면 빈 리스트로 초기화
+        recipeInfos = new ArrayList<>();
     } 
-        
-        
-    // 밀키트 위시리스트 데이터 가져오기 
-    ArrayList<HashMap<String, Object>> mealKitInfos = 
-        (ArrayList<HashMap<String, Object>>) request.getAttribute("mealKitWishListInfos"); // 밀키트 위시리스트
 
+    ArrayList<HashMap<String, Object>> mealKitInfos = 
+        (ArrayList<HashMap<String, Object>>) request.getAttribute("mealKitWishListInfos");
     if (mealKitInfos == null) {
-        mealKitInfos = new ArrayList<>(); // 데이터가 없으면 빈 리스트로 초기화
-    }    
-    
-    final int columnCount = 4; // 한 줄에 표시할 항목 수
+        mealKitInfos = new ArrayList<>();
+    }
+
+    // 데이터를 JSP 하단에서 사용 가능하도록 전달
+    request.setAttribute("recipeWishListInfos", recipeInfos);
+    request.setAttribute("mealKitWishListInfos", mealKitInfos);
 %>
 
 <!DOCTYPE html>
@@ -34,173 +32,119 @@
 <head>
     <meta charset="UTF-8">
     <title>Wish List</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+    <style>
+        /* 스타일 정의 그대로 유지 */
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+            font-family: "Noto Serif KR", serif;
+        }
+        .wishlist-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            width: 100%;
+        }
+        .wishlist-item {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+        }
+        .wishlist-item img {
+            max-width: 150px;
+            height: 150px;
+            margin-right: 20px;
+        }
+        .wishlist-item .info {
+            text-align: left;
+        }
+        #radio {
+            margin-bottom: 20px;
+        }
+    </style>
     <script>
-        // 라디오 버튼에 따라 표시할 리스트 제어
         function toggleList() {
             const selectedValue = document.querySelector('input[name="filter"]:checked').value;
-
-            // 모든 목록과 제목 숨기기
-            document.getElementById("allList").style.display = "none";
-            document.getElementById("recipeList").style.display = "none";
-            document.getElementById("productList").style.display = "none";
-            document.getElementById("allTitle").style.display = "none";
-            document.getElementById("recipeTitle").style.display = "none";
-            document.getElementById("productTitle").style.display = "none";
-
-            // 선택된 항목 표시
-            if (selectedValue === "all") {
-                document.getElementById("allList").style.display = "block";
-                document.getElementById("allTitle").style.display = "block";
-            } else if (selectedValue === "recipe") {
-                document.getElementById("recipeList").style.display = "block";
-                document.getElementById("recipeTitle").style.display = "block";
-            } else if (selectedValue === "product") {
-                document.getElementById("productList").style.display = "block";
-                document.getElementById("productTitle").style.display = "block";
-            }
+            document.getElementById("wishListRecipe").style.display = selectedValue === "recipe" ? "block" : "none";
+            document.getElementById("wishListMealKit").style.display = selectedValue === "product" ? "block" : "none";
         }
-
-        // 페이지 로드 시 기본값 설정
         window.onload = function() {
-            toggleList();
+            document.getElementById("wishListRecipe").style.display = "block";
+            document.getElementById("wishListMealKit").style.display = "none";
+            document.getElementById("recipe").checked = true;
         };
     </script>
-    <style>
-    	
-    
-    	#container {
-    		width: 1200px;
-    		background-color: #FFEBEE;
-    	}
-    
-       .wishlist-grid {
-		    display: grid;
-		    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-		    gap: 20px;
-		}
-		
-		.wishlist-item {
-		    border: 1px solid #ddd;
-		    border-radius: 5px;
-		    overflow: hidden;
-		    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-		    text-align: center;
-		    transition: transform 0.2s ease, box-shadow 0.2s ease;
-		}
-		
-		.wishlist-item:hover {
-		    transform: translateY(-5px);
-		    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-		}
-		
-		.wishlist-item img {
-		    max-width: 100%;
-		    height: auto;
-		    border-bottom: 1px solid #ddd;
-		}
-		
-		.wishlist-item div {
-		    margin: 10px 0;
-		}
-    </style>
 </head>
 <body>
-	<div id="container">
-	    <h1>Wish List</h1>
-	
-	    <!-- 라디오 버튼 -->
-	    <div>
-	        <input type="radio" id="all" name="filter" value="all" checked onchange="toggleList()">
-	        <label for="all">전체보기</label>
-	
-	        <input type="radio" id="recipe" name="filter" value="recipe" onchange="toggleList()">
-	        <label for="recipe">레시피</label>
-	
-	        <input type="radio" id="product" name="filter" value="product" onchange="toggleList()">
-	        <label for="product">상품</label>
-	    </div>
-	    <hr>
-	
-	    <!-- 전체보기 -->
-	    <div id="allTitle" style="display: block;">
-	    </div>
-	    <div id="allList" style="display: block;">
-	        <div class="wishlist-grid">
-	            <c:forEach var="item" items="${recipeWishListInfos}">
-            <c:choose>
-                <c:when test="${item.recipeVO != null}">
-                    <div class="wishlist-item">
-                        <a href="recipeDetails.jsp?recipeNo=${item.recipeVO.no}">
-                            <img src="${pageContext.request.contextPath}/images/recipe/thumbnails/${item.recipeVO.no}/${item.recipeVO.thumbnail}" 
-                                 alt="${item.recipeVO.title}" />
-                            <div><b>${item.recipeVO.title}</b></div>
-                            <div>작성자: ${item.nickname}</div> <!-- 작성자 닉네임 -->
-                            <div>평점: ${item.averageRating}</div> <!-- 평점 -->
-                        </a>
-                    </div>
-                </c:when>
-            </c:choose>
-        </c:forEach>
-         <c:forEach var="item" items="${mealKitWishListInfos}">
-            <c:choose>
-                <c:when test="${item.mealkitVO != null}">
-                    <div class="wishlist-item">
-                        <a href="mealKitDetails.jsp?mealKitNo=${item.mealkitVO.no}">
-                            <div><b>${item.mealkitVO.title}</b></div>
-                            <div>작성자: ${item.nickname}</div> <!-- 작성자 닉네임 -->
-                            <div>평점: ${item.avgRating}</div> <!-- 평점 -->
-                        </a>
-                    </div>
-                </c:when>
-            </c:choose>
-        </c:forEach>
-	        </div>
-	    </div>
-	<!-- 레시피 목록 -->
-<div id="recipeTitle">
-</div>
-<div id="recipeList">
-    <div class="wishlist-grid">
-        <!-- 레시피 위시리스트 정보 출력 -->
-        <c:forEach var="item" items="${recipeWishListInfos}">
-            <c:choose>
-                <c:when test="${item.recipeVO != null}">
-                    <div class="wishlist-item">
-                        <a href="recipeDetails.jsp?recipeNo=${item.recipeVO.no}">
-                            <img src="${pageContext.request.contextPath}/images/recipe/thumbnails/${item.recipeVO.no}/${item.recipeVO.thumbnail}" 
-                                 alt="${item.recipeVO.title}" />
-                            <div><b>${item.recipeVO.title}</b></div>
-                            <div>작성자: ${item.nickname}</div> <!-- 작성자 닉네임 -->
-                            <div>평점: ${item.averageRating}</div> <!-- 평점 -->
-                        </a>
-                    </div>
-                </c:when>
-            </c:choose>
-        </c:forEach>
-    </div>
-</div>
+    <div id="container">
+        <!-- 기존 라디오 버튼 및 제목 유지 -->
+        <div id="radio">
+            <h1>Wish List</h1>
+            <input type="radio" id="recipe" name="filter" value="recipe" checked onchange="toggleList()">
+            <label for="recipe">레시피</label>
+            <input type="radio" id="product" name="filter" value="product" onchange="toggleList()">
+            <label for="product">상품</label>
+            <hr>
+        </div>
 
-<!-- 밀키트 목록 -->
-<div id="productTitle">
-</div>
-<div id="productList">
-    <div class="wishlist-grid">
-        <!-- 밀키트 위시리스트 정보 출력 -->
-        <c:forEach var="item" items="${mealKitWishListInfos}">
-            <c:choose>
-                <c:when test="${item.mealkitVO != null}">
+        <!-- 기존 레시피 및 밀키트 위시리스트 유지 -->
+        <!-- 레시피 위시리스트 -->
+        <div id="wishListRecipe" class="wishList">
+            <div class="wishlist-grid">
+                <c:forEach var="item" items="${recipeWishListInfos}">
                     <div class="wishlist-item">
-                        <a href="mealKitDetails.jsp?mealKitNo=${item.mealkitVO.no}">
-                            <div><b>${item.mealkitVO.title}</b></div>
-                            <div>작성자: ${item.nickname}</div> <!-- 작성자 닉네임 -->
-                            <div>평점: ${item.avgRating}</div> <!-- 평점 -->
-                        </a>
+						<a href="${pageContext.request.contextPath}/Recipe/read?no=${item.recipeVO.no}&category=0&currentPage=0&currentBlock=0">
+						    <img src="${pageContext.request.contextPath}/images/recipe/thumbnails/${item.recipeVO.no}/${item.recipeVO.thumbnail}" 
+						         alt="${item.recipeVO.title}">
+						</a>
+
+                        <div class="info">
+                            <div><b>${item.recipeVO.title}</b></div>
+                            <div>작성자: ${item.nickname}</div>
+                            <div>${item.recipeVO.description}</div>
+                            <div>평점: ${item.averageRating}</div>
+                           <form action="${pageContext.request.contextPath}/Member/deleteWishRecipe.me" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
+							    <input type="hidden" name="recipeNo" value="${item.recipeVO.no}">
+							    <input type="hidden" name="userId" value="${sessionScope.userId}"> <!-- userId로 이름을 수정 -->
+							    <button type="submit">삭제</button>
+							</form>
+
+                        </div>
                     </div>
-                </c:when>
-            </c:choose>
-        </c:forEach>
+                </c:forEach>
+            </div>
+        </div>
+
+        <!-- 밀키트 위시리스트 -->
+        <div id="wishListMealKit" class="wishList" style="display: none;">
+            <div class="wishlist-grid">
+                <c:forEach var="item" items="${mealKitWishListInfos}">
+                    <div class="wishlist-item">
+                    <a href="<%= request.getContextPath() %>/Mealkit/info?no=${item.mealkitVO.no}">
+                     <img src="<%= request.getContextPath() %>/images/mealkit/thumbnails/${item.mealkitVO.no}/${item.mealkitVO.id}/${item.mealkitVO.pictures.substring(4)}" 
+                             alt="${item.mealkitVO.title}">
+                             </a>
+                        <div class="info">
+                            <div><b>${item.mealkitVO.title}</b></div>
+                             <p>no: ${item.mealkitVO.id}</p>
+                            <div>작성자: ${item.nickname}</div>
+                            <div>가격: ${item.mealkitVO.price}</div>
+                            <div>평점: ${item.avgRating}</div>
+                             <form action="<%= request.getContextPath() %>/Member/deleteWishMealkit.me" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
+							    <input type="hidden" name="mealkitNo" value="${item.mealkitVO.no}">
+							    <input type="hidden" name="userId" value="${sessionScope.userId}"> <!-- userId로 이름을 수정 -->
+							     <input type="submit" value="삭제" class="btn" style="background-color: #BF917E;">
+							</form>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+        </div>
     </div>
-</div>
-	
 </body>
 </html>

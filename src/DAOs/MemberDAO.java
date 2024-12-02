@@ -236,67 +236,131 @@ public class MemberDAO {
 	}
 
 	
-	// 최근 본 목록 조회
-	public ArrayList<HashMap<String, Object>> getRecentView(String userId, int type) {
-		
-		ArrayList<HashMap<String, Object>> recentViews = new ArrayList<>();
-	    String sql = "SELECT ";
-	    
-	    if (type == 0) {
-	    	sql += "r.title, r.thumbnail, r.description, r.category, ";
-	    }
-	    else {
-	    	sql += "k.title, k.contents, k.category, k.price, k.pictures, ";
-	    }
-	    sql += "m.nickname, m.profile ";
-	    sql += "FROM recent_view v ";
-	    if (type == 0 ) {
-	    	sql += "LEFT JOIN recipe r ON v.item_no = r.no ";
-	    	sql += "LEFT JOIN member m ON r.id=m.id ";
-	    	sql += "WHERE v.id=?";
-		    sql += "ORDER BY r.post_date DESC LIMIT 20";
-	    }
-	    else {
-	    	sql += "LEFT JOIN mealkit k ON v.item_no = k.no ";
-	    	sql += "LEFT JOIN member m ON k.id=m.id ";
-	    	sql += "WHERE v.id=?";
-		    sql += "ORDER BY k.post_date DESC LIMIT 20";
-	    }
-	    
-	    ResultSet resultSet = dbConnector.executeQuery(sql, userId);
-	    
-	    try {
-			while (resultSet.next()) {
-				HashMap<String, Object> recentView = new HashMap<String, Object>();
-				
-				if (type == 0) {
-					RecipeVO recipeVO = new RecipeVO();
+	/*
+	 * public ArrayList<HashMap<String, Object>> getRecentView(String userId, int
+	 * type) {
+	 * 
+	 * System.out.println("다오에서 UserId: " + userId); // userId 값 확인
+	 * ArrayList<HashMap<String, Object>> recentViews = new ArrayList<>(); String
+	 * sql = "SELECT ";
+	 * 
+	 * if (type == 0) { sql += "r.title, r.thumbnail, r.description, r.category, ";
+	 * } else { sql += "k.title, k.contents, k.category, k.price, k.pictures, "; }
+	 * 
+	 * sql += "m.nickname, m.profile "; sql += "FROM recent_view v ";
+	 * 
+	 * if (type == 0) { sql += "LEFT JOIN recipe r ON v.item_no = r.no "; sql +=
+	 * "LEFT JOIN member m ON r.id = m.id "; sql += "WHERE v.id = ? "; // userId로 조회
+	 * sql += "ORDER BY r.post_date DESC LIMIT 20"; } else { sql +=
+	 * "LEFT JOIN mealkit k ON v.item_no = k.no "; sql +=
+	 * "LEFT JOIN member m ON k.id = m.id "; sql += "WHERE v.id = ? "; // userId로 조회
+	 * sql += "ORDER BY k.post_date DESC LIMIT 20"; }
+	 * 
+	 * // 데이터베이스에서 결과 조회 ResultSet resultSet = dbConnector.executeQuery(sql,
+	 * userId);
+	 * 
+	 * try { while (resultSet.next()) { HashMap<String, Object> recentView = new
+	 * HashMap<String, Object>();
+	 * 
+	 * // type에 따라 레시피 또는 밀키트 정보를 다르게 처리 if (type == 0) { RecipeVO recipeVO = new
+	 * RecipeVO(); recipeVO.setTitle(resultSet.getString("title"));
+	 * recipeVO.setThumbnail(resultSet.getString("thumbnail"));
+	 * recipeVO.setDescription(resultSet.getString("description"));
+	 * recipeVO.setCategory(resultSet.getInt("category"));
+	 * recentView.put("recipeVO", recipeVO); } else { MealkitVO mealkitVO = new
+	 * MealkitVO(); mealkitVO.setTitle(resultSet.getString("title"));
+	 * mealkitVO.setContents(resultSet.getString("contents"));
+	 * mealkitVO.setCategory(resultSet.getInt("category"));
+	 * mealkitVO.setPrice(resultSet.getString("price"));
+	 * mealkitVO.setPictures(resultSet.getString("pictures"));
+	 * recentView.put("mealkitVO", mealkitVO); }
+	 * 
+	 * // 회원 정보 추가 MemberVO memberVO = new MemberVO();
+	 * memberVO.setNickname(resultSet.getString("nickname"));
+	 * memberVO.setProfile(resultSet.getString("profile"));
+	 * recentView.put("memberVO", memberVO);
+	 * 
+	 * // 최근 본 글 정보를 리스트에 추가 recentViews.add(recentView); } } catch (SQLException e)
+	 * { e.printStackTrace(); }
+	 * 
+	 * return recentViews; }
+	 */
+	
+	public ArrayList<HashMap<String, Object>> getRecentRecipeViews(String userId) {
+	    ArrayList<HashMap<String, Object>> recentViews = new ArrayList<>();
+	    String sql = "SELECT r.title, r.thumbnail, r.description, r.category, m.nickname AS author_nickname, m.profile "
+	               + "FROM recent_view v "
+	               + "LEFT JOIN recipe r ON v.item_no = r.no "
+	               + "LEFT JOIN member m ON r.id = m.id "
+	               + "WHERE v.id = ? "
+	               + "ORDER BY v.view_date DESC LIMIT 20";
 
-					recipeVO.setTitle(resultSet.getString("title"));
-					recipeVO.setThumbnail(resultSet.getString("thumbnail"));
-					recipeVO.setDescription(resultSet.getString("description"));
-					recipeVO.setCategory(resultSet.getInt("category"));
-					
-					recentView.put("recipeVO", recipeVO);
-				}
-				else {
-					MealkitVO mealkitVO = new MealkitVO();
-				}
-				
-				MemberVO memberVO = new MemberVO();
-				
-				memberVO.setNickname(resultSet.getString("nickname"));
-				memberVO.setProfile(resultSet.getString("profile"));
-				
-				recentViews.add(recentView);
-			}
-		}
-	    catch (SQLException e) {
-			e.printStackTrace();
-		}
-	    
+	    ResultSet resultSet = dbConnector.executeQuery(sql, userId);
+
+	    try {
+	        while (resultSet.next()) {
+	            HashMap<String, Object> recentView = new HashMap<>();
+	            RecipeVO recipeVO = new RecipeVO();
+	            recipeVO.setTitle(resultSet.getString("title"));
+	            recipeVO.setThumbnail(resultSet.getString("thumbnail"));
+	            recipeVO.setDescription(resultSet.getString("description"));
+	            recipeVO.setCategory(resultSet.getInt("category"));
+	            recentView.put("recipeVO", recipeVO);
+
+	            MemberVO memberVO = new MemberVO();
+	            memberVO.setProfile(resultSet.getString("profile"));
+	            String authorNickname = resultSet.getString("author_nickname"); // 작성자의 닉네임 가져오기
+	            recentView.put("memberVO", memberVO);
+	            recentView.put("nickname", authorNickname);
+
+	            recentViews.add(recentView);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
 	    return recentViews;
 	}
+	
+	public ArrayList<HashMap<String, Object>> getRecentMealkitViews(String userId) {
+	    ArrayList<HashMap<String, Object>> recentViews = new ArrayList<>();
+	    String sql = "SELECT k.title, k.contents, k.category, k.price, k.pictures, m.nickname AS author_nickname, m.profile "
+	               + "FROM recent_view v "
+	               + "LEFT JOIN mealkit k ON v.item_no = k.no "
+	               + "LEFT JOIN member m ON k.id = m.id "
+	               + "WHERE v.id = ? "
+	               + "ORDER BY v.view_date DESC LIMIT 20";
+
+	    ResultSet resultSet = dbConnector.executeQuery(sql, userId);
+
+	    try {
+	        while (resultSet.next()) {
+	            HashMap<String, Object> recentView = new HashMap<>();
+	            MealkitVO mealkitVO = new MealkitVO();
+	            mealkitVO.setTitle(resultSet.getString("title"));
+	            mealkitVO.setContents(resultSet.getString("contents"));
+	            mealkitVO.setCategory(resultSet.getInt("category"));
+	            mealkitVO.setPrice(resultSet.getString("price"));
+	            mealkitVO.setPictures(resultSet.getString("pictures"));
+	            recentView.put("mealkitVO", mealkitVO);
+
+	            MemberVO memberVO = new MemberVO();
+	            memberVO.setProfile(resultSet.getString("profile"));
+	            String authorNickname = resultSet.getString("author_nickname"); // 작성자의 닉네임 가져오기
+	            recentView.put("memberVO", memberVO);
+	            recentView.put("nickname", authorNickname);
+
+	            recentViews.add(recentView);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return recentViews;
+	}
+
+
+
 
 	public MemberVO getMemberProfile(String userId) throws SQLException {
 		MemberVO member = null;
@@ -379,7 +443,7 @@ public class MemberDAO {
 		
 		String sql = "SELECT "
 				+ "k.title, k.contents, k.category, k.price, k.stock, k.pictures, "
-				+ "o.address, o.quantity, o.refund, "
+				+ "o.no AS order_no, o.address, o.quantity, o.delivered, o.refund, "
 				+ "m.nickname, m.profile "
 				+ "FROM mealkit k "
 				+ "INNER JOIN mealkit_order o "
@@ -404,8 +468,10 @@ public class MemberDAO {
 				mealkitVO.setPictures(resultSet.getString("pictures"));
 
 				MealkitOrderVO orderVO = new MealkitOrderVO();
+				orderVO.setNo(resultSet.getInt("order_no")); 
 				orderVO.setAddress(resultSet.getString("address"));
 				orderVO.setQuantity(resultSet.getInt("quantity"));
+				orderVO.setDelivered(resultSet.getInt("delivered"));
 				orderVO.setRefund(resultSet.getInt("refund"));
 
 				MemberVO memberVO = new MemberVO();
@@ -416,6 +482,7 @@ public class MemberDAO {
 				orderedMealkit.put("mealkitVO", mealkitVO);
 				orderedMealkit.put("memberVO", memberVO);
 
+				System.out.println(delivered);
 				orderedMealkitList.add(orderedMealkit);
 			}
 		}
@@ -424,5 +491,30 @@ public class MemberDAO {
 		}
 
 		return orderedMealkitList;
+	}
+	
+	public ArrayList<Integer> selectCountDelivered(String userId) {
+	    ArrayList<Integer> counts = new ArrayList<>();
+	    String sql = "SELECT " +
+	                 "SUM(CASE WHEN delivered = 0 THEN 1 ELSE 0 END) AS preparing, " +
+	                 "SUM(CASE WHEN delivered = 1 THEN 1 ELSE 0 END) AS shipping, " +
+	                 "SUM(CASE WHEN delivered = 2 THEN 1 ELSE 0 END) AS completed " +
+	                 "FROM mealkit_order " +
+	                 "WHERE id = ?";
+
+	    try {
+	        ResultSet rs = dbConnector.executeQuery(sql, userId);
+	        if (rs.next()) {
+	            counts.add(rs.getInt("preparing")); // 발송 준비 중
+	            counts.add(rs.getInt("shipping")); // 발송 중
+	            counts.add(rs.getInt("completed")); // 발송 완료
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        dbConnector.release();
+	    }
+
+	    return counts;
 	}
 }

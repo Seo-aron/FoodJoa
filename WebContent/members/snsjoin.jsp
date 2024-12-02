@@ -25,7 +25,7 @@
         
     img {
             width: auto;
-            height: 50px;
+            height: 40px;
         }
   
   </style>

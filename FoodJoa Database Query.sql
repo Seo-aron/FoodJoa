@@ -54,7 +54,7 @@ create table recipe_wishlist(
 	no 				int primary key auto_increment,
     id 				varchar(50) not null,
     recipe_no 		int not null, 
-    choice_date		timestamp not null, 
+    choice_date		timestamp not null DEFAULT CURRENT_TIMESTAMP,
     
     FOREIGN KEY (id) REFERENCES member(id) ON DELETE CASCADE,
     FOREIGN KEY (recipe_no) REFERENCES recipe(no) ON DELETE CASCADE
@@ -116,12 +116,26 @@ CREATE TABLE mealkit_wishlist(
 	no			int primary key auto_increment,
     id			varchar(50) not null,
     mealkit_no	int not null,
-    type		tinyint not null,
-	choice_date	timestamp not null,
+	choice_date	timestamp not null DEFAULT CURRENT_TIMESTAMP,
     
     foreign key (id) references member(id) ON DELETE CASCADE,
     foreign key (mealkit_no) references mealkit(no) ON DELETE CASCADE
 );
+
+
+
+DROP TABLE IF EXISTS mealkit_cart;
+CREATE TABLE mealkit_cart(
+	no			int primary key auto_increment,
+    id			varchar(50) not null,
+    mealkit_no	int not null,
+    quantity    int not null,
+	choice_date	timestamp not null DEFAULT CURRENT_TIMESTAMP,
+    
+    foreign key (id) references member(id) ON DELETE CASCADE,
+    foreign key (mealkit_no) references mealkit(no) ON DELETE CASCADE
+);
+
 
 
 

@@ -350,8 +350,9 @@ public class MemberService {
 
 	private ArrayList<HashMap<String, Object>> getMealKitWishList(String userId) {
 	    // MealkitDAO에서 밀키트 위시리스트 정보를 가져오는 메소드 호출
-	    return mealkitDAO.selectMealKitInfos(userId, 0); // 0은 밀키트 위시리스트를 의미
+	    return mealkitDAO.selectMealKitInfos(userId); // 0은 밀키트 위시리스트를 의미
 	}
+
 
 
 
@@ -377,18 +378,40 @@ public class MemberService {
 	}
 
 	public ArrayList<HashMap<String, Object>> getSendedMealkit(HttpServletRequest request) {
-		
+		System.out.println("Service왔음");
 		HttpSession session = request.getSession();
 		String id = (String) session.getAttribute("userId");
 		
-		String deliverd = request.getParameter("deliverd");
+		String delivered = (String) request.getParameter("deliverd");
 		
-		return memberDAO.selectSendedMealkit(id, deliverd);
+		return memberDAO.selectSendedMealkit(id,  "0"); //0 1 2
 	}
-	
-	 // 최근 본 목록 조회 서비스
-    public ArrayList<HashMap<String, Object>> getRecentViews(String userId) throws SQLException {
-        return memberDAO.getRecentView(userId, 0);
+
+    // 최근 본 목록을 조회하는 메소드
+	public ArrayList<HashMap<String, Object>> getRecentViews(String userId, int type) {
+	    ArrayList<HashMap<String, Object>> recentViewInfos = new ArrayList<>();
+
+	    if (type == 0) {
+	        recentViewInfos = memberDAO.getRecentRecipeViews(userId);  // Recipe 데이터 조회
+	    } else {
+	        recentViewInfos = memberDAO.getRecentMealkitViews(userId);  // Mealkit 데이터 조회
+	    }
+
+	    return recentViewInfos;
+	}
+
+    public int deleteWishRecipe(String userId, String recipeNo) {
+        // DAO에서 삭제 메소드를 호출하고 결과를 받음
+        int result = recipeDAO.deleteWishRecipe(userId, recipeNo);
+        
+        // 결과에 따라 처리
+        if (result == 0) {
+            // 삭제할 레시피가 없으면 실패 처리
+            return 0;  // 삭제 실패
+        } else {
+            // 삭제 성공 처리
+            return 1;  // 삭제 성공
+        }
     }
     
     public HashMap<String, Object> getReviews(HttpServletRequest request) {
@@ -405,4 +428,65 @@ public class MemberService {
     	
     	return reviews;
     }
+
+	public ArrayList<HashMap<String, Object>> getCartListInfos(String userId) {
+       
+		   if (userId == null || userId.isEmpty()) {
+		        // 예외 처리 또는 빈 리스트 반환
+		        return new ArrayList<>();
+		    }
+
+		    try {
+		        return mealkitDAO.selectCartList(userId);
+		    } catch (Exception e) {
+		        // 예외 처리 (예: 로그 출력)
+		        System.err.println("Error while fetching cart list: " + e.getMessage());
+		        return new ArrayList<>();
+		    }
+		    
+	}
+		
+    public ArrayList<Integer> getCountOrderDelivered(HttpServletRequest request) {
+    	return mealkitDAO.selectCountOrderDelivered((String) request.getSession().getAttribute("userId"));
+    }
+    
+    public ArrayList<Integer> getCountDelivered(HttpServletRequest request) {
+    	return mealkitDAO.selectCountDelivered((String) request.getSession().getAttribute("userId"));
+    }
+    
+    //public int updateDelivery(int delivered, int refund){
+    	//return MealkitDAO.updateDelivery()
+    //}
+
+
+	public int deleteWishMealkit(String userId, String mealkitNo) {
+		  // DAO에서 삭제 메소드를 호출하고 결과를 받음
+        int result = mealkitDAO.deleteWishMealkit(userId, mealkitNo);
+        
+        // 결과에 따라 처리
+        if (result == 0) {
+            // 삭제할 레시피가 없으면 실패 처리
+            return 0;  // 삭제 실패
+        } else {
+            // 삭제 성공 처리
+            return 1;  // 삭제 성공
+        }
+	}
+
+	public int deleteCartList(String userId, String mealkitNo) {
+		  // DAO에서 삭제 메소드를 호출하고 결과를 받음
+        int result = mealkitDAO.deleteCartList(userId, mealkitNo);
+        
+        // 결과에 따라 처리
+        if (result == 0) {
+            // 삭제할 레시피가 없으면 실패 처리
+            return 0;  // 삭제 실패
+        } else {
+            // 삭제 성공 처리
+            return 1;  // 삭제 성공
+        }
+	}
+
 }
+
+

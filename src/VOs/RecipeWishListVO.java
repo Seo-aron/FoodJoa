@@ -1,10 +1,13 @@
 package VOs;
 
+import java.sql.Timestamp;
+
 public class RecipeWishListVO {
 
 	private int no;
 	private String id;
 	private int recipeNo;
+	private Timestamp choice_date;
 	
 	public RecipeWishListVO() {
 	}
@@ -14,6 +17,15 @@ public class RecipeWishListVO {
 		this.no = no;
 		this.id = id;
 		this.recipeNo = recipeNo;
+	}
+	
+
+	public RecipeWishListVO(int no, String id, int recipeNo, Timestamp choice_date) {
+		
+		this.no = no;
+		this.id = id;
+		this.recipeNo = recipeNo;
+		this.choice_date = choice_date;
 	}
 
 	public int getNo() {
@@ -39,4 +51,13 @@ public class RecipeWishListVO {
 	public void setRecipeNo(int recipeNo) {
 		this.recipeNo = recipeNo;
 	}
+	
+	public Timestamp getChoiceDate() {
+		return choice_date;
+	}
+
+	public void setChoiceDate(Timestamp choice_date) {
+		this.choice_date = choice_date;
+	}
+
 }

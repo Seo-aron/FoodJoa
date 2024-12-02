@@ -3,6 +3,7 @@ package Services;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -345,4 +346,9 @@ public class MealkitService {
 		return mealkitDAO.selectMealkitsById((String) request.getSession().getAttribute("userId"));
 	}
 
+	public ArrayList<Integer> getCountDelivered(HttpServletRequest request) {
+	    String userId = (String) request.getSession().getAttribute("userId");
+	    
+	    return mealkitDAO.selectCountDelivered(userId); // DAO 호출
+	}
 }

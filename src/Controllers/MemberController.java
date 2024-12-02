@@ -78,10 +78,12 @@ public class MemberController extends HttpServlet {
 		case "/logout.me" : processMemberLogOut(request, response); return;
 		case "/deleteMember.me": openDeleteMember(request, response); break;
 		case "/deleteMemberPro.me": processDeleteMember(request, response); return;
-		case "/WishList.me": openWishList(request, response); break;
-		case "/RecentList.me": openRecentList(request, response); break;	
+		case "/wishList.me": openWishList(request, response); break;
+		case "/deleteWishRecipe.me" : deleteWishRecipe(request, response); return;
+		case "/deleteWishMealkit.me" : deleteWishMealkit(request, response); return;
+		case "/recentList.me": openRecentList(request, response); break;	
 		case "/cartList.me" : openCartList(request, response); break;
-
+		case "/deleteCartList.me" : deleteCartList(request, response); return;
 		case "/mypagemain.me": openMypagemainView(request, response); break;
 		case "/update.me": openMemberUpdateView(request, response); break;
 		case "/updatePro.me": processMemberUpdate(request, response); break;
@@ -89,8 +91,8 @@ public class MemberController extends HttpServlet {
 		case "/viewMySend.me": openMySendView(request, response); break;
 		case "/viewMyRecipe.me" : openMyRecipeView(request, response); break;
 		
-		//-- 건용 작성
 		case "/myReviews": openMyReviewsView(request, response); break;
+	//	case "/updateDelivery" : processUpdateDelivery(request, response); break;
 
 		default:
 			nextPage = "/main.jsp";
@@ -100,7 +102,15 @@ public class MemberController extends HttpServlet {
 		dispatcher.forward(request, response);
 	}
 
-	
+
+	/*
+	 * private void processUpdateDelivery(HttpServletRequest request,
+	 * HttpServletResponse response) { MealkitDAO dao = memberService.(request);
+	 * request.setAttribute("center","members/sendmealkit.jsp"); nextPage =
+	 * "/main.jsp"; }
+	 */
+
+
 		private void openMemberJoinView(HttpServletRequest request, HttpServletResponse response)
 				throws ServletException, IOException {
 	
@@ -351,7 +361,8 @@ public class MemberController extends HttpServlet {
 		}
 		
 		private void openWishList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		    // 세션에서 사용자 ID를 가져옴
+		    
+			// 세션에서 사용자 ID를 가져옴
 		    HttpSession session = request.getSession();
 		    String userId = (String) session.getAttribute("userId");
 
@@ -369,47 +380,151 @@ public class MemberController extends HttpServlet {
 		    String nextPage = "/main.jsp"; // 메인 페이지로 이동하도록 설정
 
 		}
- 
-	    private void openRecentList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-	    	 // 세션에서 사용자 ID를 가져옴
-	        HttpSession session = request.getSession();
-	        String userId = (String) session.getAttribute("userId");
-
-	        if (userId == null) {
-	            // 사용자 ID가 없을 경우 로그인 페이지로 리다이렉트
-	            response.sendRedirect(request.getContextPath() + "/login.jsp");
-	            return;
-	        }
-
-	        // MemberService를 통해 최근 본 목록 데이터를 가져옴
-	        try {
-	            ArrayList<HashMap<String, Object>> recentList = memberService.getRecentViews(userId);
-	            request.setAttribute("recentList", recentList); // 가져온 데이터를 요청 속성에 추가
-	            
-	            // recent.jsp로 포워딩
-	            request.setAttribute("center", "members/recent.jsp");  // 중심 콘텐츠 설정
-	            request.getRequestDispatcher("/main.jsp").forward(request, response);  // main.jsp에서 recent.jsp로 포워딩
-	            
-	            
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	            // 예외 발생 시 오류 페이지로 포워딩
-	            request.setAttribute("errorMessage", "최근 본 목록을 가져오는 중 오류가 발생했습니다.");
-	            request.setAttribute("center", "error.jsp");
-	            request.getRequestDispatcher("/main.jsp").forward(request, response);
-	            return;
-	        }
-
-	    }
 		
-		private void openCartList(HttpServletRequest request, HttpServletResponse response) {
-		    
+
+		private void deleteWishRecipe(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		        String userId = request.getParameter("userId");
+		        String recipeNo = request.getParameter("recipeNo");
+
+		        // 값이 제대로 넘어오는지 확인
+		        System.out.println("userId: " + userId);
+		        System.out.println("recipeNo: " + recipeNo);
+
+
+		        int result = memberService.deleteWishRecipe(userId, recipeNo);
+
+		        if (!response.isCommitted()) { // 응답이 커밋되지 않았다면 리다이렉트 처리
+		            if (result == 1) {
+		                // 삭제 성공
+		                System.out.println("삭제 성공!");
+		                response.sendRedirect(request.getContextPath() + "/Member/wishList.me");
+		                return; // sendRedirect 후 메소드 종료
+		            } else if (result == 0) {
+		                // 삭제 실패: 해당 레시피는 위시리스트에 없음
+		                System.out.println("삭제 실패: 해당 레시피는 위시리스트에 없습니다.");	          
+		            } else {
+		                // DB 통신 오류
+		                System.out.println("DB 통신 오류가 발생했습니다.");	             
+		            }
+		        }
+		        }
+		
+		private void deleteWishMealkit(HttpServletRequest request, HttpServletResponse response) throws IOException {
+			 String userId = request.getParameter("userId");
+		        String mealkitNo = request.getParameter("mealkitNo");
+
+		        // 값이 제대로 넘어오는지 확인
+		        System.out.println("userId: " + userId);
+		        System.out.println("mealkitNo: " + mealkitNo);
+
+
+		        int result = memberService.deleteWishMealkit(userId, mealkitNo);
+
+		        if (!response.isCommitted()) { // 응답이 커밋되지 않았다면 리다이렉트 처리
+		            if (result == 1) {
+		                // 삭제 성공
+		                System.out.println("삭제 성공!");
+		                response.sendRedirect(request.getContextPath() + "/Member/wishList.me");
+		                return; // sendRedirect 후 메소드 종료
+		            } else if (result == 0) {
+		                // 삭제 실패: 해당 레시피는 위시리스트에 없음
+		                System.out.println("삭제 실패: 해당 레시피는 위시리스트에 없습니다.");	          
+		            } else {
+		                // DB 통신 오류
+		                System.out.println("DB 통신 오류가 발생했습니다.");	             
+		            }
+		        }
+		
+	}
+
+ 
+		private void openRecentList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		    String userId = (String) request.getSession().getAttribute("userId");  // 세션에서 userId 가져오기
+		    String typeParam = request.getParameter("type");
+		    int type = (typeParam != null && !typeParam.isEmpty()) ? Integer.parseInt(typeParam) : 0;  // 기본값 0 설정
+
+		    if (userId == null) {
+		        response.sendRedirect("/login.jsp");  // 로그인하지 않은 경우 로그인 페이지로 리디렉션
+		        return;
+		    }
+
+		    // 최근 본 글 목록 가져오기 (type에 맞게 필터링)
+		    ArrayList<HashMap<String, Object>> recentViewInfos = memberService.getRecentViews(userId, type);
+
+		    // 최근 본 글 목록을 request에 추가
+		    request.setAttribute("recentViewInfos", recentViewInfos);
+
+		    // type에 맞는 필터링된 데이터를 요청 속성에 추가
+		    request.setAttribute("type", type);
+
 		    // center 부분에 해당하는 JSP 파일 설정
-		    request.setAttribute("center", "members/cartlist.jsp");
-		    
+		    request.setAttribute("center", "members/recent.jsp");
+
 		    // 메인 페이지로 이동
-		    nextPage = "/main.jsp";
+		    String nextPage = "/main.jsp";
 		}
+
+	
+		private void openCartList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		    String userId = (String) request.getSession().getAttribute("userId");
+
+		    // userId가 없는 경우 처리
+		    if (userId == null || userId.isEmpty()) {
+		        response.sendRedirect("/login"); // 로그인 페이지로 리디렉션
+		        return;
+		    }
+
+		    try {
+		        // 서비스에서 데이터 가져오기
+		        ArrayList<HashMap<String, Object>> cartListInfos = memberService.getCartListInfos(userId);
+
+		        // 데이터가 없으면 빈 리스트를 전달
+		        if (cartListInfos == null) {
+		            cartListInfos = new ArrayList<>();
+		        }
+
+		        request.setAttribute("cart", cartListInfos); // cart로 전달
+		        request.setAttribute("center", "members/cartlist.jsp");
+
+		        nextPage = "/main.jsp";
+		    } catch (Exception e) {
+		        // 예외 처리 (예: 로그 출력)
+		        e.printStackTrace();
+		        request.setAttribute("errorMessage", "장바구니 정보를 가져오는 데 문제가 발생했습니다.");
+		        nextPage = "/error.jsp"; // 에러 페이지로 이동
+		    }
+		}
+		
+		private void deleteCartList(HttpServletRequest request, HttpServletResponse response) throws IOException {
+			String userId = request.getParameter("userId");
+	        String mealkitNo = request.getParameter("mealkitNo");
+
+	        // 값이 제대로 넘어오는지 확인
+	        System.out.println("userId: " + userId);
+	        System.out.println("mealkitNo: " + mealkitNo);
+
+
+	        int result = memberService.deleteCartList(userId, mealkitNo);
+
+	        if (!response.isCommitted()) { // 응답이 커밋되지 않았다면 리다이렉트 처리
+	            if (result == 1) {
+	                // 삭제 성공
+	                System.out.println("삭제 성공!");
+	                response.sendRedirect(request.getContextPath() + "/Member/cartList.me");
+	                return; // sendRedirect 후 메소드 종료
+	            } else if (result == 0) {
+	                // 삭제 실패: 해당 레시피는 위시리스트에 없음
+	                System.out.println("삭제 실패: 해당 레시피는 위시리스트에 없습니다.");	          
+	            } else {
+	                // DB 통신 오류
+	                System.out.println("DB 통신 오류가 발생했습니다.");	             
+	            }
+	        }
+	        }
+
+
+		
 
 		//혜원 파트
 		//------------------------------------------------------------------------------------------
@@ -424,14 +539,23 @@ public class MemberController extends HttpServlet {
 
 				// 아이디가 세션에 없으면 로그인 페이지로 리다이렉트
 				if (userId == null) {
-					response.sendRedirect("login.jsp");
+		   		   response.setContentType("text/html; charset=UTF-8");
+				    PrintWriter out = response.getWriter();
+					out.println("<script type='text/javascript'>");
+					out.println("alert('로그인이 필요합니다. 로그인 페이지로 이동합니다.');");
+					out.println("location.href='" + request.getContextPath() + "/Member/login.me';");
+					out.println("</script>");
+					out.close();
 					return;
 				}
 
 				// 서비스 메서드를 호출하여 회원 정보 처리
 				memberService.getMemberProfile(request, userId);
+				
+				ArrayList<Integer> orderCounts = memberService.getCountOrderDelivered(request);
 
 				// 처리 후 마이페이지로 이동
+				request.setAttribute("orderCounts", orderCounts);
 				request.setAttribute("center", "members/mypagemain.jsp");
 				request.getRequestDispatcher("main.jsp").forward(request, response);
 			} catch (Exception e) {
@@ -460,6 +584,10 @@ public class MemberController extends HttpServlet {
 		}
 
 		private void openMyDeliveryView(HttpServletRequest request, HttpServletResponse response) {
+			
+			HttpSession session = request.getSession();
+			String id = (String) session.getAttribute("userId");
+			
 			ArrayList<HashMap<String, Object>> orderedMealkitList = memberService.getDeliveredMealkit(request);
 			
 			request.setAttribute("orderedMealkitList", orderedMealkitList);
@@ -468,8 +596,12 @@ public class MemberController extends HttpServlet {
 		}
 		
 		private void openMySendView(HttpServletRequest request, HttpServletResponse response){ 
+			System.out.println("controller왔음");
+			HttpSession session = request.getSession();
+			String id = (String) session.getAttribute("userId");
+					
 			ArrayList<HashMap<String, Object>> orderedMealkitList = memberService.getSendedMealkit(request);
-					  
+			
 			request.setAttribute("orderedMealkitList", orderedMealkitList); 
 			request.setAttribute("center","members/sendmealkit.jsp"); 
 			nextPage = "/main.jsp"; 
