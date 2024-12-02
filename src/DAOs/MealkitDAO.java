@@ -339,16 +339,17 @@ public class MealkitDAO {
 	    
 	    // SQL 쿼리문 정의
 	    String sql = "SELECT "
-	    		+ "mk.pictures, mk.title, mk.contents, mk.price, m.nickname AS author_nickname, mr.average_rating "
+	    		+ "mk.no, mk.id, mk.pictures, mk.title, mk.contents, mk.price, m.nickname AS author_nickname, mr.average_rating "
 	    		+ "FROM mealkit_wishlist mw "
 	    		+ "JOIN mealkit mk ON mw.mealkit_no = mk.no "
 	    		+ "JOIN member m ON mk.id = m.id "
 	    		+ "LEFT JOIN ( "
 	    		+ "SELECT mealkit_no, AVG(rating) AS average_rating "
 	    		+ "FROM mealkit_review "
-	    		+ "GROUP BY rating "
+	    		+ "GROUP BY mealkit_no "
 	    		+ ") mr ON mw.mealkit_no = mr.mealkit_no "
-	    		+ "WHERE mw.id = ?";
+	    		+ "WHERE mw.id = ?"
+	    		+ "ORDER BY mw.choice_date DESC;";
 	    
 		ResultSet resultSet = dbConnector.executeQuery(sql, userId);
 
@@ -357,6 +358,8 @@ public class MealkitDAO {
 				HashMap<String, Object> mealkitInfo = new HashMap<String, Object>();
 				
 				MealkitVO mealkitVO = new MealkitVO();
+				mealkitVO.setNo(resultSet.getInt("no"));
+				mealkitVO.setId(resultSet.getString("id"));
 				mealkitVO.setPictures(resultSet.getString("pictures"));
 				mealkitVO.setTitle(resultSet.getString("title"));
 				mealkitVO.setContents(resultSet.getString("contents"));
@@ -395,44 +398,37 @@ public class MealkitDAO {
 	}
 
 	public ArrayList<HashMap<String, Object>> selectCartList(String userId) {
-	    // 결과를 저장할 ArrayList 선언
-	    ArrayList<HashMap<String, Object>> cartListInfos = new ArrayList<HashMap<String, Object>>();
-	    
-	    // SQL 쿼리문 정의
-	    String sql = "SELECT "
-	    		+ "mk.pictures, mk.title, m.nickname AS author_nickname, mk.price "
-	    		+ "FROM mealkit_cart mc "
-	    		+ "JOIN mealkit mk ON mc.mealkit_no = mk.no "
-	    		+ "JOIN member m ON mk.id = m.id "
-	    		+ "WHERE mc.id=?";
-	    
-		ResultSet resultSet = dbConnector.executeQuery(sql, userId);
+	    ArrayList<HashMap<String, Object>> cartListInfos = new ArrayList<>();
+	    String sql = "SELECT mk.no, mk.id, mk.pictures, mk.title, mk.price, m.nickname AS author_nickname, mc.quantity " +
+	                 "FROM mealkit_cart mc " +
+	                 "JOIN mealkit mk ON mc.mealkit_no = mk.no " +
+	                 "JOIN member m ON mk.id = m.id " +
+	                 "WHERE mc.id = ?";
 
-		try {
-			while (resultSet.next()) {
-				HashMap<String, Object> cartListInfo = new HashMap<String, Object>();
-				
-				MealkitVO mealkitVO = new MealkitVO();
-				mealkitVO.setPictures(resultSet.getString("pictures"));
-				mealkitVO.setTitle(resultSet.getString("title"));
-				mealkitVO.setPrice(resultSet.getString("price"));
-				
-				String authorNickname  = resultSet.getString("author_nickname");
-				
-				cartListInfo.put("mealkitVO", mealkitVO);
-				cartListInfo.put("nickname", authorNickname);
-				
-				cartListInfos.add(cartListInfo);
-				
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	    try (ResultSet resultSet = dbConnector.executeQuery(sql, userId)) {
+	        while (resultSet.next()) {
+	            HashMap<String, Object> cartListInfo = new HashMap<>();
+	            
+	            MealkitVO mealkitVO = new MealkitVO();
+	            mealkitVO.setNo(resultSet.getInt("no"));
+	            mealkitVO.setId(resultSet.getString("id"));
+	            mealkitVO.setPictures(resultSet.getString("pictures"));
+	            mealkitVO.setTitle(resultSet.getString("title"));
+	            mealkitVO.setPrice(resultSet.getString("price"));
 
-		dbConnector.release();
+	            String authorNickname = resultSet.getString("author_nickname");
+	            int quantity = resultSet.getInt("quantity");  // quantity 추가
 
-		return cartListInfos;
+	            cartListInfo.put("mealkitVO", mealkitVO);
+	            cartListInfo.put("nickname", authorNickname);
+	            cartListInfo.put("quantity", quantity);  // 수량 추가
+	            cartListInfos.add(cartListInfo);
+	        }
+	    } catch (SQLException e) {
+	        System.err.println("Error while fetching cart list: " + e.getMessage());
+	    }
+
+	    return cartListInfos;
 	}
 
 	public ArrayList<Integer> selectCountOrderDelivered(String id) {
@@ -488,5 +484,32 @@ public ArrayList<Integer> selectCountDelivered(String id) {
 		
 		return counts;
 	}
+
+	public int deleteWishMealkit(String userId, String mealkitNo) {
+		 String sql = "SELECT * FROM mealkit_wishlist WHERE id=? AND mealkit_no=?";
+		    
+		    // 위시리스트에서 해당 레시피가 있는지 확인
+		    ResultSet resultSet = dbConnector.executeQuery(sql, userId, Integer.parseInt(mealkitNo));
+	
+		    try {
+		        // 레시피가 존재하지 않으면 삭제할 필요 없음
+		        if (!resultSet.next()) {
+		            return 0;  // 레시피가 위시리스트에 없으므로 삭제 실패
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		        return 0;  // 예외 발생 시 삭제 실패 처리
+		    }
+		    
+		    // 레시피가 있으면 삭제 작업 수행
+		    sql = "DELETE FROM mealkit_wishlist WHERE id=? AND mealkit_no=?";
+		    
+		    int result = dbConnector.executeUpdate(sql, userId, mealkitNo);
+		    
+		    dbConnector.release();
+		    
+		    return result;  // 삭제 성공 시 1 반환, 실패 시 0 반환
+		}
+	
 
 }

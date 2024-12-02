@@ -417,7 +417,8 @@ public ArrayList<HashMap<String, Object>> selectRecipeInfos(String userId) {
 	            + ") avg_rating ON r.no = avg_rating.recipe_no "
 	            + ") recipeWithAvg ON wish.recipe_no = recipeWithAvg.no "
 	            + "LEFT JOIN member m ON recipeWithAvg.id = m.id " // 수정된 부분: recipe의 작성자 id와 member를 연결
-	            + "WHERE wish.id=?";
+	            + "WHERE wish.id=?"
+	            + "ORDER BY wish.choice_date DESC;";
 	    
 	    ResultSet resultSet = dbConnector.executeQuery(sql, userId);
 	    
@@ -567,34 +568,30 @@ public ArrayList<HashMap<String, Object>> selectRecipeInfos(String userId) {
 		return recipes;
 	}
 	
-	public int deleteWishRecipe(String userId, String recipeNo) {
-	    // 위시리스트에 해당 레시피가 있는지 확인
+	public int deleteWishRecipe(String id, String recipeNo) {
 	    String sql = "SELECT * FROM recipe_wishlist WHERE id=? AND recipe_no=?";
 	    
-	    // 확인 쿼리 실행
-	    ResultSet resultSet = dbConnector.executeQuery(sql, userId, Integer.parseInt(recipeNo));
+	    // 위시리스트에서 해당 레시피가 있는지 확인
+	    ResultSet resultSet = dbConnector.executeQuery(sql, id, Integer.parseInt(recipeNo));
 
 	    try {
+	        // 레시피가 존재하지 않으면 삭제할 필요 없음
 	        if (!resultSet.next()) {
-	            // 위시리스트에 해당 레시피가 없으면 삭제할 항목이 없음
-	            return 0; // 삭제 실패
+	            return 0;  // 레시피가 위시리스트에 없으므로 삭제 실패
 	        }
-
-	        // 해당 레시피가 있으면 삭제
-	        String sqlDelete = "DELETE FROM recipe_wishlist WHERE id=? AND recipe_no=?";
-	        
-	        // 삭제 쿼리 실행
-	        int result = dbConnector.executeUpdate(sqlDelete, userId, Integer.parseInt(recipeNo));
-
-	        return result > 0 ? 1 : 0; // 삭제 성공 (1) / 실패 (0)
-
 	    } catch (SQLException e) {
 	        e.printStackTrace();
-	        return 0; // DB 통신 실패
-	    } finally {
-	        dbConnector.release(); // 자원 해제
+	        return 0;  // 예외 발생 시 삭제 실패 처리
 	    }
-
+	    
+	    // 레시피가 있으면 삭제 작업 수행
+	    sql = "DELETE FROM recipe_wishlist WHERE id=? AND recipe_no=?";
+	    
+	    int result = dbConnector.executeUpdate(sql, id, recipeNo);
+	    
+	    dbConnector.release();
+	    
+	    return result;  // 삭제 성공 시 1 반환, 실패 시 0 반환
 	}
 }
 

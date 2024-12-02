@@ -10,181 +10,156 @@
 
     String contextPath = request.getContextPath();
 
-    // 위시리스트 데이터 가져오기 
-    ArrayList<HashMap<String, Object>> recipeInfos = 
-        (ArrayList<HashMap<String, Object>>) request.getAttribute("recipeWishListInfos"); // 수정된 속성명
-    if (recipeInfos == null) {
-        recipeInfos = new ArrayList<>(); // 데이터가 없으면 빈 리스트로 초기화
-    } 
-        
-        
-    // 밀키트 위시리스트 데이터 가져오기 
-    ArrayList<HashMap<String, Object>> mealKitInfos = 
-        (ArrayList<HashMap<String, Object>>) request.getAttribute("mealKitWishListInfos"); // 밀키트 위시리스트
+    // 최근 본 글 리스트 정보 받아오기
+    ArrayList<HashMap<String, Object>> recentViewInfos = 
+        (ArrayList<HashMap<String, Object>>) request.getAttribute("recentViewInfos");
+    if (recentViewInfos == null) {
+        recentViewInfos = new ArrayList<>();
+    }
 
-    if (mealKitInfos == null) {
-        mealKitInfos = new ArrayList<>(); // 데이터가 없으면 빈 리스트로 초기화
-    }    
-    
-    final int columnCount = 4; // 한 줄에 표시할 항목 수
+    // 'type' 파라미터 값을 받아서, default는 0 (레시피)로 설정
+    String type = request.getParameter("type");
+    if (type == null) {
+        type = "0";  // 기본값: 레시피
+    }
+
+    // 데이터를 JSP 하단에서 사용 가능하도록 전달
+    request.setAttribute("recentViewInfos", recentViewInfos);
+    request.setAttribute("type", type); // 'type' 값을 JSP로 전달
 %>
 
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>최근에 본</title>
-<script>
-    // 라디오 버튼에 따라 표시할 리스트 제어
-    function toggleList() {
-        const selectedValue = document.querySelector('input[name="filter"]:checked').value;
-
-        // 모든 목록과 제목 숨기기
-        document.getElementById("wishListRecipe").style.display = "none";
-        document.getElementById("wishListMealKit").style.display = "none";
-;
-
-        // 선택된 항목 표시
-        if (selectedValue === "recipe") {
-            document.getElementById("wishListRecipe").style.display = "block";  // 레시피 목록 보이기
-        } else if (selectedValue === "product") {
-            document.getElementById("wishListMealKit").style.display = "block"; // 밀키트 목록 보이기
-        }
-    }
-
-    // 페이지 로드 시 기본값 설정
-    window.onload = function() {
-        // 기본적으로 레시피 목록만 표시하도록 설정
-        document.getElementById("wishListRecipe").style.display = "block";
-        // 밀키트 목록은 숨기기
-        document.getElementById("wishListMealKit").style.display = "none";
-
-        // 레시피 라디오 버튼이 체크되도록 설정
-        document.getElementById("recipe").checked = true;
-    };
-</script>
-
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>최근에 본</title>
+    <title>최근 본 글 목록</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
     <style>
-    /* #container는 기본적으로 flexbox가 아닌 기본 레이아웃 유지 */
-    .container {
-        width: 1200px;
-        margin: 0 auto; /* 가운데 정렬 */
-    }
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+            font-family: "Noto Serif KR", serif;
+        }
+        .recent-view-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            width: 100%;
+        }
+        .recent-view-item {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+        }
+        .recent-view-item img {
+            max-width: 150px;
+            height: 150px;
+            margin-right: 20px;
+        }
+        .recent-view-item .info {
+            text-align: left;
+        }
+        #radio {
+            margin-bottom: 20px;
+        }
+    </style>
+    <script>
+        function toggleList() {
+            const selectedValue = document.querySelector('input[name="filter"]:checked').value;
+            const typeHiddenField = document.getElementById("typeHidden");
+            
+            // '레시피'가 선택되면 0, '밀키트'가 선택되면 1
+            if (selectedValue === "recipe") {
+                typeHiddenField.value = "0";
+            } else {
+                typeHiddenField.value = "1";
+            }
 
-    .wishlist-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr); /* 두 개의 항목을 나란히 배치 */
-        gap: 25px; /* 항목 간의 간격 */
-        width: 100%;
-    }
+            // 선택된 값에 맞춰 필터링
+            document.getElementById("recentViewRecipe").style.display = selectedValue === "recipe" ? "block" : "none";
+            document.getElementById("recentViewMealKit").style.display = selectedValue === "product" ? "block" : "none";
 
-    /* wishlist-item에만 flexbox 적용 */
-    .wishlist-item {
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        overflow: hidden;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        display: flex; /* Flexbox를 사용하여 아이템을 가로로 배치 */
-        align-items: center; /* 세로로 가운데 정렬 */
-        padding: 10px;
-    }
+            // form 제출하여 'type' 값 갱신
+            document.getElementById("typeForm").submit();
+        }
 
-    .wishlist-item:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
+        window.onload = function() {
+            const type = '<%= type %>';
+            // 페이지 로드 시 선택된 항목에 따라 해당하는 목록만 표시
+            if (type === "0") {
+                document.getElementById("recentViewRecipe").style.display = "block";
+                document.getElementById("recentViewMealKit").style.display = "none";
+                document.getElementById("recipe").checked = true;
+            } else {
+                document.getElementById("recentViewRecipe").style.display = "none";
+                document.getElementById("recentViewMealKit").style.display = "block";
+                document.getElementById("product").checked = true;
+            }
+        };
+    </script>
+</head>
+<body>
+    <div id="container">
+        <!-- 라디오 버튼으로 레시피와 밀키트 선택 -->
+        <div id="radio">
+            <h1>최근 본 글 목록</h1>
+            <form id="typeForm" method="POST" action="${pageContext.request.contextPath}/Member/recentList.me">
+                <!-- type 값을 전달하는 hidden 필드를 사용 -->
+                <input type="hidden" id="typeHidden" name="type" value="<%= type %>">
+                <input type="radio" id="recipe" name="filter" value="recipe" <%= "0".equals(type) ? "checked" : "" %> onchange="toggleList()">
+                <label for="recipe">레시피</label>
+                <input type="radio" id="product" name="filter" value="product" <%= "1".equals(type) ? "checked" : "" %> onchange="toggleList()">
+                <label for="product">밀키트</label>
+                <hr>
+            </form>
+        </div>
 
-    .wishlist-item img {
-        max-width: 150px; /* 이미지 크기 조정 */
-        height: 150px;
-        margin-right: 20px; /* 이미지와 텍스트 사이의 간격 */
-    }
+        <!-- 최근 본 레시피 목록 -->
+        <div id="recentViewRecipe" class="recent-view" style="display: none;">
+            <div class="recent-view-grid">
+                <c:forEach var="item" items="${recentViewInfos}">
+                    <c:if test="${item.recipeVO != null}">
+                        <div class="recent-view-item">
+                            <a href="${pageContext.request.contextPath}/Recipe/read?no=${item.recipeVO.no}&category=0&currentPage=0&currentBlock=0">
+						    <img src="${pageContext.request.contextPath}/images/recipe/thumbnails/${item.recipeVO.no}/${item.recipeVO.thumbnail}" 
+						         alt="${item.recipeVO.title}">
+							</a>
 
-    .wishlist-item .info {
-        text-align: left; /* 텍스트를 왼쪽 정렬 */
-    }
-
-    .wishlist-item .info div {
-        margin-bottom: 10px;
-    }
-
-    /* radio 관련 스타일은 기본 레이아웃으로 유지 */
-    #radio {
-        margin-bottom: 20px;
-    }
-</style>
-
-<div id="container">
-    <!-- 라디오 버튼과 제목을 담고 있는 div -->
-    <div id="radio">
-        <h1>Wish List</h1>
-        <input type="radio" id="recipe" name="filter" value="recipe" checked onchange="toggleList()">
-        <label for="recipe">레시피</label>
-
-        <input type="radio" id="product" name="filter" value="product" onchange="toggleList()">
-        <label for="product">상품</label> 
-        <hr> <!-- 구분선 -->
-    </div>
-    
-    <!-- 레시피 목록을 보여주는 div -->
-    <div id="wishListRecipe" class="wishList">
-        <div class="wishlist-grid">
-            <c:forEach var="item" items="${recipeWishListInfos}">
-                <c:choose>
-                    <c:when test="${item.recipeVO != null}">
-                        <div class="wishlist-item">
-                            <!-- 이미지 왼쪽에 배치 -->
-                            <a href="${pageContext.request.contextPath}/recipes/list.jsp?recipeNo=${item.recipeVO.no}">
-                                <img src="${pageContext.request.contextPath}/images/recipe/thumbnails/${item.recipeVO.no}/${item.recipeVO.thumbnail}" 
-                                     alt="${item.recipeVO.title}" />
-                            </a>
-
-                            <!-- 텍스트 정보 오른쪽에 배치 -->
                             <div class="info">
-                                <div id="title"><b>${item.recipeVO.title}</b></div>
-                                <div id="nickname">작성자: ${item.nickname}</div> <!-- 작성자 닉네임 -->
-                                <div id="contents">간단소개: ${item.contents}</div>
-                                <div id="averageRating">평점: ${item.averageRating}</div> <!-- 평점 -->
+                                <div><b>${item.recipeVO.title}</b></div>
+                                <div>작성자: ${item.nickname}</div>
+                                <div>${item.recipeVO.description}</div>
+                                <div>평점: ${item.averageRating}</div>
                             </div>
                         </div>
-                    </c:when>
-                </c:choose>
-            </c:forEach>
+                    </c:if>
+                </c:forEach>
+            </div>
         </div>
-    </div>
 
-    <!-- 밀키트 목록을 보여주는 div -->
-    <div id="wishListMealKit" class="wishList" style="display:none;">
-        <div class="wishlist-grid">
-            <c:forEach var="item" items="${mealKitWishListInfos}">
-                <c:choose>
-                    <c:when test="${item.mealkitVO != null}">
-                        <div class="wishlist-item">
-                            <!-- 이미지 왼쪽에 배치 -->
-                            <%-- <a href="mealKitDetails.jsp?mealKitNo=${item.mealkitVO.no}">
-                                <img src="${pageContext.request.contextPath}/images/mealkit/thumbnails/${item.mealkitVO.no}/${item.mealkitVO.thumbnail}" 
-                                     alt="${item.mealkitVO.title}" />
-                            </a>
- --%>
-                            <!-- 텍스트 정보 오른쪽에 배치 -->
+        <!-- 최근 본 밀키트 목록 -->
+        <div id="recentViewMealKit" class="recent-view" style="display: none;">
+            <div class="recent-view-grid">
+                <c:forEach var="item" items="${recentViewInfos}">
+                    <c:if test="${item.mealkitVO != null}">
+                        <div class="recent-view-item">
+                            <img src="${pageContext.request.contextPath}/images/mealkit/thumbnails/${item.mealkitVO.no}/${item.mealkitVO.id}/${item.mealkitVO.pictures.substring(4)}" 
+                             alt="${item.mealkitVO.title}">
                             <div class="info">
                                 <div><b>${item.mealkitVO.title}</b></div>
-                                <div>작성자: ${item.nickname}</div> <!-- 작성자 닉네임 -->
-                                <div>평점: ${item.avgRating}</div> <!-- 평점 -->
+                                <div>작성자: ${item.nickname}</div>
+                                <div>가격: ${item.mealkitVO.price}</div>
+                                <div>평점: ${item.avgRating}</div>
                             </div>
                         </div>
-                    </c:when>
-                </c:choose>
-            </c:forEach>
+                    </c:if>
+                </c:forEach>
+            </div>
         </div>
     </div>
-</div>
 </body>
-</html> 
+</html>
