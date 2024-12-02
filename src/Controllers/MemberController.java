@@ -83,6 +83,7 @@ public class MemberController extends HttpServlet {
 		case "/deleteWishMealkit.me" : deleteWishMealkit(request, response); return;
 		case "/recentList.me": openRecentList(request, response); break;	
 		case "/cartList.me" : openCartList(request, response); break;
+		case "/deleteCartList.me" : deleteCartList(request, response); return;
 
 		case "/mypagemain.me": openMypagemainView(request, response); break;
 		case "/update.me": openMemberUpdateView(request, response); break;
@@ -486,6 +487,33 @@ public class MemberController extends HttpServlet {
 		        nextPage = "/error.jsp"; // 에러 페이지로 이동
 		    }
 		}
+		
+		private void deleteCartList(HttpServletRequest request, HttpServletResponse response) throws IOException {
+			String userId = request.getParameter("userId");
+	        String mealkitNo = request.getParameter("mealkitNo");
+
+	        // 값이 제대로 넘어오는지 확인
+	        System.out.println("userId: " + userId);
+	        System.out.println("mealkitNo: " + mealkitNo);
+
+
+	        int result = memberService.deleteCartList(userId, mealkitNo);
+
+	        if (!response.isCommitted()) { // 응답이 커밋되지 않았다면 리다이렉트 처리
+	            if (result == 1) {
+	                // 삭제 성공
+	                System.out.println("삭제 성공!");
+	                response.sendRedirect(request.getContextPath() + "/Member/cartList.me");
+	                return; // sendRedirect 후 메소드 종료
+	            } else if (result == 0) {
+	                // 삭제 실패: 해당 레시피는 위시리스트에 없음
+	                System.out.println("삭제 실패: 해당 레시피는 위시리스트에 없습니다.");	          
+	            } else {
+	                // DB 통신 오류
+	                System.out.println("DB 통신 오류가 발생했습니다.");	             
+	            }
+	        }
+	        }
 
 
 		

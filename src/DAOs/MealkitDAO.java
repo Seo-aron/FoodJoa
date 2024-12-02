@@ -510,6 +510,37 @@ public ArrayList<Integer> selectCountDelivered(String id) {
 		    
 		    return result;  // 삭제 성공 시 1 반환, 실패 시 0 반환
 		}
+
+	public int deleteCartList(String userId, String mealkitNo) {
+		
+		 // 값이 제대로 넘어오는지 확인
+        System.out.println("다오userId: " + userId);
+        System.out.println("다오mealkitNo: " + mealkitNo);
+        
+		 String sql = "SELECT * FROM mealkit_cart WHERE id=? AND mealkit_no=?";
+		    
+		    // 위시리스트에서 해당 레시피가 있는지 확인
+		    ResultSet resultSet = dbConnector.executeQuery(sql, userId, Integer.parseInt(mealkitNo));
+	
+		    try {
+		        // 레시피가 존재하지 않으면 삭제할 필요 없음
+		        if (!resultSet.next()) {
+		            return 0;  // 레시피가 위시리스트에 없으므로 삭제 실패
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		        return 0;  // 예외 발생 시 삭제 실패 처리
+		    }
+		    
+		    // 레시피가 있으면 삭제 작업 수행
+		    sql = "DELETE FROM mealkit_cart WHERE id=? AND mealkit_no=?";
+		    
+		    int result = dbConnector.executeUpdate(sql, userId, mealkitNo);
+		    
+		    dbConnector.release();
+		    
+		    return result;  // 삭제 성공 시 1 반환, 실패 시 0 반환
+	}
 	
 
 }

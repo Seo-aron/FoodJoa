@@ -138,7 +138,7 @@
                              <form action="${pageContext.request.contextPath}/Member/deleteWishMealkit.me" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
 							    <input type="hidden" name="mealkitNo" value="${item.mealkitVO.no}">
 							    <input type="hidden" name="userId" value="${sessionScope.userId}"> <!-- userId로 이름을 수정 -->
-							    <button type="submit">삭제</button>
+							     <input type="submit" value="삭제" class="btn" style="background-color: #BF917E;">
 							</form>
                         </div>
                     </div>

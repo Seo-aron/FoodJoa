@@ -456,5 +456,21 @@ public class MemberService {
         }
 	}
 
+
+
+	public int deleteCartList(String userId, String mealkitNo) {
+		  // DAO에서 삭제 메소드를 호출하고 결과를 받음
+        int result = mealkitDAO.deleteCartList(userId, mealkitNo);
+        
+        // 결과에 따라 처리
+        if (result == 0) {
+            // 삭제할 레시피가 없으면 실패 처리
+            return 0;  // 삭제 실패
+        } else {
+            // 삭제 성공 처리
+            return 1;  // 삭제 성공
+        }
+	}
+
 }
 
