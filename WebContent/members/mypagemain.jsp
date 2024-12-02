@@ -121,9 +121,9 @@ long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
          <div>내 마켓 발송 현황</div>
         <div style="display: flex;">
             <span>주문건수 : <%= totalOrderCount %></span> &nbsp;&nbsp; | &nbsp;&nbsp;   
-            <span>배송준비중 : <%= orderCounts.get(0) %></span> &nbsp;&nbsp; | &nbsp;&nbsp;
-            <span>배송중 : <%= orderCounts.get(1) %></span> &nbsp;&nbsp; | &nbsp;&nbsp;
-            <span>배송완료 : <%= orderCounts.get(2) %></span>
+            <span>발송준비중 : <%= orderCounts.get(0) %></span> &nbsp;&nbsp; | &nbsp;&nbsp;
+            <span>발송중 : <%= orderCounts.get(1) %></span> &nbsp;&nbsp; | &nbsp;&nbsp;
+            <span>발송완료 : <%= orderCounts.get(2) %></span>
             <a href="<%=contextPath%>/Member/viewMySend.me" style="margin-left: auto;">더보기</a>
          </div>
       </div>

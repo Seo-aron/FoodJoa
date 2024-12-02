@@ -82,14 +82,13 @@ public class MemberController extends HttpServlet {
 		case "/deleteWishRecipe.me" : deleteWishRecipe(request, response); break;
 		case "/recentList.me": openRecentList(request, response); break;	
 		case "/cartList.me" : openCartList(request, response); break;
-
 		case "/mypagemain.me": openMypagemainView(request, response); break;
 		case "/update.me": openMemberUpdateView(request, response); break;
 		case "/updatePro.me": processMemberUpdate(request, response); break;
 		case "/viewMyDelivery.me": openMyDeliveryView(request, response); break;
 		case "/viewMySend.me": openMySendView(request, response); break;
 		case "/viewMyRecipe.me" : openMyRecipeView(request, response); break;
-
+	//	case "/updateDelivery" : processUpdateDelivery(request, response); break;
 
 		default:
 			nextPage = "/main.jsp";
@@ -98,6 +97,13 @@ public class MemberController extends HttpServlet {
 		RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
 		dispatcher.forward(request, response);
 	}
+
+	/*
+	 * private void processUpdateDelivery(HttpServletRequest request,
+	 * HttpServletResponse response) { MealkitDAO dao = memberService.(request);
+	 * request.setAttribute("center","members/sendmealkit.jsp"); nextPage =
+	 * "/main.jsp"; }
+	 */
 
 		private void openMemberJoinView(HttpServletRequest request, HttpServletResponse response)
 				throws ServletException, IOException {
@@ -447,7 +453,13 @@ public class MemberController extends HttpServlet {
 
 				// 아이디가 세션에 없으면 로그인 페이지로 리다이렉트
 				if (userId == null) {
-					response.sendRedirect("login.jsp");
+		   		   response.setContentType("text/html; charset=UTF-8");
+				    PrintWriter out = response.getWriter();
+					out.println("<script type='text/javascript'>");
+					out.println("alert('로그인이 필요합니다. 로그인 페이지로 이동합니다.');");
+					out.println("location.href='" + request.getContextPath() + "/Member/login.me';");
+					out.println("</script>");
+					out.close();
 					return;
 				}
 
@@ -498,7 +510,7 @@ public class MemberController extends HttpServlet {
 		}
 		
 		private void openMySendView(HttpServletRequest request, HttpServletResponse response){ 
-			
+			System.out.println("controller왔음");
 			HttpSession session = request.getSession();
 			String id = (String) session.getAttribute("userId");
 					
