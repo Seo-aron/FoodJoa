@@ -125,8 +125,8 @@
             <div class="wishlist-grid">
                 <c:forEach var="item" items="${mealKitWishListInfos}">
                     <div class="wishlist-item">
-                    <a href="${pageContext.request.contextPath}/Mealkit/info?no=${item.mealkitVO.no}">
-                     <img src="${pageContext.request.contextPath}/images/mealkit/thumbnails/${item.mealkitVO.no}/${item.mealkitVO.id}/${item.mealkitVO.pictures.substring(4)}" 
+                    <a href="<%= request.getContextPath() %>/Mealkit/info?no=${item.mealkitVO.no}">
+                     <img src="<%= request.getContextPath() %>/images/mealkit/thumbnails/${item.mealkitVO.no}/${item.mealkitVO.id}/${item.mealkitVO.pictures.substring(4)}" 
                              alt="${item.mealkitVO.title}">
                              </a>
                         <div class="info">
@@ -135,7 +135,7 @@
                             <div>작성자: ${item.nickname}</div>
                             <div>가격: ${item.mealkitVO.price}</div>
                             <div>평점: ${item.avgRating}</div>
-                             <form action="${pageContext.request.contextPath}/Member/deleteWishMealkit.me" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
+                             <form action="<%= request.getContextPath() %>/Member/deleteWishMealkit.me" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
 							    <input type="hidden" name="mealkitNo" value="${item.mealkitVO.no}">
 							    <input type="hidden" name="userId" value="${sessionScope.userId}"> <!-- userId로 이름을 수정 -->
 							     <input type="submit" value="삭제" class="btn" style="background-color: #BF917E;">

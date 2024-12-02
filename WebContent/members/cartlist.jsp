@@ -91,14 +91,14 @@
                 <c:forEach var="item" items="${cart}">
                     <tr>
                         <td><input type="checkbox" class="itemCheckbox" value="${item.mealkitVO.no}" onclick="calculateTotal()"></td> <!-- 상품별 체크박스 -->
-                        <td><a href="${pageContext.request.contextPath}/Mealkit/info?no=${item.mealkitVO.no}">
-                     <img src="${pageContext.request.contextPath}/images/mealkit/thumbnails/${item.mealkitVO.no}/${item.mealkitVO.id}/${item.mealkitVO.pictures.substring(4)}" 
+                        <td><a href="<%= request.getContextPath() %>/Mealkit/info?no=${item.mealkitVO.no}">
+                     <img src="<%= request.getContextPath() %>/images/mealkit/thumbnails/${item.mealkitVO.no}/${item.mealkitVO.id}/${item.mealkitVO.pictures.substring(4)}" 
                              alt="${item.mealkitVO.title}">
                              </a><br>${item.mealkitVO.title}</td> <!-- 상품명 -->
                         <td>${item.nickname}</td>
                         <td data-price="${item.mealkitVO.price}">${item.mealkitVO.price}</td> <!-- 가격을 data-price에 저장 -->
                         <td>
-                            <form class="form-inline" action="updateCart" method="post">
+                            <form class="form-inline" action="updateCarList.me" method="post">
                                 <input type="number" name="quantity" value="${item.quantity}" min="1" onchange="calculateTotal()">
                                 <input type="hidden" name="mealkitNo" value="${item.mealkitVO.no}">
                                 <input type="submit" value="수정" class="btn">
@@ -106,7 +106,7 @@
                         </td>
                         <td class="itemTotal">${item.mealkitVO.price * item.quantity}</td> <!-- 총액 -->
                         <td>
-                             <form action="${pageContext.request.contextPath}/Member/deleteCartList.me" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
+                             <form action="<%= request.getContextPath() %>/Member/deleteCartList.me" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
 							    <input type="hidden" name="mealkitNo" value="${item.mealkitVO.no}">
 							    <input type="hidden" name="userId" value="${sessionScope.userId}"> 
 							    <input type="submit" value="삭제" class="btn" style="background-color: #BF917E;">
