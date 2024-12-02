@@ -278,16 +278,20 @@ public class RecipeService {
 	
 	public int processReviewDelete(HttpServletRequest request) {
 		
+		String id = (String) request.getSession().getAttribute("userId");
+		String no = request.getParameter("no");
+		String recipeNo = request.getParameter("recipeNo");
+		
 		int result = 0;
 		
-		result = recipeDAO.deleteRecipeReview(
-				request.getParameter("no"),
-				(String) request.getSession().getAttribute("userId"));
+		result = recipeDAO.deleteRecipeReview(no, id);
 		
 		if (result == 1) {
 			String path = request.getServletContext().getRealPath(File.separator + "images");			
 			String destinationPath = path + File.separator + "recipe" + File.separator +
 					"reviews" + File.separator + String.valueOf(recipeNo) + File.separator + id;
+			
+			FileIOController.deleteDirectory(destinationPath);
 		}
 		
 		return result;
