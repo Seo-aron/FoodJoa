@@ -48,13 +48,16 @@
 </head>
 
 <body>
-	<div id="top_container" align="center">
-		<p class="community_p1">COMMUNITY</p>
-		<p class="community_p2">나눔/같이먹어요 게시판</p>
-		<p>자유롭게 글을 작성해보세요</p>
+	<div id="commnunity-container">
+		<div id="community-header" align="center">
+			<p class="community_p1">COMMUNITY</p>
+			<p class="community_p2">나눔/같이먹어요 게시판</p>
+			<p>자유롭게 글을 작성해보세요</p>
+		</div>
 	</div>
+	
 	<div id="container">
-		<table class="list_table" width="100%">
+		<table class="table-list" width="100%">
 			<tr align="center" bgcolor="#e9ecef">
 				<td class="col-no" width="5%">글번호</td>
 				<td class="col-title" width="5%">분류</td>
@@ -147,19 +150,22 @@
 				<td colspan="6" align="center">&nbsp;&nbsp;&nbsp;&nbsp;
 					<form action="<%=contextPath%>/Community/shareSearchList" method="post"
 					  name="frmSearch" onsubmit="fnSearch(); return false;">
+					<span class="select-button">						
 						<select name="key">
 							<option value="title">제목</option>								
 							<option value="nickname">작성자</option>								
 							<option value="type">분류</option>								
 						</select>
+					</span>	
 							<input type="text" name="word" id="word" placeholder="검색어를 입력해주세요">
 							<input type="submit" value="검색"/>
 
 					<%	if(id != null && id.length()!= 0){
 						
 					%>
-						<input type="button" value="글쓰기" onclick="onWriteButton(event)">
-						
+						<div class="community-write-button">
+							<input type="button" value="글쓰기" onclick="onWriteButton(event)">
+						</div>
 					<%  } %>
 				
 					</form>

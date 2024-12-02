@@ -137,7 +137,7 @@ public class CommunityDAO {
 			
 			preparedStatement.executeUpdate();
 			
-			sql = "SELECT c.*, m.nickname "
+			sql = "SELECT c.*, m.nickname, m.profile "
 				+ "FROM community c "
 				+ "LEFT OUTER JOIN member m "
 				+ "ON c.id = m.id "
@@ -160,6 +160,7 @@ public class CommunityDAO {
 				
 				MemberVO memberVO = new MemberVO();
 				memberVO.setNickname(resultSet.getString("nickname"));
+				memberVO.setProfile(resultSet.getString("profile"));
 				
 				community.put("communityVO", communityVO);
 				community.put("memberVO", memberVO);

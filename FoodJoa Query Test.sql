@@ -68,3 +68,6 @@ FROM recipe_review rv
 LEFT JOIN recipe r 
 ON rv.recipe_no=r.no 
 WHERE rv.no=1;
+
+insert into member
+values('E5WfZ9Dw6uy3PzDsAkaKOEdHtykh5sgibCaIt7BqYqM', '고나리자', '고나리자', '01000000000', '부산시 부산진구', 'admin_image.png', CURRENT_TIMESTAMP);

@@ -51,13 +51,16 @@
 
 </head>
 <body>
-	<div id="top_container">
-		<p class="community_p1">COMMUNITY</p>
-		<p class="community_p2">자유게시판</p>
-		<p>자유롭게 글을 작성해보세요</p>
+	<div id="commnunity-container">
+		<div id="community-header" align="center">
+			<p class="community_p1">COMMUNITY</p>
+			<p class="community_p2">자유게시판</p>
+			<p>자유롭게 글을 작성해보세요</p>
+		</div>
 	</div>
-	<div id="container">
-		<table class="list_table" width="100%">
+	
+	<div id="community-body">
+		<table class="table-list" width="100%">
 			<tr align="center" bgcolor="#e9ecef">
 				<td class="col-no" width="15%">글번호</td>
 				<td class="col-title" width="45%">제목</td>
@@ -131,24 +134,33 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan="5" align="center">&nbsp;&nbsp;&nbsp;&nbsp;
-					<form action="<%=contextPath%>/Community/searchList" method="post"
-					  name="frmSearch" onsubmit="fnSearch(); return false;">
-						<select name="key">
-							<option value="titleContent">제목+내용</option>								
-							<option value="writerContent">작성자</option>								
-						</select>
-							<input type="text" name="word" id="word" placeholder="검색어를 입력해주세요">
-							<input type="submit" value="검색"/>
-
-					<%	if(id != null && id.length()!= 0){
-						
-					%>
-						<input type="button" value="글쓰기" onclick="onWriteButton(event)">
-						
-					<%  } %>
-				
-					</form>
+				<td colspan="5" align="center">
+					<div class="community-table-bottom">
+						<form action="<%=contextPath%>/Community/searchList" method="post" 
+							name="frmSearch" onsubmit="fnSearch(); return false;">
+							<span class="select-button">
+								<select name="key">
+									<option value="titleContent">제목+내용</option>								
+									<option value="writerContent">작성자</option>								
+								</select>
+							</span>
+							<span class="community-search-area">
+								<input type="text" name="word" id="word" placeholder="검색어를 입력해주세요">
+							</span>
+							<span class="community-search-button">
+								<input type="submit" value="검색"/>
+							</span>
+						</form>
+						<%
+						if(id != null && id.length()!= 0){
+							%>
+							<div class="community-write-button">
+								<input type="button" value="글쓰기" onclick="onWriteButton(event)">
+							</div>	
+							<%
+						}
+						%>
+					</div>
 				</td>
 			</tr>
 		</table>
