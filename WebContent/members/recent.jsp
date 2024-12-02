@@ -90,7 +90,7 @@ String id = (String) session.getAttribute("userId");
 					<c:if test="${item.recipeVO != null}">
 						<div class="recent-view-item">
 							<a
-								href="${pageContext.request.contextPath}/Recipe/read?no=${item.recipeVO.no}&category=0&currentPage=0&currentBlock=0">
+								href="${pageContext.request.contextPath}/Recipe/read?no=${item.recipeVO.no}">
 								<img
 								src="${pageContext.request.contextPath}/images/recipe/thumbnails/${item.recipeVO.no}/${item.recipeVO.thumbnail}"
 								alt="${item.recipeVO.title}">
