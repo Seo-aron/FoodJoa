@@ -378,15 +378,14 @@ public class MemberService {
 	}
 
 	public ArrayList<HashMap<String, Object>> getSendedMealkit(HttpServletRequest request) {
-		
+		System.out.println("Service왔음");
 		HttpSession session = request.getSession();
 		String id = (String) session.getAttribute("userId");
 		
-		String deliverd = (String) request.getParameter("deliverd");
+		String delivered = (String) request.getParameter("deliverd");
 		
 		return memberDAO.selectSendedMealkit(id,  "0"); //0 1 2
 	}
-	
 
     // 최근 본 목록을 조회하는 메소드
 	public ArrayList<HashMap<String, Object>> getRecentViews(String userId, int type) {
@@ -439,6 +438,10 @@ public class MemberService {
     public ArrayList<Integer> getCountDelivered(HttpServletRequest request) {
     	return mealkitDAO.selectCountDelivered((String) request.getSession().getAttribute("userId"));
     }
+    
+    //public int updateDelivery(int delivered, int refund){
+    	//return MealkitDAO.updateDelivery()
+    //}
 
 
 
@@ -473,4 +476,5 @@ public class MemberService {
 	}
 
 }
+
 

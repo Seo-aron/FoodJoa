@@ -443,7 +443,7 @@ public class MemberDAO {
 		
 		String sql = "SELECT "
 				+ "k.title, k.contents, k.category, k.price, k.stock, k.pictures, "
-				+ "o.address, o.quantity, o.delivered, o.refund, "
+				+ "o.no AS order_no, o.address, o.quantity, o.delivered, o.refund, "
 				+ "m.nickname, m.profile "
 				+ "FROM mealkit k "
 				+ "INNER JOIN mealkit_order o "
@@ -468,6 +468,7 @@ public class MemberDAO {
 				mealkitVO.setPictures(resultSet.getString("pictures"));
 
 				MealkitOrderVO orderVO = new MealkitOrderVO();
+				orderVO.setNo(resultSet.getInt("order_no")); 
 				orderVO.setAddress(resultSet.getString("address"));
 				orderVO.setQuantity(resultSet.getInt("quantity"));
 				orderVO.setDelivered(resultSet.getInt("delivered"));
@@ -481,6 +482,7 @@ public class MemberDAO {
 				orderedMealkit.put("mealkitVO", mealkitVO);
 				orderedMealkit.put("memberVO", memberVO);
 
+				System.out.println(delivered);
 				orderedMealkitList.add(orderedMealkit);
 			}
 		}
@@ -489,5 +491,30 @@ public class MemberDAO {
 		}
 
 		return orderedMealkitList;
+	}
+	
+	public ArrayList<Integer> selectCountDelivered(String userId) {
+	    ArrayList<Integer> counts = new ArrayList<>();
+	    String sql = "SELECT " +
+	                 "SUM(CASE WHEN delivered = 0 THEN 1 ELSE 0 END) AS preparing, " +
+	                 "SUM(CASE WHEN delivered = 1 THEN 1 ELSE 0 END) AS shipping, " +
+	                 "SUM(CASE WHEN delivered = 2 THEN 1 ELSE 0 END) AS completed " +
+	                 "FROM mealkit_order " +
+	                 "WHERE id = ?";
+
+	    try {
+	        ResultSet rs = dbConnector.executeQuery(sql, userId);
+	        if (rs.next()) {
+	            counts.add(rs.getInt("preparing")); // 발송 준비 중
+	            counts.add(rs.getInt("shipping")); // 발송 중
+	            counts.add(rs.getInt("completed")); // 발송 완료
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        dbConnector.release();
+	    }
+
+	    return counts;
 	}
 }

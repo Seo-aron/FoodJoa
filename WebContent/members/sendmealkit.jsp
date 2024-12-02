@@ -21,7 +21,7 @@
 
 <head>
 <meta charset="UTF-8">
-<title>배송조회 페이지</title>
+<title>발송조회 페이지</title>
 <style>
     /* 메인 컨테이너 스타일링 */
     #deliver-container {
@@ -79,7 +79,8 @@
     <!-- 메인 컨테이너 -->
     <div id="deliver-container">
         <h1>발송조회 페이지</h1>
-        <!-- 테이블을 생성하여 가운데 정렬하고 100% 너비를 설정합니다. -->
+        <!-- 저장 버튼 추가를 위한 form 태그 -->
+        <form action="<%= request.getContextPath() %>/Member/orderUpdate.me" method="post">
         <table align="center">
             <%
             // 주문된 밀키트 리스트가 비어있는지 확인합니다.
@@ -121,25 +122,32 @@
                     <tr align="center">
                     	<td><%=mealkitVO.getTitle() %></td>
                     	<td><%=mealkitVO.getContents()%></td>
-                    	<td><%=mealkitVO.getCategory()%></td>
+                    	<td>
+						<% if(mealkitVO.getCategory() == 0 ){%> 한식요리 <%}%>
+						<% if(mealkitVO.getCategory() == 1 ){%> 일식요리 <%}%>
+						<% if(mealkitVO.getCategory() == 2 ){ %>중식요리 <%}%>
+						<% if(mealkitVO.getCategory() == 3 ){ %>양식요리 <%}%>
+						<% if(mealkitVO.getCategory() == 4 ){ %>자취요리 <%}%>
+						</td>
                     	<td><%=mealkitVO.getPrice()%></td>
                     	<td><%=mealkitVO.getStock()%></td>
                         <td> <img src="<%=request.getContextPath()%>/images/member/userProfiles/profilePhoto/<%= mealkitVO.getPictures()%>" alt="사진없음"></td>
                         <td><%=memberVO.getAddress()%></td>
                         <td><%=orderVO.getQuantity()%></td>            
                         <td>
-                        <select name="refundStatus" id="refundStatus">
-                          <option value="0" <% if(orderVO.getRefund() == 0) { %>selected<% } %>>배송전</option>
-                          <option value="1" <% if(orderVO.getRefund() == 1) { %>selected<% } %>>배송중</option>
-                          <option value="2" <% if(orderVO.getRefund() == 2) { %>selected<% } %>>배송완료</option>
-                        </select>
+                        <select name="deliveryStatus_<%= orderVO.getNo() %>">
+						    <option value="0" <% if(orderVO.getDelivered() == 0) { %>selected<% } %>>배송 전</option>
+						    <option value="1" <% if(orderVO.getDelivered() == 1) { %>selected<% } %>>배송 중</option>
+						    <option value="2" <% if(orderVO.getDelivered() == 2) { %>selected<% } %>>배송 완료</option>
+						</select>
+
                       </td>
                       <td>
-                        <select name="deliveryStatus" id="deliveryStatus">
-                          <option value="0" <% if(orderVO.getDelivered() == 0) { %>selected<% } %>>환불전</option>
-                          <option value="1" <% if(orderVO.getDelivered() == 1) { %>selected<% } %>>환불중</option>
-                          <option value="2" <% if(orderVO.getDelivered() == 2) { %>selected<% } %>>환불완료</option>
-                        </select>
+                         <select name="refundStatus">
+                          <option value="0" <% if(orderVO.getDelivered() == 0) { %>selected<% } %>>환불 전</option>
+                          <option value="1" <% if(orderVO.getDelivered() == 1) { %>selected<% } %>>환불 중</option>
+                          <option value="2" <% if(orderVO.getDelivered() == 2) { %>selected<% } %>>환불 완료</option>
+                        </select> 
                       </td>
                          <td><%=memberVO.getNickname()%></td>
                          <td><img src="<%=request.getContextPath()%>/images/member/userProfiles/profilePhoto/<%= memberVO.getProfile() %>" alt="판매자 프로필"></td>          
@@ -152,6 +160,10 @@
             } // if-else 종료
             %>
         </table>
+        	
+			<input type="button" value="저장" 
+			onclick="location.href='<%=contextPath%>/Member/viewMySend.me'">
+        </form>
     </div>
 </body>
 </html>

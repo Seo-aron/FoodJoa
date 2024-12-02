@@ -458,6 +458,7 @@ public class MealkitDAO {
 		return counts;
 	}
 	
+//발송 
 public ArrayList<Integer> selectCountDelivered(String id) {
 		
 		ArrayList<Integer> counts = new ArrayList<Integer>();
@@ -484,6 +485,7 @@ public ArrayList<Integer> selectCountDelivered(String id) {
 		
 		return counts;
 	}
+
 
 	public int deleteWishMealkit(String userId, String mealkitNo) {
 		 String sql = "SELECT * FROM mealkit_wishlist WHERE id=? AND mealkit_no=?";
@@ -542,5 +544,22 @@ public ArrayList<Integer> selectCountDelivered(String id) {
 		    return result;  // 삭제 성공 시 1 반환, 실패 시 0 반환
 	}
 	
+
+	public void updateDelivery(String orderId, String deliveryStatus) throws SQLException {
+	    // SQL 쿼리 작성 (배송 상태를 업데이트)
+	    String sql = "UPDATE mealkit_order SET delivered = ? WHERE order_id = ?";
+	
+	    // 데이터베이스 연결
+		ResultSet resultSet = dbConnector.executeQuery(sql, orderId, deliveryStatus);
+	
+		// executeQuery 대신 executeUpdate를 사용해야 하므로, resultSet을 사용하지 않음
+		dbConnector.executeUpdate(sql, orderId, deliveryStatus); // 실행
+	}
+	
+	public void updateOrderStatus(String orderId, String deliveryStatus, String refundStatus) throws SQLException {
+	    String sql = "UPDATE mealkit_order SET delivered = ?, refund = ? WHERE no = ?";
+	    dbConnector.executeUpdate(sql, Integer.parseInt(deliveryStatus), Integer.parseInt(refundStatus), Integer.parseInt(orderId));
+	}
+
 
 }

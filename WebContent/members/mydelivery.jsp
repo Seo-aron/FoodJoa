@@ -120,22 +120,23 @@
                     <tr align="center">
                         <td><%=orderVO.getAddress()%></td>
                         <td><%=orderVO.getQuantity()%></td> 
-                          <td><%
-                        if(orderVO.getRefund()==0){
-                        	%>배송전<%
-                       	 }else if(orderVO.getRefund()==1){
-                        	%>배송중<% 
-                         }else{
-                        	%>배송완료<%
-                         }%></td>
                         <td><%
                         if(orderVO.getDelivered()==0){
-                        	%>배송전<%
+                        	%>배송 전<%
                        	 }else if(orderVO.getDelivered()==1){
-                        	%>배송중<% 
+                        	%>배송 중<% 
                          }else{
-                        	%>배송완료<%
+                        	%>배송 완료<%
                          }%></td>
+                        <td><%
+                        if(orderVO.getRefund()==0){
+                        	%>환불 전<%
+                       	 }else if(orderVO.getRefund()==1){
+                        	%>환불 중<% 
+                         }else{
+                        	%>환불 완료<%
+                         }%></td>
+                       
                         <td><%=mealkitVO.getTitle() %></td>
                         <td><%=mealkitVO.getContents()%></td>
                         <td><%=mealkitVO.getCategory()%></td>
