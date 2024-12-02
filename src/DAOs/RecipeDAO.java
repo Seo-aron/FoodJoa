@@ -122,6 +122,8 @@ public class RecipeDAO {
 	
 	public HashMap<String, Object> selectRecipeInfo(String no, String id) {
 		
+		boolean flag = false;
+		
 		String sql = "UPDATE recipe SET views=views+1 where no=?";
 		
 		dbConnector.executeUpdate(sql, Integer.parseInt(no));
@@ -158,6 +160,9 @@ public class RecipeDAO {
 						resultSet.getString("ingredient_amount"),
 						resultSet.getString("orders"),
 						resultSet.getTimestamp("post_date")));
+				
+				flag = true;
+				
 				recipeHashMap.put("averageRating", resultSet.getDouble("average_rating"));
 				recipeHashMap.put("nickname", resultSet.getString("nickname"));
 				recipeHashMap.put("profile", resultSet.getString("profile"));
@@ -172,13 +177,34 @@ public class RecipeDAO {
 		
 		recipeHashMap.put("reviews", selectRecipeReviews(no));
 		
-		if (id != null && !id.equals("") && id.length() != 0) {			
-			sql = "INSERT INTO recent_view(id, item_no, type, view_date) "
-					+ "VALUES(?, ?, ?, CURRENT_TIMESTAMP)";
+		if (flag && id != null && !id.equals("") && id.length() != 0) {
 			
-			int result = dbConnector.executeUpdate(sql, id, no, 0);
+			sql = "SELECT COUNT(*) AS result FROM recent_view WHERE id=? AND item_no=? AND type=?";
+			
+			resultSet = dbConnector.executeQuery(sql, id, no, 0);
+			
+			boolean isExistRecent = false;
+			try {
+				if (resultSet.next()) {
+					int result = resultSet.getInt("result");
+					
+					isExistRecent = result > 0;
+				}
+			}
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
 			
 			dbConnector.release();
+			
+			if (!isExistRecent) {				
+				sql = "INSERT INTO recent_view(id, item_no, type, view_date) "
+						+ "VALUES(?, ?, ?, CURRENT_TIMESTAMP)";
+				
+				int result = dbConnector.executeUpdate(sql, id, no, 0);
+				
+				dbConnector.release();
+			}
 		}
 		
 		return recipeHashMap;

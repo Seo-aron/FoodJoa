@@ -51,7 +51,15 @@ public class MealkitService {
 		
 		mealkitDAO.incrementViewCount(no);
 		
-		return mealkitDAO.InfoMealkit(no);
+		MealkitVO mealkitVO = mealkitDAO.InfoMealkit(no);
+		
+		if (mealkitVO != null) {
+			int result = mealkitDAO.insertRecentView(
+					(String) request.getSession().getAttribute("userId"),
+					mealkitVO.getNo());
+		}
+		
+		return mealkitVO;
 	}
 
 	public ArrayList<Map<String, Object>> getReviewInfo(HttpServletRequest request) {

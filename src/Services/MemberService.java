@@ -380,16 +380,17 @@ public class MemberService {
 	}
 
     // 최근 본 목록을 조회하는 메소드
-	public ArrayList<HashMap<String, Object>> getRecentViews(String userId, int type) {
-	    ArrayList<HashMap<String, Object>> recentViewInfos = new ArrayList<>();
-
-	    if (type == 0) {
-	        recentViewInfos = memberDAO.getRecentRecipeViews(userId);  // Recipe 데이터 조회
-	    } else {
-	        recentViewInfos = memberDAO.getRecentMealkitViews(userId);  // Mealkit 데이터 조회
-	    }
-
-	    return recentViewInfos;
+	public HashMap<String, Object> getRecentViews(String userId) {
+		
+		HashMap<String, Object> recentViews = new HashMap<String, Object>();
+		
+		ArrayList<HashMap<String, Object>> recentRecipeViews = memberDAO.getRecentRecipeViews(userId);
+		ArrayList<HashMap<String, Object>> recentMealkitViews = memberDAO.getRecentMealkitViews(userId);
+		
+		recentViews.put("recipe", recentRecipeViews);
+		recentViews.put("mealkit", recentMealkitViews);
+		
+		return recentViews;
 	}
 
     public int deleteWishRecipe(String userId, String recipeNo) {

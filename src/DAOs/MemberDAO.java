@@ -288,12 +288,20 @@ public class MemberDAO {
 	
 	public ArrayList<HashMap<String, Object>> getRecentRecipeViews(String userId) {
 	    ArrayList<HashMap<String, Object>> recentViews = new ArrayList<>();
-	    String sql = "SELECT r.title, r.thumbnail, r.description, r.category, m.nickname AS author_nickname, m.profile "
-	               + "FROM recent_view v "
-	               + "LEFT JOIN recipe r ON v.item_no = r.no "
-	               + "LEFT JOIN member m ON r.id = m.id "
-	               + "WHERE v.id = ? "
-	               + "ORDER BY v.view_date DESC LIMIT 20";
+	    String sql = "SELECT "
+	    		+ "r.title, r.description, r.category, r.thumbnail, "
+	    		+ "m.nickname, m.profile, "
+	    		+ "COALESCE(average_table.average_rating, 0) AS average_rating "
+	    		+ "FROM recent_view v "
+	    		+ "LEFT JOIN recipe r ON v.item_no = r.no "
+	    		+ "LEFT JOIN member m ON m.id = r.id "
+	    		+ "LEFT JOIN ("
+	    		+ "SELECT recipe_no, AVG(rating) AS average_rating "
+	    		+ "FROM recipe_review "
+	    		+ "GROUP BY recipe_no "
+	    		+ ") average_table ON average_table.recipe_no = v.item_no "
+	    		+ "WHERE v.id = ? AND v.type=0 "
+	    		+ "ORDER BY v.view_date DESC LIMIT 20";
 
 	    ResultSet resultSet = dbConnector.executeQuery(sql, userId);
 
@@ -305,14 +313,17 @@ public class MemberDAO {
 	            recipeVO.setThumbnail(resultSet.getString("thumbnail"));
 	            recipeVO.setDescription(resultSet.getString("description"));
 	            recipeVO.setCategory(resultSet.getInt("category"));
-	            recentView.put("recipeVO", recipeVO);
 
 	            MemberVO memberVO = new MemberVO();
 	            memberVO.setProfile(resultSet.getString("profile"));
-	            String authorNickname = resultSet.getString("author_nickname"); // 작성자의 닉네임 가져오기
-	            recentView.put("memberVO", memberVO);
-	            recentView.put("nickname", authorNickname);
+	            memberVO.setNickname(resultSet.getString("nickname"));
 
+	            float averageRating = resultSet.getFloat("average_rating");	            
+
+	            recentView.put("recipeVO", recipeVO);
+	            recentView.put("memberVO", memberVO);
+	            recentView.put("averageRating", averageRating);
+	            
 	            recentViews.add(recentView);
 	        }
 	    } catch (SQLException e) {
@@ -324,12 +335,20 @@ public class MemberDAO {
 	
 	public ArrayList<HashMap<String, Object>> getRecentMealkitViews(String userId) {
 	    ArrayList<HashMap<String, Object>> recentViews = new ArrayList<>();
-	    String sql = "SELECT k.title, k.contents, k.category, k.price, k.pictures, m.nickname AS author_nickname, m.profile "
-	               + "FROM recent_view v "
-	               + "LEFT JOIN mealkit k ON v.item_no = k.no "
-	               + "LEFT JOIN member m ON k.id = m.id "
-	               + "WHERE v.id = ? "
-	               + "ORDER BY v.view_date DESC LIMIT 20";
+	    String sql = "SELECT "
+	    		+ "k.title, k.contents, k.category, k.price, k.pictures, "
+	    		+ "m.nickname, m.profile, "
+	    		+ "COALESCE(average_table.average_rating, 0) AS average_rating "
+	    		+ "FROM recent_view v "
+	    		+ "LEFT JOIN mealkit k ON v.item_no = k.no "
+	    		+ "LEFT JOIN member m ON m.id = k.id "
+	    		+ "LEFT JOIN ( "
+	    		+ "SELECT mealkit_no, AVG(rating) AS average_rating "
+	    		+ "FROM mealkit_review "
+	    		+ "GROUP BY mealkit_no "
+	    		+ ") average_table ON average_table.mealkit_no = v.item_no "
+	    		+ "WHERE v.id = ? AND v.type=1 "
+	    		+ "ORDER BY v.view_date DESC LIMIT 20";
 
 	    ResultSet resultSet = dbConnector.executeQuery(sql, userId);
 
@@ -342,20 +361,23 @@ public class MemberDAO {
 	            mealkitVO.setCategory(resultSet.getInt("category"));
 	            mealkitVO.setPrice(resultSet.getString("price"));
 	            mealkitVO.setPictures(resultSet.getString("pictures"));
-	            recentView.put("mealkitVO", mealkitVO);
 
 	            MemberVO memberVO = new MemberVO();
 	            memberVO.setProfile(resultSet.getString("profile"));
-	            String authorNickname = resultSet.getString("author_nickname"); // 작성자의 닉네임 가져오기
-	            recentView.put("memberVO", memberVO);
-	            recentView.put("nickname", authorNickname);
+	            memberVO.setNickname(resultSet.getString("nickname"));
+	            
+	            float averageRating = resultSet.getFloat("average_rating");
 
+	            recentView.put("mealkitVO", mealkitVO);
+	            recentView.put("memberVO", memberVO);
+	            recentView.put("averageRating", averageRating);
+	            
 	            recentViews.add(recentView);
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
-
+	    
 	    return recentViews;
 	}
 

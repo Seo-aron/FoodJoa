@@ -603,4 +603,36 @@ public class MealkitDAO {
 				Integer.parseInt(orderId));
 	}
 
+	public int insertRecentView(String id, int mealkitNo) {
+		
+		String sql = "SELECT COUNT(*) AS result FROM recent_view WHERE id=? AND item_no=? AND type=?";
+		
+		ResultSet resultSet = dbConnector.executeQuery(sql, id, mealkitNo, 1);
+		
+		boolean isExistRecent = false;
+		try {
+			if (resultSet.next()) {
+				int result = resultSet.getInt("result");
+				
+				isExistRecent = result > 0;
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		int result = 0;
+		
+		if (!isExistRecent) {
+			
+			sql = "INSERT INTO recent_view(id, item_no, type, view_date) "
+					+ "VALUES(?, ?, 1, CURRENT_TIMESTAMP)";
+			
+			result = dbConnector.executeUpdate(sql, id, mealkitNo);
+			
+			dbConnector.release();
+		}
+		
+		return result;
+	}
 }

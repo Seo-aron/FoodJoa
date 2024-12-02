@@ -70,7 +70,7 @@ public class MemberController extends HttpServlet {
 		case "/wishList.me": openWishList(request, response); break;
 		case "/deleteWishRecipe.me": deleteWishRecipe(request, response); return;
 		case "/deleteWishMealkit.me": deleteWishMealkit(request, response); return;
-		case "/recentList.me": openRecentList(request, response); break;
+		case "/recentList.me": if (!openRecentList(request, response)) return; break;
 		case "/cartList.me": openCartList(request, response); break;
 		case "/deleteCartList.me": deleteCartList(request, response); return;
 		case "/mypagemain.me": if (!openMypagemainView(request, response)) return; break;
@@ -421,31 +421,30 @@ public class MemberController extends HttpServlet {
 
 	}
 
-	private void openRecentList(HttpServletRequest request, HttpServletResponse response)
+	private boolean openRecentList(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
+		
 		String userId = (String) request.getSession().getAttribute("userId"); // 세션에서 userId 가져오기
-		String typeParam = request.getParameter("type");
-		int type = (typeParam != null && !typeParam.isEmpty()) ? Integer.parseInt(typeParam) : 0; // 기본값 0 설정
-
+		
 		if (userId == null) {
 			response.sendRedirect("/login.jsp"); // 로그인하지 않은 경우 로그인 페이지로 리디렉션
-			return;
+			return false;
 		}
 
 		// 최근 본 글 목록 가져오기 (type에 맞게 필터링)
-		ArrayList<HashMap<String, Object>> recentViewInfos = memberService.getRecentViews(userId, type);
+		//ArrayList<HashMap<String, Object>> recentViewInfos = memberService.getRecentViews(userId, type);		
+		HashMap<String, Object> recentViewInfos = memberService.getRecentViews(userId);
 
 		// 최근 본 글 목록을 request에 추가
 		request.setAttribute("recentViewInfos", recentViewInfos);
-
-		// type에 맞는 필터링된 데이터를 요청 속성에 추가
-		request.setAttribute("type", type);
 
 		// center 부분에 해당하는 JSP 파일 설정
 		request.setAttribute("center", "members/recent.jsp");
 
 		// 메인 페이지로 이동
-		String nextPage = "/main.jsp";
+		nextPage = "/main.jsp";
+		
+		return true;
 	}
 
 	private void openCartList(HttpServletRequest request, HttpServletResponse response)
