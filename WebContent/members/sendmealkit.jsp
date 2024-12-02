@@ -160,9 +160,6 @@
             } // if-else 종료
             %>
         </table>
-        	
-			<input type="button" value="저장" 
-			onclick="location.href='<%=contextPath%>/Member/viewMySend.me'">
         </form>
     </div>
 </body>
