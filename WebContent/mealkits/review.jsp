@@ -108,13 +108,8 @@
 		%>	
 			<tr>
 				<td colspan="4">
-<<<<<<< HEAD
-					<input type="button" value="리뷰 작성" 
-					onclick="location.href='<%=contextPath%>/Mealkit/reviewwrite?no=${mealkit.no }'">
-=======
 					<input type="button" value="리뷰 작성" class="review-button"
-					onclick="location.href='<%=contextPath%>/Mealkit/reviewwrite?mealkit_no=${mealkit.no }'">
->>>>>>> aron
+						onclick="location.href='<%=contextPath%>/Mealkit/reviewwrite?no=${mealkit.no }'">
 				</td>
 			</tr>
 		</table>

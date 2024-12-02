@@ -138,7 +138,7 @@ String id = (String) session.getAttribute("userId");
 				for (int i = 0; i < mealkitReviews.size(); i++) {
 					MealkitVO mealkitVO = (MealkitVO) mealkitReviews.get(i).get("mealkit");
 					MealkitReviewVO reviewVO = (MealkitReviewVO) mealkitReviews.get(i).get("review");
-					MemberVO memberVO = (MemberVO) recipeReviews.get(i).get("member");
+					MemberVO memberVO = (MemberVO) mealkitReviews.get(i).get("member");
 					
 					int category = mealkitVO.getCategory();
 					String categoryStr = (category == 1) ? "한식" : 

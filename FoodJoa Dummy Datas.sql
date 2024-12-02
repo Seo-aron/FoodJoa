@@ -84,12 +84,12 @@ INSERT INTO mealkit_review (id, mealkit_no, pictures, contents, rating, post_dat
 ('review4', 5, '0018test_thumbnail.png', '정말 훌륭한 맛! 추천합니다.', 5, CURRENT_TIMESTAMP),
 ('review1', 5, '0018test_thumbnail.png', '다음에도 또 구매할게요.', 4, CURRENT_TIMESTAMP);
 
-INSERT INTO mealkit_wishlist (id, mealkit_no, type, choice_date) VALUES
-('review1', 1, 0, CURRENT_TIMESTAMP),
-('review2', 2, 1, CURRENT_TIMESTAMP),
-('review3', 3, 0, CURRENT_TIMESTAMP),
-('review4', 4, 1, CURRENT_TIMESTAMP),
-('review1', 5, 0, CURRENT_TIMESTAMP);
+INSERT INTO mealkit_wishlist (id, mealkit_no, choice_date) VALUES
+('review1', 1, CURRENT_TIMESTAMP),
+('review2', 2, CURRENT_TIMESTAMP),
+('review3', 3, CURRENT_TIMESTAMP),
+('review4', 4, CURRENT_TIMESTAMP),
+('review1', 5, CURRENT_TIMESTAMP);
 
 
 

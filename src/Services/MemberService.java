@@ -356,17 +356,9 @@ public class MemberService {
 
 
 
-	public void getMemberProfile(HttpServletRequest request, String userId) throws ServletException, IOException, SQLException {
-	    // 회원 정보를 DAO에서 조회
-	    MemberVO member = memberDAO.getMemberProfile(userId);
-	    
-	    if (member != null) {
-	        // 회원 정보를 request에 저장
-	        request.setAttribute("member", member);
-	    } else {
-	        // 회원 정보 조회 실패 시 에러 메시지 설정
-	        request.setAttribute("error", "회원 정보를 찾을 수 없습니다.");
-	    }
+	public MemberVO getMemberProfile(String userId) {
+
+	   return memberDAO.getMemberProfile(userId);
 	}
 
 	public ArrayList<HashMap<String, Object>> getDeliveredMealkit(HttpServletRequest request) {

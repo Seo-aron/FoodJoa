@@ -38,20 +38,6 @@
 			});
 		});
 	</script>
-	
-   	<script type="text/javascript">   	
-		function onWishList() {
-			location.href = '<%= contextPath %>/Member/wishList.me';
-		}
-		
-		function onRecentList() {
-			location.href = '<%= contextPath %>/Member/recentList.me';
-		}
-		
-		function onCartList() {
-			location.href = '<%= contextPath %>/Member/cartList.me';
-		}		
-	</script>
 </head>
 
 <body>

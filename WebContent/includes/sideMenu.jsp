@@ -12,16 +12,16 @@ String id = (String) session.getAttribute("userId");
 
 <script>
 	function onWishList() {
-		location.href = '<%=contextPath%>/Member/WishList.me';
+		location.href = '<%= contextPath %>/Member/wishList.me';
 	}
 	
 	function onRecentList() {
-		location.href = '<%=contextPath%>/Member/RecentList.me';
+		location.href = '<%= contextPath %>/Member/recentList.me';
 	}
 	
 	function onCartList() {
-		location.href = '<%=contextPath%>/Member/cartList.me';
-	}
+		location.href = '<%= contextPath %>/Member/cartList.me';
+	}		
 </script>
 
 <style>

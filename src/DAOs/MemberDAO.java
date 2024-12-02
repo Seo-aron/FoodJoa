@@ -362,7 +362,7 @@ public class MemberDAO {
 
 
 
-	public MemberVO getMemberProfile(String userId) throws SQLException {
+	public MemberVO getMemberProfile(String userId) {
 		MemberVO member = null;
 		String sql = "SELECT * FROM member WHERE id=?";
 
