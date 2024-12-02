@@ -416,8 +416,10 @@ public class MealkitDAO {
 
 		String sql = "INSERT INTO mealkit_order (id, mealkit_no, address, quantity, delivered, refund, post_date) " +
                  "VALUES (?, ?, (SELECT address FROM member WHERE id = ?), ?, 0, 0, NOW())";
-		
 		int result = dbConnector.executeUpdate(sql, id, mealkitNo, id, quantity);
+		
+		sql = "UPDATE mealkit SET stock = stock - ? WHERE no = ?";
+		dbConnector.executeUpdate(sql, quantity, mealkitNo);
 		
 		return result == 1;
 	}

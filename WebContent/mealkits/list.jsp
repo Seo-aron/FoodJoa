@@ -132,68 +132,81 @@
 					int price_ = Integer.parseInt(price); 
 					NumberFormat numberFormat = NumberFormat.getInstance();
 					String formattedPrice = numberFormat.format(price_);
+					
+					java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd");
+				    String formattedPostDate = dateFormat.format(postDate);
 					%>
 				<tr>
-			        <td>
-			            <a href="<%=contextPath%>/Mealkit/info?no=<%=no%>&nickName=<%=nickName%>">
-				            <span>
-				                <img class="thumbnail" 
-				                     src="<%=contextPath%>/images/mealkit/thumbnails/<%=no%>/<%=id%>/<%=thumbnail%>">
-				                작성자: <%=nickName%> &nbsp;&nbsp;&nbsp;&nbsp;
-				                작성일: <%=postDate%> &nbsp;&nbsp;&nbsp;&nbsp;
-				                평점: <fmt:formatNumber value="<%=ratingAvr.get(no)%>" pattern="#.#" /> &nbsp;&nbsp;&nbsp;&nbsp;
-				                조회수: <%=views%>
-				            </span>
-				            <h3><%=title%></h3>
-				            <p>가격: <%=formattedPrice%> 원</p>
-				            <p>내용: <%=contents%></p>
-				            <br>
-			        </td>
-			    </tr>
-						
+    <td colspan="2">
+        <a href="<%=contextPath%>/Mealkit/info?no=<%=no%>&nickName=<%=nickName%>" class="row-link">
+            <div style="display: flex; align-items: flex-start;">
+                <!-- 이미지 영역 -->
+                <div>
+                    <img class="thumbnail" 
+                         src="<%=contextPath%>/images/mealkit/thumbnails/<%=no%>/<%=id%>/<%=thumbnail%>">
+                </div>
+                <!-- 텍스트 정보 영역 -->
+                <div class="info-container" style="margin-left: 16px;">
+                    <!-- 작성자, 작성일, 평점, 조회수 -->
+                    <span>
+                        작성자: <%=nickName%> &nbsp;&nbsp;&nbsp;&nbsp;
+                        작성일: <%=formattedPostDate%> &nbsp;&nbsp;&nbsp;&nbsp;
+                        평점: <fmt:formatNumber value="<%=ratingAvr.get(no)%>" pattern="#.#" /> &nbsp;&nbsp;&nbsp;&nbsp;
+                        조회수: <%=views%>
+                    </span>
+                    <br>
+                    <h2><strong><%=title%></strong></h2>
+                    <h3><%=formattedPrice%> 원</h3>
+                    <br>
+                    <p>설명: <%=contents%></p>
+                </div>
+            </div>
+        </a>
+    </td>
+</tr>
+
 				<%
 				} // for
 			} // esle
-			%>			    
+			%>    
 			<!--페이징-->
 			<tr align="center">
-				<td>
-					<%
-						if(totalRecord != 0){
-							
-							if(nowBlock > 0){
-							%>
-								<a href="<%=contextPath%>/Mealkit/list?nowBlock=<%=nowBlock-1%>&nowPage=<%=((nowBlock-1) * pagePerBlock)%>">
-								이전
-								</a>
+			    <td class="pagination">
+			        <%
+			            if(totalRecord != 0){
+			                
+			                if(nowBlock > 0){
+			                %>
+			                    <a href="<%=contextPath%>/Mealkit/list?category=<%=category %>&nowBlock=<%=nowBlock-1%>&nowPage=<%=((nowBlock-1) * pagePerBlock)%>">
+			                    이전
+			                    </a>
+			                <%
+			                }
+			                
+			                for (int i = 0; i < pagePerBlock; i++) {
+			                    int pageNumber = (nowBlock * pagePerBlock) + i + 1;
+			                    if (pageNumber > totalPage) break;
+
+			                    String currentClass = (pageNumber == nowPage + 1) ? "current-page" : ""; 
+			          		%>
+			                    <!-- 링크에 activeClass 추가 -->
+			                    <a href="<%=contextPath%>/Mealkit/list?category=<%=category%>&nowBlock=<%=nowBlock%>&nowPage=<%=(pageNumber - 1)%>" 
+			                       class="<%=currentClass%>">
+			                       <%=pageNumber%>
+			                    </a>
 							<%
-							}
-							
-							for(int i=0; i<pagePerBlock; i++){
-							%>
-								&nbsp;&nbsp;
-								<a href="<%=contextPath%>/Mealkit/list?nowBlock=<%=nowBlock%>&nowPage=<%=(nowBlock * pagePerBlock)+i%>">
-									<%=(nowBlock * pagePerBlock)+i+1 %>
-									<%
-										if((nowBlock * pagePerBlock)+i+1 == totalPage){
-											break;
-										}
-									%>
-								</a>
-								&nbsp;&nbsp;
-							<%
-							}
-							
-							if(totalBlock > nowBlock + 1){
-							%>
-								<a href="<%=contextPath%>/Mealkit/list?nowBlock=<%=nowBlock+1%>&nowPage=<%=(nowBlock + 1) * pagePerBlock%>">
-									다음
-								</a>
-							<%
-							}
-						}
-					%>
-				</td>
+			                }
+			                
+			                if(totalBlock > nowBlock + 1){
+			                %>
+			                    <a href="<%=contextPath%>/Mealkit/list?category=<%=category %>&nowBlock=<%=nowBlock+1%>&nowPage=<%=(nowBlock + 1) * pagePerBlock%>">
+			                        다음
+			                    </a>
+			                <%
+			                }
+			            }
+			        %>
+			    </td>
 			</tr>
 		</table>
 	</div>

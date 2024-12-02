@@ -1,5 +1,35 @@
 @charset "UTF-8";
 
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+td {
+    vertical-align: top;
+    padding: 10px;
+}
+
+span {
+    display: block;
+    margin-bottom: 10px;
+}
+
+h2 {
+    margin: 10px 0;
+}
+
+p {
+    margin: 5px 0;
+}
+
+.list a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
 #container {
 	width: 1200px;
 	font-family: "Noto Serif KR", serif;
@@ -9,25 +39,25 @@
 	width: 100%;
 	padding: 10px;
 	box-sizing: border-box;
-	display: flex; /* 검색 폼과 글쓰기 버튼을 같은 줄에 배치하기 위해 flex 사용 */
-	justify-content: center; /* 검색 폼을 화면 중앙에 배치 */
-	align-items: center; /* 세로 정렬 */
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .search-form-container {
 	display: flex;
-	align-items: center; /* 세로로 가운데 정렬 */
-	gap: 10px; /* 요소 간 간격 */
+	align-items: center;
+	gap: 10px;
 }
 
 .search-form-container select, .search-form-container input {
 	padding: 5px;
 	font-size: 14px;
-	margin: 0; /* 기본 여백 제거 */
+	margin: 0;
 }
 
 .write-button-container {
-	margin-left: 20px; /* 검색 폼과 버튼 간격 */
+	margin-left: 20px;
 }
 
 #newContent {
@@ -45,4 +75,44 @@
 	border-radius: 10px;
 	width: 256px;
 	height: 256px;
+}
+
+.info-container {
+    font-family: "Noto Serif KR", serif;
+   	padding-left: 40px;
+    color: #333;
+}
+
+.row-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.row-link:hover {
+    background-color: #f9f9f9;
+}
+
+/* 페이지 */
+.pagination a {
+    display: inline-block;
+    margin: 0 5px;
+    padding: 5px 10px;
+    text-decoration: none;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.current-page {
+    font-weight: bold;
+    color: white;
+    background-color: #BF917E;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.pagination a:hover {
+    background-color: #9e6e58;
+    border-color: #BF917E;
 }

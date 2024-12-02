@@ -25,17 +25,22 @@
     <div id="container">
         <h2>밀키트 게시글 작성</h2>
         <form action="<%=contextPath%>/Mealkit/write.pro" method="post" id="frmWrite" enctype="multipart/form-data">
-            <table border="1">
+            <table class="write-form">
                 <tr>
                     <th>글 제목</th>
                     <td>
-                    	<input type="text" class="title" name="title" required>
+                    	<input type="text" class="title" name="title" placeholder="ex) 김치볶음밥 밀키트" required>
                     	<!-- id -->
                     	<input type="hidden" name="id" value="<%=id%>">
                     </td>
                 </tr>
                 <tr>
-				    <th>사진 추가</th>
+				    <th>
+				    	사진 추가
+				    	 <small class="notice-text">
+				    	 ※ 사진은 최대 5장까지<br>업로드 가능합니다.<br>※ 해당 사진을 클릭하면<br>삭제됩니다.
+				    	 </small>
+				    </th>
 				    <td>
 				        <div id="imagePreview"></div>
    						<input type="file" id="pictureFiles" name="pictureFiles" 
@@ -58,7 +63,7 @@
                 </tr>
                 <tr>
                     <th>간단 소개글</th>
-                    <td><textarea name="contents" class="contents" rows="4" required></textarea></td>
+                    <td><textarea name="contents" class="contents" rows="4" placeholder="해당 밀키트의 조리법을 적어주세요" required></textarea></td>
                 </tr>
                 <tr>
 					<th>가격</th>
@@ -66,7 +71,7 @@
 				</tr>
                 <tr>
                     <th>재고 수량</th>
-                    <td><input type="number" name="stock" class="stock" required min="0">개</td>
+                    <td><input type="number" name="stock" class="stock" required min="0"> 개</td>
                 </tr>
                 <tr>
 					<th>간단 조리 순서</th>
@@ -78,7 +83,7 @@
 				</tr>
                 <tr>
                     <th>원산지 표기</th>
-                    <td><input type="text" name="origin" class="origin" required></td>
+                    <td><input type="text" name="origin" class="origin" placeholder="ex) 쌀(국내산), 소고기(미국산), ..." required></td>
                 </tr>
             </table>
             <input type="button" class="write" value="작성 완료" onclick="onSubmit(event, '<%=contextPath%>')">

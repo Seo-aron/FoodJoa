@@ -88,6 +88,7 @@
 										<td class="views-price-area">
 										    <div>조회수 : <%= mealkitVO.getViews() %></div>
 										    <div>가격 : <%= formattedPrice %> 원</div>
+										    <div>수량 : <%=mealkitVO.getStock() %></div>
 										</td>
 
 									</tr>
