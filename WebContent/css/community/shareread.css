@@ -37,11 +37,6 @@ table {
 	border-spacing: 0 15px;
 }
 
-td {
-	padding: 10px;
-	vertical-align: top;
-}
-
 td[colspan="4"] {
 	padding-top: 20px;
 }

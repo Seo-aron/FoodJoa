@@ -19,6 +19,7 @@ request.setCharacterEncoding("UTF-8");
 	
 	<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
 	<style>
+	
 	#bottom_container {
 		width:100%;
 		font-family: "Noto Serif KR", serif;
@@ -26,6 +27,7 @@ request.setCharacterEncoding("UTF-8");
 		text-align: center;
 		padding: 20px 0;
 		border-top: 1px solid #e0e0e0;
+		margin-top: 50px; 
 	}
 	
 	body {
@@ -77,6 +79,7 @@ request.setCharacterEncoding("UTF-8");
 	#company p {
 		margin: 5px 0;
 	}
+	
 	</style>
 </head>
 
