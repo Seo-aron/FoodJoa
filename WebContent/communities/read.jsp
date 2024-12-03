@@ -21,7 +21,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>작성글 읽기 및 글 수정, 삭제, 목록</title>
+	<title>자유게시판 읽기</title>
 	
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>	
 	<link rel="stylesheet" href="<%=contextPath%>/css/community/read.css">
@@ -69,7 +69,8 @@
 						<div class="community_nickname">
 							<%= memberVO.getNickname()%>
 						</div>
-					</td>	
+					</td>
+				</tr>	
 				<tr>
 					<td>
 						<div class="community_date">

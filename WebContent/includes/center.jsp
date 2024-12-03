@@ -23,59 +23,127 @@
     <script src="https://cdn.jsdelivr.net/npm/bxslider@4.2.17/dist/jquery.bxslider.min.js"></script>	
 	<link rel="stylesheet" href="<%= contextPath %>/css/includes/center.css">
 	
-	<!-- BX slider -->
 	<script>
         
 		$(function() {
-			$('.rank_slider').bxSlider({
+			$('.bx_slider').bxSlider({
+				adaptiveHeight: true,
 				auto : true,
-				pager : true
-			});
-
-			$('.market_slider').bxSlider({
-				auto : true,
-				pager : true
+				pager : false
 			});
 		});
 	</script>
 </head>
 
 <body>
-	<div id="center">
-		<table>
-            <tr>
-                <td>
-                	<img alt="" src="">
-                    <오늘의 레시피 랭킹>
-                    <ul class="rank_slider">
-                        <li><img src="${contextPath}/images/mainpage/foodrank1.jpg" alt="레시피랭킹1"></li>
-                        <li><img src="${contextPath}/images/mainpage/foodrank2.jpg" alt="레시피랭킹2"></li>
-                        <li><img src="${contextPath}/images/mainpage/foodrank3.jpg" alt="레시피랭킹3"></li>
-                    </ul>
-                </td>
-                <td>
-                	<img alt="" src="">
-                    <오늘의 추천 요리>
-                    <a><img src="${contextPath}/images/mainpage//marketrank1.jpg" alt="첫번째 오른쪽" width="300px"></a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                	<img alt="" src="">
-                    <오늘의 마켓 랭킹>
-                    <ul class="market_slider">
-                        <li><img src="${contextPath}/images/mainpage/marketrank1.jpg" alt="마켓랭킹1"></li>
-                        <li><img src="${contextPath}/images/mainpage/marketrank2.jpg" alt="마켓랭킹2"></li>
-                        <li><img src="${contextPath}/images/mainpage/marketrank3.jpg" alt="마켓랭킹3"></li>
-                    </ul>
-                </td>
-                <td>
-                	<img alt="" src=""> 
-                    <오늘의 웰빙 요리>
-                    <a><img src="${contextPath}/images/mainpage/wellbeing.jpg" alt="두번째 오른쪽" width="300px"></a>
-                </td>
-            </tr>
-        </table>
+	<div id="container">
+		<div class="event_banner">
+			<img src="${contextPath}/images/mainpage/main_banner.png" alt="이벤트 배너">
+		</div>
+		<div class="rank">
+			<ul class="bx_slider">
+				<li>
+					<div class="recipe-slider-cell">
+						<div class="slide-cell-header">
+							<img src="${contextPath}/images/mainpage/trophy.png" alt="별모양 이미지">
+							<span>레시피 BEST</span>
+						</div>
+						<div class="block-cell">
+							<div class="image-area">
+								<img src="${contextPath}/images/mainpage/foodrank1.jpg" alt="레시피랭킹1">
+								<div class="rank-flag">
+									<img class="rank-flag" src="${contextPath}/images/mainpage/rankflag.png">
+								</div>
+								<div class="rank-label">1</div>
+							</div>
+							<div class="label-area">
+								<p>레시피 제목</p>
+								<p>작성자</p>
+								<p>평점</p>
+							</div>
+						</div>
+						<div class="block-cell">
+							<div class="image-area">
+								<img src="${contextPath}/images/mainpage/foodrank1.jpg" alt="레시피랭킹1">
+								<div class="rank-flag">
+									<img class="rank-flag" src="${contextPath}/images/mainpage/rankflag.png">
+								</div>
+								<div class="rank-label">2</div>
+							</div>
+							<div class="label-area">
+								<p>레시피 제목</p>
+								<p>작성자</p>
+								<p>평점</p>
+							</div>
+						</div>
+						<div class="block-cell">
+							<div class="image-area">
+								<img src="${contextPath}/images/mainpage/foodrank1.jpg" alt="레시피랭킹1">
+								<div class="rank-flag">
+									<img class="rank-flag" src="${contextPath}/images/mainpage/rankflag.png">
+								</div>
+								<div class="rank-label">3</div>
+							</div>
+							<div class="label-area">
+								<p>레시피 제목</p>
+								<p>작성자</p>
+								<p>평점</p>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="store-slider-cell">
+						<div class="slide-cell-header">
+							<img src="${contextPath}/images/mainpage/trophy.png" alt="별모양 이미지">
+							<span>스토어 BEST</span>
+						</div>
+						<div class="block-cell">
+							<div class="image-area">
+								<img src="${contextPath}/images/mainpage/foodrank1.jpg" alt="레시피랭킹1">
+								<div class="rank-flag">
+									<img class="rank-flag" src="${contextPath}/images/mainpage/rankflag.png">
+								</div>
+								<div class="rank-label">1</div>
+							</div>
+							<div class="label-area">
+								<p>상품명</p>
+								<p>평점</p>
+								<p>가격</p>
+							</div>
+						</div>
+						<div class="block-cell">
+							<div class="image-area">
+								<img src="${contextPath}/images/mainpage/foodrank1.jpg" alt="레시피랭킹1">
+								<div class="rank-flag">
+									<img class="rank-flag" src="${contextPath}/images/mainpage/rankflag.png">
+								</div>
+								<div class="rank-label">2</div>
+							</div>
+							<div class="label-area">
+								<p>상품명</p>
+								<p>평점</p>
+								<p>가격</p>
+							</div>
+						</div>
+						<div class="block-cell">
+							<div class="image-area">
+								<img src="${contextPath}/images/mainpage/foodrank1.jpg" alt="레시피랭킹1">
+								<div class="rank-flag">
+									<img class="rank-flag" src="${contextPath}/images/mainpage/rankflag.png">
+								</div>
+								<div class="rank-label">3</div>
+							</div>
+							<div class="label-area">
+								<p>상품명</p>
+								<p>평점</p>
+								<p>가격</p>
+							</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
 	</div>
 </body>
 
