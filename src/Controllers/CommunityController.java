@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import Services.CommunityService;
 import VOs.CommunityShareVO;
 import VOs.CommunityVO;
+import VOs.NoticeVO;
 
 @WebServlet("/Community/*")
 public class CommunityController extends HttpServlet {
@@ -61,15 +62,20 @@ public class CommunityController extends HttpServlet {
 			
 			case "/shareList": openShareList(request, response);break; 
 			case "/shareWrite": openShareWriteView(request, response);break; 
-			case "/shareWrite.pro":
-				if (!processShareWrite(request, response))
-					return;
-				break; 
+			case "/shareWrite.pro": if (!processShareWrite(request, response)) return; break; 
 			case "/shareRead": openShareRead(request, response);break; 
 			case "/shareUpdate": openShareUpdateView(request, response);break; 
 			case "/shareUpdatePro": processShareUpdate(request, response);return; 
 			case "/shareDeletePro": processShareDelete(request, response);break;
 			case "/shareSearchList": processShareSearch(request, response); break;
+			
+			case "/noticeList": openNoticeListView(request, response); break;
+			case "/noticeWrite": openNoticeWriteView(request, response); break;
+			case "/noticeWritePro": processNoticeWrite(request, response); return;
+			case "/noticeRead": openNoticeReadView(request, response); break;
+			case "/noticeUpdate": openNoticeUpdateView(request, response); break;
+			case "/noticeUpdatePro": processNoticeUpdate(request, response); return;
+			case "/noticeDeletePro": processNoticeDelete(request, response); return;
 			
 			default:
 		}
@@ -292,5 +298,95 @@ public class CommunityController extends HttpServlet {
 		request.setAttribute("center", "communities/shareList.jsp");
 		
 		nextPage = "/main.jsp";
+	}
+	
+	private void openNoticeListView(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		ArrayList<NoticeVO> noticeList = communityService.getNoticeList(request);
+		
+		String nowPage = request.getParameter("nowPage");
+		String nowBlock = request.getParameter("nowBlock");
+
+		request.setAttribute("noticeList", noticeList);
+		request.setAttribute("nowPage", nowPage);
+		request.setAttribute("nowBlock", nowBlock);
+		request.setAttribute("pageTitle", "공지사항");
+		request.setAttribute("center", "communities/noticeList.jsp");
+
+		nextPage = "/main.jsp";	
+	}
+	
+	private void openNoticeWriteView(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		request.setAttribute("pageTitle", "공지사항 작성");
+		request.setAttribute("center", "communities/noticeWrite.jsp");
+
+		nextPage = "/main.jsp";	
+	}
+	
+	private void processNoticeWrite(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		int result = communityService.processNoticeWrite(request);
+		
+		PrintWriter out = response.getWriter();
+		
+		out.print(result);
+		
+		out.close();
+	}
+	
+	private void openNoticeReadView(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		NoticeVO noticeVO = communityService.getNotice(request);
+		
+		request.setAttribute("noticeVO", noticeVO);
+		request.setAttribute("nowPage", request.getParameter("nowPage"));
+		request.setAttribute("nowBlock", request.getParameter("nowBlock"));
+		request.setAttribute("pageTitle", "공지사항 - " + noticeVO.getTitle());
+		request.setAttribute("center", "communities/noticeRead.jsp");
+
+		nextPage = "/main.jsp";	
+	}
+	
+	private void openNoticeUpdateView(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+	
+		NoticeVO noticeVO = communityService.getNotice(request);
+		
+		request.setAttribute("noticeVO", noticeVO);
+		request.setAttribute("nowPage", request.getParameter("nowPage"));
+		request.setAttribute("nowBlock", request.getParameter("nowBlock"));
+		request.setAttribute("pageTitle", "공지사항 수정하기 - " + noticeVO.getTitle());
+		request.setAttribute("center", "communities/noticeUpdate.jsp");
+
+		nextPage = "/main.jsp";	
+	}
+	
+	private void processNoticeUpdate(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		int result = communityService.processNoticeUpdate(request);
+		
+		PrintWriter out = response.getWriter();
+		
+		out.print(result);
+		
+		out.close();
+	}
+	
+	private void processNoticeDelete(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		int result = communityService.processNoticeDelete(request);
+		
+		PrintWriter out = response.getWriter();
+		
+		out.print(result);
+		
+		out.close();
 	}
 }

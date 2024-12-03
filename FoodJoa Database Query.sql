@@ -181,4 +181,15 @@ create table recent_view(
     foreign key(id) references member(id) ON DELETE CASCADE
 );
 
+
+
+DROP TABLE IF EXISTS notice;
+CREATE TABLE notice(
+	no 			int primary key auto_increment,
+    title 		varchar(50) not null,
+    contents 	text not null,
+    views 		int not null default 0,
+    post_date 	timestamp not null default current_timestamp
+);
+
 COMMIT;

@@ -17,6 +17,7 @@ import Common.FileIOController;
 import DAOs.CommunityDAO;
 import VOs.CommunityShareVO;
 import VOs.CommunityVO;
+import VOs.NoticeVO;
 
 public class CommunityService {
 
@@ -195,5 +196,35 @@ public class CommunityService {
 		}
 		
 		return result;
-	} 
+	}
+	
+	public ArrayList<NoticeVO> getNoticeList(HttpServletRequest request) {
+		
+		return communitydao.selectNoticeList();
+	}
+	
+	public int processNoticeWrite(HttpServletRequest request) {
+		
+		return communitydao.insertNotice(
+				request.getParameter("title"),
+				request.getParameter("contents"));
+	}
+	
+	public NoticeVO getNotice(HttpServletRequest request) {
+		
+		return communitydao.selectNotice(request.getParameter("no"));
+	}
+	
+	public int processNoticeUpdate(HttpServletRequest request) {
+		
+		return communitydao.updateNotice(
+				request.getParameter("no"),
+				request.getParameter("title"),
+				request.getParameter("contents"));
+	}
+	
+	public int processNoticeDelete(HttpServletRequest request) {
+		
+		return communitydao.deleteNotice(request.getParameter("no"));
+	}
 }
