@@ -76,6 +76,7 @@
 				<li>
 					<a href="#">자유게시판</a>
 					<ul>
+						<li><a href="<%=contextPath%>/Community/noticeList">공지사항</a></li>
 						<li><a href="<%=contextPath%>/Community/list">자유 게시판</a></li>
 						<li><a href="<%=contextPath%>/Community/shareList">나눔/같이 먹어요</a></li>
 					</ul>

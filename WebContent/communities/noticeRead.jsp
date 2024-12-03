@@ -1,5 +1,4 @@
-<%@page import="VOs.MemberVO"%>
-<%@page import="java.util.HashMap"%>
+<%@page import="VOs.NoticeVO"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="VOs.CommunityVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -9,12 +8,13 @@
 	request.setCharacterEncoding("UTF-8");
 	String contextPath = request.getContextPath();
 	
-	HashMap<String, Object> community = (HashMap<String, Object>)request.getAttribute("community");
-	
-	CommunityVO communityVO = (CommunityVO)community.get("communityVO");
-	MemberVO memberVO = (MemberVO)community.get("memberVO");
+	NoticeVO noticeVO = (NoticeVO) request.getAttribute("noticeVO");
 	
 	String id = (String) session.getAttribute("userId");
+	String adminId = "tQi32Qj0iONPLRZ16-5sX4-Gq_p8Jg_T33r-HdtLEFE";
+	
+	String nowPage = (String) request.getAttribute("nowPage");
+	String nowBlock = (String) request.getAttribute("nowBlock");
 %>
     
 <!DOCTYPE html>
@@ -30,9 +30,8 @@
 <body>
 	<div id="commnunity-container">
 		<div id="community-header" align="center">
-			<p class="community_p1">COMMUNITY</p>
-			<p class="community_p2">자유게시판</p>
-			<p>자유롭게 글을 작성해보세요</p>
+			<p class="community_p1">NOTICE</p>
+			<p class="community_p2">공지 사항</p>
 		</div>
 		
 		<div id="community-body">
@@ -42,7 +41,7 @@
 						<div class="community-button-area">
 							<input type="button" value="목록" id="list" onclick="onListButton()">
 							<%
-							if (id != null && id.equals(communityVO.getId())) {
+							if (id != null && id.length() > 0 && id.equals(adminId)) {
 								%>
 								<input type="button" value="수정" id="update" onclick="onUpdateButton()">
 								<input type="button" value="삭제" id="delete" onclick="onDeleteButton()">
@@ -53,36 +52,22 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="4">
+					<td width="80%">
 						<div class="community_title">
-							<%= communityVO.getTitle() %>
+							<%= noticeVO.getTitle() %>
 						</div>
 					</td>
-				</tr>
-				<tr>
-					<td width="50px" rowspan="2">
-						<div class="image_profile">
-							<img src="<%= contextPath %>/images/member/userProfiles/<%= communityVO.getId() %>/<%= memberVO.getProfile() %>">
-						</div>
-					</td>
-					<td>
-						<div class="community_nickname">
-							<%= memberVO.getNickname()%>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
+					<td width="20%">
 						<div class="community_date">
-							<span><%=new SimpleDateFormat("yyyy-MM-dd").format(communityVO.getPostDate())%></span>
-							<span>&nbsp;조회 <%= communityVO.getViews()%></span>
+							<span><%=new SimpleDateFormat("yyyy-MM-dd").format(noticeVO.getPostDate())%></span>
+							<span>&nbsp;조회 <%= noticeVO.getViews()%></span>
 						</div>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="4">
 						<div class="community_contents">
-							<%= communityVO.getContents() %>
+							<%= noticeVO.getContents() %>
 						</div>
 					</td>
 				</tr>
@@ -91,7 +76,7 @@
 						<div class="community-button-area">
 							<input type="button" value="목록" id="list" onclick="onListButton()">
 							<%
-							if (id != null && id.equals(communityVO.getId())) {
+							if (id != null && id.length() > 0 && id.equals(adminId)) {
 								%>
 								<input type="button" value="수정" id="update" onclick="onUpdateButton()">
 								<input type="button" value="삭제" id="delete" onclick="onDeleteButton()">
@@ -107,47 +92,43 @@
 	
 	<form name="frmUpdate" method="post">
 		<input type="hidden" name="no">
-		<input type="hidden" name="title">
-		<input type="hidden" name="contents">
-		<input type="hidden" name="views">
+		<input type="hidden" name="nowPage" value="<%= nowPage %>">
+		<input type="hidden" name="nowBlock" value="<%= nowBlock %>">
 	</form>
 	
 	<script>
 		function onListButton() {
-			location.href = '<%= contextPath %>/Community/list';
-			
+			location.href = '<%= contextPath %>/Community/noticeList?nowPage=<%=nowPage%>&nowBlock=<%=nowBlock%>';
 		}
 	
 		function onUpdateButton() {
-			document.frmUpdate.action = "<%= contextPath %>/Community/update";
+			document.frmUpdate.action = "<%= contextPath %>/Community/noticeUpdate";
 			
-			document.frmUpdate.no.value = "<%= communityVO.getNo()%>";
-			document.frmUpdate.title.value = "<%= communityVO.getTitle() %>";
-			document.frmUpdate.contents.value = `<%= communityVO.getContents() %>`;
-			document.frmUpdate.views.value = <%= communityVO.getViews()%>;
+			document.frmUpdate.no.value = "<%= noticeVO.getNo()%>";
 			
 			document.frmUpdate.submit();
 		}
 		
 		function onDeleteButton() {
 			$.ajax({
-				url: "<%= contextPath%>/Community/deletePro",
+				url: "<%= contextPath%>/Community/noticeDeletePro",
 				type: "post",
 				data : {
-					no: <%= communityVO.getNo()%>
+					no: <%= noticeVO.getNo()%>
 				},
 				dataType: "text",
-				success: function(responsedData){
-					
-					if(responsedData == "삭제 완료"){
-						location.href ='<%= contextPath %>/Community/list';
+				success: function(responsedData){					
+					if(responsedData == "1"){
+						alert('공지사항이 삭제되었습니다.');
+						location.href ='<%= contextPath %>/Community/noticeList';
 					}
 					else {
-						alert('삭제되지 않았습니다.');
+						alert('공지사항 삭제에 실패했습니다.');
 					}
 				},
 				error: function(error){
 					console.log(error);
+					alert('공지사항 삭제 통신 오류');
 				}				
 			});
 		}

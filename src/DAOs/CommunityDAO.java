@@ -9,6 +9,7 @@ import Common.DBConnector;
 import VOs.CommunityShareVO;
 import VOs.CommunityVO;
 import VOs.MemberVO;
+import VOs.NoticeVO;
 
 public class CommunityDAO {
 
@@ -459,6 +460,90 @@ public class CommunityDAO {
 		
 		dbConnector.release();
 
+		return result;
+	}
+	
+	public ArrayList<NoticeVO> selectNoticeList() {
+		
+		ArrayList<NoticeVO> noticeList = new ArrayList<NoticeVO>();
+		
+		String sql = "SELECT * FROM notice ORDER BY post_date DESC";
+		
+		ResultSet resultSet = dbConnector.executeQuery(sql);
+		
+		try {
+			while (resultSet.next()) {
+				NoticeVO noticeVO = new NoticeVO(
+						resultSet.getInt("no"),
+						resultSet.getString("title"),
+						resultSet.getString("contents"),
+						resultSet.getInt("views"),
+						resultSet.getTimestamp("post_date"));
+				
+				noticeList.add(noticeVO);
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		dbConnector.release();
+		
+		return noticeList;
+	}
+	
+	public NoticeVO selectNotice(String no) {
+
+		NoticeVO noticeVO = null;
+		String sql = "SELECT * FROM notice WHERE no=?";
+		
+		ResultSet resultSet = dbConnector.executeQuery(sql, Integer.parseInt(no));
+		
+		try {
+			if (resultSet.next()) {
+				noticeVO = new NoticeVO(
+						resultSet.getInt("no"),
+						resultSet.getString("title"),
+						resultSet.getString("contents"),
+						resultSet.getInt("views"),
+						resultSet.getTimestamp("post_date"));
+			}
+		} 
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return noticeVO;
+	}
+	
+	public int insertNotice(String title, String contents) {
+		
+		String sql = "INSERT INTO notice(title, contents) VALUES(?, ?)";
+		
+		int result = dbConnector.executeUpdate(sql, title, contents);
+		
+		return result;
+	}
+	
+	public int updateNotice(String no, String title, String contents) {
+		
+		String sql = "UPDATE notice SET title=?, contents=? WHERE no=?";
+		
+		int result = dbConnector.executeUpdate(sql, title, contents, Integer.parseInt(no));
+		
+		dbConnector.release();
+		
+		return result;
+	}
+	
+	public int deleteNotice(String no) {
+		
+		String sql = "DELETE FROM notice WHERE no=?";
+		
+		int result = dbConnector.executeUpdate(sql, Integer.parseInt(no));
+		
+		dbConnector.release();
+		
 		return result;
 	}
 }
