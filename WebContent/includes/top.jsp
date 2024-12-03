@@ -55,7 +55,7 @@
 		<nav class="top_nav">
 			<ul id="topMenu">
 				<li><a href="<%= contextPath %>/main.jsp">홈</a></li>
-				<li><a href="<%= contextPath %>/Recipe/list?category=0">레시피 공유</a>
+				<li><a href="<%= contextPath %>/Recipe/list?category=0">레시피</a>
 					<ul>
 						<li><a href="<%= contextPath %>/Recipe/list?category=1">한식 요리</a></li>
 						<li><a href="<%= contextPath %>/Recipe/list?category=2">일식 요리</a></li>
@@ -65,7 +65,7 @@
 					</ul>
 				</li>
 				<li>
-					<a href="<%=contextPath%>/Mealkit/list?category=0">나만의 음식 판매</a>
+					<a href="<%=contextPath%>/Mealkit/list?category=0">스토어</a>
 					<ul>
 						<li><a href="<%=contextPath%>/Mealkit/list?category=1">한식 제품</a></li>
 						<li><a href="<%=contextPath%>/Mealkit/list?category=2">일식 제품</a></li>
@@ -74,8 +74,9 @@
 					</ul>
 				</li>
 				<li>
-					<a href="#">자유게시판</a>
+					<a href="#">게시판</a>
 					<ul>
+						<li><a href="<%=contextPath%>/Community/noticeList">공지사항</a></li>
 						<li><a href="<%=contextPath%>/Community/list">자유 게시판</a></li>
 						<li><a href="<%=contextPath%>/Community/shareList">나눔/같이 먹어요</a></li>
 					</ul>

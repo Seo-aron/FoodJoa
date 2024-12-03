@@ -169,23 +169,16 @@
 	
 	<script>
 		function fnSearch(){
-			//입력한 검색어 얻기 
 			var word = document.getElementById("word").value;
 			
-	    	//검색어를 입력하지 않았다면?
 			if(word == null || word == ""){
-				//검색어 입력 메세지창 띄우기 
 				alert("검색어를 입력하세요.");
-				//검색어를 입력 하는 <input>에 강제 포커스를 주어 검색어를 입력하게 유도함.
 				document.getElementById("word").focus();
 				
-				//<form>의 action속성에 작성된 BoardController서버페이지 요청을 차단 
 				return false;
 			}
-			else{//검색어를 입력했다면
+			else{
 				
-				//<form>을 선택해서 가져와 action속성에 작성된 주소를 이용해
-				//BoardController로 입력한 검색어에 관한 글목록 조회 요청을 함 
 				document.frmSearch.submit();
 			}
 		}
@@ -208,6 +201,5 @@
 			}
 		}
 	</script>
-		
 </body>
 </html>
