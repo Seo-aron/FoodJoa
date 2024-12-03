@@ -14,9 +14,6 @@
     String contextPath = request.getContextPath();
     
     MealkitVO mealkitvo = (MealkitVO) request.getAttribute("mealkitvo");
-    
-    // String updatePictures = (String) request.getAttribute("updatePictures");	// 파일명 (이미지 로드용)
-    // String bytePictures = (String) request.getAttribute("bytePictures");		// 0000파일명
 %>
 <c:set var="mealkit" value="${requestScope.mealkitvo}"/>
 
@@ -36,9 +33,7 @@
 	            <tr>
 				    <th>ID</th>
 				    <td>
-				    	<!-- 로그인정보를 세션에 저장해야 쓸 수 있음 -->
-				    	<!--<input type="text" name="id" value="${sessionScope.userId}" readonly>-->
-				    	<input type="text" name="id" value="admin" readonly>
+				    	<input type="text" name="id" value="${sessionScope.userId}" readonly>
 				    	<input type="hidden" name="no" value="${mealkit.no }">
 				    </td>
 				</tr>
@@ -53,8 +48,6 @@
    						<input type="file" id="pictureFiles" name="pictureFiles" 
 							accept=".jpg,.jpeg,.png" multiple onchange="handleFileSelect(this.files)">
 						<button type="button" id="addFileBtn" onclick="triggerFileInput()">사진 추가</button>
-						<input type="text" id="pictures" name="pictures" value="${mealkit.pictures }">
-						<button type="button" onclick="clearInputValue()">삭제</button>
 					</td>
 				</tr>
                 <tr>
@@ -103,14 +96,50 @@
         </form>
     </div>
     <% 
-    	List<String> orders = StringParser.splitString(mealkitvo.getOrders()); 
-	    String pictures = mealkitvo.getPictures();
-	    String[] pictureArray = pictures.split(",");
+    	List<String> orders = StringParser.splitString(mealkitvo.getOrders());
+	    List<String> pictures = StringParser.splitString(mealkitvo.getPictures());
+	    // input에는 스트링파서를 하면 안됨 << 이걸 해결해야함
     %>
    <script type="text/javascript">
    	let selectedFiles = [];
    	let selectedRealFiles = [];
 
+	initialize();		
+	
+	function initialize() {
+		<%
+		for (int i = 0; i < orders.size(); i++) {
+			%>
+			var newOrderHtml = 
+	            '<p class="added-orders">' +
+				'<span class="added-order"><%= orders.get(i) %></span>' + 
+	            '<button type="button" class="remove-orders">삭제</button>' +
+	            '</p>';
+	            
+            $(".orders-container").append(newOrderHtml);
+			<%
+		}
+		%>
+		
+		<%
+		int i = 0;
+	    for (String picture : pictures) {
+	    %>
+	        var imgHtml = 
+	            '<div class="preview-container">' +
+	            '<img src="<%= contextPath %>/images/mealkit/thumbnails/<%= mealkitvo.getNo() %>/<%= mealkitvo.getId() %>/<%=picture%>" class="preview-image-<%=i%>">' +
+	            '<input type="hidden" id="pictures" class="preview-filename-<%=i%>" value="" >' +
+	            '<input type="button" class="remove-img" value="삭제" onclick="removeImage(<%=i%>)">' +
+	            '</div>';
+	        document.getElementById('imagePreview').innerHTML += imgHtml;
+	        const pictureValue = combineStrings(["<%= picture %>"]);
+	        document.getElementById("pictures-<%= i %>").value = pictureValue;
+	        <%=i++%>;
+	    <%
+	    }
+    	%>
+	}
+   	
     $(function() {
     	$(".write").click(function(event) {
     		event.preventDefault();
@@ -188,9 +217,12 @@
 			processData: false,
 			contentType: false,
 			success: function(response) {
-				if (response > 0) {
+				if (response) {
+					var responseArray = response.split(',');
+			        var no = responseArray[0];
+			        var nickName = responseArray[1];
 					alert("글 작성이 성공적으로 완료되었습니다.");
-					location.href = "<%=contextPath%>/Mealkit/info?no=" + response;
+					location.href = "<%=contextPath%>/Mealkit/info?no=" + no + "&nickName=" + nickName;
 				} else {
 					alert("글 작성에 실패했습니다. 다시 시도해주세요.");
 				}
@@ -228,25 +260,6 @@
 		
 		console.log("result : " + result);
 		return result;
-	}
-	
-	initialize();		
-	
-	function initialize() {
-		<%
-		for (int i = 0; i < orders.size(); i++) {
-			%>
-			var newOrderHtml = 
-	            '<p class="added-orders">' +
-				'<span class="added-order"><%= orders.get(i) %></span>' + 
-	            '<button type="button" class="remove-orders">삭제</button>' +
-	            '</p>';
-	            
-            $(".orders-container").append(newOrderHtml);
-			<%
-		}
-		%>
-		
 	}
 	
 	// 사진 관련 
@@ -302,24 +315,8 @@
 		document.getElementById('pictureFiles').value = '';
 	}
 	
-	function clearInputValue() {
-        // 'pictures' input의 value 값을 빈 문자열로 설정
-        document.getElementById('pictures').value = "";
-    }
-	
 	// 선택한 파일 제거
 	function removeSelectedFile(fileIdentifier) {
-		for (let i = 0; i < selectedFiles.length; i++) {
-			if (selectedFiles[i] == fileIdentifier) {
-				selectedFiles.splice(i, 1);
-				selectedRealFiles.splice(i, 1);
-				break;
-			}
-		}
-	}
-	
-	function removeSelectedFile(fileIdentifier) {
-		//selectedFiles = selectedFiles.filter(item => item !== fileIdentifier);
 		for (let i = 0; i < selectedFiles.length; i++) {
 			if (selectedFiles[i] == fileIdentifier) {
 				selectedFiles.splice(i, 1);
@@ -341,6 +338,17 @@
 		let pictures = combineStrings(strings);
 	
 		document.getElementsByName('pictures')[0].value = pictures;
+	}
+	
+	function removeImage(index) {
+	    var imgElement = document.querySelector('.preview-image-' + index);
+	    if (imgElement) {
+	        var hiddenInput = document.querySelector('.preview-filename-' + index);
+	        if (hiddenInput) {
+	            hiddenInput.value = "";
+	        }
+	        imgElement.parentElement.remove();
+	    }
 	}
     </script>
 </body>

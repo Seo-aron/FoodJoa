@@ -64,6 +64,7 @@ public class MealkitController extends HttpServlet {
 		case "/reviewwrite.pro": processAddReview(request, response); return;
 		case "/reviewDelete.pro": processReviewDelete(request, response); return;
 		case "/reviewUpdate": openReviewUpdate(request, response); break;
+		case "/reviewUpdate.pro": processReviewUpdate(request, response); return;
 		
 		case "/searchlist.pro": processSearchList(request, response); break;
 		case "/buyMealkit.pro": processBuyMealkit(request, response); return;		
@@ -76,13 +77,19 @@ public class MealkitController extends HttpServlet {
 		dispatcher.forward(request, response);
 	}
 
+	private void processReviewUpdate(HttpServletRequest request, HttpServletResponse response) 
+			throws IOException {
+		mealkitService.updateReviewpro(request);
+	}
+
 	private void openReviewUpdate(HttpServletRequest request, HttpServletResponse response) {
-		MealkitVO mealkit = mealkitService.getMealkit(request);
+		MealkitVO mealkit = mealkitService.getMealkitReview(request);
 		String nickName = mealkitService.getMealkitNickName(mealkit);
 		MealkitReviewVO reviewvo = mealkitService.updateReviewMealkit(request);
 		
-		request.setAttribute("reviewvo", reviewvo);
+		request.setAttribute("mealkit", mealkit);
 	    request.setAttribute("nickName", nickName);
+		request.setAttribute("reviewvo", reviewvo);
 		request.setAttribute("center", "mealkits/editreview.jsp");
 		
 		nextPage = "/main.jsp";
@@ -138,7 +145,7 @@ public class MealkitController extends HttpServlet {
 
 	private void openAddReview(HttpServletRequest request, HttpServletResponse response) {
 		
-		MealkitVO mealkit = mealkitService.getMealkit(request);
+		MealkitVO mealkit = mealkitService.getMealkitInfo(request);
 		String nickName = mealkitService.getMealkitNickName(mealkit);
 	    
 	    request.setAttribute("mealkit", mealkit);

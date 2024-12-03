@@ -1,4 +1,6 @@
 <%@ page import="java.util.List"%>
+<%@ page import="java.util.ArrayList"%>
+<%@ page import="java.util.Map"%>
 <%@ page import="Common.StringParser"%>
 <%@ page import="VOs.MealkitVO"%>
 <%@ page import="VOs.MemberVO"%>
@@ -15,8 +17,8 @@
 	String contextPath = request.getContextPath();
 	
     String id = (String) session.getAttribute("userId");
-	String bytePictures = request.getParameter("bytePictures");
 	MealkitVO mealkitvo = (MealkitVO) request.getAttribute("mealkitvo");
+	ArrayList<Map<String, Object>> reviewvo = (ArrayList<Map<String, Object>>) request.getAttribute("reviewvo");
 	String nickName = (String) request.getAttribute("nickName");
 	
 	List<String> parsedOrders = StringParser.splitString(mealkitvo.getOrders());
@@ -46,7 +48,6 @@
 	<div id="board-container">
 		<!-- editBoard.jsp로 넘길 데이터 -->
 		<input type="hidden" id="mealkitNo" value="${mealkit.no}">
-		<input type="hidden" id="bytePictures" value="<%=bytePictures%>">
 		
 		<div class="info_image">
 			<%

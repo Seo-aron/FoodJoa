@@ -627,10 +627,10 @@ public class MealkitDAO {
 		try {
 			if(rs.next()) nickName = rs.getString("nickName");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("MealkitDAO - selectMealkitNickName 예외발생");
 			e.printStackTrace();
 		}
-		System.out.println("DAO" + nickName);
+		
 		dbConnector.release();
 		
 		return nickName;
@@ -663,5 +663,37 @@ public class MealkitDAO {
 		
 		return reviewvo;
 	}
+	
+	public MealkitVO InfoMealkitReview(int no) {
+		MealkitVO mealkit = null;
+
+		String sql = "SELECT * FROM mealkit WHERE no = "
+				+ "(SELECT mealkit_no FROM mealkit_review WHERE no = ?);";
+
+		ResultSet rs = dbConnector.executeQuery(sql, no);
+
+		try {
+			if (rs.next()) {
+				mealkit = new MealkitVO(rs.getInt("no"), rs.getString("id"), rs.getString("title"),
+						rs.getString("contents"), rs.getInt("category"), rs.getString("price"), rs.getInt("stock"),
+						rs.getString("pictures"), rs.getString("orders"), rs.getString("origin"), rs.getInt("views"),
+						rs.getInt("soldout"), rs.getTimestamp("post_date"));
+			}
+
+		} catch (Exception e) {
+			System.out.println("MealkitDAO - InfoMealkitReview 예외발생 ");
+			e.printStackTrace();
+		}
+
+		dbConnector.release();
+
+		return mealkit;
+	}
+
+	public Object updateReview(MealkitReviewVO review) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

@@ -38,11 +38,11 @@ public class MealkitService {
 		return mealkitDAO.selectMealkits(category);
 	}
 
-	public MealkitVO getMealkit(HttpServletRequest request) {
+	public MealkitVO getMealkitReview(HttpServletRequest request) {
 		
 		int no = Integer.parseInt(request.getParameter("no"));
 		
-		return mealkitDAO.InfoMealkit(no);
+		return mealkitDAO.InfoMealkitReview(no);
 	}
 
 	public MealkitVO getMealkitInfo(HttpServletRequest request) {
@@ -149,26 +149,11 @@ public class MealkitService {
     		FileIOController.moveFile(srcPath, destinationPath, fileName);
         }
 
-	    String bytePictures = multipartRequest.getParameter("pictures");
-	    System.out.println("setWriteMealkit - bytePictures: " + bytePictures);
-
-	    response.setContentType("application/json;charset=UTF-8");
-	    PrintWriter printWriter = response.getWriter();
-	    if (no > 0) {
-	    	String jsonResponse = String.format("{\"no\": %d, \"bytePictures\": \"%s\"}", no, bytePictures);
-	        printWriter.print(jsonResponse);
-	    	
-	        // printWriter.print(no);
-		    
-	        // RequestDispatcher dispatcher = request.getRequestDispatcher("mealkits/editBoard.jsp");
-	    	// dispatcher.forward(request, response);
-	    } else {
-	    	printWriter.print("{\"no\": 0, \"error\": \"글 작성에 실패했습니다.\"}");
-	    	
-	        // printWriter.print(no);
-	    }
-
-	    printWriter.close();
+        String nickName = mealkitDAO.selectNickName(id);
+		
+		PrintWriter printWriter = response.getWriter();
+		printWriter.print(no + "," + nickName);
+		printWriter.close();
 	}
 
 	public int setWriteReview(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -281,8 +266,10 @@ public class MealkitService {
 		    }
 		}
 		
+		String nickName = mealkitDAO.selectNickName(id);
+		
 		PrintWriter printWriter = response.getWriter();
-		printWriter.println(no);
+		printWriter.print(no + "," + nickName);
 		printWriter.close();
 	}
 
@@ -370,8 +357,49 @@ public class MealkitService {
 	}
 
 	public MealkitReviewVO updateReviewMealkit(HttpServletRequest request) {
-		int reviewNo = Integer.parseInt(request.getParameter("reviewNo"));
+		int reviewNo = Integer.parseInt(request.getParameter("no"));
 		
 		return mealkitDAO.selectReview(reviewNo);
+	}
+
+	public void updateReviewpro(HttpServletRequest request) 
+			throws IOException {
+		
+		String id = (String) request.getSession().getAttribute("userId");
+		
+		ServletContext application = request.getServletContext();
+
+		String path = application.getRealPath(File.separator + "images");
+		int maxSize = 1024 * 1024 * 1024;
+
+		MultipartRequest multipartRequest = new MultipartRequest(request, path + File.separator + "temp", maxSize, "UTF-8",
+				new DefaultFileRenamePolicy());
+		
+		String mealkitNo = multipartRequest.getParameter("mealkit_no");
+        String pictures = multipartRequest.getParameter("pictures");
+        String contents = multipartRequest.getParameter("contents");
+        String rating = multipartRequest.getParameter("rating");
+        
+        System.out.println("pictures : " + pictures);
+        
+        List<String> fileNames = StringParser.splitString(pictures);
+        
+        for(String fileName : fileNames) {
+    		
+    		String srcPath = path + File.separator + "temp";
+    		String destinationPath = path + File.separator + "mealkit" + File.separator +
+    				"reviews" + File.separator + String.valueOf(mealkitNo) + File.separator + id;
+    		
+    		FileIOController.moveFile(srcPath, destinationPath, fileName);
+        }
+        
+        MealkitReviewVO review = new MealkitReviewVO();
+        review.setId(id);
+        review.setMealkitNo(Integer.parseInt(mealkitNo));
+        review.setPictures(pictures);
+        review.setContents(contents);
+        review.setRating(Integer.parseInt(rating));
+        
+        mealkitDAO.updateReview(review);
 	}
 }

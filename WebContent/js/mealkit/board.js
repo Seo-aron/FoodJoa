@@ -87,5 +87,5 @@ function deleteMealkit(no, contextPath) {
 
 // 수정 함수 
 function editMealkit(contextPath) {
-	location.href = contextPath + "/Mealkit/update?no=" + mealkitNo + "&bytePictures=" + encodeURIComponent(bytePictures);
+	location.href = contextPath + "/Mealkit/update?no=" + mealkitNo;
 }

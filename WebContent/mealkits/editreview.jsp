@@ -12,7 +12,7 @@
 
 	String contextPath = request.getContextPath();
 	
-	// MealkitVO mealkit = (MealkitVO) request.getAttribute("mealkit");
+	MealkitVO mealkit = (MealkitVO) request.getAttribute("mealkit");
 	MealkitReviewVO review = (MealkitReviewVO) request.getAttribute("reviewvo");
 	String nickName = (String) request.getAttribute("nickName");
 	
@@ -66,7 +66,7 @@
 								<img src="<%= contextPath %>/images/recipe/full_star.png" onclick="setRating(event, 3)">
 								<img src="<%= contextPath %>/images/recipe/full_star.png" onclick="setRating(event, 4)">
 								<img src="<%= contextPath %>/images/recipe/full_star.png" onclick="setRating(event, 5)">
-							<input type="hidden" id="rating" name="rating" value="5">
+							<input type="hidden" id="rating" name="rating" value="<%=review.getRating()%>">
 						</div>
 					</td>
 				</tr>
@@ -91,14 +91,14 @@
 							리뷰 내용 작성
 						</div>
 						<div class="reivew-contents-area">	
-							<textarea id="contents" name="contents"></textarea>
+							<textarea id="contents" name="contents"><%=review.getContents() %></textarea>
 						</div>
 					</td>
 				</tr>
 				<tr>
 					<td align="right">
 						<div class="review-button-area">
-							<input type="button" value="리뷰 쓰기" onclick="onSubmit(event,'<%= contextPath %>')">
+							<input type="button" value="수정 완료" onclick="onSubmit(event,'<%= contextPath %>')">
 							<input type="button" value="취소" onclick="onCancleButton(event)">
 						</div>
 					</td>
@@ -110,8 +110,16 @@
 	
 	<script src="<%= contextPath %>/js/mealkit/editreview.js"></script>
 	<script>
+		initialize();
+	
+		function initialize(){
+			setRating(null, $("input[name='rating']").val());
+		}
+	
 		function setRating(event, ratingValue) {
-			event.preventDefault();
+			if(event != null){
+				event.preventDefault();
+			}
 			
 			let emptyStarPath = '<%= contextPath %>/images/recipe/empty_star.png';
 			let fullStarPath = '<%= contextPath %>/images/recipe/full_star.png';
