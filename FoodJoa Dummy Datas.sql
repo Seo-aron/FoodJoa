@@ -96,16 +96,16 @@ INSERT INTO mealkit_wishlist (id, mealkit_no, choice_date) VALUES
 -- community
 insert into community(id, title, contents, views, post_date)
 values
-('admin', 'seoul', 'eat', 3, now()),
-('admin', 'busan', 'meet', 100, now()),
-('admin', 'daegu', 'go', 500, now()),
-('admin', 'ulsan', 'do', 70, now()),
-('admin', 'gwangju', 'abcdefg', 90, now());
+('admin', '감을 하루에 1개만 먹으라니"…감 섭취 시 주의사항은?', '감은 아삭한 단감, 부드러운 홍시, 쫄깃한 곶감까지 취향에 따라 골라 먹는 재미가 있어 많은 사람들의 입맛을 사로잡는다. 비타민과 식이섬유가 풍부해 영양 면에서도 뛰어난 감은 숙취 해소, 뇌졸중 예방, 설사 완화 등 건강에 도움을 주는 자연식품으로 잘 알려져 있다. 하지만 체질이나 건강 상태에 따라 섭취에 주의가 필요하다.', 1, now()),
+('review1', '캔 쉽게 따는 법 공유하는 자유게시판 게시글입니다', '아무리 힘을 세게 줘도 캔 뚜껑이 도저히 열리지 않을 때 너무 답답하시죠? 네 저도 답답해요 숟가락 하나만 있으면 안전하고 간편하게 캔 뚜껑을 딸 수 있어요.', 2, now()),
+('aronId', '낙지 공동 구매해서 먹어보았는데요 시식 후기 작성글입니다', '우리집은 보통매운맛도 조금 맵싹해서 양배추 같이 볶아 먹고 있어요. 쭈꾸미 먹어보고 맛있어서 낙지도 시켜봤는데, 쭈꾸미가 더 오동통한 것 같아요! 350g짜리는 여러 반찬 중 하나로 내어 먹기 좋고, 500g짜리는 특별히 더 반찬 꺼내지 않아도 둘이 밥 다 먹을 정도예요.', 3, now()),
+('hanaId', '요즘 김치 담글 줄 아는 사람도 있나요', '30대 요알못(요리를 알지 못하는) 주부 사이에선 이런 말이 심심찮게 나올 정도로 김치 만드는 법을 모르는 사람이 많다. 김장을 담가 주던 부모 세대 역시 김장을 포기하는 경우가 많다. 직접 담근 김치만큼 믿고 먹을 만한 게 없는데 겨울 가족 식탁에 올릴 김치를 어디서 구해야 할까. 이 같은 고민을 하는 요즘 도시 주부들이 선택하는 선택지가 바로 김장 체험이다.', 4, now()),
+('hyewonId', '겨울 별미 과메기·보양식 복어 12월 이달의 수산물로 선정', '과메기, 심혈관계 질환 예방 좋은 음식…칼슘 함량 높아 영양식으로도 적합 복어, 감칠맛 뛰어난 고급 식재… 맹독 함유, 반드시 전문 자격 조리사가 요리해야 합니다', 5, now());
 
 insert into community_share(id, thumbnail, title, contents, lat, lng, type, views, post_date)
 values
-('admin','test_thumbnail.png', 'seoul', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 0, 3, now()),
-('admin','test_thumbnail.png', 'seoul1', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 1, 3, now()),
-('admin','test_thumbnail.png', 'seoul2', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 1, 3, now()),
-('admin','test_thumbnail.png', 'seoul3', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 1, 3, now()),
-('admin','test_thumbnail.png', 'seoul4', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 0, 3, now());
+('admin','test_thumbnail.png', '반찬, 국 등 품앗이 하실분', '직접 식재료를 골라 만드는데. 식재료는 대량으로 해야 싸고, 맛있게 만들려면 이재료 저재료 들어가서 한솥이 되고 소분해서 냉동해도 감당이 안되네요. 나눔 좌표는 아래에 찍어둘게요!', 37.3595704, 127.105399, 0, 12, now()),
+('review1','test_thumbnail.png', '직접 만든빵 가져가실 분~', '학생들이 연습용으로 만든 빵이 너무 많이 남아서 좀 나눠드리려구요 나눔 희망하시는 분 여기 위치로 오시면 됩니다', 37.3595704, 127.105399, 0, 24, now()),
+('hanaId','test_thumbnail.png', '알타리김치가 집에 너무 많아서 한 통만 나눠드릴게요', '시어머니가 김치를 많이 보내주셨는데 집에서 밥을 잘 해먹지 않고 냉장고 자리도 많이 차지해 나눔하려구요 위치는 여기입니다',37.3595704, 127.105399, 0, 3, now()),
+('admin','test_thumbnail.png', '12월 2일 고나리자가 주최하는 밥 번개', '오후 8시쯤 다같이 삼겹살 먹어요! 만나는 장소는 지도로 찍어둘게요', 37.3595704, 127.105399, 1, 54, now()),
+('review1','test_thumbnail.png', '푸드조아 와인 제 41회차 정기 모임', '01.18 목요일 오후 9시 서면 삼정타워 뒤 푸드조아 건물입니ㅏ. 회비 7,000원입니다', 37.3595704, 127.105399, 1, 90, now());

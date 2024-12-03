@@ -47,6 +47,11 @@
 	font-size: 1rem;
 	color: white;
 	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+.community-search-button input:hover{
+	background-color: #e9ecef;
 }
 
 .community-search-area input {
@@ -69,7 +74,7 @@
 	cursor: pointer;
 	transition: background-color 0.3s ease;
 }
-.community-search-button input:hover{
+.community-search-button input:hover {
 	background-color: #e9ecef;
 }
 
