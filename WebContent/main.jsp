@@ -11,10 +11,11 @@
 	String pageTitle = (String) request.getAttribute("pageTitle");
 %>
 
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <c:set var="center" value="${requestScope.center}"/>
 
 <c:if test="${center == null}">
-	<c:set var="center" value="includes/center.jsp"/>
+	<c:set var="center" value="Main/center"/>
 </c:if>
 
 <!DOCTYPE html>

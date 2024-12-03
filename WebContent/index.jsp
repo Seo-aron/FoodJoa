@@ -2,5 +2,5 @@
     pageEncoding="UTF-8"%>
     
 <script>
-	location.href = '<%=request.getContextPath()%>/main.jsp';
+	location.href = '<%=request.getContextPath()%>/Main/home';
 </script>

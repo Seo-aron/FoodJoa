@@ -46,7 +46,7 @@
 		</div>
 		
 		<div id="logo">
-			<a href="<%=contextPath%>/main.jsp">
+			<a href="<%=contextPath%>/Main/home">
 				<img src="<%=contextPath%>/images/mainpage/logo.png" alt="푸드조아 로고">
 			</a>
 		</div>
@@ -54,7 +54,7 @@
 		<!-- 메뉴바 -->
 		<nav class="top_nav">
 			<ul id="topMenu">
-				<li><a href="<%= contextPath %>/main.jsp">홈</a></li>
+				<li><a href="<%= contextPath %>/Main/home">홈</a></li>
 				<li><a href="<%= contextPath %>/Recipe/list?category=0">레시피 공유</a>
 					<ul>
 						<li><a href="<%= contextPath %>/Recipe/list?category=1">한식 요리</a></li>
