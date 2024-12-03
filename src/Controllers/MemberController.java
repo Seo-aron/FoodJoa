@@ -257,7 +257,7 @@ public class MemberController extends HttpServlet {
 					session.setAttribute("userId", userId); // 로그인한 사용자의 아이디를 세션에 저장
 					// 회원 존재 시 메인 페이지로 리다이렉트
 					System.out.println("회원 존재 확인: " + userId);
-					response.sendRedirect(request.getContextPath() + "/main.jsp"); // 메인 페이지로 리다이렉트
+					response.sendRedirect(request.getContextPath() + "/Main/home"); // 메인 페이지로 리다이렉트
 
 					return; // 리다이렉트 후 더 이상 코드를 실행하지 않도록 return
 				} else {
@@ -305,7 +305,7 @@ public class MemberController extends HttpServlet {
 		}
 
 		// 리다이렉트: 로그아웃 후 메인 페이지로 이동
-		response.sendRedirect(request.getContextPath() + "/main.jsp");
+		response.sendRedirect(request.getContextPath() + "/Main/home");
 	}
 
 	private void openDeleteMember(HttpServletRequest request, HttpServletResponse response)
