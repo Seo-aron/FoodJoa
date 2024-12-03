@@ -1,70 +1,40 @@
 package DAOs;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.sql.DataSource;
-
+import Common.DBConnector;
 import VOs.CommunityShareVO;
 import VOs.CommunityVO;
 import VOs.MemberVO;
 
 public class CommunityDAO {
 
-	DataSource dataSource;
-	Connection connection;
-	PreparedStatement preparedStatement;
-	ResultSet resultSet;
+	private DBConnector dbConnector;
 
 	public CommunityDAO() {
-		try {
-			Context context = new InitialContext();
-			dataSource = (DataSource) context.lookup("java:/comp/env/jdbc/FoodJoa");
-		} catch (Exception e) {
-			System.out.println("DB 연결 실패");
-			e.printStackTrace();
-		}
+		
+		dbConnector = new DBConnector();
 	}
-
-	public void release() {
-
-		try {
-			if (resultSet != null)
-				resultSet.close();
-			if (preparedStatement != null)
-				preparedStatement.close();
-			if (connection != null)
-				connection.close();
-		} catch (Exception e) {
-			System.out.println("자원 해제 실패");
-			e.printStackTrace();
-		}
-	}
-
+	
 	public ArrayList<HashMap<String, Object>> communityListAll() {
+		
 		ArrayList<HashMap<String, Object>> communities = new ArrayList<HashMap<String, Object>>();
 
+		String sql = "select c.*, m.nickname "
+				+ "FROM community c "
+				+ "LEFT OUTER JOIN member m "
+				+ "ON c.id = m.id "
+				+ "order by post_date desc";
+		
+		ResultSet resultSet = dbConnector.executeQuery(sql);
+		
 		try {
-
-			connection = dataSource.getConnection();
-
-			String sql = "select c.*, m.nickname "
-					+ "FROM community c "
-					+ "LEFT OUTER JOIN member m "
-					+ "ON c.id = m.id "
-					+ "order by post_date desc";
-			
-			preparedStatement = connection.prepareStatement(sql);
-			resultSet = preparedStatement.executeQuery();
-
 			while (resultSet.next()) {
-
 				HashMap<String, Object> data = new HashMap<String, Object>();
+				
 				CommunityVO community = new CommunityVO(
 						resultSet.getInt("no"),
 						resultSet.getString("id"),
@@ -80,84 +50,59 @@ public class CommunityDAO {
 				data.put("member", member);
 				
 				communities.add(data);
-				
 			}
 		}
-
-		catch (Exception e) {
+		catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			release();
 		}
-
-		return communities;
-
 		
+		dbConnector.release();
+		
+		return communities;
 	}
 	
 	public void insertCommunity(CommunityVO communityVO) {
 
 		int result = 0;
-		String sql = null;
-
-		try {
-			connection = dataSource.getConnection();
-
-			sql = "insert into community(id, title, contents, views, post_date) values(?,?,?,0,now())";
-
-			preparedStatement = connection.prepareStatement(sql);
-
-			preparedStatement.setString(1, communityVO.getId());
-			preparedStatement.setString(2, communityVO.getTitle());
-			preparedStatement.setString(3, communityVO.getContents());
-
-			preparedStatement.executeUpdate();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			release();
-		}
-
+		String sql = "insert into community(id, title, contents, views, post_date) values(?,?,?,0,now())";
+		
+		result = dbConnector.executeUpdate(sql, 
+				communityVO.getId(),
+				communityVO.getTitle(),
+				communityVO.getContents());
+		
+		dbConnector.release();
 	}
 
 	public HashMap<String, Object> readCommunity(String no) {
 
-		String sql = null;
+		String sql = "update community set views=views+1  where no=? ";
 		
+		dbConnector.executeUpdate(sql, Integer.parseInt(no));
+		
+		dbConnector.release();
+		
+
 		HashMap<String, Object> community = new HashMap<String, Object>();
 		
-		try {
-			connection = dataSource.getConnection();
-			
-			sql = "update community set views=views+1  where no=? ";
-			
-			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, Integer.parseInt(no));
-			
-			preparedStatement.executeUpdate();
-			
-			sql = "SELECT c.*, m.nickname, m.profile "
+		sql = "SELECT c.*, m.nickname, m.profile "
 				+ "FROM community c "
 				+ "LEFT OUTER JOIN member m "
 				+ "ON c.id = m.id "
 				+ "WHERE c.no=? ";
-			
-			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, Integer.parseInt(no));
-			resultSet = preparedStatement.executeQuery();
-			
+		
+		ResultSet resultSet = dbConnector.executeQuery(sql, Integer.parseInt(no));
+		
+		try {
 			if(resultSet.next()) {
-					
 				CommunityVO	communityVO = new CommunityVO(
-						
-							resultSet.getInt("no"),
-							resultSet.getString("id"),
-							resultSet.getString("title"),
-							resultSet.getString("contents"),
-							resultSet.getInt("views"),
-							resultSet.getTimestamp("post_date"));
-				
+						resultSet.getInt("no"),
+						resultSet.getString("id"),
+						resultSet.getString("title"),
+						resultSet.getString("contents"),
+						resultSet.getInt("views"),
+						resultSet.getTimestamp("post_date"));
+			
 				MemberVO memberVO = new MemberVO();
 				memberVO.setNickname(resultSet.getString("nickname"));
 				memberVO.setProfile(resultSet.getString("profile"));
@@ -165,60 +110,38 @@ public class CommunityDAO {
 				community.put("communityVO", communityVO);
 				community.put("memberVO", memberVO);
 			}
-		
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			release();
 		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		dbConnector.release();
 		
 		return community;
 	}
 
 	public int updateCommunity(CommunityVO vo) {
 		
-		int result = 0;
+		String sql = "update community set title=?, contents=? where no=? and id=?";
 		
-		try {
-			connection = dataSource.getConnection();
-			
-			String sql = "update community set title=?, contents=? where no=? and id=?";
-			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, vo.getTitle());
-			preparedStatement.setString(2, vo.getContents());
-			preparedStatement.setInt(3, vo.getNo());
-			preparedStatement.setString(4, vo.getId());
-			
-			result = preparedStatement.executeUpdate();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			release();
-		}
+		int result = dbConnector.executeUpdate(sql, 
+				vo.getTitle(),
+				vo.getContents(),
+				vo.getNo(),
+				vo.getId());
 		
+		dbConnector.release();
+
 		return result;
 	}
 
 	public int deleteCommunity(String no) {
 		
-		int result = 0;
+		String sql = "delete from community where no=?";
 		
-		try {
+		int result = dbConnector.executeUpdate(sql, Integer.parseInt(no));
 		
-			connection = dataSource.getConnection();
-			
-			String sql = "delete from community where no=?";
-			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, Integer.parseInt(no));
-
-			result = preparedStatement.executeUpdate();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			release();
-		}
+		dbConnector.release();
 		
 		return result;
 	}
@@ -250,27 +173,26 @@ public class CommunityDAO {
 				+ " order by no asc";
 		}
 		
+		ResultSet resultSet = dbConnector.executeQuery(sql);
+		
 		try {
-			connection=dataSource.getConnection();
-			
-			preparedStatement = connection.prepareStatement(sql);
-			resultSet = preparedStatement.executeQuery();
-			
 			while(resultSet.next()) {
-				CommunityVO vo = new CommunityVO(resultSet.getInt("no"),
-												resultSet.getString("id"),
-												resultSet.getString("title"),
-												resultSet.getString("contents"),
-												resultSet.getInt("views"),
-												resultSet.getTimestamp("post_date"));
+				CommunityVO vo = new CommunityVO(
+						resultSet.getInt("no"),
+						resultSet.getString("id"),
+						resultSet.getString("title"),
+						resultSet.getString("contents"),
+						resultSet.getInt("views"),
+						resultSet.getTimestamp("post_date"));
+				
 				list.add(vo);
 			}
-			
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally {
-			release();
 		}
+		
+		dbConnector.release();
+		
 		return list;
 	}
 	
@@ -278,18 +200,15 @@ public class CommunityDAO {
 		
 		ArrayList<HashMap<String, Object>> shareList = new ArrayList<HashMap<String, Object>>();
 		
+		String sql = "select c.*, m.profile, m.nickname "
+				+ "from community_share c "
+				+ "LEFT OUTER JOIN member m "
+				+ "ON c.id = m.id "
+				+ "ORDER BY c.post_date DESC";
+		
+		ResultSet resultSet = dbConnector.executeQuery(sql);
+		
 		try {
-			connection = dataSource.getConnection();
-			
-			String sql = "select c.*, m.profile, m.nickname "
-					+ "from community_share c "
-					+ "LEFT OUTER JOIN member m "
-					+ "ON c.id = m.id "
-					+ "ORDER BY c.post_date DESC";
-			preparedStatement = connection.prepareStatement(sql);
-			
-			resultSet = preparedStatement.executeQuery();
-			
 			while (resultSet.next()) {
 				HashMap<String, Object> data = new HashMap<String, Object>();
 				
@@ -314,13 +233,12 @@ public class CommunityDAO {
 				
 				shareList.add(data);
 			}
-			
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			release();
-		}		
+		}
 		
+		dbConnector.release();
+
 		return shareList;
 	}
 
@@ -347,7 +265,8 @@ public class CommunityDAO {
 						+ "ORDER BY c.post_date DESC";
 			}
 		
-		}else {
+		}
+		else {
 			sql = "select c.*, m.profile, m.nickname "
 					+ "from community_share c "
 					+ "LEFT OUTER JOIN member m "
@@ -355,12 +274,9 @@ public class CommunityDAO {
 					+ "ORDER BY c.post_date DESC";
 		}
 		
+		ResultSet resultSet = dbConnector.executeQuery(sql);
+		
 		try {
-			connection=dataSource.getConnection();
-			
-			preparedStatement = connection.prepareStatement(sql);
-			resultSet = preparedStatement.executeQuery();
-			
 			while(resultSet.next()) {
 				HashMap<String, Object> data = new HashMap<String, Object>();
 				
@@ -385,79 +301,75 @@ public class CommunityDAO {
 				
 				shareList.add(data);
 			}
-			
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally {
-			release();
 		}
+
+		dbConnector.release();
 		
 		return shareList;
 	}
 
 	public int selectNoInsertedShare(CommunityShareVO share) {
 		
-		int no = 0;
+		String sql = "insert into community_share(id, thumbnail, title, contents, lat, lng, type, views, post_date) "
+				+ "values(?, ?, ?, ?, ?, ?, ?, 0, CURRENT_TIMESTAMP)";
+		
+		dbConnector.executeUpdate(sql,
+				share.getId(),
+				share.getThumbnail(),
+				share.getTitle(),
+				share.getContents(),
+				share.getLat(),
+				share.getLng(),
+				share.getType());
+		
+		dbConnector.release();
 
+		
+		int no = 0;
+		sql = "SELECT no FROM community_share ORDER BY no DESC LIMIT 1";
+		
+		ResultSet resultSet = dbConnector.executeQuery(sql);
+		
 		try {
-			connection = dataSource.getConnection();
-			
-			String sql = "insert into community_share(id, thumbnail, title, contents, lat, lng, type, views, post_date) "
-					+ "values(?, ?, ?, ?, ?, ?, ?, 0, CURRENT_TIMESTAMP)";
-			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, share.getId());
-			preparedStatement.setString(2, share.getThumbnail());
-			preparedStatement.setString(3, share.getTitle());
-			preparedStatement.setString(4, share.getContents());
-			preparedStatement.setDouble(5, share.getLat());
-			preparedStatement.setDouble(6, share.getLng());
-			preparedStatement.setInt(7, share.getType());
-			
-			preparedStatement.executeUpdate();
-			
-			sql = "SELECT no FROM community_share ORDER BY no DESC LIMIT 1";
-			preparedStatement = connection.prepareStatement(sql);
-			resultSet = preparedStatement.executeQuery();
-			
 			if (resultSet.next()) {
 				no = resultSet.getInt("no");
 			}
 			else {
 				no = -1;
 			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			release();
 		}
-		
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		dbConnector.release();
+
 		return no;
 	}
 
 	public HashMap<String, Object> selectCommunityShareMap(String no) {
 		
+		String sql = "update community_share set views = views + 1 "
+				+ "where no='" + no + "'";
+		
+		dbConnector.executeUpdate(sql);
+		
+		dbConnector.release();
+		
+		
 		HashMap<String, Object> share = new HashMap<String, Object>();
 		
+		sql = "SELECT c.*, m.profile, m.nickname "
+				+ "FROM community_share c "
+				+ "LEFT OUTER JOIN member m "
+				+ "ON c.id = m.id "
+				+ "WHERE no=?";
+		
+		ResultSet resultSet = dbConnector.executeQuery(sql, Integer.parseInt(no));
+		
 		try {
-			connection = dataSource.getConnection();
-			
-			String sql = "update community_share set views = views + 1 "
-						+ "where no='" + no + "'";
-			preparedStatement = connection.prepareStatement(sql);
-			
-			preparedStatement.executeUpdate();
-			
-			sql = "SELECT c.*, m.profile, m.nickname "
-					+ "FROM community_share c "
-					+ "LEFT OUTER JOIN member m "
-					+ "ON c.id = m.id "
-					+ "WHERE no=?";
-			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, Integer.parseInt(no));
-			
-			resultSet = preparedStatement.executeQuery();
-			
 			if(resultSet.next()) {
 				CommunityShareVO shareVO = new CommunityShareVO(
 						resultSet.getInt("no"), 
@@ -478,31 +390,24 @@ public class CommunityDAO {
 				share.put("share", shareVO);
 				share.put("member", memberVO);
 			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			release();
 		}
-		
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		dbConnector.release();
+
 		return share;
 	}
 
 	public CommunityShareVO selectCommunityShare(String no) {
 		
 		CommunityShareVO share = null;
+		String sql = "select * from community_share where no=?";
+		
+		ResultSet resultSet = dbConnector.executeQuery(sql, Integer.parseInt(no));
 		
 		try {
-			
-			connection = dataSource.getConnection();
-			
-			String sql = "select * from community_share where no=?";
-			preparedStatement = connection.prepareStatement(sql);
-			
-			preparedStatement.setInt(1, Integer.parseInt(no));
-			
-			resultSet = preparedStatement.executeQuery();
-			
 			if(resultSet.next()) {
 				share = new CommunityShareVO(
 						resultSet.getInt("no"), 
@@ -516,66 +421,44 @@ public class CommunityDAO {
 						resultSet.getInt("views"), 
 						resultSet.getTimestamp("post_date"));
 			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			
-		}finally {
-			release();
 		}
-		
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		dbConnector.release();
+
 		return share;
 	}
 
 	public int updateCommunityShare(CommunityShareVO share) {
 		
-		int result = 0;
+		String sql = "UPDATE community_share SET thumbnail=?, title=?, contents=?, lat=?, lng=?, type=? "
+				+ "WHERE no=? AND id=?";
 		
-		try {
-			connection = dataSource.getConnection();
-			
-			String sql = "UPDATE community_share SET thumbnail=?, title=?, contents=?, lat=?, lng=?, type=? "
-					+ "WHERE no=? AND id=?";
-			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, share.getThumbnail());
-			preparedStatement.setString(2, share.getTitle());
-			preparedStatement.setString(3, share.getContents());
-			preparedStatement.setDouble(4, share.getLat());
-			preparedStatement.setDouble(5, share.getLng());
-			preparedStatement.setInt(6, share.getType());
-			preparedStatement.setInt(7, share.getNo());
-			preparedStatement.setString(8, share.getId());
-			
-			result = preparedStatement.executeUpdate();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			release();
-		}
+		int result = dbConnector.executeUpdate(sql,
+				share.getThumbnail(),
+				share.getTitle(),
+				share.getContents(),
+				share.getLat(),
+				share.getLng(),
+				share.getType(),
+				share.getNo(),
+				share.getId());
 
+		dbConnector.release();
+		
 		return result;
 	}
 
 	public int deleteCommunityShare(String no) {
+
+		String sql = "DELETE FROM community_share WHERE no=?";
 		
-		int result = 0;
+		int result = dbConnector.executeUpdate(sql, Integer.parseInt(no));
 		
-		try {
-			connection = dataSource.getConnection();
-			
-			String sql = "DELETE FROM community_share WHERE no=?";
-			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, Integer.parseInt(no));
-			
-			result = preparedStatement.executeUpdate();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			release();
-		}
-		
+		dbConnector.release();
+
 		return result;
 	}
 }
