@@ -1,3 +1,4 @@
+<%@page import="java.util.HashMap"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="java.util.Map"%>
@@ -15,20 +16,18 @@
 	request.setCharacterEncoding("UTF-8");
 	response.setContentType("text/html;charset=utf-8");
 	String contextPath = request.getContextPath();
+
+	HashMap<String, Object> mealkitInfo = (HashMap<String, Object>) request.getAttribute("mealkit"); 
 	
-    String id = (String) session.getAttribute("userId");
-	MealkitVO mealkitvo = (MealkitVO) request.getAttribute("mealkitvo");
-	ArrayList<Map<String, Object>> reviewvo = (ArrayList<Map<String, Object>>) request.getAttribute("reviewvo");
-	String nickName = (String) request.getAttribute("nickName");
+	MealkitVO mealkitvo = (MealkitVO) mealkitInfo.get("mealkitVO");
+	String nickname = ((MemberVO) mealkitInfo.get("memberVO")).getNickname();
+	float avgRating = (float) mealkitInfo.get("averageRating");
 	
 	List<String> parsedOrders = StringParser.splitString(mealkitvo.getOrders());
 	
-	 String priceString = mealkitvo.getPrice();
-	 int price = Integer.parseInt(priceString); 
-	 NumberFormat numberFormat = NumberFormat.getInstance();
-	 String formattedPrice = numberFormat.format(price);
+	String id = (String) session.getAttribute("userId");
 %>
-<c:set var="mealkit" value="${requestScope.mealkitvo}"/>
+<c:set var="mealkit" value="<%= mealkitvo %>"/>
 
 <!DOCTYPE html>
 <html>
@@ -91,12 +90,19 @@
 				</button>
 				<h1>${mealkit.title }</h1>
 				<hr>
-				<strong>글쓴이: <%=nickName%></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<strong>글쓴이: <%=nickname%></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<strong>게시일: ${mealkit.postDate }</strong><br>
 				<!-- 나중에 평점 수정 -->
-				<strong>평점: <fmt:formatNumber value="${ratingAvr}" pattern="#.#" /></strong><hr>
+				<strong>평점: <fmt:formatNumber value="<%= avgRating %>" pattern="#.#" /></strong><hr>
 			</span>
-			<h2>가격: <%= formattedPrice %> 원</h2><hr>
+			<h2>
+				가격 :&nbsp;
+				<fmt:formatNumber value="<%= mealkitvo.getPrice() %>" 
+					type="number" 
+					groupingUsed="true" 
+					maxFractionDigits="0" />&nbsp;원
+			</h2>
+			<hr>
 			<br>
 			
 			<!-- 수량 정하는 박스 -->
@@ -126,11 +132,15 @@
 			</div>
 			<!-- 수정 삭제 버튼 -->
             <div class="edit_delete_buttons">
-            	<c:if test="${sessionScope.userId == mealkit.id}">
+            	<%
+            	if (id != null && !id.equals("") && id.length() > 0 && id.equals(mealkitvo.getId())) {
+            		%>
                 	<button class="edit_button" type="button" onclick="editMealkit('<%=contextPath%>')">수정</button>
                 	<button class="delete_button" type="button"
-                	 onclick="deleteMealkit(${mealkit.no}, '<%=contextPath%>')">삭제</button>
-                </c:if>
+                		onclick="deleteMealkit(${mealkit.no}, '<%=contextPath%>')">삭제</button>
+            		<%
+            	}
+            	%>
             </div>
 	    </div>
 	</div>
@@ -140,7 +150,7 @@
 	<!-- 결제 api -->
 	<script type="text/javascript">
 	
-	var userId = "<%=id%>";
+	var userId = '<%=id%>';
 	console.log("userId:", userId);
 	
 	// 고유한 결제 번호 생성

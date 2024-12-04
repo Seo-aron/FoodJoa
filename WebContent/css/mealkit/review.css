@@ -25,11 +25,14 @@ li {
     list-style-type: none;
 }
 
-input[type="text"], input[type="file"] {
-	width: 100%;
-	padding: 10px;
-	border: 1px solid #ccc;
-	border-radius: 4px;
+.nickname-td{
+	width: 550px;
+}
+
+.id{
+	border: none;
+    outline: none;
+    font-size: 22px;
 }
 
 textarea{
@@ -60,20 +63,44 @@ textarea{
 
 .contents-container {
     display: flex;
-    align-items: flex-start;
+    flex-direction: column;
     gap: 20px;
-    height: 200px;
+}
+
+.review-images {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 20px;
+}
+
+.review-bxslider {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.review-bxslider li {
+    margin-right: 20px;
 }
 
 .review-image {
     height: 200px;
     width: 200px;
+    object-fit: cover;
+}
+
+.review-contents-container {
+    margin-top: 10px;
 }
 
 .review-contents {
-    flex: 1;
-    margin: 0;
+    width: 100%;
+    height: 100px;
     resize: none;
-    height: 100%;
-    width: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #f9f9f9;
 }
+

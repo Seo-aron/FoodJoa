@@ -184,18 +184,15 @@ public class MealkitController extends HttpServlet {
 	
 	private void openMealkitInfoView(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		MealkitVO mealkitvo = mealkitService.getMealkitInfo(request);
-		ArrayList<Map<String, Object>> reviewvo = mealkitService.getReviewInfo(request);
-		float ratingAvr = mealkitService.getRatingAvr(mealkitvo);
 		
-		String nickName = request.getParameter("nickName");
+		HashMap<String, Object> mealkit = mealkitService.getMealkit(request);
+		ArrayList<HashMap<String, Object>> reviews = mealkitService.getReviewInfo(request);
 		
-		request.setAttribute("mealkitvo", mealkitvo);
-		request.setAttribute("reviewvo", reviewvo);
-		request.setAttribute("ratingAvr", ratingAvr);
-		request.setAttribute("nickName", nickName);
+		String title = ((MealkitVO) mealkit.get("mealkitVO")).getTitle();
 		
+		request.setAttribute("mealkit", mealkit);
+		request.setAttribute("reviews", reviews);
+		request.setAttribute("pageTitle", title);
 		request.setAttribute("center", "mealkits/info.jsp");
 
 		nextPage = "/main.jsp";

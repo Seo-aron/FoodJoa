@@ -44,6 +44,11 @@ public class MealkitService {
 		
 		return mealkitDAO.InfoMealkitReview(no);
 	}
+	
+	public HashMap<String, Object> getMealkit(HttpServletRequest request) {
+		
+		return mealkitDAO.selectMealkit(request.getParameter("no"));
+	}
 
 	public MealkitVO getMealkitInfo(HttpServletRequest request) {
 		
@@ -54,7 +59,7 @@ public class MealkitService {
 		return mealkitDAO.InfoMealkit(no);
 	}
 
-	public ArrayList<Map<String, Object>> getReviewInfo(HttpServletRequest request) {
+	public ArrayList<HashMap<String, Object>> getReviewInfo(HttpServletRequest request) {
 		
 		int no = Integer.parseInt(request.getParameter("no"));
 		

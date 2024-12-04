@@ -112,7 +112,7 @@ hr {
 
 .button_row {
 	display: flex;
-	gap: 10px;
+	gap: 50px;
 	margin-top: 10px;
 }
 

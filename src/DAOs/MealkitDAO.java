@@ -63,6 +63,59 @@ public class MealkitDAO {
 
 		return mealkits;
 	}
+	
+	public HashMap<String, Object> selectMealkit(String no) {
+		
+		HashMap<String, Object> mealkit = new HashMap<String, Object>();
+		
+		String sql = "SELECT "
+				+ "k.*, coalesce(avg_table.avg_rating, 0) AS average_rating, m.nickname "
+				+ "FROM mealkit k "
+				+ "JOIN ( "
+				+ "SELECT "
+				+ "mr.mealkit_no, AVG(rating) as avg_rating "
+				+ "FROM mealkit_review mr "
+				+ "GROUP BY mr.mealkit_no "
+				+ ") avg_table ON k.no=avg_table.mealkit_no "
+				+ "JOIN member m "
+				+ "ON k.id=m.id "
+				+ "WHERE no=?";
+		
+		ResultSet resultSet = dbConnector.executeQuery(sql, Integer.parseInt(no));
+		
+		try {
+			if (resultSet.next()) {
+				MealkitVO mealkitVO = new MealkitVO(
+						resultSet.getInt("no"), 
+						resultSet.getString("id"), 
+						resultSet.getString("title"), 
+						resultSet.getString("contents"), 
+						resultSet.getInt("category"), 
+						resultSet.getString("price"), 
+						resultSet.getInt("stock"), 
+						resultSet.getString("pictures"), 
+						resultSet.getString("orders"), 
+						resultSet.getString("origin"), 
+						resultSet.getInt("views"), 
+						resultSet.getInt("soldout"), 
+						resultSet.getTimestamp("post_date"));
+				
+				float averageRating = resultSet.getFloat("average_rating");
+				
+				MemberVO memberVO = new MemberVO();
+				memberVO.setNickname(resultSet.getString("nickname"));
+				
+				mealkit.put("mealkitVO", mealkitVO);
+				mealkit.put("averageRating", averageRating);
+				mealkit.put("memberVO", memberVO);
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return mealkit;
+	}
 
 	public MealkitVO InfoMealkit(int no) {
 
@@ -90,9 +143,9 @@ public class MealkitDAO {
 		return mealkit;
 	}
 
-	public ArrayList<Map<String, Object>> InfoReview(int no) {
+	public ArrayList<HashMap<String, Object>> InfoReview(int no) {
 
-		ArrayList<Map<String, Object>> reviews = new ArrayList<>();
+		ArrayList<HashMap<String, Object>> reviews = new ArrayList<>();
 
 		String sql = "SELECT mr.*, mem.nickname FROM mealkit_review mr JOIN member mem " + "ON mr.id = mem.id "
 				+ "WHERE mr.mealkit_no = ?";
@@ -101,18 +154,24 @@ public class MealkitDAO {
 
 		try {
 			while (rs.next()) {
-				Map<String, Object> reviewsData = new HashMap<>();
-				reviewsData.put("no", rs.getInt("no"));
-				reviewsData.put("id", rs.getString("id"));
-				reviewsData.put("mealkit_no", rs.getInt("mealkit_no"));
-				reviewsData.put("pictures", rs.getString("pictures"));
-				reviewsData.put("contents", rs.getString("contents"));
-				reviewsData.put("rating", rs.getInt("rating"));
-				reviewsData.put("post_date", rs.getTimestamp("post_date"));
-
-				reviewsData.put("nickname", rs.getString("nickname"));
-
-				reviews.add(reviewsData);
+				HashMap<String, Object> review = new HashMap<>();
+				
+				MealkitReviewVO reviewVO = new MealkitReviewVO(
+						rs.getInt("no"), 
+						rs.getString("id"), 
+						rs.getInt("mealkit_no"), 
+						rs.getString("pictures"), 
+						rs.getString("contents"), 
+						rs.getInt("rating"), 
+						rs.getTimestamp("post_date"));
+				
+				MemberVO memberVO = new MemberVO();
+				memberVO.setNickname(rs.getString("nickname"));
+				
+				review.put("reviewVO", reviewVO);
+				review.put("memberVO", memberVO);
+				
+				reviews.add(review);
 
 			}
 		} catch (Exception e) {
@@ -237,10 +296,6 @@ public class MealkitDAO {
 		dbConnector.release();
 
 		return result;
-	}
-
-	public MealkitVO getMealkitByNo(int no) {
-		return InfoMealkit(no);
 	}
 
 	public void incrementViewCount(int no) {
@@ -691,6 +746,7 @@ public class MealkitDAO {
 
 	public void updateReview(MealkitReviewVO review) {
 		
+		//
 		String sql = "UPDATE mealkit_review SET pictures = ?, contents = ?, rating = ?";
 		
 		dbConnector.executeUpdate(sql, review.getPictures(), review.getContents(), review.getRating());
