@@ -746,10 +746,10 @@ public class MealkitDAO {
 
 	public void updateReview(MealkitReviewVO review) {
 		
-		//
-		String sql = "UPDATE mealkit_review SET pictures = ?, contents = ?, rating = ?";
+		String sql = "UPDATE mealkit_review SET pictures = ?, contents = ?, rating = ? "
+				+ "WHERE no = ?";
 		
-		dbConnector.executeUpdate(sql, review.getPictures(), review.getContents(), review.getRating());
+		dbConnector.executeUpdate(sql, review.getPictures(), review.getContents(), review.getRating(), review.getNo());
 		
 		dbConnector.release();
 	}

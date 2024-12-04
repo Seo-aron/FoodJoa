@@ -42,9 +42,8 @@
   	<script src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
   	<link rel="stylesheet" href="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css">
   	
-  	<link rel="stylesheet" href="<%=contextPath%>/css/mealkit/board.css">
+  	<link rel="stylesheet" href="<%=contextPath%>/css/mealkit/info.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-	<link rel="stylesheet" href="<%=contextPath%>/css/mealkit/review.css">
   	
   	<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 	
@@ -57,12 +56,6 @@
 <body>
 	<div id="mealkit-container">
 		<table>
-			<%-- <tr>
-				<td><jsp:include page="board.jsp" flush="true" /></td>
-			</tr>
-			<tr>
-				<td><jsp:include page="review.jsp" flush="true" /></td>
-			</tr> --%>
 			<tr>
 				<td>
 					<div id="board-container">

@@ -12,6 +12,7 @@ function onSubmit(event, contextPath) {
 
 	const formData = new FormData();
 	formData.append('mealkit_no', $("#mealkit_no").val());
+	formData.append('review_no', $("#review_no").val());
 	formData.append('pictures', $("#pictures").val());
 	formData.append('origin_pictures', $("#origin_pictures").val());
 	formData.append('origin_selected_pictures', combineStrings(originSelectedFileNames));

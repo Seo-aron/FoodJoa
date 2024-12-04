@@ -227,10 +227,6 @@ public class MealkitService {
 
 		MultipartRequest multipartRequest = new MultipartRequest(request, path + File.separator + "temp", maxSize, "UTF-8",
 				new DefaultFileRenamePolicy());
-		/*
-		 * String originFileName = multipartRequest.getParameter("thumbnail-origin");
-		 * String fileName = multipartRequest.getOriginalFileName("file");
-		 */
 	    
 	    int no = Integer.parseInt(multipartRequest.getParameter("no"));
 	    String id = (String) request.getSession().getAttribute("userId");
@@ -388,6 +384,7 @@ public class MealkitService {
 				new DefaultFileRenamePolicy());
 		
 		String mealkitNo = multipartRequest.getParameter("mealkit_no");
+		String reviewNo = multipartRequest.getParameter("review_no");
         String pictures = multipartRequest.getParameter("pictures");
 		String originPictures = multipartRequest.getParameter("origin_pictures");
 		String originSelectedPictures = multipartRequest.getParameter("origin_selected_pictures");
@@ -397,6 +394,7 @@ public class MealkitService {
         MealkitReviewVO review = new MealkitReviewVO();
         review.setId(id);
         review.setMealkitNo(Integer.parseInt(mealkitNo));
+        review.setNo(Integer.parseInt(reviewNo));
         review.setPictures(pictures + originSelectedPictures);
         review.setContents(contents);
         review.setRating(Integer.parseInt(rating));

@@ -87,9 +87,12 @@ public class MealkitController extends HttpServlet {
 		String nickName = mealkitService.getMealkitNickName(mealkit);
 		MealkitReviewVO reviewvo = mealkitService.updateReviewMealkit(request);
 		
+		String title = (String) mealkit.getTitle();
+		
 		request.setAttribute("mealkit", mealkit);
 	    request.setAttribute("nickName", nickName);
 		request.setAttribute("reviewvo", reviewvo);
+		request.setAttribute("pageTitle", title);
 		request.setAttribute("center", "mealkits/editreview.jsp");
 		
 		nextPage = "/main.jsp";
@@ -107,6 +110,7 @@ public class MealkitController extends HttpServlet {
 		request.setAttribute("mealkits", mealkits);
 		request.setAttribute("nickName", nickName);
 		request.setAttribute("center", "mealkits/mymealkits.jsp");
+		request.setAttribute("pageTitle", "내 밀키트 관리");
 
 		nextPage = "/main.jsp";
 	}
@@ -127,8 +131,11 @@ public class MealkitController extends HttpServlet {
 	private void openUpdateBoard(HttpServletRequest request, HttpServletResponse response) {
 		MealkitVO mealkitvo = mealkitService.getMealkitInfo(request);
 		
+		String title = (String) mealkitvo.getTitle();
+		
 		request.setAttribute("mealkitvo", mealkitvo);
 		request.setAttribute("center", "mealkits/editBoard.jsp");
+		request.setAttribute("pageTitle", title);
 		
 		nextPage = "/main.jsp";
 	}
@@ -147,10 +154,13 @@ public class MealkitController extends HttpServlet {
 		
 		MealkitVO mealkit = mealkitService.getMealkitInfo(request);
 		String nickName = mealkitService.getMealkitNickName(mealkit);
+		
+		String title = (String) mealkit.getTitle();
 	    
 	    request.setAttribute("mealkit", mealkit);
 	    request.setAttribute("nickName", nickName);
 		request.setAttribute("center", "mealkits/reviewWrite.jsp");
+		request.setAttribute("pageTitle", title);
 		
 		nextPage = "/main.jsp";
 	}
@@ -215,6 +225,7 @@ public class MealkitController extends HttpServlet {
 		request.setAttribute("center", "mealkits/list.jsp");
 		request.setAttribute("nowPage", nowPage);
 		request.setAttribute("nowBlock", nowBlock);
+		request.setAttribute("pageTitle", "밀키트 목록");
 
 		nextPage = "/main.jsp";
 	}

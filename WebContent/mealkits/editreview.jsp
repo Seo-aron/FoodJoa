@@ -39,6 +39,7 @@
 		<h1>밀키트 리뷰 수정</h1>
 		<form id="frmReview" action="#" method="post" enctype="multipart/form-data">
 			<input type="hidden" id="mealkit_no" name="mealkit_no" value="<%= mealkit.getNo() %>">
+			<input type="hidden" id="review_no" name="review_no" value="<%= review.getNo() %>">
 			<input type="hidden" id="nickname" name="nickname" value="<%=nickName%>"/>
 			<input type="hidden" id="origin_pictures" name="origin_pictures" value="<%= review.getPictures() %>">
 					
