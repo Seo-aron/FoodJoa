@@ -17,23 +17,23 @@ values('admin', '관리자', '고나리자', '01012345678', '47296 부산 부산
 
 -- recipe
 insert into recipe(id, title, thumbnail, description, contents, category, views, ingredient, ingredient_amount, orders, post_date) 
-values('admin', 'test title', 'test_thumbnail.png', 'test description',
+values('admin', '한식 레시피 제목 1', 'test_thumbnail.png', 'test description',
 	'eJyzKbB73Nr4uLX9cWsfiNGyBcRu2WmjX2AHAOteD+U=', 1, 0,
 	'0016test ingredient10016test ingredient2','0012test amount10012test amount2',
 	'0012test orders10012test orders2', CURRENT_TIMESTAMP),
-	('admin', 'test title', 'test_thumbnail.png', 'test description',
+	('admin', '일식 레시피 제목 1', 'test_thumbnail.png', 'test description',
 	'eJyzKbB73Nr4uLX9cWsfiNGyBcRu2WmjX2AHAOteD+U=', 2, 0,
 	'0016test ingredient10016test ingredient2','0012test amount10012test amount2',
 	'0012test orders10012test orders2', CURRENT_TIMESTAMP),
-	('admin', 'test title', 'test_thumbnail.png', 'test description',
+	('admin', '중식 레시피 제목 1', 'test_thumbnail.png', 'test description',
 	'eJyzKbB73Nr4uLX9cWsfiNGyBcRu2WmjX2AHAOteD+U=', 3, 0,
 	'0016test ingredient10016test ingredient2','0012test amount10012test amount2',
 	'0012test orders10012test orders2', CURRENT_TIMESTAMP),
-	('admin', 'test title', 'test_thumbnail.png', 'test description',
+	('admin', '양식 레시피 제목 1', 'test_thumbnail.png', 'test description',
 	'eJyzKbB73Nr4uLX9cWsfiNGyBcRu2WmjX2AHAOteD+U=', 4, 0,
 	'0016test ingredient10016test ingredient2','0012test amount10012test amount2',
 	'0012test orders10012test orders2', CURRENT_TIMESTAMP),
-	('admin', 'test title', 'test_thumbnail.png', 'test description',
+	('admin', '자취요리 레시피 제목 1', 'test_thumbnail.png', 'test description',
 	'eJyzKbB73Nr4uLX9cWsfiNGyBcRu2WmjX2AHAOteD+U=', 5, 0,
 	'0016test ingredient10016test ingredient2','0012test amount10012test amount2',
 	'0012test orders10012test orders2', CURRENT_TIMESTAMP);
@@ -109,3 +109,12 @@ values
 ('hanaId','test_thumbnail.png', '알타리김치가 집에 너무 많아서 한 통만 나눠드릴게요', '시어머니가 김치를 많이 보내주셨는데 집에서 밥을 잘 해먹지 않고 냉장고 자리도 많이 차지해 나눔하려구요 위치는 여기입니다',37.3595704, 127.105399, 0, 3, now()),
 ('admin','test_thumbnail.png', '12월 2일 고나리자가 주최하는 밥 번개', '오후 8시쯤 다같이 삼겹살 먹어요! 만나는 장소는 지도로 찍어둘게요', 37.3595704, 127.105399, 1, 54, now()),
 ('review1','test_thumbnail.png', '푸드조아 와인 제 41회차 정기 모임', '01.18 목요일 오후 9시 서면 삼정타워 뒤 푸드조아 건물입니ㅏ. 회비 7,000원입니다', 37.3595704, 127.105399, 1, 90, now());
+
+insert into notice(title, contents)
+values("공지사항 1", "공지사항 내용 1"),
+	("공지사항 2", "공지사항 내용 2"),
+	("공지사항 3", "공지사항 내용 3"),
+	("공지사항 4", "공지사항 내용 4"),
+	("공지사항 5", "공지사항 내용 5"),
+	("공지사항 6", "공지사항 내용 6"),
+	("공지사항 7", "공지사항 내용 7");

@@ -82,9 +82,9 @@
 	<div id="recipe-list-container">
 		<h1 class="list-title">
 			<%
-			int _catetory = (category == null || category.equals("")) ? 0 : Integer.parseInt(category);
+			int _category = (category == null || category.equals("")) ? 0 : Integer.parseInt(category);
 		
-			switch (_catetory) {
+			switch (_category) {
 			case 1: %> 한식 요리 <% break;
 			case 2: %> 일식 요리 <% break;
 			case 3: %> 중식 요리 <% break;

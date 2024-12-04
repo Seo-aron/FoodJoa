@@ -1,3 +1,35 @@
+SELECT
+r.no, r.title, r.thumbnail, r.category, r.views, 
+COALESCE(average_table.avg_rating, 0) AS average_rating, 
+m.nickname
+FROM recipe r
+JOIN (
+SELECT 
+rv.recipe_no, AVG(rating) as avg_rating
+FROM recipe_review rv
+GROUP BY rv.recipe_no
+) average_table 
+ON r.no=average_table.recipe_no
+JOIN member m
+ON r.id=m.id
+ORDER BY average_rating DESC LIMIT 3;
+
+SELECT
+k.no, k.title, k.pictures, k.category, k.views, k.price,  
+COALESCE(average_table.avg_rating, 0) AS average_rating
+FROM mealkit k
+JOIN (
+SELECT 
+mv.mealkit_no, AVG(rating) as avg_rating
+FROM mealkit_review mv
+GROUP BY mv.mealkit_no
+) average_table 
+ON k.no=average_table.mealkit_no
+ORDER BY average_rating DESC LIMIT 3;
+
+
+
+
 SELECT 
 r.title, r.contents, r.category, r.thumbnail, 
 m.nickname, m.profile, 
@@ -12,6 +44,27 @@ GROUP BY recipe_no
 ) average_table ON average_table.recipe_no = v.item_no 
 WHERE v.id = 'tQi32Qj0iONPLRZ16-5sX4-Gq_p8Jg_T33r-HdtLEFE' AND v.type=0
 ORDER BY v.view_date DESC LIMIT 20;
+
+
+SELECT *
+FROM notice
+ORDER BY post_date DESC LIMIT 5;
+
+SELECT 
+c.title, c.views, c.post_date,
+m.nickname
+FROM community c
+JOIN member m
+ON c.id=m.id
+ORDER BY c.views DESC LIMIT 5;
+
+SELECT 
+c.title, c.views, c.post_date,
+m.nickname
+FROM community_share c
+JOIN member m
+ON c.id=m.id
+ORDER BY c.views DESC LIMIT 5;
 
 
 

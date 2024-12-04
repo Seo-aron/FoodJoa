@@ -151,7 +151,7 @@ public class CommunityDAO {
 
 		String sql = null;
 		
-		ArrayList list = new ArrayList();
+		ArrayList<CommunityVO> list = new ArrayList<CommunityVO>();
 		
 		if(!word.equals("")) {
 			
