@@ -97,3 +97,17 @@
 	top: 0px;
 	right: 50px;
 }
+
+.page_number > td > a {
+	padding: 8px 13px;
+	text-decoration: none;
+	font-size: 15px;
+	color: #555;
+	background-color: #fff;
+	border-radius: 4px;
+}
+
+.page_number > td > a:hover {
+	background-color: #e9ecef;
+	transition: 0.3s ease;
+}

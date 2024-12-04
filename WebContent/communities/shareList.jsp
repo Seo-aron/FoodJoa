@@ -111,7 +111,7 @@
 				}
 			}
 			%>
-			<tr>
+			<tr class="page_number">
 				<td colspan="6" align="center">
 					<%
 					if (totalRecord > 0) {
@@ -119,7 +119,7 @@
 						if (nowBlock > 0) {
 							%>
 							<a href="<%= contextPath %>/Community/shareList?nowBlock=<%= nowBlock - 1 %>&nowPage=<%= (nowBlock - 1) * pagePerBlock %>">
-								이전
+								<
 							</a>
 							<%
 						}
@@ -138,7 +138,7 @@
 						if (nowBlock + 1 < totalBlock) {
 							%>
 							<a href="<%= contextPath %>/Community/shareList?nowBlock=<%= nowBlock + 1 %>&nowPage=<%= (nowBlock + 1) * pagePerBlock %>">
-								다음
+								>
 							</a>
 							<%
 						}
@@ -147,7 +147,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan="6" align="center">&nbsp;&nbsp;&nbsp;&nbsp;
+				<td colspan="6" align="center">
 					<div class="community-table-bottom">
 						<form action="<%=contextPath%>/Community/shareSearchList" method="post"
 						  name="frmSearch" onsubmit="fnSearch(); return false;">

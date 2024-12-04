@@ -75,7 +75,7 @@ public class CommunityService {
 		return result;
 	}
 
-	public ArrayList<CommunityVO> processCommunitySearch(String key, String word) {
+	public ArrayList<HashMap<String, Object>> processCommunitySearch(String key, String word) {
 
 		return communitydao.communityList(key, word);
 	}

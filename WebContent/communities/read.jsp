@@ -120,9 +120,9 @@
 	
 		function onUpdateButton() {
 			document.frmUpdate.action = "<%= contextPath %>/Community/update";
-			
+
 			document.frmUpdate.no.value = "<%= communityVO.getNo()%>";
-			document.frmUpdate.title.value = "<%= communityVO.getTitle() %>";
+			document.frmUpdate.title.value = `<%= communityVO.getTitle() %>`;
 			document.frmUpdate.contents.value = `<%= communityVO.getContents() %>`;
 			document.frmUpdate.views.value = <%= communityVO.getViews()%>;
 			

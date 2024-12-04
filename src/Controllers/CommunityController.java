@@ -101,6 +101,7 @@ public class CommunityController extends HttpServlet {
 		request.setAttribute("nowPage", nowPage);
 		request.setAttribute("nowBlock", nowBlock);
 
+		request.setAttribute("pageTitle", "자유게시판");
 		nextPage = "/main.jsp";	
 	}
 
@@ -108,6 +109,7 @@ public class CommunityController extends HttpServlet {
 			throws ServletException, IOException{
 	
 		request.setAttribute("center", "communities/write.jsp");
+		request.setAttribute("pageTitle", "게시글 작성");
 		
 		nextPage = "/main.jsp";
 	}
@@ -130,7 +132,8 @@ public class CommunityController extends HttpServlet {
 		
 		request.setAttribute("community", community);
 		request.setAttribute("center", "communities/read.jsp");
-		
+		request.setAttribute("pageTitle", "자유게시판");
+
 		nextPage = "/main.jsp";
 		
 	}
@@ -146,7 +149,8 @@ public class CommunityController extends HttpServlet {
 		
 		request.setAttribute("vo", vo);
 		request.setAttribute("center", "communities/update.jsp");
-		
+		request.setAttribute("pageTitle", "자유게시판");
+
 		nextPage = "/main.jsp";
 	}
 
@@ -183,7 +187,7 @@ public class CommunityController extends HttpServlet {
 		String key = request.getParameter("key");
 		String word = request.getParameter("word");
 		
-		ArrayList<CommunityVO> communities = communityService.processCommunitySearch(key, word);
+		ArrayList<HashMap<String, Object>> communities = communityService.processCommunitySearch(key, word);
 
 		request.setAttribute("communities", communities);
 		request.setAttribute("center", "communities/list.jsp");
@@ -204,7 +208,8 @@ public class CommunityController extends HttpServlet {
 		request.setAttribute("nowPage", nowPage);
 		request.setAttribute("nowBlock", nowBlock);
 		request.setAttribute("center", "communities/shareList.jsp");
-		
+		request.setAttribute("pageTitle", "커뮤니티");
+
 		nextPage = "/main.jsp";
 	}
 	
@@ -212,6 +217,8 @@ public class CommunityController extends HttpServlet {
 			throws ServletException, IOException{
 
 		request.setAttribute("center", "communities/shareWrite.jsp");
+		request.setAttribute("pageTitle", "커뮤니티");
+
 		
 		nextPage = "/main.jsp";
 	}
@@ -252,7 +259,8 @@ public class CommunityController extends HttpServlet {
 		request.setAttribute("nowBlock", request.getParameter("nowBlock"));
 		request.setAttribute("nowPage", request.getParameter("nowPage"));
 		request.setAttribute("center", "communities/shareRead.jsp");
-		
+		request.setAttribute("pageTitle", "커뮤니티");
+
 		nextPage = "/main.jsp";
 	}
 	
@@ -265,7 +273,8 @@ public class CommunityController extends HttpServlet {
 		request.setAttribute("nowBlock", request.getParameter("nowBlock"));
 		request.setAttribute("nowPage", request.getParameter("nowPage"));
 		request.setAttribute("center", "communities/shareUpdate.jsp");
-		
+		request.setAttribute("pageTitle", "커뮤니티");
+
 		nextPage = "/main.jsp";
 	}
 	
