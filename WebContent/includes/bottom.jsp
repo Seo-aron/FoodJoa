@@ -7,6 +7,7 @@
 
 <%
 request.setCharacterEncoding("UTF-8");
+String contextPath = request.getContextPath();
 %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 
@@ -18,68 +19,71 @@ request.setCharacterEncoding("UTF-8");
 	<title>Insert title here</title>
 	
 	<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
-	<style>
+	<style>	
+		a:link, a:visited, a:hover, a:active {
+			color: inherit;
+			text-decoration: none;
+		}
 	
-	#bottom_container {
-		width:100%;
-		font-family: "Noto Serif KR", serif;
-		font-optical-sizing: auto;
-		text-align: center;
-		padding: 20px 0;
-		border-top: 1px solid #e0e0e0;
-		margin-top: 50px; 
-	}
-	
-	body {
-		font-family: "Noto Serif KR", serif;
-		margin: 0;
-		padding: 0;
-		background-color: #ffffff; 
-		color: #333333; 
-	}
-	
-	#bottomMenu {
-		margin-bottom: 20px;
-	}
-	
-	#bottomMenu table {
-		width: 100%;
-		border-collapse: collapse;
-	}
-	
-	#bottomMenu td {
-		font-size: 14px;
-		padding: 10px;
-		color: #666666;
-		cursor: pointer;
-		transition: color 0.3s ease;
-	}
-	
-	#bottomMenu td:hover {
-		color: #000000;
-	}
-	
-	#sns {
-		margin-top: 20px;
-	}
-	
-	#sns a img {
-		width: 300px;
-		height: 100px;
-		object-fit: contain;
-		transition: transform 0.3s ease;
-	}
-	
-	#company {
-		font-size: 12px;
-		line-height: 1.6;
-		color: #888888;
-	}
-	
-	#company p {
-		margin: 5px 0;
-	}
-	
+		#bottom_container {
+			width:100%;
+			font-family: "Noto Serif KR", serif;
+			font-optical-sizing: auto;
+			text-align: center;
+			padding: 20px 0;
+			border-top: 1px solid #e0e0e0;
+			margin-top: 50px; 
+		}
+		
+		body {
+			font-family: "Noto Serif KR", serif;
+			margin: 0;
+			padding: 0;
+			background-color: #ffffff; 
+			color: #333333; 
+		}
+		
+		#bottomMenu {
+			margin-bottom: 20px;
+		}
+		
+		#bottomMenu table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+		
+		#bottomMenu td {
+			font-size: 14px;
+			padding: 10px;
+			color: #666666;
+			cursor: pointer;
+			transition: color 0.3s ease;
+		}
+		
+		#bottomMenu td:hover {
+			color: #000000;
+		}
+		
+		#sns {
+			margin-top: 20px;
+		}
+		
+		#sns a img {
+			width: 300px;
+			height: 100px;
+			object-fit: contain;
+			transition: transform 0.3s ease;
+		}
+		
+		#company {
+			font-size: 12px;
+			line-height: 1.6;
+			color: #888888;
+		}
+		
+		#company p {
+			margin: 5px 0;
+		}	
 	</style>
 </head>
 
@@ -90,7 +94,11 @@ request.setCharacterEncoding("UTF-8");
 				<tr>
 					<td>이용약관</td>
 					<td>개인정보취급방침</td>
-					<td>공지사항</td>
+					<td>
+						<a href="<%= contextPath %>/Community/noticeList">
+							공지사항
+						</a>
+					</td>
 					<td>자주묻는질문</td>
 				</tr>
 				<div id="sns">
