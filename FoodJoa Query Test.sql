@@ -39,3 +39,18 @@ select * from recipe_review;
 select * from mealkit_review;
 
 select * from recent_view;
+
+SELECT c.*, m.nickname
+FROM community c
+JOIN member m
+ON c.id = m.id
+where title like '%감%'
+OR contents like '%감%'
+ORDER BY post_date desc;
+
+SELECT c.*, m.nickname
+FROM community c
+JOIN member m
+ON c.id = m.id
+WHERE nickname like '%고나%'
+ORDER by no asc;

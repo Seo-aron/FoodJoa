@@ -50,7 +50,7 @@
 						</div>
 						<div class="block-cell">
 							<div class="image-area">
-								<img src="${contextPath}/images/mainpage/foodrank1.jpg" alt="레시피랭킹1">
+								<img src="${contextPath}/images/mainpage/foodrank1.png" alt="레시피랭킹1">
 								<div class="rank-flag">
 									<img class="rank-flag" src="${contextPath}/images/mainpage/rankflag.png">
 								</div>
@@ -64,7 +64,7 @@
 						</div>
 						<div class="block-cell">
 							<div class="image-area">
-								<img src="${contextPath}/images/mainpage/foodrank1.jpg" alt="레시피랭킹1">
+								<img src="${contextPath}/images/mainpage/foodrank2.png" alt="레시피랭킹2">
 								<div class="rank-flag">
 									<img class="rank-flag" src="${contextPath}/images/mainpage/rankflag.png">
 								</div>
@@ -78,7 +78,7 @@
 						</div>
 						<div class="block-cell">
 							<div class="image-area">
-								<img src="${contextPath}/images/mainpage/foodrank1.jpg" alt="레시피랭킹1">
+								<img src="${contextPath}/images/mainpage/foodrank3.png" alt="레시피랭킹3">
 								<div class="rank-flag">
 									<img class="rank-flag" src="${contextPath}/images/mainpage/rankflag.png">
 								</div>
@@ -100,7 +100,7 @@
 						</div>
 						<div class="block-cell">
 							<div class="image-area">
-								<img src="${contextPath}/images/mainpage/foodrank1.jpg" alt="레시피랭킹1">
+								<img src="${contextPath}/images/mainpage/storerank1.jpg" alt="스토어랭킹1">
 								<div class="rank-flag">
 									<img class="rank-flag" src="${contextPath}/images/mainpage/rankflag.png">
 								</div>
@@ -114,7 +114,7 @@
 						</div>
 						<div class="block-cell">
 							<div class="image-area">
-								<img src="${contextPath}/images/mainpage/foodrank1.jpg" alt="레시피랭킹1">
+								<img src="${contextPath}/images/mainpage/storerank2.jpg" alt="스토어랭킹2">
 								<div class="rank-flag">
 									<img class="rank-flag" src="${contextPath}/images/mainpage/rankflag.png">
 								</div>
@@ -128,7 +128,7 @@
 						</div>
 						<div class="block-cell">
 							<div class="image-area">
-								<img src="${contextPath}/images/mainpage/foodrank1.jpg" alt="레시피랭킹1">
+								<img src="${contextPath}/images/mainpage/storerank3.png" alt="스토어랭킹3">
 								<div class="rank-flag">
 									<img class="rank-flag" src="${contextPath}/images/mainpage/rankflag.png">
 								</div>
