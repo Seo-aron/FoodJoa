@@ -115,7 +115,6 @@
 	<script>
 		function onListButton() {
 			location.href = '<%= contextPath %>/Community/list';
-			
 		}
 	
 		function onUpdateButton() {

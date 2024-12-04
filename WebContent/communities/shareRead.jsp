@@ -140,7 +140,14 @@
 		}
 		
 		function onListButton(){
-			location.href='<%=contextPath%>/Community/shareList?nowBlock=<%=nowBlock%>&nowPage=<%=nowPage%>';
+			<%
+			if (nowPage != null && nowBlock != null) {
+				%>location.href = '<%= contextPath %>/Community/noticeList?nowPage=<%=nowPage%>&nowBlock=<%=nowBlock%>';<%
+			}
+			else {
+				%>location.href = '<%= contextPath %>/Community/noticeList';<%
+			}
+			%>
 		}
 		
 		function onUpdateButton(){
