@@ -14,6 +14,7 @@
     String contextPath = request.getContextPath();
     
     MealkitVO mealkitvo = (MealkitVO) request.getAttribute("mealkitvo");
+	String id = (String) session.getAttribute("userId");
 %>
 <c:set var="mealkit" value="${requestScope.mealkitvo}"/>
 
@@ -35,6 +36,7 @@
 				    <td>
 				    	<input type="text" name="id" value="${sessionScope.userId}" readonly>
 				    	<input type="hidden" name="no" value="${mealkit.no }">
+						<input type="hidden" id="origin_pictures" name="origin_pictures" value="<%= mealkitvo.getPictures() %>">
 				    </td>
 				</tr>
                 <tr>
@@ -44,10 +46,16 @@
                 <tr>
 				    <th>사진 추가</th>
 				    <td>
-				        <div id="imagePreview"></div>
-   						<input type="file" id="pictureFiles" name="pictureFiles" 
-							accept=".jpg,.jpeg,.png" multiple onchange="handleFileSelect(this.files)">
-						<button type="button" id="addFileBtn" onclick="triggerFileInput()">사진 추가</button>
+						<div class="preview-area">
+	    					<ul id="imagePreview">
+	    						<li>
+	    							<input type="file" id="pictureFiles" name="pictureFiles" 
+										accept=".jpg,.jpeg,.png" multiple onchange="handleFileSelect(this.files)">
+	    						</li>
+	    					</ul>
+    					</div>
+							
+						<input type="hidden" id="pictures" name="pictures">
 					</td>
 				</tr>
                 <tr>
@@ -98,9 +106,9 @@
     <% 
     	List<String> orders = StringParser.splitString(mealkitvo.getOrders());
 	    List<String> pictures = StringParser.splitString(mealkitvo.getPictures());
-	    // input에는 스트링파서를 하면 안됨 << 이걸 해결해야함
     %>
    <script type="text/javascript">
+   	let originSelectedFileNames = [];
    	let selectedFiles = [];
    	let selectedRealFiles = [];
 
@@ -121,84 +129,125 @@
 		}
 		%>
 		
+		let $li;
+		let $img;
+		
 		<%
-		int i = 0;
-	    for (String picture : pictures) {
-	    %>
-	        var imgHtml = 
-	            '<div class="preview-container">' +
-	            '<img src="<%= contextPath %>/images/mealkit/thumbnails/<%= mealkitvo.getNo() %>/<%= mealkitvo.getId() %>/<%=picture%>" class="preview-image-<%=i%>">' +
-	            '<input type="hidden" id="pictures" class="preview-filename-<%=i%>" value="" >' +
-	            '<input type="button" class="remove-img" value="삭제" onclick="removeImage(<%=i%>)">' +
-	            '</div>';
-	        document.getElementById('imagePreview').innerHTML += imgHtml;
-	        const pictureValue = combineStrings(["<%= picture %>"]);
-	        document.getElementById("pictures-<%= i %>").value = pictureValue;
-	        <%=i++%>;
-	    <%
-	    }
-    	%>
+		for (int i = 0; i < pictures.size(); i++) {
+			String fileName = pictures.get(i);
+			%>
+			originSelectedFileNames.push('<%= fileName %>');
+			
+			$li = $('<li>');
+			$img = $('<img>', {
+				class: 'review-origin-preview-image',
+				src: '<%= contextPath %>/images/mealkit/thumbnails/<%= mealkitvo.getNo() %>/<%= id %>/<%= fileName %>',
+				css: {
+					cursor: 'pointer'
+				}
+			});
+
+			$img.on('click', function() {
+			    $(this).parent().remove();
+			    removeOriginFileName('<%= fileName %>');
+			});
+
+			$li.append($img);
+			$('#imagePreview').append($li);
+			<%
+		}
+		%>
 	}
-   	
-    $(function() {
-    	$(".write").click(function(event) {
-    		event.preventDefault();
-    	});
-    	
-    	$(".add-orders").click(function() {
-    	    var newOrderHtml = `
-    	        <p class="orders-row">
-    	            <input type="text" class="name-orders" placeholder="조리 순서를 간단히 적어주세요.">
-    	            <button type="button" class="addrow-orders">추가</button>
-    	            <button type="button" class="cancle-orders">취소</button>
-    	        </p>
-    	    `;
-    	    
-    	    $(this).parent().prev().append(newOrderHtml);
-    	});
-    	
-		// 추가 버튼을 눌렀을 때 
-    	$(document).on('click', '.addrow-orders', function() {
-    	    var $row = $(this).closest('.orders-row');
-    	    var name = $row.find('.name-orders').val();
-    	    
-    	    if (name) {
-    	    	var newOrderHtml = 
-    	            '<p class="added-orders">' +
-    				'<span class="added-order">' + name + '</span>' + 
-    	            '<button type="button" class="remove-orders">삭제</button>' +
-    	            '</p>';
-    	        
-    	        $row.replaceWith(newOrderHtml);    
-    	    }
-    		else {
-    	        alert("조리 순서를 입력 해주세요.");
-    	    }
-    	});
-		// 조리 순서 취소 버튼 
-    	$(document).on('click', '.cancle-orders', function() {
-    	    $(this).closest('.orders-row').remove();
-    	});
-		// 조리 순서 삭제 버튼 
-    	$(document).on('click', '.remove-orders', function() {
-    	    $(this).closest('.added-orders').remove();
-    	});
-    });
+	
+	function removeOriginFileName(fileName) {
+		for (let i = 0; i < originSelectedFiles.length; i++) {
+			if (originSelectedFileNames[i] == fileName) {
+				originSelectedFileNames.splice(i, 1);
+				break;
+			}
+		}
+	}
+	
+	// 선택한 파일 제거
+	function removeSelectedFile(fileIdentifier) {
+		for (let i = 0; i < selectedFiles.length; i++) {
+			if (selectedFiles[i] == fileIdentifier) {
+				selectedFiles.splice(i, 1);
+				selectedRealFiles.splice(i, 1);
+				break;
+			}
+		}
+	}
+	
+	function setPicturesString() {
+		let strings = [];
+
+		selectedFiles.forEach(fileIdentifier => {
+			// fileIdentifier는 "파일이름-파일크기" 형식
+			let fileName = fileIdentifier.split('-')[0]; // 파일 이름 부분만 추출
+			strings.push(fileName);
+		});
+
+		let pictures = combineStrings(strings);
+
+		document.getElementsByName('pictures')[0].value = pictures;
+	}
+	
+	function handleFileSelect(files) {
+		const imagePreview = document.getElementById('imagePreview');
+
+		Array.from(files).forEach(file => {
+			if (file.type.startsWith('image/')) {
+				let fileIdentifier = file.name + '-' + file.size;
+				
+				if (!selectedFiles.includes(fileIdentifier)) {
+					selectedFiles.push(fileIdentifier);
+					selectedRealFiles.push(file);
+		
+					const reader = new FileReader();
+		
+					reader.readAsDataURL(file);
+		
+					reader.onload = function(e) {
+						const li = document.createElement('li');
+						const img = document.createElement('img');
+						img.src = e.target.result;
+		
+						img.dataset.filename = file.name;
+						img.classList.add('preview_image');
+		
+						img.addEventListener('click', function() {
+							imagePreview.removeChild(img.parentElement);
+							removeSelectedFile(fileIdentifier);
+							document.getElementById('pictureFiles').value = '';
+						});
+		
+						img.style.cursor = 'pointer';
+						
+						li.appendChild(img);
+						imagePreview.appendChild(li);
+					}				
+				} 
+			}
+		});
+
+		document.getElementById('pictureFiles').value = '';
+	}
 
 	// 전송버튼 
 	function onSubmit(e, contextPath) {
 		e.preventDefault();
 	
 		setOrdersString();
-		if(!$("#pictures").val()){
-			setPicturesString();
-		}
+		setPicturesString();
 	
 		const formData = new FormData();
 		formData.append('no', $("input[name='no']").val());
 		formData.append('id', $("input[name='id']").val());
 		formData.append('title', $("input[name='title']").val());
 		formData.append('pictures', $("#pictures").val());
+		formData.append('origin_pictures', $("#origin_pictures").val());
+		formData.append('origin_selected_pictures', combineStrings(originSelectedFileNames));
 		formData.append('category', $("select[name='category']").val());
 		formData.append('contents', $("textarea[name='contents']").val());
 		formData.append('price', $("input[name='price']").val());
@@ -261,95 +310,52 @@
 		console.log("result : " + result);
 		return result;
 	}
-	
-	// 사진 관련 
-	function triggerFileInput() {
-		if (selectedFiles.length >= 5) {
-			alert("사진은 최대 5장까지 추가할 수 있습니다.");
-			return;
-		}
-		document.getElementById('pictureFiles').click();
-	}
-	
-	function handleFileSelect(files) {
-		const imagePreview = document.getElementById('imagePreview');
-	
-		Array.from(files).forEach(file => {
-			if (file.type.startsWith('image/')) {
-				let fileIdentifier = file.name + '-' + file.size;
-	
-				if (!selectedFiles.includes(fileIdentifier)) {
-					if (selectedFiles.length >= 5) {
-						alert("사진은 최대 5장까지 추가할 수 있습니다.");
-						return;
-					}
-	
-					selectedFiles.push(fileIdentifier);
-					selectedRealFiles.push(file);
-	
-					const reader = new FileReader();
-	
-					reader.readAsDataURL(file);
-	
-					reader.onload = function(e) {
-						const img = document.createElement('img');
-						img.src = e.target.result;
-	
-						img.dataset.filename = file.name;
-						img.classList.add('preview_image');
-	
-						img.addEventListener('click', function() {
-							imagePreview.removeChild(img);
-							removeSelectedFile(fileIdentifier);
-							document.getElementById('pictureFiles').value = '';
-						});
-	
-						img.style.cursor = 'pointer';
-	
-						imagePreview.appendChild(img);
-					}
-				}
-			}
-		});
-	
-		document.getElementById('pictureFiles').value = '';
-	}
-	
-	// 선택한 파일 제거
-	function removeSelectedFile(fileIdentifier) {
-		for (let i = 0; i < selectedFiles.length; i++) {
-			if (selectedFiles[i] == fileIdentifier) {
-				selectedFiles.splice(i, 1);
-				selectedRealFiles.splice(i, 1);
-				break;
-			}
-		}
-	}
-	
-	function setPicturesString() {
-		let strings = [];
-	
-		selectedFiles.forEach(fileIdentifier => {
-			// fileIdentifier는 "파일이름-파일크기" 형식
-			let fileName = fileIdentifier.split('-')[0]; // 파일 이름 부분만 추출
-			strings.push(fileName);
-		});
-	
-		let pictures = combineStrings(strings);
-	
-		document.getElementsByName('pictures')[0].value = pictures;
-	}
-	
-	function removeImage(index) {
-	    var imgElement = document.querySelector('.preview-image-' + index);
-	    if (imgElement) {
-	        var hiddenInput = document.querySelector('.preview-filename-' + index);
-	        if (hiddenInput) {
-	            hiddenInput.value = "";
-	        }
-	        imgElement.parentElement.remove();
-	    }
-	}
+   	
+    $(function() {
+    	$(".write").click(function(event) {
+    		event.preventDefault();
+    	});
+    	
+    	$(".add-orders").click(function() {
+    	    var newOrderHtml = `
+    	        <p class="orders-row">
+    	            <input type="text" class="name-orders" placeholder="조리 순서를 간단히 적어주세요.">
+    	            <button type="button" class="addrow-orders">추가</button>
+    	            <button type="button" class="cancle-orders">취소</button>
+    	        </p>
+    	    `;
+    	    
+    	    $(this).parent().prev().append(newOrderHtml);
+    	});
+    	
+		// 추가 버튼을 눌렀을 때 
+    	$(document).on('click', '.addrow-orders', function() {
+    	    var $row = $(this).closest('.orders-row');
+    	    var name = $row.find('.name-orders').val();
+    	    
+    	    if (name) {
+    	    	var newOrderHtml = 
+    	            '<p class="added-orders">' +
+    				'<span class="added-order">' + name + '</span>' + 
+    	            '<button type="button" class="remove-orders">삭제</button>' +
+    	            '</p>';
+    	        
+    	        $row.replaceWith(newOrderHtml);    
+    	    }
+    		else {
+    	        alert("조리 순서를 입력 해주세요.");
+    	    }
+    	});
+		// 조리 순서 취소 버튼 
+    	$(document).on('click', '.cancle-orders', function() {
+    	    $(this).closest('.orders-row').remove();
+    	});
+		// 조리 순서 삭제 버튼 
+    	$(document).on('click', '.remove-orders', function() {
+    	    $(this).closest('.added-orders').remove();
+    	});
+    });
+
     </script>
 </body>
 </html>

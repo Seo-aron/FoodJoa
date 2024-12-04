@@ -88,12 +88,14 @@ public class MealkitService {
 	public void setCartMealkit(HttpServletRequest request, HttpServletResponse response) 
 			throws IOException {
 		
-		int no = Integer.parseInt(request.getParameter("no"));
+		int mealkitNo = Integer.parseInt(request.getParameter("no"));
 		int quantity = Integer.parseInt(request.getParameter("quantity"));
 		String id = (String) request.getSession().getAttribute("userId");
 		
-		int result = mealkitDAO.insertMealkitCartlist(no, quantity, id);
+		System.out.println(quantity);
 		
+		int result = mealkitDAO.insertMealkitCartlist(mealkitNo, quantity, id);
+		System.out.println("result: " + result);
 		String res = String.valueOf(result);
 
 		printWriter = response.getWriter();
@@ -143,7 +145,7 @@ public class MealkitService {
 	    
         for(String fileName : fileNames) {
     		
-    		String srcPath = path + File.separator + "temp" + File.separator;
+    		String srcPath = path + File.separator + "temp";
     	    String destinationPath = path + File.separator + "mealkit" + File.separator + "thumbnails" + File.separator + no + File.separator + id;
     		
     		FileIOController.moveFile(srcPath, destinationPath, fileName);
@@ -220,25 +222,30 @@ public class MealkitService {
 
 		MultipartRequest multipartRequest = new MultipartRequest(request, path + File.separator + "temp", maxSize, "UTF-8",
 				new DefaultFileRenamePolicy());
-
-	    String originFileName = multipartRequest.getParameter("thumbnail-origin");
-		String fileName = multipartRequest.getOriginalFileName("file");
+		/*
+		 * String originFileName = multipartRequest.getParameter("thumbnail-origin");
+		 * String fileName = multipartRequest.getOriginalFileName("file");
+		 */
 	    
 	    int no = Integer.parseInt(multipartRequest.getParameter("no"));
 	    String id = (String) request.getSession().getAttribute("userId");
 	    String title = multipartRequest.getParameter("title");
 	    String pictures = multipartRequest.getParameter("pictures");
+		String originPictures = multipartRequest.getParameter("origin_pictures");
+		String originSelectedPictures = multipartRequest.getParameter("origin_selected_pictures");
 	    String contents = multipartRequest.getParameter("contents");
 	    String price = multipartRequest.getParameter("price");
 	    String origin = multipartRequest.getParameter("origin");
 	    String orders = multipartRequest.getParameter("orders");
 	    int stock = Integer.parseInt(multipartRequest.getParameter("stock"));
 	    
+	    System.out.println("pictures : " + pictures);
+	    
 	    MealkitVO vo = new MealkitVO();
 	    vo.setNo(no);
 	    vo.setId(id);
 	    vo.setTitle(title);
-	    vo.setPictures(pictures);
+	    vo.setPictures(originSelectedPictures + pictures);
 	    vo.setContents(contents);
 	    vo.setPrice(price);
 	    vo.setStock(stock);
@@ -246,25 +253,25 @@ public class MealkitService {
 	    vo.setOrigin(origin);
 
 	    mealkitDAO.updateMealkit(vo);
-
-	    List<String> fileNames = StringParser.splitString(pictures);
 	    
-	    String srcPath = path + File.separator + "temp" + File.separator;
+	    String srcPath = path + File.separator + "temp";
 		String destinationPath = path + File.separator + "mealkit" + File.separator +
 				"thumbnails" + File.separator + String.valueOf(no) + File.separator + id;
 		
-		if (fileName != null && !fileName.equals("")) {
-		    if (originFileName != null && !originFileName.equals("")) {
-		        FileIOController.deleteFile(destinationPath, originFileName);
-		    }
-		    FileIOController.moveFile(srcPath, destinationPath, fileName);
+		List<String> originFileNames = StringParser.splitString(originPictures);
+		List<String> originSelectedFileNames = StringParser.splitString(originSelectedPictures);
+		
+		for (String fileName : originFileNames) {
+			if (!originSelectedFileNames.contains(fileName)) {
+				FileIOController.deleteFile(destinationPath, fileName);
+			}
 		}
 		
-		for (String file : fileNames) {
-		    if (file != null && !file.equals("")) {
-		        FileIOController.moveFile(srcPath, destinationPath, file);
-		    }
-		}
+		List<String> fileNames = StringParser.splitString(pictures);
+
+        for (String fileName : fileNames) {
+    		FileIOController.moveFile(srcPath, destinationPath, fileName);
+        }
 		
 		String nickName = mealkitDAO.selectNickName(id);
 		
@@ -377,29 +384,37 @@ public class MealkitService {
 		
 		String mealkitNo = multipartRequest.getParameter("mealkit_no");
         String pictures = multipartRequest.getParameter("pictures");
+		String originPictures = multipartRequest.getParameter("origin_pictures");
+		String originSelectedPictures = multipartRequest.getParameter("origin_selected_pictures");
         String contents = multipartRequest.getParameter("contents");
         String rating = multipartRequest.getParameter("rating");
-        
-        System.out.println("pictures : " + pictures);
-        
-        List<String> fileNames = StringParser.splitString(pictures);
-        
-        for(String fileName : fileNames) {
-    		
-    		String srcPath = path + File.separator + "temp";
-    		String destinationPath = path + File.separator + "mealkit" + File.separator +
-    				"reviews" + File.separator + String.valueOf(mealkitNo) + File.separator + id;
-    		
-    		FileIOController.moveFile(srcPath, destinationPath, fileName);
-        }
         
         MealkitReviewVO review = new MealkitReviewVO();
         review.setId(id);
         review.setMealkitNo(Integer.parseInt(mealkitNo));
-        review.setPictures(pictures);
+        review.setPictures(pictures + originSelectedPictures);
         review.setContents(contents);
         review.setRating(Integer.parseInt(rating));
         
         mealkitDAO.updateReview(review);
+        
+        String srcPath = path + File.separator + "temp";
+		String destinationPath = path + File.separator + "mealkit" + File.separator +
+				"reviews" + File.separator + String.valueOf(mealkitNo) + File.separator + id;
+		
+		List<String> originFileNames = StringParser.splitString(originPictures);
+		List<String> originSelectedFileNames = StringParser.splitString(originSelectedPictures);
+		
+        for(String fileName : originFileNames) {
+        	if (!originSelectedFileNames.contains(fileName)) {
+				FileIOController.deleteFile(destinationPath, fileName);
+			}
+        }
+        List<String> fileNames = StringParser.splitString(pictures);
+    	
+        for (String fileName : fileNames) {
+    		FileIOController.moveFile(srcPath, destinationPath, fileName);
+        }
+        
 	}
 }

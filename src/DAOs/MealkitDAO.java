@@ -136,13 +136,12 @@ public class MealkitDAO {
 		return result;
 	}
 
-	public int insertMealkitCartlist(int no, int quantity, String id) {
+	public int insertMealkitCartlist(int mealkitNo, int quantity, String id) {
 
-		// 테이블 명 수정 필요
-		String sql = "INSERT INTO mealkit_wishlist(id, mealkit_no, quantity choice_date) "
+		String sql = "INSERT INTO mealkit_cart(id, mealkit_no, quantity, choice_date) "
 				+ "VALUES(?, ?, ?, CURRENT_TIMESTAMP)";
 
-		int result = dbConnector.executeUpdate(sql, id, no, quantity);
+		int result = dbConnector.executeUpdate(sql, id, mealkitNo, quantity);
 
 		dbConnector.release();
 
@@ -690,10 +689,13 @@ public class MealkitDAO {
 		return mealkit;
 	}
 
-	public Object updateReview(MealkitReviewVO review) {
-		// TODO Auto-generated method stub
-		return null;
+	public void updateReview(MealkitReviewVO review) {
+		
+		String sql = "UPDATE mealkit_review SET pictures = ?, contents = ?, rating = ?";
+		
+		dbConnector.executeUpdate(sql, review.getPictures(), review.getContents(), review.getRating());
+		
+		dbConnector.release();
 	}
-
 
 }

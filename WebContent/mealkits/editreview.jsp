@@ -17,6 +17,7 @@
 	String nickName = (String) request.getAttribute("nickName");
 	
 	List<String> pictures = StringParser.splitString(review.getPictures());
+	String id = (String) session.getAttribute("userId");
 %>
 
 <!DOCTYPE html>
@@ -37,14 +38,15 @@
 	<div id="recipe-review-container">
 		<h1>밀키트 리뷰 수정</h1>
 		<form id="frmReview" action="#" method="post" enctype="multipart/form-data">
-			<input type="hidden" id="recipe_no" name="recipe_no" value="<%= mealkit.getNo() %>">
+			<input type="hidden" id="mealkit_no" name="mealkit_no" value="<%= mealkit.getNo() %>">
 			<input type="hidden" id="nickname" name="nickname" value="<%=nickName%>"/>
+			<input type="hidden" id="origin_pictures" name="origin_pictures" value="<%= review.getPictures() %>">
 					
 			<table width="100%">
 				<tr>
 					<td align="center">
 						<div class="thumbnail-area">						
-							<img src="<%= contextPath %>/images/recipe/thumbnails/<%= mealkit.getNo() %>/<%= pictures.get(0) %>">
+							<img src="<%= contextPath %>/images/recipe/thumbnails/<%= mealkit.getNo() %>/<%= review.getPictures() %>">
 						</div>
 					</td>
 				</tr>
@@ -113,7 +115,47 @@
 		initialize();
 	
 		function initialize(){
-			setRating(null, $("input[name='rating']").val());
+			setRating(null, $("input[name='rating']").val());	
+
+			let $li;
+			let $img;
+			
+			<%
+			for (int i = 0; i < pictures.size(); i++) {
+				String fileName = pictures.get(i);
+				%>
+				originSelectedFileNames.push('<%= fileName %>');
+				
+				$li = $('<li>');
+				$img = $('<img>', {
+					class: 'review-origin-preview-image',
+					src: '<%= contextPath %>/images/mealkit/reviews/<%= review.getMealkitNo() %>/<%= id %>/<%= fileName %>',
+					css: {
+						cursor: 'pointer'
+					}
+				});
+
+				$img.on('click', function() {
+				    $(this).parent().remove();
+				    removeOriginFileName('<%= fileName %>');
+				});
+
+				$li.append($img);
+				$('#imagePreview').append($li);
+				<%
+			}
+			%>
+			
+			$("#contents").val('<%= review.getContents() %>');
+		}
+		
+		function removeOriginFileName(fileName) {
+			for (let i = 0; i < originSelectedFileNames.length; i++) {
+				if (originSelectedFileNames[i] == fileName) {
+					originSelectedFileNames.splice(i, 1);
+					break;
+				}
+			}
 		}
 	
 		function setRating(event, ratingValue) {
