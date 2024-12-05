@@ -6,8 +6,7 @@
 
 <%
     request.setCharacterEncoding("UTF-8");
-    response.setContentType("text/html; charset=utf-8");
-    
+    response.setContentType("text/html;charset=utf-8");
     String contextPath = request.getContextPath();
     
     String id = (String) session.getAttribute("userId");

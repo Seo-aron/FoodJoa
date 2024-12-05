@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 SELECT
 r.no, r.title, r.thumbnail, r.category, r.views, 
 COALESCE(average_table.avg_rating, 0) AS average_rating, 
@@ -30,6 +31,9 @@ ORDER BY average_rating DESC LIMIT 3;
 
 
 
+=======
+<<<<<<< HEAD
+>>>>>>> aron
 SELECT 
 r.title, r.contents, r.category, r.thumbnail, 
 m.nickname, m.profile, 
@@ -92,6 +96,7 @@ select * from recipe_review;
 select * from mealkit_review;
 
 select * from recent_view;
+<<<<<<< HEAD
 
 SELECT c.*, m.nickname
 FROM community c
@@ -107,3 +112,22 @@ JOIN member m
 ON c.id = m.id
 WHERE nickname like '%고나%'
 ORDER by no asc;
+=======
+=======
+SELECT * FROM mealkit;
+SELECT * FROM mealkit_review;
+
+SELECT
+k.*, coalesce(avg_table.avg_rating, 0) AS average_rating, m.nickname 
+FROM mealkit k
+JOIN (
+	SELECT
+		mr.mealkit_no, AVG(rating) as avg_rating
+    FROM mealkit_review mr
+    GROUP BY mr.mealkit_no
+) avg_table ON k.no=avg_table.mealkit_no
+JOIN member m 
+ON k.id=m.id
+WHERE no=1;
+>>>>>>> 0945a78673293758c58920c14c2ae08fcfafb845
+>>>>>>> aron

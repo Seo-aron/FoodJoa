@@ -17,16 +17,16 @@ body {
 
 table {
     width: 100%;
-    border-collapse: collapse; /* 겹치는 테두리 설정 */
+    border-collapse: collapse;
 }
 
 th, td {
     padding: 10px 5px;
     text-align: left;
-    border-top: none;    /* 행 구분선 제거 */
-    border-bottom: none; /* 행 구분선 제거 */
-    border-left: none;   /* 열 구분선 제거 */
-    border-right: none;  /* 열 구분선 제거 */
+    border-top: none;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
 }
 
 th{
@@ -39,10 +39,10 @@ th{
 
 input[type="text"], textarea {
     padding: 8px;
-    margin-left: 5px; /* 왼쪽 간격을 좁힘 */
-    margin-right: 5px; /* 오른쪽 간격을 좁힘 */
-    margin-top: 0; /* 위쪽 간격을 없앰 */
-    margin-bottom: 10px; /* 아래쪽 간격은 그대로 유지 */
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 0;
+    margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
@@ -57,10 +57,10 @@ input[type="file"] {
 }
 
 .notice-text {
-    display: block; /* 줄 바꿈 적용 */
-    font-size: 12px; /* 글씨 크기를 작게 설정 */
-    color: #888; /* 회색 글씨 */
-    margin-top: 5px; /* 제목과 간격 */
+    display: block;
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
 }
 
 #pictureFiles{

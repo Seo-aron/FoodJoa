@@ -1,6 +1,7 @@
 <%@page import="java.util.List"%>
 <%@page import="Common.StringParser"%>
 <%@page import="VOs.MealkitVO"%>
+<%@page import="VOs.MealkitReviewVO"%>
 <%@page import="VOs.RecipeVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -12,9 +13,11 @@
 	String contextPath = request.getContextPath();
 	
 	MealkitVO mealkit = (MealkitVO) request.getAttribute("mealkit");
+	MealkitReviewVO review = (MealkitReviewVO) request.getAttribute("reviewvo");
 	String nickName = (String) request.getAttribute("nickName");
 	
-	List<String> pictures = StringParser.splitString(mealkit.getPictures());
+	List<String> pictures = StringParser.splitString(review.getPictures());
+	String id = (String) session.getAttribute("userId");
 %>
 
 <!DOCTYPE html>
@@ -33,16 +36,18 @@
 
 <body>
 	<div id="recipe-review-container">
-		<h1>밀키트 리뷰 작성</h1>
+		<h1>밀키트 리뷰 수정</h1>
 		<form id="frmReview" action="#" method="post" enctype="multipart/form-data">
 			<input type="hidden" id="mealkit_no" name="mealkit_no" value="<%= mealkit.getNo() %>">
+			<input type="hidden" id="review_no" name="review_no" value="<%= review.getNo() %>">
 			<input type="hidden" id="nickname" name="nickname" value="<%=nickName%>"/>
+			<input type="hidden" id="origin_pictures" name="origin_pictures" value="<%= review.getPictures() %>">
 					
 			<table width="100%">
 				<tr>
 					<td align="center">
 						<div class="thumbnail-area">						
-							<img src="<%= contextPath %>/images/recipe/thumbnails/<%= mealkit.getNo() %>/<%= pictures.get(0) %>">
+							<img src="<%= contextPath %>/images/recipe/thumbnails/<%= mealkit.getNo() %>/<%= review.getPictures() %>">
 						</div>
 					</td>
 				</tr>
@@ -64,7 +69,7 @@
 								<img src="<%= contextPath %>/images/recipe/full_star.png" onclick="setRating(event, 3)">
 								<img src="<%= contextPath %>/images/recipe/full_star.png" onclick="setRating(event, 4)">
 								<img src="<%= contextPath %>/images/recipe/full_star.png" onclick="setRating(event, 5)">
-							<input type="hidden" id="rating" name="rating" value="5">
+							<input type="hidden" id="rating" name="rating" value="<%=review.getRating()%>">
 						</div>
 					</td>
 				</tr>
@@ -89,14 +94,14 @@
 							리뷰 내용 작성
 						</div>
 						<div class="reivew-contents-area">	
-							<textarea id="contents" name="contents"></textarea>
+							<textarea id="contents" name="contents"><%=review.getContents() %></textarea>
 						</div>
 					</td>
 				</tr>
 				<tr>
 					<td align="right">
 						<div class="review-button-area">
-							<input type="button" value="리뷰 쓰기" onclick="onSubmit(event,'<%= contextPath %>')">
+							<input type="button" value="수정 완료" onclick="onSubmit(event,'<%= contextPath %>')">
 							<input type="button" value="취소" onclick="onCancleButton(event)">
 						</div>
 					</td>
@@ -106,10 +111,58 @@
 	</div>
 	
 	
-	<script src="<%= contextPath %>/js/mealkit/reviewWrite.js"></script>
+	<script src="<%= contextPath %>/js/mealkit/editreview.js"></script>
 	<script>
+		initialize();
+	
+		function initialize(){
+			setRating(null, $("input[name='rating']").val());	
+
+			let $li;
+			let $img;
+			
+			<%
+			for (int i = 0; i < pictures.size(); i++) {
+				String fileName = pictures.get(i);
+				%>
+				originSelectedFileNames.push('<%= fileName %>');
+				
+				$li = $('<li>');
+				$img = $('<img>', {
+					class: 'review-origin-preview-image',
+					src: '<%= contextPath %>/images/mealkit/reviews/<%= review.getMealkitNo() %>/<%= id %>/<%= fileName %>',
+					css: {
+						cursor: 'pointer'
+					}
+				});
+
+				$img.on('click', function() {
+				    $(this).parent().remove();
+				    removeOriginFileName('<%= fileName %>');
+				});
+
+				$li.append($img);
+				$('#imagePreview').append($li);
+				<%
+			}
+			%>
+			
+			$("#contents").val('<%= review.getContents() %>');
+		}
+		
+		function removeOriginFileName(fileName) {
+			for (let i = 0; i < originSelectedFileNames.length; i++) {
+				if (originSelectedFileNames[i] == fileName) {
+					originSelectedFileNames.splice(i, 1);
+					break;
+				}
+			}
+		}
+	
 		function setRating(event, ratingValue) {
-			event.preventDefault();
+			if(event != null){
+				event.preventDefault();
+			}
 			
 			let emptyStarPath = '<%= contextPath %>/images/recipe/empty_star.png';
 			let fullStarPath = '<%= contextPath %>/images/recipe/full_star.png';

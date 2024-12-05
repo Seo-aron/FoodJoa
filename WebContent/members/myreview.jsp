@@ -179,63 +179,63 @@ String id = (String) session.getAttribute("userId");
 						%>
 						<tr>
 							<td><div class="myreview-cell">
-								<table width="100%">
-									<tr>
-										<td rowspan="3" width="240px" style="vertical-align: top;">
-											<div class="myreview-picture">
-												<%
-												if (reviewPictures != null && reviewPictures.size() > 0) {
-													%>
-													<img src="<%= contextPath %>/images/mealkit/reviews/<%= reviewVO.getMealkitNo() %>/<%= id %>/<%= reviewPictures.get(0) %>">
-													<%
-												}
-												%>											
-											</div>
-										</td>
-										<td>
-											<div class="myreview-title">
-												<%= categoryStr %>
-												<%= mealkitVO.getTitle() %>
-											</div>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<div class="myreview-rating">
-												<ul>
-												<%
-												int rating = reviewVO.getRating();
-												for (int startIndex = 1; startIndex <= 5; startIndex++) {
-													String starImage = (startIndex <= rating) ? "full_star.png" : "empty_star.png";
-													%>
-									                <li>
-									                	<img src="<%= contextPath %>/images/recipe/<%= starImage %>" alt="별점">
-									                </li>
-									                <%
-												}
+							<table width="100%">
+								<tr>
+									<td rowspan="3" width="240px" style="vertical-align: top;">
+										<div class="myreview-picture">
+											<%
+											if (reviewPictures != null && reviewPictures.size() > 0) {
 												%>
-												</ul>
-												<span class="myreview-postdate">
-													<%= new SimpleDateFormat("yyyy-MM-dd").format(reviewVO.getPostDate()) %>
-												</span>
-											</div>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<div class="myreview-contents">
-												<%= reviewVO.getContents() %>
-											</div>
-										</td>
-									</tr>
-									<tr>
-										<td class="myreview-button-area" colspan="2" align="right">
-											<input type="button" value="수정" onclick="onMealkitReviewUpdate(<%= reviewVO.getNo() %>)">
-											<input type="button" value="삭제" onclick="onMealkitReviewDelete(<%= reviewVO.getNo() %>)">
-										</td>
-									</tr>
-								</table>
-							</div></td>
+												<img src="<%= contextPath %>/images/mealkit/reviews/<%= reviewVO.getMealkitNo() %>/<%= id %>/<%= reviewPictures.get(0) %>">
+												<%
+											}
+											%>											
+										</div>
+									</td>
+									<td>
+										<div class="myreview-title">
+											<%= categoryStr %>
+											<%= mealkitVO.getTitle() %>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<div class="myreview-rating">
+											<ul>
+											<%
+											int rating = reviewVO.getRating();
+											for (int startIndex = 1; startIndex <= 5; startIndex++) {
+												String starImage = (startIndex <= rating) ? "full_star.png" : "empty_star.png";
+												%>
+								                <li>
+								                	<img src="<%= contextPath %>/images/recipe/<%= starImage %>" alt="별점">
+								                </li>
+								                <%
+											}
+											%>
+											</ul>
+											<span class="myreview-postdate">
+												<%= new SimpleDateFormat("yyyy-MM-dd").format(reviewVO.getPostDate()) %>
+											</span>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<div class="myreview-contents">
+											<%= reviewVO.getContents() %>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td class="myreview-button-area" colspan="2" align="right">
+										<input type="button" value="수정" onclick="onMealkitReviewUpdate(<%= reviewVO.getNo() %>)">
+										<input type="button" value="삭제" onclick="onMealkitReviewDelete(<%= reviewVO.getNo() %>, <%= mealkitVO.getNo()%>)">
+									</td>
+								</tr>
+							</table>
+						</div></td>
 						</tr>
 						<%
 					}
@@ -278,12 +278,32 @@ String id = (String) session.getAttribute("userId");
 			}
 		}
 		
-		function onRecipeMealkitUpdate(reviewNo) {
-			
+		function onMealkitReviewUpdate(reviewNo) {
+			location.href = '<%= contextPath %>/Mealkit/reviewUpdate?no=' + reviewNo;
 		}
 		
-		function onRecipeMealkitDelete(reviewNo) {
-			
+		function onMealkitReviewDelete(reviewNo, mealkitNo) {
+			if (confirm('정말로 삭제하시겠습니까?')) {
+				$.ajax({
+					url: '<%= contextPath %>/Mealkit/reviewDelete.pro',
+				    type: "POST",
+				    async: true,
+				    data: {
+				    	no: reviewNo,
+				    	mealkitNo: mealkitNo
+				    },
+				    dataType: "text",
+				    success: function(responseData) {
+						if(responseData == "1") {
+							alert('리뷰를 삭제했습니다.');
+							location.reload();
+						}
+						else {
+							alert('리뷰 삭제에 실패했습니다.');
+						}
+				    }
+				});
+			}
 		}
 	
 		let categoryButtons = $(".myreview-category-area input");

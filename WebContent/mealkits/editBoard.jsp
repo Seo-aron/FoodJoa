@@ -14,9 +14,7 @@
     String contextPath = request.getContextPath();
     
     MealkitVO mealkitvo = (MealkitVO) request.getAttribute("mealkitvo");
-    
-    // String updatePictures = (String) request.getAttribute("updatePictures");	// 파일명 (이미지 로드용)
-    // String bytePictures = (String) request.getAttribute("bytePictures");		// 0000파일명
+	String id = (String) session.getAttribute("userId");
 %>
 <c:set var="mealkit" value="${requestScope.mealkitvo}"/>
 
@@ -36,10 +34,9 @@
 	            <tr>
 				    <th>ID</th>
 				    <td>
-				    	<!-- 로그인정보를 세션에 저장해야 쓸 수 있음 -->
-				    	<!--<input type="text" name="id" value="${sessionScope.userId}" readonly>-->
-				    	<input type="text" name="id" value="admin" readonly>
+				    	<input type="text" name="id" value="${sessionScope.userId}" readonly>
 				    	<input type="hidden" name="no" value="${mealkit.no }">
+						<input type="hidden" id="origin_pictures" name="origin_pictures" value="<%= mealkitvo.getPictures() %>">
 				    </td>
 				</tr>
                 <tr>
@@ -49,12 +46,16 @@
                 <tr>
 				    <th>사진 추가</th>
 				    <td>
-				        <div id="imagePreview"></div>
-   						<input type="file" id="pictureFiles" name="pictureFiles" 
-							accept=".jpg,.jpeg,.png" multiple onchange="handleFileSelect(this.files)">
-						<button type="button" id="addFileBtn" onclick="triggerFileInput()">사진 추가</button>
-						<input type="text" id="pictures" name="pictures" value="${mealkit.pictures }">
-						<button type="button" onclick="clearInputValue()">삭제</button>
+						<div class="preview-area">
+	    					<ul id="imagePreview">
+	    						<li>
+	    							<input type="file" id="pictureFiles" name="pictureFiles" 
+										accept=".jpg,.jpeg,.png" multiple onchange="handleFileSelect(this.files)">
+	    						</li>
+	    					</ul>
+    					</div>
+							
+						<input type="hidden" id="pictures" name="pictures">
 					</td>
 				</tr>
                 <tr>
@@ -103,14 +104,213 @@
         </form>
     </div>
     <% 
-    	List<String> orders = StringParser.splitString(mealkitvo.getOrders()); 
-	    String pictures = mealkitvo.getPictures();
-	    String[] pictureArray = pictures.split(",");
+    	List<String> orders = StringParser.splitString(mealkitvo.getOrders());
+	    List<String> pictures = StringParser.splitString(mealkitvo.getPictures());
     %>
    <script type="text/javascript">
+   	let originSelectedFileNames = [];
    	let selectedFiles = [];
    	let selectedRealFiles = [];
 
+	initialize();		
+	
+	function initialize() {
+		<%
+		for (int i = 0; i < orders.size(); i++) {
+			%>
+			var newOrderHtml = 
+	            '<p class="added-orders">' +
+				'<span class="added-order"><%= orders.get(i) %></span>' + 
+	            '<button type="button" class="remove-orders">삭제</button>' +
+	            '</p>';
+	            
+            $(".orders-container").append(newOrderHtml);
+			<%
+		}
+		%>
+		
+		let $li;
+		let $img;
+		
+		<%
+		for (int i = 0; i < pictures.size(); i++) {
+			String fileName = pictures.get(i);
+			%>
+			originSelectedFileNames.push('<%= fileName %>');
+			
+			$li = $('<li>');
+			$img = $('<img>', {
+				class: 'review-origin-preview-image',
+				src: '<%= contextPath %>/images/mealkit/thumbnails/<%= mealkitvo.getNo() %>/<%= id %>/<%= fileName %>',
+				css: {
+					cursor: 'pointer'
+				}
+			});
+
+			$img.on('click', function() {
+			    $(this).parent().remove();
+			    removeOriginFileName('<%= fileName %>');
+			});
+
+			$li.append($img);
+			$('#imagePreview').append($li);
+			<%
+		}
+		%>
+	}
+	
+	function removeOriginFileName(fileName) {
+		for (let i = 0; i < originSelectedFiles.length; i++) {
+			if (originSelectedFileNames[i] == fileName) {
+				originSelectedFileNames.splice(i, 1);
+				break;
+			}
+		}
+	}
+	
+	// 선택한 파일 제거
+	function removeSelectedFile(fileIdentifier) {
+		for (let i = 0; i < selectedFiles.length; i++) {
+			if (selectedFiles[i] == fileIdentifier) {
+				selectedFiles.splice(i, 1);
+				selectedRealFiles.splice(i, 1);
+				break;
+			}
+		}
+	}
+	
+	function setPicturesString() {
+		let strings = [];
+
+		selectedFiles.forEach(fileIdentifier => {
+			// fileIdentifier는 "파일이름-파일크기" 형식
+			let fileName = fileIdentifier.split('-')[0]; // 파일 이름 부분만 추출
+			strings.push(fileName);
+		});
+
+		let pictures = combineStrings(strings);
+
+		document.getElementsByName('pictures')[0].value = pictures;
+	}
+	
+	function handleFileSelect(files) {
+		const imagePreview = document.getElementById('imagePreview');
+
+		Array.from(files).forEach(file => {
+			if (file.type.startsWith('image/')) {
+				let fileIdentifier = file.name + '-' + file.size;
+				
+				if (!selectedFiles.includes(fileIdentifier)) {
+					selectedFiles.push(fileIdentifier);
+					selectedRealFiles.push(file);
+		
+					const reader = new FileReader();
+		
+					reader.readAsDataURL(file);
+		
+					reader.onload = function(e) {
+						const li = document.createElement('li');
+						const img = document.createElement('img');
+						img.src = e.target.result;
+		
+						img.dataset.filename = file.name;
+						img.classList.add('preview_image');
+		
+						img.addEventListener('click', function() {
+							imagePreview.removeChild(img.parentElement);
+							removeSelectedFile(fileIdentifier);
+							document.getElementById('pictureFiles').value = '';
+						});
+		
+						img.style.cursor = 'pointer';
+						
+						li.appendChild(img);
+						imagePreview.appendChild(li);
+					}				
+				} 
+			}
+		});
+
+		document.getElementById('pictureFiles').value = '';
+	}
+
+	// 전송버튼 
+	function onSubmit(e, contextPath) {
+		e.preventDefault();
+	
+		setOrdersString();
+		setPicturesString();
+	
+		const formData = new FormData();
+		formData.append('no', $("input[name='no']").val());
+		formData.append('id', $("input[name='id']").val());
+		formData.append('title', $("input[name='title']").val());
+		formData.append('pictures', $("#pictures").val());
+		formData.append('origin_pictures', $("#origin_pictures").val());
+		formData.append('origin_selected_pictures', combineStrings(originSelectedFileNames));
+		formData.append('category', $("select[name='category']").val());
+		formData.append('contents', $("textarea[name='contents']").val());
+		formData.append('price', $("input[name='price']").val());
+		formData.append('stock', $("input[name='stock']").val());
+		formData.append('origin', $("input[name='origin']").val());
+		formData.append('orders', $("#orders").val());
+	
+		selectedRealFiles.forEach((file, index) => {
+			formData.append('file' + index, file);
+		});
+	
+		$.ajax({
+			url: "<%=contextPath%>/Mealkit/update.pro",
+			type: "POST",
+			data: formData,
+			processData: false,
+			contentType: false,
+			success: function(response) {
+				if (response) {
+					var responseArray = response.split(',');
+			        var no = responseArray[0];
+			        var nickName = responseArray[1];
+					alert("글 작성이 성공적으로 완료되었습니다.");
+					location.href = "<%=contextPath%>/Mealkit/info?no=" + no + "&nickName=" + nickName;
+				} else {
+					alert("글 작성에 실패했습니다. 다시 시도해주세요.");
+				}
+			},
+			error: function() {
+				alert("서버 요청 중 에러가 발생했습니다.");
+			}
+		});
+	}
+	
+	// 받은 조리 순서를 하나의 배열로 만드는 함수 
+	function setOrdersString() {
+
+		let orders = $(".added-order");
+		let ordersString = [];
+				
+		orders.each(function(index, element) {
+			ordersString.push($(element).text());
+		});
+			
+		let combinedOrderString = combineStrings(ordersString);
+		
+		document.getElementsByName('orders')[0].value = combinedOrderString;
+	}
+				
+	// 문자열을 합치는 함수
+	function combineStrings(strings) {
+		
+		let result = strings.map(str => {
+	        const length = str.length;
+	        // 길이를 4자리로 포맷하고 0으로 패딩
+	        const lengthStr = String(length).padStart(4, '0');
+	        return lengthStr + str; // 길이와 문자열을 합침
+	    }).join(''); // 모든 요소를 하나의 문자열로 결합
+		
+		console.log("result : " + result);
+		return result;
+	}
+   	
     $(function() {
     	$(".write").click(function(event) {
     		event.preventDefault();
@@ -156,192 +356,6 @@
     	});
     });
 
-	// 전송버튼 
-	function onSubmit(e, contextPath) {
-		e.preventDefault();
-	
-		setOrdersString();
-		if(!$("#pictures").val()){
-			setPicturesString();
-		}
-	
-		const formData = new FormData();
-		formData.append('no', $("input[name='no']").val());
-		formData.append('id', $("input[name='id']").val());
-		formData.append('title', $("input[name='title']").val());
-		formData.append('pictures', $("#pictures").val());
-		formData.append('category', $("select[name='category']").val());
-		formData.append('contents', $("textarea[name='contents']").val());
-		formData.append('price', $("input[name='price']").val());
-		formData.append('stock', $("input[name='stock']").val());
-		formData.append('origin', $("input[name='origin']").val());
-		formData.append('orders', $("#orders").val());
-	
-		selectedRealFiles.forEach((file, index) => {
-			formData.append('file' + index, file);
-		});
-	
-		$.ajax({
-			url: "<%=contextPath%>/Mealkit/update.pro",
-			type: "POST",
-			data: formData,
-			processData: false,
-			contentType: false,
-			success: function(response) {
-				if (response > 0) {
-					alert("글 작성이 성공적으로 완료되었습니다.");
-					location.href = "<%=contextPath%>/Mealkit/info?no=" + response;
-				} else {
-					alert("글 작성에 실패했습니다. 다시 시도해주세요.");
-				}
-			},
-			error: function() {
-				alert("서버 요청 중 에러가 발생했습니다.");
-			}
-		});
-	}
-	
-	// 받은 조리 순서를 하나의 배열로 만드는 함수 
-	function setOrdersString() {
-
-		let orders = $(".added-order");
-		let ordersString = [];
-				
-		orders.each(function(index, element) {
-			ordersString.push($(element).text());
-		});
-			
-		let combinedOrderString = combineStrings(ordersString);
-		
-		document.getElementsByName('orders')[0].value = combinedOrderString;
-	}
-				
-	// 문자열을 합치는 함수
-	function combineStrings(strings) {
-		
-		let result = strings.map(str => {
-	        const length = str.length;
-	        // 길이를 4자리로 포맷하고 0으로 패딩
-	        const lengthStr = String(length).padStart(4, '0');
-	        return lengthStr + str; // 길이와 문자열을 합침
-	    }).join(''); // 모든 요소를 하나의 문자열로 결합
-		
-		console.log("result : " + result);
-		return result;
-	}
-	
-	initialize();		
-	
-	function initialize() {
-		<%
-		for (int i = 0; i < orders.size(); i++) {
-			%>
-			var newOrderHtml = 
-	            '<p class="added-orders">' +
-				'<span class="added-order"><%= orders.get(i) %></span>' + 
-	            '<button type="button" class="remove-orders">삭제</button>' +
-	            '</p>';
-	            
-            $(".orders-container").append(newOrderHtml);
-			<%
-		}
-		%>
-		
-	}
-	
-	// 사진 관련 
-	function triggerFileInput() {
-		if (selectedFiles.length >= 5) {
-			alert("사진은 최대 5장까지 추가할 수 있습니다.");
-			return;
-		}
-		document.getElementById('pictureFiles').click();
-	}
-	
-	function handleFileSelect(files) {
-		const imagePreview = document.getElementById('imagePreview');
-	
-		Array.from(files).forEach(file => {
-			if (file.type.startsWith('image/')) {
-				let fileIdentifier = file.name + '-' + file.size;
-	
-				if (!selectedFiles.includes(fileIdentifier)) {
-					if (selectedFiles.length >= 5) {
-						alert("사진은 최대 5장까지 추가할 수 있습니다.");
-						return;
-					}
-	
-					selectedFiles.push(fileIdentifier);
-					selectedRealFiles.push(file);
-	
-					const reader = new FileReader();
-	
-					reader.readAsDataURL(file);
-	
-					reader.onload = function(e) {
-						const img = document.createElement('img');
-						img.src = e.target.result;
-	
-						img.dataset.filename = file.name;
-						img.classList.add('preview_image');
-	
-						img.addEventListener('click', function() {
-							imagePreview.removeChild(img);
-							removeSelectedFile(fileIdentifier);
-							document.getElementById('pictureFiles').value = '';
-						});
-	
-						img.style.cursor = 'pointer';
-	
-						imagePreview.appendChild(img);
-					}
-				}
-			}
-		});
-	
-		document.getElementById('pictureFiles').value = '';
-	}
-	
-	function clearInputValue() {
-        // 'pictures' input의 value 값을 빈 문자열로 설정
-        document.getElementById('pictures').value = "";
-    }
-	
-	// 선택한 파일 제거
-	function removeSelectedFile(fileIdentifier) {
-		for (let i = 0; i < selectedFiles.length; i++) {
-			if (selectedFiles[i] == fileIdentifier) {
-				selectedFiles.splice(i, 1);
-				selectedRealFiles.splice(i, 1);
-				break;
-			}
-		}
-	}
-	
-	function removeSelectedFile(fileIdentifier) {
-		//selectedFiles = selectedFiles.filter(item => item !== fileIdentifier);
-		for (let i = 0; i < selectedFiles.length; i++) {
-			if (selectedFiles[i] == fileIdentifier) {
-				selectedFiles.splice(i, 1);
-				selectedRealFiles.splice(i, 1);
-				break;
-			}
-		}
-	}
-	
-	function setPicturesString() {
-		let strings = [];
-	
-		selectedFiles.forEach(fileIdentifier => {
-			// fileIdentifier는 "파일이름-파일크기" 형식
-			let fileName = fileIdentifier.split('-')[0]; // 파일 이름 부분만 추출
-			strings.push(fileName);
-		});
-	
-		let pictures = combineStrings(strings);
-	
-		document.getElementsByName('pictures')[0].value = pictures;
-	}
     </script>
 </body>
 </html>

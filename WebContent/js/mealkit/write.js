@@ -70,22 +70,24 @@ function onSubmit(e, contextPath) {
 	$.ajax({
 		url: contextPath + "/Mealkit/write.pro",
 		type: "POST",
+		async: true,
 		data: formData,
-		dataType: "json",
 		processData: false,
 		contentType: false,
 		success: function(response) {
-			console.log("서버 응답:", response);
-		       if (response.no > 0) {
-		           alert("글 작성이 성공적으로 완료되었습니다.");
-		           location.href = contextPath + "/Mealkit/info?no=" + response.no + "&bytePictures=" + encodeURIComponent(response.bytePictures);
-		       } else {
-				alert(response.error);
-				// alert("글 작성에 실패했습니다. 다시 시도해주세요.");
-			}
+		       if (response) {
+					var responseArray = response.split(',');
+			        var no = responseArray[0];
+			        var nickName = responseArray[1];
+					alert("글 작성이 성공적으로 완료되었습니다.");
+					location.href = contextPath + "/Mealkit/info?no=" + no + "&nickName=" + nickName;
+		       	} else {
+					alert("글 작성에 실패했습니다. 다시 시도해주세요.");
+				}
 		},
-		error: function() {
-			alert("서버 요청 중 에러가 발생했습니다.");
+		error: function(xhr, status, error) {
+			console.error("Ajax Error:", status, error);
+			alert("서버와의 통신 중 오류가 발생했습니다.");
 		}
 	});
 }
