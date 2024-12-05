@@ -106,7 +106,7 @@
 						if (nowBlock > 0) {
 							%>
 							<a href="<%= contextPath %>/Community/list?nowBlock=<%= nowBlock - 1 %>&nowPage=<%= (nowBlock - 1) * pagePerBlock %>">
-								이전
+								<
 							</a>
 							<%
 						}
@@ -125,7 +125,7 @@
 						if (nowBlock + 1 < totalBlock) {
 							%>
 							<a href="<%= contextPath %>/Community/list?nowBlock=<%= nowBlock + 1 %>&nowPage=<%= (nowBlock + 1) * pagePerBlock %>">
-								다음
+								>
 							</a>
 							<%
 						}

@@ -72,6 +72,8 @@ public class DBConnector {
 					statement.setFloat(i + 1, (float) params[i]);
 				else if (params[i] instanceof Timestamp)
 					statement.setTimestamp(i + 1, (Timestamp) params[i]);
+				else if (params[i] instanceof Double)
+					statement.setDouble(i + 1, (Double) params[i]);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

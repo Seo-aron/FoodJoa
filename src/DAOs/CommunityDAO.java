@@ -146,39 +146,51 @@ public class CommunityDAO {
 		
 		return result;
 	}
-
-	public ArrayList<CommunityVO> communityList(String key, String word) {
+	
+	public ArrayList<HashMap<String, Object>> communityList(String key, String word) {
 
 		String sql = null;
 		
-		ArrayList<CommunityVO> list = new ArrayList<CommunityVO>();
+		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
 		
 		if(!word.equals("")) {
 			
 			if(key.equals("titleContent")) {
 				
-				sql = "select * from community"
-					+ " where title like '%"+word+"%' "
-					+ " OR contents like '%"+word+"%' "
-					+ " order by no asc";
+				sql = "SELECT c.*, m.nickname "
+						+ "FROM community c "
+						+ "JOIN member m "
+						+ "ON c.id = m.id "
+						+ "where title like '%" + word + "%' "
+						+ "OR contents like '%" + word + "%' "
+						+ "ORDER BY post_date desc";
 				
 			}else {
-				sql = "select * from community"
-					+ " where id like '%"+word+"%' "
-					+ " order by no asc";
+				sql = "SELECT c.*, m.nickname "
+					+ "FROM community c "
+					+ "JOIN member m "
+					+ "ON c.id = m.id "
+					+ "WHERE nickname like '%"+word+"%' "
+					+ "ORDER BY post_date desc";
 			}
 		
 		}else {
 			
-			sql = "select * from community"
-				+ " order by no asc";
+			sql = "SELECT c.*, m.nickname "
+				+ "FROM community c "
+				+ "JOIN member m "
+				+ "ON c.id = m.id "
+				+ "ORDER BY post_date desc";
 		}
 		
 		ResultSet resultSet = dbConnector.executeQuery(sql);
 		
 		try {
 			while(resultSet.next()) {
-				CommunityVO vo = new CommunityVO(
+				
+				HashMap<String, Object> data = new HashMap<String, Object>();
+				
+				CommunityVO communityVO = new CommunityVO(
 						resultSet.getInt("no"),
 						resultSet.getString("id"),
 						resultSet.getString("title"),
@@ -186,7 +198,13 @@ public class CommunityDAO {
 						resultSet.getInt("views"),
 						resultSet.getTimestamp("post_date"));
 				
-				list.add(vo);
+				MemberVO memberVO = new MemberVO();
+						memberVO.setNickname("nickname");
+					
+				data.put("community", communityVO);
+				data.put("member", memberVO);
+				
+				list.add(data);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
