@@ -176,9 +176,25 @@
 .paging-area li {
 	display: inline-block;
 	margin: 0 5px;
-	border: 1px solid black;
 	list-style-type: none;
 	width: 32px;
 	height: 32px;
 	line-height: 32px;
+}
+
+.paging-area li a {
+	display: inline-block;
+	border: 1px solid #BF817E;
+	width: 32px;
+	height: 32px;
+	line-height: 32px;
+	color: #BF817E;
+	border-radius: 5px;
+	background: white;
+}
+
+.paging-area li a:hover {
+	border: 1px solid white;
+	color: white;
+	background: #BF817E;
 }

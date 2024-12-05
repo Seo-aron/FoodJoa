@@ -667,10 +667,14 @@ public class RecipeDAO {
 		
 		ArrayList<HashMap<String, Object>> recipes = new ArrayList<HashMap<String,Object>>(); 
 		
-		String sql = "SELECT r.*, COALESCE(avg_rating.average_rating, 0) AS average_rating, m.nickname AS nickname "
+		String sql = "SELECT "
+				+ "r.*, "
+				+ "COALESCE(avg_rating.average_rating, 0) AS average_rating, "
+				+ "COALESCE(avg_rating.review_count, 0) AS review_count, "
+				+ "m.nickname AS nickname "
 				+ "FROM recipe r "
 				+ "LEFT JOIN ( "
-				+ "SELECT recipe_no, AVG(rating) AS average_rating "
+				+ "SELECT recipe_no, AVG(rating) AS average_rating, COUNT(recipe_no) AS review_count "
 				+ "FROM recipe_review "
 				+ "GROUP BY recipe_no "
 				+ ") avg_rating ON r.no = avg_rating.recipe_no "
@@ -702,12 +706,14 @@ public class RecipeDAO {
 						resultSet.getString("orders"),
 						resultSet.getTimestamp("post_date"));
 				
-				double avgReview = resultSet.getDouble("average_rating");
+				float avgReview = resultSet.getFloat("average_rating");
+				int reviewCount = resultSet.getInt("review_count");
 				String nickname = resultSet.getString("nickname");
 				
 				HashMap<String, Object> recipeHashMap = new HashMap<String, Object>();
 				recipeHashMap.put("recipe", recipe);
 				recipeHashMap.put("average", avgReview);
+				recipeHashMap.put("reviewCount", reviewCount);
 				recipeHashMap.put("nickname", nickname);
 				
 				recipes.add(recipeHashMap);
