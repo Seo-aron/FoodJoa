@@ -370,15 +370,24 @@ public class MemberService {
 	}
 
 	public ArrayList<HashMap<String, Object>> getSendedMealkit(HttpServletRequest request) {
-		System.out.println("Service왔음");
-		HttpSession session = request.getSession();
-		String id = (String) session.getAttribute("userId");
-		
-		String delivered = (String) request.getParameter("deliverd");
-		
-		return memberDAO.selectSendedMealkit(id,  "0"); //0 1 2
-	}
+	    HttpSession session = request.getSession();
+	    String id = (String) session.getAttribute("userId");
 
+	    // delivered 값을 요청 파라미터에서 가져오기
+	    int delivered = 0; // 기본값
+	    if (request.getParameter("delivered") != null) {
+	        try {
+	            delivered = Integer.parseInt(request.getParameter("delivered"));
+	        } catch (NumberFormatException e) {
+	            System.out.println("Invalid delivered value: " + request.getParameter("delivered"));
+	        }
+	    }
+
+	    // DAO 호출
+	    ArrayList<HashMap<String, Object>> sendedMealkitList = memberDAO.selectSendedMealkit(id, delivered);
+
+	    return sendedMealkitList;
+	}
     // 최근 본 목록을 조회하는 메소드
 	public HashMap<String, Object> getRecentViews(String userId) {
 		
@@ -443,15 +452,10 @@ public class MemberService {
     	return mealkitDAO.selectCountOrderDelivered((String) request.getSession().getAttribute("userId"));
     }
     
-    public ArrayList<Integer> getCountDelivered(HttpServletRequest request) {
-    	return mealkitDAO.selectCountDelivered((String) request.getSession().getAttribute("userId"));
+    public ArrayList<Integer> getCountOrderSended(HttpServletRequest request) {
+    	return mealkitDAO.selectCountOrderSended((String) request.getSession().getAttribute("userId"));
     }
     
-    //public int updateDelivery(int delivered, int refund){
-    	//return MealkitDAO.updateDelivery()
-    //}
-
-
 	public int deleteWishMealkit(String userId, String mealkitNo) {
 		  // DAO에서 삭제 메소드를 호출하고 결과를 받음
         int result = mealkitDAO.deleteWishMealkit(userId, mealkitNo);
@@ -480,8 +484,6 @@ public class MemberService {
         }
 	}
 
-
-
 	public int updateCartList(String userId, String mealkitNo, int quantity) {
 		// DAO 객체를 통해 수량을 업데이트
 	    int result = mealkitDAO.updateCartList(userId, mealkitNo, quantity);
@@ -489,8 +491,6 @@ public class MemberService {
 	    // 결과에 따라 1 또는 0을 반환 (성공/실패)
 	    return result;
 	}
-
-
 
 	public boolean updateOrderList(String userId, int mealkitNo, int quantity, String fullAddress) {
 		 // 주문 저장 메소드 호출
@@ -500,10 +500,14 @@ public class MemberService {
         return result;  // 주문 성공 시 true, 실패 시 false 반환
 	}
 
+	public int updateOrder(int orderNo, int deliveredStatus, int refundStatus) {
+	    return memberDAO.updateOrderStatus(deliveredStatus, refundStatus, orderNo);
+	}
 
-
-	
-
+	public List<HashMap<String, Object>> getOrderedMealkitList(String userId) { 
+		 List<HashMap<String, Object>> orderedMealkitList = new ArrayList<>();
+		 return orderedMealkitList; 
+		}
 
 }
 

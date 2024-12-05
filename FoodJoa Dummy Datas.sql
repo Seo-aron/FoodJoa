@@ -55,8 +55,7 @@ values('admin', 1, CURRENT_TIMESTAMP),
 ('admin', 3, CURRENT_TIMESTAMP),
 ('admin', 4, CURRENT_TIMESTAMP),
 ('admin', 5, CURRENT_TIMESTAMP);
-
-
+select * from mealkit_order;
 
 -- mealkit
 INSERT INTO mealkit (id, title, contents, category, price, stock, pictures, orders, origin, views, soldout, post_date) VALUES
@@ -91,8 +90,6 @@ INSERT INTO mealkit_wishlist (id, mealkit_no, choice_date) VALUES
 ('review4', 4, CURRENT_TIMESTAMP),
 ('review1', 5, CURRENT_TIMESTAMP);
 
-
-
 -- community
 insert into community(id, title, contents, views, post_date)
 values
@@ -114,5 +111,8 @@ values
 insert into mealkit_cart(id, mealkit_no, quantity, choice_date)
 values
 ('oTcuaqH712AhGERfeDDh7sKhFyWoPrKcNhIujhF73vk', '1', '3', current_time()),
-('oTcuaqH712AhGERfeDDh7sKhFyWoPrKcNhIujhF73vk', '2','2', current_time());
-('oTcuaqH712AhGERfeDDh7sKhFyWoPrKcNhIujhF73vk', '1', '3', current_time());
+('oTcuaqH712AhGERfeDDh7sKhFyWoPrKcNhIujhF73vk', '2', '2', current_time()),
+('oTcuaqH712AhGERfeDDh7sKhFyWoPrKcNhIujhF73vk', '1', '3', current_time()),
+('WR1ZpRIM2ktSXjEzf0nI5NMU9JU_ASY6UXjh6ROLA4o', '2', '3', current_time()),
+('WR1ZpRIM2ktSXjEzf0nI5NMU9JU_ASY6UXjh6ROLA4o', '3', '1', current_time());
+

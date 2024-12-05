@@ -1,41 +1,21 @@
 SELECT 
-r.title, r.contents, r.category, r.thumbnail, 
-m.nickname, m.profile, 
-COALESCE(average_table.average_rating, 0) AS average_rating
-FROM recent_view v 
-LEFT JOIN recipe r ON v.item_no = r.no 
-LEFT JOIN member m ON m.id = r.id 
-LEFT JOIN (
-SELECT recipe_no, AVG(rating) AS average_rating
-FROM recipe_review
-GROUP BY recipe_no
-) average_table ON average_table.recipe_no = v.item_no 
-WHERE v.id = 'tQi32Qj0iONPLRZ16-5sX4-Gq_p8Jg_T33r-HdtLEFE' AND v.type=0
-ORDER BY v.view_date DESC LIMIT 20;
+k.title, k.contents, k.category, k.price, k.stock, k.pictures, 
+o.no AS order_no, o.address, o.quantity, o.delivered, o.refund, 
+m.nickname, m.profile 
+FROM mealkit k 
+JOIN mealkit_order o 
+ON k.no=o.mealkit_no 
+JOIN member m 
+ON o.id=m.id 
+WHERE k.id='WR1ZpRIM2ktSXjEzf0nI5NMU9JU_ASY6UXjh6ROLA4o'
+ORDER BY o.post_date DESC;
 
 
+SELECT COUNT(*) 
+FROM mealkit k 
+JOIN mealkit_order o
+ON k.no=o.mealkit_no
+WHERE k.id='WR1ZpRIM2ktSXjEzf0nI5NMU9JU_ASY6UXjh6ROLA4o' AND o.delivered=0;
 
-SELECT 
-k.title, k.contents, k.category, k.price, k.pictures, 
-m.nickname, m.profile, 
-COALESCE(average_table.average_rating, 0) AS average_rating
-FROM recent_view v 
-LEFT JOIN mealkit k ON v.item_no = k.no 
-LEFT JOIN member m ON m.id = k.id 
-LEFT JOIN (
-SELECT mealkit_no, AVG(rating) AS average_rating
-FROM mealkit_review 
-GROUP BY mealkit_no
-) average_table ON average_table.mealkit_no = v.item_no 
-WHERE v.id = 'tQi32Qj0iONPLRZ16-5sX4-Gq_p8Jg_T33r-HdtLEFE' AND v.type=1
-ORDER BY v.view_date DESC LIMIT 20;
-
-select * from member;
-
-select * from mealkit;
-
-select * from recipe_review;
-
-select * from mealkit_review;
-
-select * from recent_view;
+SELECT * FROM mealkit_order;
+SELECT * FROM mealkit;
