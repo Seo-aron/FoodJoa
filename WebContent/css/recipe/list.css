@@ -167,6 +167,10 @@
 	text-align: center;
 }
 
+.paging-area>div {
+	margin-top: 20px;
+}
+
 .paging-area ul {
 	display: inline-block;
 	padding: 0;

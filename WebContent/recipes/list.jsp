@@ -190,49 +190,51 @@
 			%>
 			<tr>
 				<td class="paging-area" colspan="4">
-					<ul>
-					<%
-					if (totalRecipeCount != 0) {
-						if (currentBlock > 0) {
-							%>
-							<li>
-								<a href="<%= contextPath %>/Recipe/list?category=<%= category %>&
-									currentBlock=<%= currentBlock - 1 %>&currentPage=<%= (currentBlock - 1) * pageCountPerBlock %>">
-									◀
-								</a>
-							</li>
-							<%
-						}
-						
-						for (int i = 0; i < pageCountPerBlock; i++) {
-							int pageNumber = (currentBlock * pageCountPerBlock) + i;
+					<div>
+						<ul>
+						<%
+						if (totalRecipeCount != 0) {
+							if (currentBlock > 0) {
+								%>
+								<li>
+									<a href="<%= contextPath %>/Recipe/list?category=<%= category %>&
+										currentBlock=<%= currentBlock - 1 %>&currentPage=<%= (currentBlock - 1) * pageCountPerBlock %>">
+										◀
+									</a>
+								</li>
+								<%
+							}
 							
-							%>
-							<li>
-								<a href="<%= contextPath %>/Recipe/list?category=<%= category %>&
-									currentBlock=<%= currentBlock %>&currentPage=<%= pageNumber %>">
-									<%= pageNumber + 1 %>
-								</a>
-							</li>
-							<%
+							for (int i = 0; i < pageCountPerBlock; i++) {
+								int pageNumber = (currentBlock * pageCountPerBlock) + i;
+								
+								%>
+								<li>
+									<a href="<%= contextPath %>/Recipe/list?category=<%= category %>&
+										currentBlock=<%= currentBlock %>&currentPage=<%= pageNumber %>">
+										<%= pageNumber + 1 %>
+									</a>
+								</li>
+								<%
+								
+								if (pageNumber + 1 == totalPageCount)
+									break;
+							}
 							
-							if (pageNumber + 1 == totalPageCount)
-								break;
+							if (currentBlock + 1 < totalBlockCount) {
+								%>
+								<li>
+									<a href="<%= contextPath %>/Recipe/list?category=<%= category %>&
+										currentBlock=<%= currentBlock + 1 %>&currentPage=<%= (currentBlock + 1) * pageCountPerBlock %>">
+										▶
+									</a>
+								</li>
+								<%
+							}
 						}
-						
-						if (currentBlock + 1 < totalBlockCount) {
-							%>
-							<li>
-								<a href="<%= contextPath %>/Recipe/list?category=<%= category %>&
-									currentBlock=<%= currentBlock + 1 %>&currentPage=<%= (currentBlock + 1) * pageCountPerBlock %>">
-									▶
-								</a>
-							</li>
-							<%
-						}
-					}
-					%>
-					</ul>
+						%>
+						</ul>
+					</div>
 				</td>
 			</tr>
 		</table>
