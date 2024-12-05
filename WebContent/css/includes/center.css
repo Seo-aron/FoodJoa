@@ -179,3 +179,7 @@ a:link, a:visited, a:hover, a:active {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
+
+.notice-table, .free-table, .share-table {
+	border-spacing: 0px 15px;
+}
