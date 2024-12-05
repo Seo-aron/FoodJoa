@@ -44,13 +44,19 @@
                     <td><input type="text" name="title" value="${mealkit.title }" required></td>
                 </tr>
                 <tr>
-				    <th>사진 추가</th>
+				    <th>
+				    	사진 추가
+				    	 <small class="notice-text">
+				    	 ※ 사진은 최대 5장까지<br>업로드 가능합니다.<br>※ 해당 사진을 클릭하면<br>삭제됩니다.
+				    	 </small>
+				    </th>
 				    <td>
 						<div class="preview-area">
 	    					<ul id="imagePreview">
 	    						<li>
 	    							<input type="file" id="pictureFiles" name="pictureFiles" 
 										accept=".jpg,.jpeg,.png" multiple onchange="handleFileSelect(this.files)">
+									<button type="button" id="addFileBtn" onclick="triggerFileInput()">사진 추가</button>
 	    						</li>
 	    					</ul>
     					</div>
@@ -73,19 +79,19 @@
                 </tr>
                 <tr>
                     <th>간단 소개글</th>
-                    <td><textarea name="contents" rows="4" required>${mealkit.contents }</textarea></td>
+                    <td><textarea name="contents" class="contents" rows="4" required>${mealkit.contents }</textarea></td>
                 </tr>
                 <tr>
 					<th>가격</th>
-				    <td><input type="text" name="price" value="${mealkit.price }" quired min="0">원</td>
+				    <td><input type="text" name="price" class="price" value="${mealkit.price }" quired min="0">원</td>
 				</tr>
                 <tr>
                     <th>재고 수량</th>
-                    <td><input type="number" name="stock" value="${mealkit.stock }" required min="0">개</td>
+                    <td><input type="number" name="stock" class="stock" value="${mealkit.stock }" required min="0">개</td>
                 </tr>
                 <tr>
-					<td colspan="2">
-						<p>간단 조리 순서 작성</p>
+					<th>간단 조리 순서</th>
+					<td>
 						<div class="orders-container"></div>
 						<p><input type="button" class="add-orders" value="순서 추가하기"></p>
 						<input type="hidden" id="orders" name="orders">
@@ -93,7 +99,7 @@
 				</tr>
                 <tr>
                     <th>원산지 표기</th>
-                    <td><input type="text" name="origin" value="${mealkit.origin }" required></td>
+                    <td><input type="text" name="origin" class="origin" value="${mealkit.origin }" required></td>
                 </tr>
                 <tr>
                 <td colspan="2">
@@ -160,7 +166,7 @@
 	}
 	
 	function removeOriginFileName(fileName) {
-		for (let i = 0; i < originSelectedFiles.length; i++) {
+		for (let i = 0; i < originSelectedFileNames.length; i++) {
 			if (originSelectedFileNames[i] == fileName) {
 				originSelectedFileNames.splice(i, 1);
 				break;
@@ -232,6 +238,14 @@
 		});
 
 		document.getElementById('pictureFiles').value = '';
+	}
+	
+	function triggerFileInput() {
+		if (selectedFiles.length >= 5) {
+			alert("사진은 최대 5장까지 추가할 수 있습니다.");
+			return;
+		}
+		document.getElementById('pictureFiles').click();
 	}
 
 	// 전송버튼 

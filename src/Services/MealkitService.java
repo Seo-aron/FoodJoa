@@ -238,8 +238,6 @@ public class MealkitService {
 	    String orders = multipartRequest.getParameter("orders");
 	    int stock = Integer.parseInt(multipartRequest.getParameter("stock"));
 	    
-	    System.out.println("pictures : " + pictures);
-	    
 	    MealkitVO vo = new MealkitVO();
 	    vo.setNo(no);
 	    vo.setId(id);

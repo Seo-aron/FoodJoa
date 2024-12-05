@@ -5,14 +5,8 @@ body {
 	margin: 20px;
 }
 
-#container {
-	width: 1000px;
-	margin: auto;
-}
-
-.write-form{
-	height: 800px;
-	border: solid 1px #BF917E;
+li {
+    list-style-type: none;
 }
 
 table {
@@ -35,6 +29,21 @@ th{
 	height: 55px;
 	font-size: 22px;
 	font-weight: bold;
+}
+
+textarea{
+	resize: none;
+    overflow: auto;
+}
+
+#container {
+	width: 1000px;
+	margin: auto;
+}
+
+.write-form{
+	height: 800px;
+	border: solid 1px #BF917E;
 }
 
 input[type="text"], textarea {
@@ -68,6 +77,12 @@ input[type="file"] {
 }
 
 .preview_image{
+	width: 250px;
+	height: 200px;
+	padding-right: 20px;
+}
+
+.review-origin-preview-image{
 	width: 250px;
 	height: 200px;
 	padding-right: 20px;
@@ -111,6 +126,15 @@ button:hover {
 	height: 28px;
 	border: 1px solid #ccc;
     border-radius: 4px;
+}
+
+.added-orders{
+	/* p 태그 */
+	margin-bottom: 7px;
+}
+
+.remove-orders{
+	margin-left: 5px;
 }
 
 .add-orders{
