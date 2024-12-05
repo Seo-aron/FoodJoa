@@ -502,15 +502,26 @@ public class MealkitDAO {
 	}
 
 	public ArrayList<HashMap<String, Object>> selectCartList(String userId) {
+		
 		ArrayList<HashMap<String, Object>> cartListInfos = new ArrayList<>();
 		String sql = "SELECT mk.no, mk.id, mk.pictures, mk.title, mk.price, m.nickname AS author_nickname, mc.quantity "
 				+ "FROM mealkit_cart mc " + "JOIN mealkit mk ON mc.mealkit_no = mk.no "
 				+ "JOIN member m ON mk.id = m.id " + "WHERE mc.id = ?";
 
-		try (ResultSet resultSet = dbConnector.executeQuery(sql, userId)) {
-			while (resultSet.next()) {
-				HashMap<String, Object> cartListInfo = new HashMap<>();
+		 try (ResultSet resultSet = dbConnector.executeQuery(sql, userId)) {
+		        if (resultSet == null) {
+		            System.err.println("ResultSet is null");
+		        }
 
+		        while (resultSet != null && resultSet.next()) {
+		        	
+		        	 // 값 출력 (디버깅용)
+		            System.out.println("mealkitNo: " + resultSet.getInt("no"));
+		            System.out.println("mealkitTitle: " + resultSet.getString("title"));
+		            System.out.println("price: " + resultSet.getString("price"));
+		            
+		            HashMap<String, Object> cartListInfo = new HashMap<>();
+			
 				MealkitVO mealkitVO = new MealkitVO();
 				mealkitVO.setNo(resultSet.getInt("no"));
 				mealkitVO.setId(resultSet.getString("id"));
@@ -525,6 +536,7 @@ public class MealkitDAO {
 				cartListInfo.put("nickname", authorNickname);
 				cartListInfo.put("quantity", quantity); // 수량 추가
 				cartListInfos.add(cartListInfo);
+				
 			}
 		} catch (SQLException e) {
 			System.err.println("Error while fetching cart list: " + e.getMessage());
@@ -558,17 +570,20 @@ public class MealkitDAO {
 		return counts;
 	}
 
-	//발송 
-	public ArrayList<Integer> selectCountDelivered(String id) {
+	public ArrayList<Integer> selectCountOrderSended(String id) {
 
 		ArrayList<Integer> counts = new ArrayList<Integer>();
 
 		String sql = "";
 
 		for (int i = 0; i < 3; i++) {
-			sql = "SELECT COUNT(*) " + "FROM mealkit_order o " + "WHERE o.delivered=? AND o.id=?";
+			sql = "SELECT COUNT(*) " + 
+					"FROM mealkit k " + 
+					"JOIN mealkit_order o " + 
+					"ON k.no=o.mealkit_no " + 
+					"WHERE k.id=? AND o.delivered=?";
 
-			ResultSet resultSet = dbConnector.executeQuery(sql, i, id);
+			ResultSet resultSet = dbConnector.executeQuery(sql, id, i);
 
 			try {
 				if (resultSet.next()) {
@@ -690,6 +705,7 @@ public class MealkitDAO {
 		
 		return result;
 	}
+	
 	public int deleteMealkitReview(int no, int mealkitNo) {
 		
 		String sql = "DELETE FROM mealkit_review WHERE mealkit_no = ? AND no = ?";
@@ -784,5 +800,44 @@ public class MealkitDAO {
 		dbConnector.executeUpdate(sql, review.getPictures(), review.getContents(), review.getRating(), review.getNo());
 		
 		dbConnector.release();
+	}
+
+	public int updateCartList(String userId, String mealkitNo, int quantity) {
+
+	    String sql = "SELECT * FROM mealkit_cart WHERE id=? AND mealkit_no=?";
+	    
+	    ResultSet resultSet = dbConnector.executeQuery(sql, userId, Integer.parseInt(mealkitNo));
+
+	    try {
+
+	        if (!resultSet.next()) {
+	            return 0; 
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return 0;
+	    }
+
+
+	    sql = "UPDATE mealkit_cart SET quantity=? WHERE id=? AND mealkit_no=?";
+	    
+	    int result = dbConnector.executeUpdate(sql, quantity, userId, mealkitNo);
+
+	    dbConnector.release(); 
+
+	    return result; 
+	}
+
+	public boolean updateOrder(String userId, int mealkitNo, int quantity, String fullAddress) {
+		 // 주문 정보 삽입
+	    String sql = "INSERT INTO mealkit_order (id, mealkit_no, address, quantity, delivered, refund, post_date) "
+	               + "VALUES (?, ?, ?, ?, 0, 0, NOW())";  // delivered와 refund는 기본값 0으로 설정
+	    int result = dbConnector.executeUpdate(sql, userId, mealkitNo, fullAddress, quantity);
+
+	    // 재고 업데이트
+	    sql = "UPDATE mealkit SET stock = stock - ? WHERE no = ?";
+	    dbConnector.executeUpdate(sql, quantity, mealkitNo);
+
+	    return result == 1;  // 성공적으로 주문이 저장되었으면 true 반환
 	}
 }

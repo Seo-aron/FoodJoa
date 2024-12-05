@@ -348,11 +348,11 @@ public class MealkitService {
 	public ArrayList<HashMap<String, Object>> getMealkitsListById(HttpServletRequest request) {
 		return mealkitDAO.selectMealkitsById((String) request.getSession().getAttribute("userId"));
 	}
-
+	
 	public ArrayList<Integer> getCountDelivered(HttpServletRequest request) {
 	    String userId = (String) request.getSession().getAttribute("userId");
 	    
-	    return mealkitDAO.selectCountDelivered(userId); // DAO 호출
+	    return mealkitDAO.selectCountOrderDelivered(userId); // DAO 호출
 	}
 
 	public void delMealkitReview(HttpServletRequest request, HttpServletResponse response) 
@@ -425,7 +425,6 @@ public class MealkitService {
     	
         for (String fileName : fileNames) {
     		FileIOController.moveFile(srcPath, destinationPath, fileName);
-        }
-        
+        }        
 	}
 }

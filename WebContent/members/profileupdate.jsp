@@ -47,11 +47,11 @@ document.addEventListener('DOMContentLoaded', function () {
             previewContainer.innerHTML = '<span style="color: red;">이미지 파일만 선택 가능합니다.</span>';
         }
     });
-
+    
     // 제출 버튼 유효성 검사
     $(".btn-submit").click(function(event) {
         event.preventDefault();
-
+        
         const name = document.getElementById('name').value.trim();
         const nickname = document.getElementById('nickname').value.trim();
         const phone = document.getElementById('phone').value.trim();
@@ -91,41 +91,43 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 </head>
 <body>
-    <div class="form-container">
-        <h2>정보 수정</h2>
-        <!-- JavaScript로 미리보기 기능 구현 -->
-        <form action="<%=contextPath%>/Member/updatePro.me" method="post" enctype="multipart/form-data" id="updateForm" >
-           <input type="hidden" id="origin-profile" name="origin-profile" value="<%=vo.getProfile()%>">
+	<div class="form-container">
+		<h2>정보 수정</h2>
+		<!-- JavaScript로 미리보기 기능 구현 -->
+		<form action="<%=contextPath%>/Member/updatePro.me" method="post"
+			enctype="multipart/form-data" id="updateForm">
+			<input type="hidden" id="origin-profile" name="origin-profile"
+				value="<%=vo.getProfile()%>"> <br> <br>
+				
+			<!-- 파일 선택 버튼 -->
+			<input type="file" accept=".jpg, .jpeg, .png" class="profile"
+				id="fileInput" name="profile">
+			<!-- 미리보기 컨테이너 -->
+			<div class="preview-container" id="previewContainer"></div>
 
-            <br>
-            <br>
-            <!-- 이미지 미리보기가 표시될 컨테이너 -->
-            <div class="preview-container" id="previewContainer">
-            </div>
-
-            <!-- 파일 선택 버튼 -->
-            <input type="file" accept=".jpg, .jpeg, .png" class="profile" id="fileInput" name="profile">
-            <div class="form-group">
-                <label for="name">이름</label> 
-                <input type="text" id="name" name="name" value="${vo.name}" placeholder="2자 이상 10자 미만으로 입력해주세요" required>
-            </div>
-            <div class="form-group">
-                <label for="nickname">닉네임</label> 
-                <input type="text" id="nickname" name="nickname" value="${vo.nickname}" placeholder="2자 이상 10자 미만으로 입력해주세요" required>
-            </div>
-            <div class="form-group">
-                <label for="phone">번호</label> 
-                <input type="text" id="phone" name="phone" value="${vo.phone}" placeholder="-없이 입력해주세요" required>
-            </div>
-            <div class="form-group">
-                <label for="address">주소</label> 
-                <input type="text" id="address" name="address" value="${vo.address}" required>
-            </div>
-            <div class="btn-container">
-                <button type="button" class="btn-submit" id="updateForm()">제출</button>
-                <button type="button" class="btn-cancel">취소</button>
-            </div>
-        </form>
-    </div>
+			<div class="form-group">
+				<label for="name">이름</label> <input type="text" id="name"
+					name="name" value="${vo.name}" placeholder="2자 이상 10자 미만으로 입력해주세요"
+					required>
+			</div>
+			<div class="form-group">
+				<label for="nickname">닉네임</label> <input type="text" id="nickname"
+					name="nickname" value="${vo.nickname}"
+					placeholder="2자 이상 10자 미만으로 입력해주세요" required>
+			</div>
+			<div class="form-group">
+				<label for="phone">번호</label> <input type="text" id="phone"
+					name="phone" value="${vo.phone}" placeholder="-없이 입력해주세요" required>
+			</div>
+			<div class="form-group">
+				<label for="address">주소</label> <input type="text" id="address"
+					name="address" value="${vo.address}" required>
+			</div>
+			<div class="btn-container">
+				<button type="submit" class="btn-submit" id="updateForm()">제출</button>
+				<button type="submit" class="btn-cancel">취소</button>
+			</div>
+		</form>
+	</div>
 </body>
 </html>

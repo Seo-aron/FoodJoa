@@ -65,6 +65,7 @@ values('review1', '1', '0018test_thumbnail.png', '리뷰 내용', FLOOR(RAND() *
     ('review4', '3', '0018test_thumbnail.png', '리뷰 내용', FLOOR(RAND() * 5) + 1, NOW() - INTERVAL FLOOR(RAND() * 60) DAY);
     
 insert into recipe_wishlist(id, recipe_no, choice_date) 
+<<<<<<< HEAD
 values('admin', 1, NOW() - INTERVAL FLOOR(RAND() * 60) DAY),
 ('admin', 2, NOW() - INTERVAL FLOOR(RAND() * 60) DAY),
 ('admin', 3, NOW() - INTERVAL FLOOR(RAND() * 60) DAY),
@@ -72,6 +73,14 @@ values('admin', 1, NOW() - INTERVAL FLOOR(RAND() * 60) DAY),
 ('admin', 5, NOW() - INTERVAL FLOOR(RAND() * 60) DAY);
 
 
+=======
+values('admin', 1, CURRENT_TIMESTAMP),
+('admin', 2, CURRENT_TIMESTAMP),
+('admin', 3, CURRENT_TIMESTAMP),
+('admin', 4, CURRENT_TIMESTAMP),
+('admin', 5, CURRENT_TIMESTAMP);
+select * from mealkit_order;
+>>>>>>> minseok
 
 -- mealkit
 INSERT INTO mealkit (id, title, contents, category, price, stock, pictures, orders, origin, views, soldout, post_date) VALUES
@@ -106,8 +115,6 @@ INSERT INTO mealkit_wishlist (id, mealkit_no, choice_date) VALUES
 ('review4', 4, NOW() - INTERVAL FLOOR(RAND() * 60) DAY),
 ('review1', 5, NOW() - INTERVAL FLOOR(RAND() * 60) DAY);
 
-
-
 -- community
 insert into community(id, title, contents, views, post_date)
 values
@@ -130,6 +137,7 @@ values
 
 insert into community_share(id, thumbnail, title, contents, lat, lng, type, views, post_date)
 values
+<<<<<<< HEAD
 ('geonyongId','test_thumbnail.png', '반찬, 국 등 품앗이 하실분', '직접 식재료를 골라 만드는데. 식재료는 대량으로 해야 싸고, 맛있게 만들려면 이재료 저재료 들어가서 한솥이 되고 소분해서 냉동해도 감당이 안되네요. 나눔 좌표는 아래에 찍어둘게요!', 37.3595704, 127.105399, 0, FLOOR(RAND() * 50), NOW() - INTERVAL FLOOR(RAND() * 60) DAY),
 ('review1','test_thumbnail.png', '직접 만든빵 가져가실 분~', '학생들이 연습용으로 만든 빵이 너무 많이 남아서 좀 나눠드리려구요 나눔 희망하시는 분 여기 위치로 오시면 됩니다', 37.3595704, 127.105399, 0, FLOOR(RAND() * 50), NOW() - INTERVAL FLOOR(RAND() * 60) DAY),
 ('hanaId','test_thumbnail.png', '알타리김치가 집에 너무 많아서 한 통만 나눠드릴게요', '시어머니가 김치를 많이 보내주셨는데 집에서 밥을 잘 해먹지 않고 냉장고 자리도 많이 차지해 나눔하려구요 위치는 여기입니다',37.3595704, 127.105399, 0, FLOOR(RAND() * 50), NOW() - INTERVAL FLOOR(RAND() * 60) DAY),
@@ -154,3 +162,20 @@ values("푸드조아 프로젝트 시작합니다!", "푸드조아 프로젝트 
 	("사람들과 자유롭게 대화 해보세요!", "사람들과 자유롭게 대화 해보세요!", DATE_SUB(NOW(), INTERVAL 2 MONTH)),
 	("음식을 공유하거나, 맛집을 서로 공유해봐요!", "음식을 공유하거나, 맛집을 서로 공유해봐요!", DATE_SUB(NOW(), INTERVAL 1 MONTH)),
 	("FoodJoa에서 여러분을 기다립니다.", "FoodJoa에서 여러분을 기다립니다.", NOW());
+=======
+('admin','test_thumbnail.png', 'seoul', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 0, 3, now()),
+('admin','test_thumbnail.png', 'seoul1', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 1, 3, now()),
+('admin','test_thumbnail.png', 'seoul2', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 1, 3, now()),
+('admin','test_thumbnail.png', 'seoul3', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 1, 3, now()),
+('admin','test_thumbnail.png', 'seoul4', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 0, 3, now());
+
+
+insert into mealkit_cart(id, mealkit_no, quantity, choice_date)
+values
+('oTcuaqH712AhGERfeDDh7sKhFyWoPrKcNhIujhF73vk', '1', '3', current_time()),
+('oTcuaqH712AhGERfeDDh7sKhFyWoPrKcNhIujhF73vk', '2', '2', current_time()),
+('oTcuaqH712AhGERfeDDh7sKhFyWoPrKcNhIujhF73vk', '1', '3', current_time()),
+('WR1ZpRIM2ktSXjEzf0nI5NMU9JU_ASY6UXjh6ROLA4o', '2', '3', current_time()),
+('WR1ZpRIM2ktSXjEzf0nI5NMU9JU_ASY6UXjh6ROLA4o', '3', '1', current_time());
+
+>>>>>>> minseok

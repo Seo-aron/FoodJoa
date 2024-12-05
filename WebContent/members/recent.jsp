@@ -90,9 +90,9 @@ String id = (String) session.getAttribute("userId");
 					<c:if test="${item.recipeVO != null}">
 						<div class="recent-view-item">
 							<a
-								href="${pageContext.request.contextPath}/Recipe/read?no=${item.recipeVO.no}">
+								href="<%= request.getContextPath() %>/Recipe/read?no=${item.recipeVO.no}">
 								<img
-								src="${pageContext.request.contextPath}/images/recipe/thumbnails/${item.recipeVO.no}/${item.recipeVO.thumbnail}"
+								src="<%= request.getContextPath() %>/images/recipe/thumbnails/${item.recipeVO.no}/${item.recipeVO.thumbnail}"
 								alt="${item.recipeVO.title}">
 							</a>
 
@@ -116,9 +116,10 @@ String id = (String) session.getAttribute("userId");
 				<c:forEach var="item" items="${recentMealkits}">
 					<c:if test="${item.mealkitVO != null}">
 						<div class="recent-view-item">
-							<img
-								src="${pageContext.request.contextPath}/images/mealkit/thumbnails/${item.mealkitVO.no}/${item.mealkitVO.id}/${item.mealkitVO.pictures.substring(4)}"
-								alt="${item.mealkitVO.title}">
+							 <a href="<%= request.getContextPath() %>/Mealkit/info?no=${item.mealkitVO.no}">
+                     <img src="<%= request.getContextPath() %>/images/mealkit/thumbnails/${item.mealkitVO.no}/${item.mealkitVO.id}/${item.mealkitVO.pictures.substring(4)}" 
+                             alt="${item.mealkitVO.title}">
+                             </a>
 							<div class="info">
 								<div>
 									<b>${item.mealkitVO.title}</b>

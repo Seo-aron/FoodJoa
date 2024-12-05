@@ -98,8 +98,8 @@
             <div class="wishlist-grid">
                 <c:forEach var="item" items="${recipeWishListInfos}">
                     <div class="wishlist-item">
-						<a href="${pageContext.request.contextPath}/Recipe/read?no=${item.recipeVO.no}&category=0&currentPage=0&currentBlock=0">
-						    <img src="${pageContext.request.contextPath}/images/recipe/thumbnails/${item.recipeVO.no}/${item.recipeVO.thumbnail}" 
+						<a href="<%= request.getContextPath() %>/Recipe/read?no=${item.recipeVO.no}">
+						    <img src="<%= request.getContextPath() %>/images/recipe/thumbnails/${item.recipeVO.no}/${item.recipeVO.thumbnail}" 
 						         alt="${item.recipeVO.title}">
 						</a>
 
@@ -108,7 +108,7 @@
                             <div>작성자: ${item.nickname}</div>
                             <div>${item.recipeVO.description}</div>
                             <div>평점: ${item.averageRating}</div>
-                           <form action="${pageContext.request.contextPath}/Member/deleteWishRecipe.me" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
+                           <form action="<%= request.getContextPath() %>/Member/deleteWishRecipe.me" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
 							    <input type="hidden" name="recipeNo" value="${item.recipeVO.no}">
 							    <input type="hidden" name="userId" value="${sessionScope.userId}"> <!-- userId로 이름을 수정 -->
 							    <button type="submit">삭제</button>

@@ -109,6 +109,7 @@ public class MealkitController extends HttpServlet {
 		
 		request.setAttribute("mealkits", mealkits);
 		request.setAttribute("nickName", nickName);
+		request.setAttribute("pageTitle", "내 상품 관리");
 		request.setAttribute("center", "mealkits/mymealkits.jsp");
 		request.setAttribute("pageTitle", "내 밀키트 관리");
 
