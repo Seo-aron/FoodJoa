@@ -3,8 +3,8 @@
 
 // bxslider 
 $('.bxslider').bxSlider({
-	mode: 'fade',
-	captions: true,
+	infiniteLoop: false,
+	hideControlOnEnd: true,
 	slideWidth: 530,
 	adaptiveHeight: true,
 });
@@ -15,6 +15,7 @@ $('.bx-wrapper').css({
 
 // 수량 증가 감소 버튼
 let stockInput = $('input[name="stock"]');
+let stock = stockInput.val();
 let maxStock = parseInt($('#mealkitStock').val());
 let minStock = 1;
 
@@ -40,7 +41,7 @@ function cartMealkit(contextPath) {
 		async: true,
 		data: {
 			no: mealkitNo,
-			quantity: stockInput
+			quantity: stock
 		},
 		success: function(response) {
 			if (response === "1") alert("장바구니에 추가되었습니다.");
@@ -76,7 +77,7 @@ function deleteMealkit(no, contextPath) {
 			success: function(response) {
 				if (response === "1") {
 					alert("삭제되었습니다.");
-					location.href = contextPath + "/Mealkit/list";
+					location.href = contextPath + "/Mealkit/list?category=0";
 				} else {
 					alert("삭제에 실패했습니다.");
 				}
@@ -87,5 +88,5 @@ function deleteMealkit(no, contextPath) {
 
 // 수정 함수 
 function editMealkit(contextPath) {
-	location.href = contextPath + "/Mealkit/update?no=" + mealkitNo + "&bytePictures=" + encodeURIComponent(bytePictures);
+	location.href = contextPath + "/Mealkit/update?no=" + mealkitNo;
 }

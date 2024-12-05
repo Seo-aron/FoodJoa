@@ -9,7 +9,7 @@ values('admin', '관리자', '고나리자', '01012345678', '47296 부산 부산
     
     ('tQi32Qj0iONPLRZ16-5sX4-Gq_p8Jg_T33r-HdtLEFE', '이건용', '은익', '01012345678', '47296 부산 부산진구 신천대로50번길 79 5층, 6층(부전동)', 'admin_image.png', CURRENT_TIMESTAMP),
     ('hanaId', '이하나', '나리', '01012345678', '47296 부산 부산진구 신천대로50번길 79 5층, 6층(부전동)', 'admin_image.png', CURRENT_TIMESTAMP),
-    ('aronId', '서아론', '아론', '01012345678', '47296 부산 부산진구 신천대로50번길 79 5층, 6층(부전동)', 'admin_image.png', CURRENT_TIMESTAMP),
+    ('nokzVx9aXFXFaCu-4sOTujR0FkNtw-zrSsY1kwwgNdM', '서아론', '아론', '01012345678', '47296 부산 부산진구 신천대로50번길 79 5층, 6층(부전동)', 'admin_image.png', CURRENT_TIMESTAMP),
     ('hyewonId', '이혜원', '혜원', '01012345678', '47296 부산 부산진구 신천대로50번길 79 5층, 6층(부전동)', 'admin_image.png', CURRENT_TIMESTAMP),
     ('minseokId', '최민석', '민석', '01012345678', '47296 부산 부산진구 신천대로50번길 79 5층, 6층(부전동)', 'admin_image.png', CURRENT_TIMESTAMP);
 

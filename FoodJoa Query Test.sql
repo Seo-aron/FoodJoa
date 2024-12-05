@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 SELECT 
 r.title, r.contents, r.category, r.thumbnail, 
 m.nickname, m.profile, 
@@ -39,3 +40,20 @@ select * from recipe_review;
 select * from mealkit_review;
 
 select * from recent_view;
+=======
+SELECT * FROM mealkit;
+SELECT * FROM mealkit_review;
+
+SELECT
+k.*, coalesce(avg_table.avg_rating, 0) AS average_rating, m.nickname 
+FROM mealkit k
+JOIN (
+	SELECT
+		mr.mealkit_no, AVG(rating) as avg_rating
+    FROM mealkit_review mr
+    GROUP BY mr.mealkit_no
+) avg_table ON k.no=avg_table.mealkit_no
+JOIN member m 
+ON k.id=m.id
+WHERE no=1;
+>>>>>>> 0945a78673293758c58920c14c2ae08fcfafb845
