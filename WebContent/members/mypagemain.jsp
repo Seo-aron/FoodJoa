@@ -21,12 +21,17 @@ String userId = (String) session.getAttribute("userId");
 
 MemberDAO memberDAO = new MemberDAO();
 
-ArrayList<Integer> orderCounts = (ArrayList<Integer>) request.getAttribute("orderCounts");
+ArrayList<Integer> deliveredCounts = (ArrayList<Integer>) request.getAttribute("deliveredCounts");
+ArrayList<Integer> sendedCounts = (ArrayList<Integer>) request.getAttribute("sendedCounts");
 
-int totalOrderCount = 0;
+int totalOrderDeliveredCount = 0;
+for (int i = 0; i < deliveredCounts.size(); i++) {
+	totalOrderDeliveredCount  += deliveredCounts.get(i);
+}
 
-for(int i = 0; i < orderCounts.size(); i++) {
-	totalOrderCount  += orderCounts.get(i);
+int totalOrderSendedCount = 0;
+for (int i = 0; i < sendedCounts.size(); i++) {
+	totalOrderSendedCount += sendedCounts.get(i);
 }
 
 // 가입 날짜 가져오기
@@ -40,23 +45,17 @@ LocalDate currentDate = LocalDate.now();
 
 // 두 날짜 사이의 일 수 차이 계산
 long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
-
 %>
 
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>마이페이지</title>
 <link rel="stylesheet" href="<%=contextPath%>/css/member/mypagemain.css">
-
 </head>
 <body>
    <div class="header">
-      <h1>마이페이지</h1>
-      <a href="<%=contextPath%>/mypagemain.me">
-         <input type="button" class="logout-btn" value="로그아웃">
-      </a>
+      <h1 color="000000">MyPage</h1>
    </div>
 
 	<div class="profile-wrapper">
@@ -93,13 +92,13 @@ long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
          <div>
             <a href="<%=contextPath%>/Mealkit/myMealkits">
                <p align="center">내 상품 관리</p>
-               <img src="../images/member/product.png" alt="상품 이미지">
+               <img src="../images/member/food.png" alt="상품 이미지">
             </a>
          </div>
          <div>
             <a href="<%=contextPath%>/Member/myReviews">
                <p align="center">내 리뷰 관리</p>
-               <img src="../images/member/hand.png" alt="리뷰 이미지">
+               <img src="../images/member/review.png" alt="리뷰 이미지">
             </a>
 
          </div>
@@ -109,35 +108,35 @@ long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
       <div class="info-section">
          <div>주문/배송조회</div>
          <div style="display: flex;">
-            <span>주문건수 : <%= totalOrderCount %></span> &nbsp;&nbsp; | &nbsp;&nbsp;   
-            <span>배송준비중 : <%= orderCounts.get(0) %></span> &nbsp;&nbsp; | &nbsp;&nbsp;
-            <span>배송중 : <%= orderCounts.get(1) %></span> &nbsp;&nbsp; | &nbsp;&nbsp;
-            <span>배송완료 : <%= orderCounts.get(2) %></span>
+            <span>주문건수 : <%= totalOrderDeliveredCount %></span> &nbsp;&nbsp; | &nbsp;&nbsp;   
+            <span>배송준비중 : <%= deliveredCounts.get(0) %></span> &nbsp;&nbsp; | &nbsp;&nbsp;
+            <span>배송중 : <%= deliveredCounts.get(1) %></span> &nbsp;&nbsp; | &nbsp;&nbsp;
+            <span>배송완료 : <%= deliveredCounts.get(2) %></span>
             <a href="<%=contextPath%>/Member/viewMyDelivery.me" style="margin-left: auto;">더보기</a>
          </div>
       </div>
 
       <div class="info-section">
-         <div>내 마켓 발송 현황</div>
+         <div>내 마켓 발송조회</div>
         <div style="display: flex;">
-            <span>주문건수 : <%= totalOrderCount %></span> &nbsp;&nbsp; | &nbsp;&nbsp;   
-            <span>발송준비중 : <%= orderCounts.get(0) %></span> &nbsp;&nbsp; | &nbsp;&nbsp;
-            <span>발송중 : <%= orderCounts.get(1) %></span> &nbsp;&nbsp; | &nbsp;&nbsp;
-            <span>발송완료 : <%= orderCounts.get(2) %></span>
+            <span>주문건수 : <%= totalOrderSendedCount %></span> &nbsp;&nbsp; | &nbsp;&nbsp;   
+            <span>발송준비중 : <%= sendedCounts.get(0) %></span> &nbsp;&nbsp; | &nbsp;&nbsp;
+            <span>발송중 : <%= sendedCounts.get(1) %></span> &nbsp;&nbsp; | &nbsp;&nbsp;
+            <span>발송완료 : <%= sendedCounts.get(2) %></span>
             <a href="<%=contextPath%>/Member/viewMySend.me" style="margin-left: auto;">더보기</a>
          </div>
-      </div>
+      </div><br>
 
-      <div class="info-section">
+      <div class="info-section2">
          <div>
-            <a href="<%=contextPath%>/members/processingpolicy.jsp">※
-               개인정보처리방침</a>
+            <a href="<%=contextPath%>/members/impormation.jsp" color="#000000">
+                ※개인정보처리방침</a>
          </div>
-      </div>
+      </div><br>
 
       <div>
          <a href="<%=contextPath%>/Member/deleteMember.me">
-            <button>탈퇴하기</button>
+            <button id="getout">탈퇴하기</button>
          </a>
       </div>
 
@@ -158,10 +157,7 @@ long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
          };
          reader.readAsDataURL(event.target.files[0]);
       }
-
-    
    </script>
 </head>
-
 </body>
 </html>

@@ -100,7 +100,7 @@ public class RecipeController extends HttpServlet {
 
 		request.setAttribute("pageTitle", "나만의 레시피 작성하기");
 		request.setAttribute("center", "recipes/write.jsp");
-
+		
 		nextPage = "/main.jsp";
 	}
 

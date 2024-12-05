@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -73,16 +74,16 @@ public class MemberController extends HttpServlet {
 		case "/recentList.me": if (!openRecentList(request, response)) return; break;
 		case "/cartList.me": openCartList(request, response); break;
 		case "/deleteCartList.me": deleteCartList(request, response); return;
-		case "/mypagemain.me": if (!openMypagemainView(request, response)) return; break;
-		case "/update.me": openMemberUpdateView(request, response); break;
+		case "/mypagemain.me": if (!openMypagemainView(request, response)) return; break; 
+		case "/update.me": openMemberUpdateView(request, response); return;
 		case "/updatePro.me": processMemberUpdate(request, response); break;
+		case "/orderUpdate.me": processUpdateOrder(request, response); break;
 		case "/viewMyDelivery.me": openMyDeliveryView(request, response); break;
 		case "/viewMySend.me": openMySendView(request, response); break;
 		case "/viewMyRecipe.me": openMyRecipeView(request, response); break;
-		// case "/updateDelivery" : processUpdateDelivery(request, response); break;
-
+		case "/viewImpormation.me": openImpormation(request, response); break;
 		case "/myReviews": openMyReviewsView(request, response); break;
-
+		case "/getOrder.me":processGetOrderedMealkitList(request,response); return;
 		default:
 			nextPage = "/main.jsp";
 		}
@@ -97,6 +98,35 @@ public class MemberController extends HttpServlet {
 	 * request.setAttribute("center","members/sendmealkit.jsp"); nextPage =
 	 * "/main.jsp"; }
 	 */
+
+	private void processUpdateOrder(HttpServletRequest request, HttpServletResponse response) {
+		 int orderNo = Integer.parseInt(request.getParameter("orderNo"));
+		    int deliveredStatus = Integer.parseInt(request.getParameter("deliveredStatus"));
+		    int refundStatus = Integer.parseInt(request.getParameter("refundStatus"));
+
+		    int result = memberService.updateOrder(orderNo, deliveredStatus, refundStatus);
+
+		    try {
+		        response.setContentType("application/json; charset=UTF-8");
+		        PrintWriter out = response.getWriter();
+
+		        if (result > 0) {
+		            out.print("{\"status\":\"success\"}");
+		        } else {
+		            out.print("{\"status\":\"fail\"}");
+		        }
+		        out.close();
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    } 
+		    
+			
+	}
+
+	private void openImpormation(HttpServletRequest request, HttpServletResponse response) {
+		request.setAttribute("center", "members/impormation.jsp");
+		nextPage = "/main.jsp";
+	}
 
 	private void openMemberJoinView(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -312,6 +342,7 @@ public class MemberController extends HttpServlet {
 			throws ServletException, IOException {
 
 		request.setAttribute("center", "members/deletemember.jsp");
+		request.setAttribute("pageTitle", "탈퇴 페이지");
 		nextPage = "/main.jsp";
 	}
 
@@ -512,7 +543,7 @@ public class MemberController extends HttpServlet {
 			throws ServletException, IOException {
 		
 		String userId = (String) request.getSession().getAttribute("userId");
-		
+		request.setAttribute("pageTitle", "마이페이지");
 		if (userId == null || userId.equals("") || userId.length() <= 0) {
 			
 			PrintWriter out = response.getWriter();
@@ -528,10 +559,12 @@ public class MemberController extends HttpServlet {
 		
 		MemberVO member = memberService.getMemberProfile(userId);
 
-		ArrayList<Integer> orderCounts = memberService.getCountOrderDelivered(request);
+		ArrayList<Integer> deliveredCounts = memberService.getCountOrderDelivered(request);
+		ArrayList<Integer> sendedCounts = memberService.getCountOrderSended(request);
 
 		request.setAttribute("member", member);
-		request.setAttribute("orderCounts", orderCounts);
+		request.setAttribute("deliveredCounts", deliveredCounts);
+		request.setAttribute("sendedCounts", sendedCounts);
 		request.setAttribute("center", "members/mypagemain.jsp");
 
 		nextPage = "/main.jsp";
@@ -543,8 +576,9 @@ public class MemberController extends HttpServlet {
 			throws ServletException, IOException {
 
 		MemberVO vo = memberService.getMember(request);
-
+		
 		request.setAttribute("vo", vo);
+		request.setAttribute("pageTitle", "프로필 수정");
 		request.setAttribute("center", "members/profileupdate.jsp");
 
 		nextPage = "/main.jsp";
@@ -560,7 +594,7 @@ public class MemberController extends HttpServlet {
 
 		HttpSession session = request.getSession();
 		String id = (String) session.getAttribute("userId");
-
+		request.setAttribute("pageTitle", "배송조회 페이지");
 		ArrayList<HashMap<String, Object>> orderedMealkitList = memberService.getDeliveredMealkit(request);
 
 		request.setAttribute("orderedMealkitList", orderedMealkitList);
@@ -569,21 +603,31 @@ public class MemberController extends HttpServlet {
 	}
 
 	private void openMySendView(HttpServletRequest request, HttpServletResponse response) {
-		System.out.println("controller왔음");
-		HttpSession session = request.getSession();
-		String id = (String) session.getAttribute("userId");
+	    HttpSession session = request.getSession();
+	    String id = (String) session.getAttribute("userId");
 
-		ArrayList<HashMap<String, Object>> orderedMealkitList = memberService.getSendedMealkit(request);
+	    // 서비스 호출
+	    ArrayList<HashMap<String, Object>> orderedMealkitList = memberService.getSendedMealkit(request);
 
-		request.setAttribute("orderedMealkitList", orderedMealkitList);
-		request.setAttribute("center", "members/sendmealkit.jsp");
-		nextPage = "/main.jsp";
+	    // JSP에 데이터 전달
+	    request.setAttribute("orderedMealkitList", orderedMealkitList);
+	    request.setAttribute("pageTitle", "발송조회 페이지");
+	    request.setAttribute("center", "members/sendmealkit.jsp");
+
+	    nextPage = "/main.jsp";
 	}
 
 	private void openMyRecipeView(HttpServletRequest request, HttpServletResponse response) {
 		request.setAttribute("center", "members/myreceipe.jsp");
 		nextPage = "/main.jsp";
 	}
+	
+	private void processGetOrderedMealkitList(HttpServletRequest request, HttpServletResponse response) { 
+		String userId = (String) request.getSession().getAttribute("id"); 
+		List<HashMap<String, Object>> orderedMealkitList = memberService.getOrderedMealkitList(userId); 
+		request.setAttribute("orderedMealkitList", orderedMealkitList); 
+		request.setAttribute("center", "members/sendmealkit.jsp"); 
+		nextPage = "/main.jsp"; }
 
 	// 건용 추가----
 	private void openMyReviewsView(HttpServletRequest request, HttpServletResponse response)

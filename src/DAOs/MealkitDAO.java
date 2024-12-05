@@ -504,16 +504,20 @@ public class MealkitDAO {
 	}
 
 //발송 
-	public ArrayList<Integer> selectCountDelivered(String id) {
+	public ArrayList<Integer> selectCountOrderSended(String id) {
 
 		ArrayList<Integer> counts = new ArrayList<Integer>();
 
 		String sql = "";
 
 		for (int i = 0; i < 3; i++) {
-			sql = "SELECT COUNT(*) " + "FROM mealkit_order o " + "WHERE o.delivered=? AND o.id=?";
+			sql = "SELECT COUNT(*) " + 
+					"FROM mealkit k " + 
+					"JOIN mealkit_order o " + 
+					"ON k.no=o.mealkit_no " + 
+					"WHERE k.id=? AND o.delivered=?";
 
-			ResultSet resultSet = dbConnector.executeQuery(sql, i, id);
+			ResultSet resultSet = dbConnector.executeQuery(sql, id, i);
 
 			try {
 				if (resultSet.next()) {

@@ -1,8 +1,10 @@
 package DAOs;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 
 import java.util.ArrayList;
@@ -18,7 +20,7 @@ import VOs.RecipeWishListVO;
 
 public class MemberDAO {
 
-	private DBConnector dbConnector;
+	private static DBConnector dbConnector;
 	private Object type;
 	private ResultSet resultSet;
 
@@ -460,84 +462,70 @@ public class MemberDAO {
 		return orderedMealkitList;
 	}
 	
-	public ArrayList<HashMap<String, Object>> selectSendedMealkit(String id, String delivered) {
-		
-		ArrayList<HashMap<String, Object>> orderedMealkitList = new ArrayList<>();
-		
-		String sql = "SELECT "
-				+ "k.title, k.contents, k.category, k.price, k.stock, k.pictures, "
-				+ "o.no AS order_no, o.address, o.quantity, o.delivered, o.refund, "
-				+ "m.nickname, m.profile "
-				+ "FROM mealkit k "
-				+ "INNER JOIN mealkit_order o "
-				+ "ON k.no=o.mealkit_no "
-				+ "LEFT JOIN member m "
-				+ "ON o.id=m.id "
-				+ "WHERE k.id=? AND o.delivered=? "
-				+ "ORDER BY o.post_date DESC";
-		
-		ResultSet resultSet = dbConnector.executeQuery(sql, id, Integer.parseInt(delivered));
-		
-		try {
-			while (resultSet.next()) {
-				HashMap<String, Object> orderedMealkit = new HashMap<String, Object>();
+	public ArrayList<HashMap<String, Object>> selectSendedMealkit(String id, int delivered) {
+	    ArrayList<HashMap<String, Object>> orderedMealkitList = new ArrayList<>();
+	    String sql = "SELECT "
+	               + "k.no, k.id, k.title, k.contents, k.category, k.price, k.stock, k.pictures, "
+	               + "o.no AS order_no, o.address, o.quantity, o.delivered, o.refund, "
+	               + "m.nickname, m.profile "
+	               + "FROM mealkit k "
+	               + "INNER JOIN mealkit_order o ON k.no = o.mealkit_no "
+	               + "INNER JOIN member m ON o.id = m.id "
+	               + "WHERE k.id = ? AND o.delivered = ? "
+	               + "ORDER BY o.post_date DESC";
 
-				MealkitVO mealkitVO = new MealkitVO();
-				mealkitVO.setTitle(resultSet.getString("title"));
-				mealkitVO.setContents(resultSet.getString("contents"));
-				mealkitVO.setCategory(resultSet.getInt("category"));
-				mealkitVO.setPrice(resultSet.getString("price"));
-				mealkitVO.setStock(resultSet.getInt("stock"));
-				mealkitVO.setPictures(resultSet.getString("pictures"));
-
-				MealkitOrderVO orderVO = new MealkitOrderVO();
-				orderVO.setNo(resultSet.getInt("order_no")); 
-				orderVO.setAddress(resultSet.getString("address"));
-				orderVO.setQuantity(resultSet.getInt("quantity"));
-				orderVO.setDelivered(resultSet.getInt("delivered"));
-				orderVO.setRefund(resultSet.getInt("refund"));
-
-				MemberVO memberVO = new MemberVO();
-				memberVO.setNickname(resultSet.getString("nickname"));
-				memberVO.setProfile(resultSet.getString("profile"));
-
-				orderedMealkit.put("orderVO", orderVO);
-				orderedMealkit.put("mealkitVO", mealkitVO);
-				orderedMealkit.put("memberVO", memberVO);
-
-				System.out.println(delivered);
-				orderedMealkitList.add(orderedMealkit);
-			}
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return orderedMealkitList;
-	}
-	
-	public ArrayList<Integer> selectCountDelivered(String userId) {
-	    ArrayList<Integer> counts = new ArrayList<>();
-	    String sql = "SELECT " +
-	                 "SUM(CASE WHEN delivered = 0 THEN 1 ELSE 0 END) AS preparing, " +
-	                 "SUM(CASE WHEN delivered = 1 THEN 1 ELSE 0 END) AS shipping, " +
-	                 "SUM(CASE WHEN delivered = 2 THEN 1 ELSE 0 END) AS completed " +
-	                 "FROM mealkit_order " +
-	                 "WHERE id = ?";
+	    ResultSet resultSet = dbConnector.executeQuery(sql, id, delivered);
 
 	    try {
-	        ResultSet rs = dbConnector.executeQuery(sql, userId);
-	        if (rs.next()) {
-	            counts.add(rs.getInt("preparing")); // 발송 준비 중
-	            counts.add(rs.getInt("shipping")); // 발송 중
-	            counts.add(rs.getInt("completed")); // 발송 완료
+	        while (resultSet.next()) {
+	            HashMap<String, Object> orderedMealkit = new HashMap<>();
+
+	            // Mealkit 데이터 매핑
+	            MealkitVO mealkitVO = new MealkitVO();
+	            mealkitVO.setNo(resultSet.getInt("no"));
+	            mealkitVO.setId(resultSet.getString("id"));
+	            mealkitVO.setTitle(resultSet.getString("title"));
+	            mealkitVO.setContents(resultSet.getString("contents"));
+	            mealkitVO.setCategory(resultSet.getInt("category"));
+	            mealkitVO.setPrice(resultSet.getString("price"));
+	            mealkitVO.setStock(resultSet.getInt("stock"));
+	            mealkitVO.setPictures(resultSet.getString("pictures"));
+
+	            // Order 데이터 매핑
+	            MealkitOrderVO orderVO = new MealkitOrderVO();
+	            orderVO.setNo(resultSet.getInt("order_no"));
+	            orderVO.setAddress(resultSet.getString("address"));
+	            orderVO.setQuantity(resultSet.getInt("quantity"));
+	            orderVO.setDelivered(resultSet.getInt("delivered"));
+	            orderVO.setRefund(resultSet.getInt("refund"));
+
+	            // Member 데이터 매핑
+	            MemberVO memberVO = new MemberVO();
+	            memberVO.setNickname(resultSet.getString("nickname"));
+	            memberVO.setProfile(resultSet.getString("profile"));
+
+	            // 결과 맵에 추가
+	            orderedMealkit.put("orderVO", orderVO);
+	            orderedMealkit.put("mealkitVO", mealkitVO);
+	            orderedMealkit.put("memberVO", memberVO);
+
+	            orderedMealkitList.add(orderedMealkit);
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
-	    } finally {
-	        dbConnector.release();
 	    }
 
-	    return counts;
+	    return orderedMealkitList;
 	}
+	
+	public static int updateOrderStatus(int deliveredStatus, int refundStatus, int no) {
+
+		   String sql = "UPDATE mealkit_order SET delivered = ?, refund = ? WHERE no = ?";
+		    int result = dbConnector.executeUpdate(sql, deliveredStatus, refundStatus, no);
+		    
+		    dbConnector.release(); // 자원 해제
+		    
+		    return result; // 업데이트 결과 반환
+	}
+	
 }

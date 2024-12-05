@@ -353,10 +353,4 @@ public class MealkitService {
 	public ArrayList<HashMap<String, Object>> getMealkitsListById(HttpServletRequest request) {
 		return mealkitDAO.selectMealkitsById((String) request.getSession().getAttribute("userId"));
 	}
-
-	public ArrayList<Integer> getCountDelivered(HttpServletRequest request) {
-	    String userId = (String) request.getSession().getAttribute("userId");
-	    
-	    return mealkitDAO.selectCountDelivered(userId); // DAO 호출
-	}
 }
