@@ -63,8 +63,8 @@
 					<td align="center">
 						<div class="thumbnail-area">
 							<input type="file" name="file" id="imageInput" accept=".png,.jpeg,.jpg" style="display: none;">
-							<img id="imagePreview" src="<%= contextPath %>/images/recipe/file_select_button.png"
-								style="cursor: pointer;">
+							<img id="imagePreview" src="<%= contextPath %>/images/recipe/addImage.png"
+								style="cursor: pointer; width: auto; height: 100px;">
 						</div>
 					</td>
 				</tr>

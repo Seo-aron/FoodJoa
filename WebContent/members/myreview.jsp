@@ -179,7 +179,7 @@ String id = (String) session.getAttribute("userId");
 										<div class="myreview-rating">
 											<ul>
 											<%
-											int rating = reviewVO.getRating();
+											float rating = reviewVO.getRating();
 											for (int startIndex = 1; startIndex <= 5; startIndex++) {
 												String starImage = (startIndex <= rating) ? "full_star.png" : "empty_star.png";
 												%>

@@ -3,6 +3,7 @@ package Controllers;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import javax.servlet.RequestDispatcher;
@@ -16,8 +17,12 @@ import javax.servlet.http.HttpSession;
 
 
 import Common.NaverLoginAPI;
+import Services.MealkitService;
 import Services.MemberService;
+import VOs.MealkitVO;
 import VOs.MemberVO;
+import DAOs.MealkitDAO;
+
 
 @WebServlet("/Member/*")
 @MultipartConfig(location = "/tmp")
@@ -25,6 +30,8 @@ public class MemberController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private MemberService memberService;
+	private MealkitService mealkitService;
+	private MealkitDAO mealkitDAO;
 	private String nextPage;
 
 	@Override
@@ -73,6 +80,10 @@ public class MemberController extends HttpServlet {
 		case "/recentList.me": if (!openRecentList(request, response)) return; break;
 		case "/cartList.me": openCartList(request, response); break;
 		case "/deleteCartList.me": deleteCartList(request, response); return;
+		case "/updateCartList.me": updateCartList(request, response); return;
+		case "/sendPayMent.me": sendPayMent(request, response); return;
+		case "/openPayMent.me": openPayMent(request, response); return;
+		case "/updateOrderList.me": updateOrderList(request, response); return;	
 		case "/mypagemain.me": if (!openMypagemainView(request, response)) return; break;
 		case "/update.me": openMemberUpdateView(request, response); break;
 		case "/updatePro.me": processMemberUpdate(request, response); break;
@@ -90,6 +101,10 @@ public class MemberController extends HttpServlet {
 		RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
 		dispatcher.forward(request, response);
 	}
+
+
+	
+
 
 	/*
 	 * private void processUpdateDelivery(HttpServletRequest request,
@@ -503,6 +518,172 @@ public class MemberController extends HttpServlet {
 			}
 		}
 	}
+	
+	private void updateCartList(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	    // 요청 파라미터 가져오기
+	    String userId = request.getParameter("userId");
+	    String mealkitNo = request.getParameter("mealkitNo");
+	    String quantityStr = request.getParameter("quantity");
+
+	    // 값이 제대로 넘어오는지 확인
+	    System.out.println("userId: " + userId);
+	    System.out.println("mealkitNo: " + mealkitNo);
+	    System.out.println("quantity: " + quantityStr);
+
+	    // 수량 값 유효성 검사
+	    int quantity = 0;
+	    try {
+	        quantity = Integer.parseInt(quantityStr);
+	        if (quantity <= 0) {
+	            System.out.println("수량 값이 0 이하입니다. 유효한 수량을 입력하세요.");
+	            response.sendRedirect(request.getContextPath() + "/Member/cartList.me");
+	            return;
+	        }
+	    } catch (NumberFormatException e) {
+	        System.out.println("수량 값이 잘못되었습니다: " + quantityStr);
+	        response.sendRedirect(request.getContextPath() + "/Member/cartList.me");
+	        return;
+	    }
+
+	    // 서비스 계층을 통해 수량 업데이트
+	    int result = memberService.updateCartList(userId, mealkitNo, quantity);
+
+	    if (!response.isCommitted()) { // 응답이 커밋되지 않았다면 리다이렉트 처리
+	        if (result == 1) {
+	            // 업데이트 성공
+	            System.out.println("수량 업데이트 성공!");
+	            response.sendRedirect(request.getContextPath() + "/Member/cartList.me");
+	        } else if (result == 0) {
+	            // 업데이트 실패: 해당 항목이 없음
+	            System.out.println("수량 업데이트 실패: 해당 항목이 장바구니에 없습니다.");
+	            response.sendRedirect(request.getContextPath() + "/Member/cartList.me");
+	        } else {
+	            // DB 통신 오류
+	            System.out.println("DB 통신 오류가 발생했습니다.");
+	            response.sendRedirect(request.getContextPath() + "/Member/cartList.me");
+	        }
+	    }
+	}
+	
+	private void sendPayMent(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	    HttpSession session = request.getSession();
+	    String userId = (String) session.getAttribute("userId");
+
+	    // 장바구니에서 선택된 아이템 가져오기
+	    String selectedMealkitNosParam = request.getParameter("selectedMealkitNos");
+
+	    // 선택된 아이템이 없으면 처리
+	    if (selectedMealkitNosParam == null || selectedMealkitNosParam.isEmpty()) {
+	        System.out.println("sendPayMent - 선택된 상품이 없습니다.");
+	        response.sendRedirect(request.getContextPath() + "/Member/cartList.me");
+	        return;
+	    }
+
+	    // "1,2"와 같은 문자열을 "," 기준으로 분리하여 배열로 만듦
+	    String[] selectedMealkitNos = selectedMealkitNosParam.split(",");
+
+	    // 장바구니 정보 가져오기
+	    ArrayList<HashMap<String, Object>> cartListInfos = memberService.getCartListInfos(userId);
+	    
+	    // 선택된 아이템 필터링
+	    ArrayList<HashMap<String, Object>> filteredItems = new ArrayList<>();
+	    try {
+	        for (String selectedMealkitNo : selectedMealkitNos) {
+	            int no = Integer.parseInt(selectedMealkitNo); // 문자열을 숫자로 변환
+	            for (HashMap<String, Object> cartItem : cartListInfos) {
+	                MealkitVO mealkitVO = (MealkitVO) cartItem.get("mealkitVO");
+	                if (mealkitVO.getNo() == no) {
+	                    filteredItems.add(cartItem);
+	                }
+	            }
+	        }
+	    } catch (NumberFormatException e) {
+	        System.err.println("sendPayMent - Invalid mealkit number: " + e.getMessage());
+	    } 
+
+	    // 선택된 아이템을 세션에 저장
+	    session.setAttribute("selectedItems", filteredItems);
+
+	    // 결제 페이지로 리디렉션
+	    response.sendRedirect(request.getContextPath() + "/Member/openPayMent.me");
+	}
+
+
+
+
+
+	private void openPayMent(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	    HttpSession session = request.getSession();
+	    ArrayList<HashMap<String, Object>> selectedItems = (ArrayList<HashMap<String, Object>>) session.getAttribute("selectedItems");
+
+	    // 선택된 아이템을 request에 설정
+	    if (selectedItems != null && !selectedItems.isEmpty()) {
+	        request.setAttribute("selectedItems", selectedItems);
+	    } else {
+	        request.setAttribute("selectedItems", new ArrayList<>()); // 기본 빈 리스트 전달
+	    }
+
+	    // 페이지 설정
+	    request.setAttribute("center", "members/payment.jsp");
+
+	    // main.jsp로 포워딩
+	    RequestDispatcher dispatcher = request.getRequestDispatcher("/main.jsp");
+	    dispatcher.forward(request, response);
+	}
+
+
+	private void updateOrderList(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		
+		// 세션에서 userId 가져오기
+	    HttpSession session = request.getSession();
+	    String userId = (String) session.getAttribute("userId");
+
+	    if (userId == null) {
+	        response.sendRedirect(request.getContextPath() + "/login.jsp"); // 세션에 userId가 없으면 로그인 페이지로 리디렉션
+	        return;
+	    }
+
+	    // 폼 데이터 받기 (배열로 여러 개의 품목을 받음)
+	    String[] mealkitNos = request.getParameterValues("mealkitNo");
+	    String[] quantities = request.getParameterValues("quantity");
+	    String address1 = request.getParameter("address1");
+	    String address2 = request.getParameter("address2");
+	    String address3 = request.getParameter("address3");
+
+	    // 배송지 정보 합치기
+	    String fullAddress = address1 + " " + address2 + " " + address3;
+
+	    // 반복문을 통해 각 품목에 대한 결제 처리
+	    boolean result = false; // 전체 결제가 성공했는지 여부
+	    for (int i = 0; i < mealkitNos.length; i++) {
+	        // mealkitNo와 quantity는 int로 변환
+	        int mealkitNo = Integer.parseInt(mealkitNos[i]);
+	        int quantity = Integer.parseInt(quantities[i]);
+
+	        // 각 품목에 대해 주문 처리
+	        result = memberService.updateOrderList(userId, mealkitNo, quantity, fullAddress);
+	    }
+
+	    // 주문 성공/실패에 따라 처리
+	    if (result) {
+	        response.sendRedirect(request.getContextPath() + "/Member/viewMyDelivery.me");  // 주문 성공 후 배송지 조회 페이지로 이동
+	    } else {
+	        response.sendRedirect(request.getContextPath() + "/Member/openPayMent.me");  // 주문 실패 시 결제 페이지로 이동
+	    }
+	}
+	
+
+		
+
+
+
+
+
+
+
+	
+	
+
 
 	// 혜원 파트
 	// ------------------------------------------------------------------------------------------

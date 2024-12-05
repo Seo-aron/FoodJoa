@@ -109,3 +109,10 @@ values
 ('admin','test_thumbnail.png', 'seoul2', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 1, 3, now()),
 ('admin','test_thumbnail.png', 'seoul3', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 1, 3, now()),
 ('admin','test_thumbnail.png', 'seoul4', 'eJyzKbB7O3XOm+65hgqvm7a8mbXSRr/ADgB7FQrX', 37.3595704, 127.105399, 0, 3, now());
+
+
+insert into mealkit_cart(id, mealkit_no, quantity, choice_date)
+values
+('oTcuaqH712AhGERfeDDh7sKhFyWoPrKcNhIujhF73vk', '1', '3', current_time()),
+('oTcuaqH712AhGERfeDDh7sKhFyWoPrKcNhIujhF73vk', '2','2', current_time());
+('oTcuaqH712AhGERfeDDh7sKhFyWoPrKcNhIujhF73vk', '1', '3', current_time());

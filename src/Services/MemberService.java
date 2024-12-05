@@ -480,6 +480,31 @@ public class MemberService {
         }
 	}
 
+
+
+	public int updateCartList(String userId, String mealkitNo, int quantity) {
+		// DAO 객체를 통해 수량을 업데이트
+	    int result = mealkitDAO.updateCartList(userId, mealkitNo, quantity);
+	    
+	    // 결과에 따라 1 또는 0을 반환 (성공/실패)
+	    return result;
+	}
+
+
+
+	public boolean updateOrderList(String userId, int mealkitNo, int quantity, String fullAddress) {
+		 // 주문 저장 메소드 호출
+        boolean result = mealkitDAO.updateOrder(userId, mealkitNo, quantity, fullAddress);
+
+        // 결과 반환
+        return result;  // 주문 성공 시 true, 실패 시 false 반환
+	}
+
+
+
+	
+
+
 }
 
 

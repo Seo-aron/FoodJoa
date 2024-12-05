@@ -1,14 +1,9 @@
-<%@ page import="java.util.HashMap" %>
-<%@ page import="VOs.MealkitVO" %>
-<%@ page import="VOs.MealkitCartVO" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%
     request.setCharacterEncoding("UTF-8");
     response.setContentType("text/html; charset=utf-8");
-
     String contextPath = request.getContextPath();
 %>
 
@@ -78,7 +73,7 @@
         <table>
             <thead>
                 <tr>
-                    <th><input type="checkbox" id="selectAll" onclick="toggleSelectAll()"> 전체 선택</th> <!-- 전체 선택 체크박스 -->
+                    <th><input type="checkbox" id="selectAll" onclick="toggleSelectAll()"> 전체 선택</th>
                     <th>상품명</th>
                     <th>판매자</th>
                     <th>가격</th>
@@ -90,21 +85,22 @@
             <tbody>
                 <c:forEach var="item" items="${cart}">
                     <tr>
-                        <td><input type="checkbox" class="itemCheckbox" value="${item.mealkitVO.no}" onclick="calculateTotal()"></td> <!-- 상품별 체크박스 -->
-                        <td><a href="<%= request.getContextPath() %>/Mealkit/info?no=${item.mealkitVO.no}">
-                     <img src="<%= request.getContextPath() %>/images/mealkit/thumbnails/${item.mealkitVO.no}/${item.mealkitVO.id}/${item.mealkitVO.pictures.substring(4)}" 
-                             alt="${item.mealkitVO.title}">
-                             </a><br>${item.mealkitVO.title}</td> <!-- 상품명 -->
+                        <td><input type="checkbox" class="itemCheckbox" value="${item.mealkitVO.no}" onclick="calculateTotal()"></td>
+                        <td><a href="<%= request.getContextPath() %>/Mealkit/info?no=${item.mealkitVO.no}"> 
+                            <img src="<%= request.getContextPath() %>/images/mealkit/thumbnails/${item.mealkitVO.no}/${item.mealkitVO.id}/${item.mealkitVO.pictures.substring(4)}" 
+                                 alt="${item.mealkitVO.title}"/>
+                            </a><br>${item.mealkitVO.title}</td>
                         <td>${item.nickname}</td>
-                        <td data-price="${item.mealkitVO.price}">${item.mealkitVO.price}</td> <!-- 가격을 data-price에 저장 -->
-                        <td>
-                            <form class="form-inline" action="updateCarList.me" method="post">
-                                <input type="number" name="quantity" value="${item.quantity}" min="1" onchange="calculateTotal()">
-                                <input type="hidden" name="mealkitNo" value="${item.mealkitVO.no}">
-                                <input type="submit" value="수정" class="btn">
-                            </form>
+                        <td data-price="${item.mealkitVO.price}">${item.mealkitVO.price}</td>
+                        <td>                        
+                            <form action="<%= request.getContextPath() %>/Member/updateCartList.me" method="post">
+							    <input type="number" name="quantity" value="${item.quantity}" min="1" onchange="calculateTotal()">
+							    <input type="hidden" name="mealkitNo" value="${item.mealkitVO.no}">
+							    <input type="hidden" name="userId" value="${sessionScope.userId}">
+							    <input type="submit" value="수정" class="btn">
+							</form>
                         </td>
-                        <td class="itemTotal">${item.mealkitVO.price * item.quantity}</td> <!-- 총액 -->
+                        <td class="itemTotal">${item.mealkitVO.price * item.quantity}</td>
                         <td>
                              <form action="<%= request.getContextPath() %>/Member/deleteCartList.me" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
 							    <input type="hidden" name="mealkitNo" value="${item.mealkitVO.no}">
@@ -116,10 +112,16 @@
                 </c:forEach>
             </tbody>
         </table>
-        <h3>총액: <span id="totalAmount">${totalPrice}</span></h3> <!-- 총액 -->
-        <form id="checkoutForm" action="checkout" method="post">
-            <!-- 체크된 상품들만 전송될 수 있도록 hidden 필드에 저장 -->
-            <input type="hidden" id="selectedItems" name="selectedItems">
+        <h3>총 금액: <span id="totalAmount">${totalPrice}</span> | 총 수량: <span id="totalQuantity">0</span></h3>
+        
+        <!-- 결제 폼 -->
+        <form id="checkoutForm" action="<%= request.getContextPath() %>/Member/sendPayMent.me" method="post">
+            <!-- 선택된 아이템의 정보를 담을 영역 -->
+            <div id="selectedItemsContainer"></div>
+
+            <!-- selectedMealkitNos 추가 -->
+            <input type="hidden" name="selectedMealkitNos" id="selectedMealkitNos"/>
+
             <input type="submit" value="결제하기" class="btn">
         </form>
     </c:if>
@@ -130,40 +132,68 @@
 </div>
 
 <script>
-    // 전체 선택 체크박스를 클릭하면 모든 체크박스를 선택/해제하는 함수
     function toggleSelectAll() {
         var checkboxes = document.querySelectorAll('.itemCheckbox');
         var selectAllCheckbox = document.getElementById('selectAll');
         for (var checkbox of checkboxes) {
             checkbox.checked = selectAllCheckbox.checked;
         }
-        calculateTotal();  // 선택된 항목의 총액 계산
+        calculateTotal();
     }
 
-    // 총액을 계산하는 함수
     function calculateTotal() {
         var checkboxes = document.querySelectorAll('.itemCheckbox:checked');
         var totalAmount = 0;
+        var totalQuantity = 0;
+
+        // 선택된 아이템들을 담을 배열
+        var selectedItems = [];
+        var selectedMealkitNos = [];  // 선택된 밀키트 번호 배열
+
+        // 선택된 아이템 처리
         for (var checkbox of checkboxes) {
             var row = checkbox.closest('tr');
-            var price = parseInt(row.cells[3].getAttribute('data-price'));  // data-price 속성에서 가격을 가져옴
-            var quantity = parseInt(row.cells[4].querySelector('input').value);  // 수량
+            var price = parseInt(row.cells[3].getAttribute('data-price'));
+            var quantity = parseInt(row.cells[4].querySelector('input').value);
             totalAmount += price * quantity;
-        }
-        document.getElementById('totalAmount').innerText = totalAmount;
-        
-        // 결제 폼에 선택된 상품들의 정보를 넣기
-        var selectedItems = [];
-        for (var checkbox of checkboxes) {
-            var itemNo = checkbox.value;
-            var quantity = checkbox.closest('tr').querySelector('input[name="quantity"]').value;
-            selectedItems.push({mealkitNo: itemNo, quantity: quantity});
+            totalQuantity += quantity;
+
+            // 선택된 아이템 정보 추가
+            selectedItems.push({
+                mealkitNo: checkbox.value,
+                quantity: quantity
+            });
+
+            // selectedMealkitNos 배열에 추가
+            selectedMealkitNos.push(checkbox.value);
         }
 
-        document.getElementById('selectedItems').value = JSON.stringify(selectedItems);
+        document.getElementById('totalAmount').innerText = totalAmount;
+        document.getElementById('totalQuantity').innerText = totalQuantity;
+
+        // 선택된 아이템들을 결제 폼에 추가
+        var selectedItemsContainer = document.getElementById('selectedItemsContainer');
+        selectedItemsContainer.innerHTML = '';  // 기존 필드를 지우고 새로 추가
+
+        selectedItems.forEach(function(item, index) {
+            var mealkitNoField = document.createElement('input');
+            mealkitNoField.type = 'hidden';
+            mealkitNoField.name = 'mealkitNo_' + index;
+            mealkitNoField.value = item.mealkitNo;
+
+            var quantityField = document.createElement('input');
+            quantityField.type = 'hidden';
+            quantityField.name = 'quantity_' + index;
+            quantityField.value = item.quantity;
+
+            selectedItemsContainer.appendChild(mealkitNoField);
+            selectedItemsContainer.appendChild(quantityField);
+        });
+
+        // selectedMealkitNos 값을 결제 폼에 넣기
+        document.getElementById('selectedMealkitNos').value = selectedMealkitNos.join(',');
     }
 
-    // 페이지 로드 시 총액 계산
     window.onload = function() {
         calculateTotal();
     };

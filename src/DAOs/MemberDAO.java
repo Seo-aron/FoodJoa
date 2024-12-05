@@ -337,7 +337,7 @@ public class MemberDAO {
 	public ArrayList<HashMap<String, Object>> getRecentMealkitViews(String userId) {
 	    ArrayList<HashMap<String, Object>> recentViews = new ArrayList<>();
 	    String sql = "SELECT "
-	    		+ "k.title, k.contents, k.category, k.price, k.pictures, "
+	    		+ "k.no, k.id, k.title, k.contents, k.category, k.price, k.pictures, "
 	    		+ "m.nickname, m.profile, "
 	    		+ "COALESCE(average_table.average_rating, 0) AS average_rating "
 	    		+ "FROM recent_view v "
@@ -357,6 +357,8 @@ public class MemberDAO {
 	        while (resultSet.next()) {
 	            HashMap<String, Object> recentView = new HashMap<>();
 	            MealkitVO mealkitVO = new MealkitVO();
+	            mealkitVO.setNo(resultSet.getInt("no"));
+	            mealkitVO.setId(resultSet.getString("id"));
 	            mealkitVO.setTitle(resultSet.getString("title"));
 	            mealkitVO.setContents(resultSet.getString("contents"));
 	            mealkitVO.setCategory(resultSet.getInt("category"));
