@@ -159,7 +159,7 @@ public class MealkitService {
         for(String fileName : fileNames) {
     		
     		String srcPath = path + File.separator + "temp";
-    	    String destinationPath = path + File.separator + "mealkit" + File.separator + "thumbnails" + File.separator + no + File.separator + id;
+    	    String destinationPath = path + File.separator + "mealkit" + File.separator + "thumbnails" + File.separator + no;
     		
     		FileIOController.moveFile(srcPath, destinationPath, fileName);
         }
@@ -321,18 +321,15 @@ public class MealkitService {
 		return updatePictures;
 	}
 
-	public void buyMealkit(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public int buyMealkit(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
 	    String id = (String) request.getSession().getAttribute("userId");
-	    int mealkitNo = Integer.parseInt(request.getParameter("mealkitNo"));
-	    int quantity = Integer.parseInt(request.getParameter("quantity"));
-	    int delivered = Integer.parseInt(request.getParameter("delivered"));
-	    int refund = Integer.parseInt(request.getParameter("refund"));
+	    String[] mealkitNos = request.getParameterValues("mealkitNos[]");
+	    String[] quantities = request.getParameterValues("quantities[]");
+	    String address = request.getParameter("address");
+	    String isCart = request.getParameter("isCart");
 
-	    boolean result = mealkitDAO.saveOrder(id, mealkitNo, quantity, delivered, refund);
-	    PrintWriter out = response.getWriter();
-	    out.print(result);
-	    out.close();
+	    return mealkitDAO.insertMealkitOrder(id, mealkitNos, quantities, address, isCart);
 	}
 
 	public ArrayList<HashMap<String, Object>> getMealkitsListById(HttpServletRequest request) {
@@ -416,5 +413,16 @@ public class MealkitService {
         for (String fileName : fileNames) {
     		FileIOController.moveFile(srcPath, destinationPath, fileName);
         }        
+	}
+	
+	public ArrayList<HashMap<String, Object>> getPurchaseMealkits(HttpServletRequest request) {
+		
+		String combinedNo = request.getParameter("combinedNo");
+		String combinedQuantity = request.getParameter("CombinedQuantity");
+		
+		String[] mealkitNos = combinedNo.split(",");
+		String[] quantities = combinedQuantity.split(",");
+		
+		return mealkitDAO.selectPurchaseMealkits(mealkitNos, quantities);
 	}
 }

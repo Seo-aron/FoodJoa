@@ -155,17 +155,19 @@ public class MemberService {
 		String userId = multipartRequest.getParameter("userId"); // 파라미터로도 확인
 
 		// 주소 파라미터 가져오기
+		String zipcode = multipartRequest.getParameter("zipcode");
 		String address1 = multipartRequest.getParameter("address1");
 		String address2 = multipartRequest.getParameter("address2");
-		String address3 = multipartRequest.getParameter("address3");
-
-		// 전체 주소 결합
-		String address = address1 + " " + address2 + " " + address3;
 
 		String profileFileName = multipartRequest.getFilesystemName("profileFile");
 		// 회원 정보 생성 (프로필 파일명 포함)
-		MemberVO vo = new MemberVO(userId, multipartRequest.getParameter("name"),
-				multipartRequest.getParameter("nickname"), multipartRequest.getParameter("phone"), address, // 결합된 주소
+		MemberVO vo = new MemberVO(userId,
+				multipartRequest.getParameter("name"),
+				multipartRequest.getParameter("nickname"),
+				multipartRequest.getParameter("phone"),
+				zipcode,
+				address1,
+				address2,
 				profileFileName);
 
 		if (memberDAO.insertMember(vo) == 1) {
@@ -272,7 +274,7 @@ public class MemberService {
 		return memberDAO.checkMember(login_id, login_name);
 	}
 
-	public MemberVO getMember(HttpServletRequest request) throws ServletException, IOException {
+	public MemberVO getMember(HttpServletRequest request){
 
 		HttpSession session = request.getSession();
 		String id = (String) session.getAttribute("userId");
@@ -301,9 +303,15 @@ public class MemberService {
 			fileName = originProfile;
 		}
 
-		MemberVO member = new MemberVO(id, multipartRequest.getParameter("name"),
-				multipartRequest.getParameter("nickname"), multipartRequest.getParameter("phone"),
-				multipartRequest.getParameter("address"), fileName);
+		MemberVO member = new MemberVO(
+				id,
+				multipartRequest.getParameter("name"),
+				multipartRequest.getParameter("nickname"),
+				multipartRequest.getParameter("phone"),
+				multipartRequest.getParameter("zipcode"),
+				multipartRequest.getParameter("address1"),
+				multipartRequest.getParameter("address2"),
+				fileName);
 
 		int result = memberDAO.updateMember(member);
 
@@ -427,20 +435,20 @@ public class MemberService {
     }
 
 	public ArrayList<HashMap<String, Object>> getCartListInfos(String userId) {
-       
-		   if (userId == null || userId.isEmpty()) {
-		        // 예외 처리 또는 빈 리스트 반환
-		        return new ArrayList<>();
-		    }
 
-		    try {
-		        return mealkitDAO.selectCartList(userId);
-		    } catch (Exception e) {
-		        // 예외 처리 (예: 로그 출력)
-		        System.err.println("Error while fetching cart list: " + e.getMessage());
-		        return new ArrayList<>();
-		    }
-		    
+		if (userId == null || userId.isEmpty()) {
+			// 예외 처리 또는 빈 리스트 반환
+			return new ArrayList<>();
+		}
+
+		try {
+			return mealkitDAO.selectCartList(userId);
+		} catch (Exception e) {
+			// 예외 처리 (예: 로그 출력)
+			System.err.println("Error while fetching cart list: " + e.getMessage());
+			return new ArrayList<>();
+		}
+
 	}
 		
     public ArrayList<Integer> getCountOrderDelivered(HttpServletRequest request) {
@@ -499,10 +507,10 @@ public class MemberService {
 	    return memberDAO.updateOrderStatus(deliveredStatus, refundStatus, orderNo);
 	}
 
-	public List<HashMap<String, Object>> getOrderedMealkitList(String userId) { 
-		 List<HashMap<String, Object>> orderedMealkitList = new ArrayList<>();
-		 return orderedMealkitList; 
-		}
+	public List<HashMap<String, Object>> getOrderedMealkitList(String userId) {
+		List<HashMap<String, Object>> orderedMealkitList = new ArrayList<>();
+		return orderedMealkitList;
+	}
 
 }
 

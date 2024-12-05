@@ -55,9 +55,16 @@ public class MemberDAO {
 		try {
 			resultSet = dbConnector.executeQuery(sql);
 			while (resultSet.next()) {
-				MemberVO member = new MemberVO(resultSet.getString("id"), resultSet.getString("name"),
-						resultSet.getString("nickname"), resultSet.getString("phone"), resultSet.getString("address"),
-						resultSet.getString("profile"), resultSet.getTimestamp("join_date"));
+				MemberVO member = new MemberVO(
+						resultSet.getString("id"), 
+						resultSet.getString("name"),
+						resultSet.getString("nickname"), 
+						resultSet.getString("phone"), 
+						resultSet.getString("zipcode"),
+						resultSet.getString("address1"),
+						resultSet.getString("address2"),
+						resultSet.getString("profile"), 
+						resultSet.getTimestamp("join_date"));
 
 			}
 		} catch (SQLException e) {
@@ -132,11 +139,18 @@ public class MemberDAO {
 
 	// 회원가입 처리 (추가 정보 포함)
 	public int insertMember(MemberVO vo) {
-		String sql = "INSERT INTO member (id, name, nickname, phone, address, profile, join_date) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
+		String sql = "INSERT INTO member (id, name, nickname, phone, zipcode, address1, address2, profile, join_date) "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
 
-		int result = dbConnector.executeUpdate(sql, vo.getId(), vo.getName(), vo.getNickname(), vo.getPhone(),
-				vo.getAddress(), vo.getProfile());
+		int result = dbConnector.executeUpdate(sql,
+				vo.getId(), 
+				vo.getName(), 
+				vo.getNickname(), 
+				vo.getPhone(),
+				vo.getZipcode(), 
+				vo.getAddress1(), 
+				vo.getAddress2(), 
+				vo.getProfile());
 
 		dbConnector.release();
 
@@ -181,17 +195,18 @@ public class MemberDAO {
 	// 개인정보수정 - id변경 불가
 	public int updateMember(MemberVO member) {
 
-		System.out.println(member.getProfile());
-		System.out.println(member.getName());
-		System.out.println(member.getNickname());
-		System.out.println(member.getPhone());
-		System.out.println(member.getAddress());
-		System.out.println(member.getId());
+		String sql = "UPDATE member SET profile=?, name=?, nickname=?, phone=?, zipcode=? , address1=? , address2=? "
+				+ "WHERE id=?";
 
-		String sql = "UPDATE member SET profile=?, name=?, nickname=?, phone=?, address=? " + "WHERE id=?";
-
-		int result = dbConnector.executeUpdate(sql, member.getProfile(), member.getName(), member.getNickname(),
-				member.getPhone(), member.getAddress(), member.getId());
+		int result = dbConnector.executeUpdate(sql, 
+				member.getProfile(), 
+				member.getName(), 
+				member.getNickname(),
+				member.getPhone(), 
+				member.getZipcode(), 
+				member.getAddress1(), 
+				member.getAddress2(), 
+				member.getId());
 
 		return result;
 	}
@@ -204,9 +219,15 @@ public class MemberDAO {
 
 		try {
 			if (resultSet.next()) {
-				member = new MemberVO(resultSet.getString("id"), resultSet.getString("name"),
-						resultSet.getString("nickname"), resultSet.getString("phone"), resultSet.getString("address"),
-						resultSet.getString("profile"), resultSet.getTimestamp("join_date"));
+				member = new MemberVO(resultSet.getString("id"),
+						resultSet.getString("name"),
+						resultSet.getString("nickname"), 
+						resultSet.getString("phone"), 
+						resultSet.getString("zipcode"),
+						resultSet.getString("address1"),
+						resultSet.getString("address2"),
+						resultSet.getString("profile"), 
+						resultSet.getTimestamp("join_date"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -397,9 +418,15 @@ public class MemberDAO {
 
 		try {
 			if (resultSet.next()) {
-				member = new MemberVO(resultSet.getString("id"), resultSet.getString("name"),
-						resultSet.getString("nickname"), resultSet.getString("phone"), resultSet.getString("address"),
-						resultSet.getString("profile"), resultSet.getTimestamp("join_date"));
+				member = new MemberVO(resultSet.getString("id"),
+						resultSet.getString("name"),
+						resultSet.getString("nickname"), 
+						resultSet.getString("phone"), 
+						resultSet.getString("zipcode"),
+						resultSet.getString("address1"),
+						resultSet.getString("address2"),
+						resultSet.getString("profile"), 
+						resultSet.getTimestamp("join_date"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

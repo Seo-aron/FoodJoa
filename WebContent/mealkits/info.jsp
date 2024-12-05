@@ -142,7 +142,7 @@
 							<!-- 구매, 장바구니 버튼 -->
 							<div class="button_row">
 								<button class="cart_button" type="button" onclick="cartMealkit('<%=contextPath%>')">장바구니</button>
-								<button class="buy_button" id="payment">구매하기</button>
+								<button class="buy_button" id="payment" onclick="onPaymentButton(event)">구매하기</button>
 							</div>
 							<!-- 수정 삭제 버튼 -->
 				            <div class="edit_delete_buttons">
@@ -240,6 +240,15 @@
 	<!-- 결제 api -->
 	<script type="text/javascript">
 	
+		function onPaymentButton(e) {
+			e.preventDefault();
+			
+			let no = $("#mealkitNo").val();
+			let quantity = $("#stock").val();
+			
+			location.href = '<%= contextPath %>/Member/payment.me?isCart=0&combinedNo='+ no + '&CombinedQuantity=' + quantity;
+		}
+	<%-- 
 	var userId = '<%=id%>';
 	console.log("userId:", userId);
 	
@@ -336,7 +345,7 @@
 		        return false;
 		}
 	}
-
+ --%>
 	</script>
 </body>
 </html>

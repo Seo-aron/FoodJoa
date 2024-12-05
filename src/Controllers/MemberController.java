@@ -32,12 +32,12 @@ public class MemberController extends HttpServlet {
 
 	private MemberService memberService;
 	private MealkitService mealkitService;
-	private MealkitDAO mealkitDAO;
 	private String nextPage;
 
 	@Override
 	public void init() throws ServletException {
 		memberService = new MemberService();
+		mealkitService = new MealkitService();
 	}
 
 	@Override
@@ -82,9 +82,6 @@ public class MemberController extends HttpServlet {
 		case "/cartList.me": openCartList(request, response); break;
 		case "/deleteCartList.me": deleteCartList(request, response); return;
 		case "/updateCartList.me": updateCartList(request, response); return;
-		case "/sendPayMent.me": sendPayMent(request, response); return;
-		case "/openPayMent.me": openPayMent(request, response); return;
-		case "/updateOrderList.me": updateOrderList(request, response); return;	
 		case "/mypagemain.me": if (!openMypagemainView(request, response)) return; break; 
 		case "/update.me": openMemberUpdateView(request, response); break;
 		case "/updatePro.me": processMemberUpdate(request, response); break;
@@ -95,6 +92,13 @@ public class MemberController extends HttpServlet {
 		case "/viewImpormation.me": openImpormation(request, response); break;
 		case "/myReviews": openMyReviewsView(request, response); break;
 		case "/getOrder.me":processGetOrderedMealkitList(request,response); return;
+		
+//		case "/sendPayMent.me": sendPayMent(request, response); return;
+//		case "/openPayMent.me": openPayMent(request, response); return;
+//		case "/updateOrderList.me": updateOrderList(request, response); return;	
+		
+		case "/payment.me": openPaymentView(request,response); break;
+		
 		default:
 			nextPage = "/main.jsp";
 		}
@@ -585,71 +589,71 @@ public class MemberController extends HttpServlet {
 	    }
 	}
 	
-	private void sendPayMent(HttpServletRequest request, HttpServletResponse response) throws IOException {
-	    HttpSession session = request.getSession();
-	    String userId = (String) session.getAttribute("userId");
-
-	    // 장바구니에서 선택된 아이템 가져오기
-	    String selectedMealkitNosParam = request.getParameter("selectedMealkitNos");
-
-	    // 선택된 아이템이 없으면 처리
-	    if (selectedMealkitNosParam == null || selectedMealkitNosParam.isEmpty()) {
-	        System.out.println("sendPayMent - 선택된 상품이 없습니다.");
-	        response.sendRedirect(request.getContextPath() + "/Member/cartList.me");
-	        return;
-	    }
-
-	    // "1,2"와 같은 문자열을 "," 기준으로 분리하여 배열로 만듦
-	    String[] selectedMealkitNos = selectedMealkitNosParam.split(",");
-
-	    // 장바구니 정보 가져오기
-	    ArrayList<HashMap<String, Object>> cartListInfos = memberService.getCartListInfos(userId);
-	    
-	    // 선택된 아이템 필터링
-	    ArrayList<HashMap<String, Object>> filteredItems = new ArrayList<>();
-	    try {
-	        for (String selectedMealkitNo : selectedMealkitNos) {
-	            int no = Integer.parseInt(selectedMealkitNo); // 문자열을 숫자로 변환
-	            for (HashMap<String, Object> cartItem : cartListInfos) {
-	                MealkitVO mealkitVO = (MealkitVO) cartItem.get("mealkitVO");
-	                if (mealkitVO.getNo() == no) {
-	                    filteredItems.add(cartItem);
-	                }
-	            }
-	        }
-	    } catch (NumberFormatException e) {
-	        System.err.println("sendPayMent - Invalid mealkit number: " + e.getMessage());
-	    } 
-
-	    // 선택된 아이템을 세션에 저장
-	    session.setAttribute("selectedItems", filteredItems);
-
-	    // 결제 페이지로 리디렉션
-	    response.sendRedirect(request.getContextPath() + "/Member/openPayMent.me");
-	}
-
-
-
-
-
-	private void openPayMent(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-	    HttpSession session = request.getSession();
-	    ArrayList<HashMap<String, Object>> selectedItems = (ArrayList<HashMap<String, Object>>) session.getAttribute("selectedItems");
-
-	    // 선택된 아이템을 request에 설정
-	    if (selectedItems != null && !selectedItems.isEmpty()) {
-	        request.setAttribute("selectedItems", selectedItems);
-	    } else {
-	        request.setAttribute("selectedItems", new ArrayList<>()); // 기본 빈 리스트 전달
-	    }
-
-	    // 페이지 설정
-	    request.setAttribute("center", "members/payment.jsp");
-
-	    // main.jsp로 포워딩
-	    RequestDispatcher dispatcher = request.getRequestDispatcher("/main.jsp");
-	    dispatcher.forward(request, response);
-	}
+//	private void sendPayMent(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//	    HttpSession session = request.getSession();
+//	    String userId = (String) session.getAttribute("userId");
+//
+//	    // 장바구니에서 선택된 아이템 가져오기
+//	    String selectedMealkitNosParam = request.getParameter("selectedMealkitNos");
+//
+//	    // 선택된 아이템이 없으면 처리
+//	    if (selectedMealkitNosParam == null || selectedMealkitNosParam.isEmpty()) {
+//	        System.out.println("sendPayMent - 선택된 상품이 없습니다.");
+//	        response.sendRedirect(request.getContextPath() + "/Member/cartList.me");
+//	        return;
+//	    }
+//
+//	    // "1,2"와 같은 문자열을 "," 기준으로 분리하여 배열로 만듦
+//	    String[] selectedMealkitNos = selectedMealkitNosParam.split(",");
+//
+//	    // 장바구니 정보 가져오기
+//	    ArrayList<HashMap<String, Object>> cartListInfos = memberService.getCartListInfos(userId);
+//	    
+//	    // 선택된 아이템 필터링
+//	    ArrayList<HashMap<String, Object>> filteredItems = new ArrayList<>();
+//	    try {
+//	        for (String selectedMealkitNo : selectedMealkitNos) {
+//	            int no = Integer.parseInt(selectedMealkitNo); // 문자열을 숫자로 변환
+//	            for (HashMap<String, Object> cartItem : cartListInfos) {
+//	                MealkitVO mealkitVO = (MealkitVO) cartItem.get("mealkitVO");
+//	                if (mealkitVO.getNo() == no) {
+//	                    filteredItems.add(cartItem);
+//	                }
+//	            }
+//	        }
+//	    } catch (NumberFormatException e) {
+//	        System.err.println("sendPayMent - Invalid mealkit number: " + e.getMessage());
+//	    } 
+//
+//	    // 선택된 아이템을 세션에 저장
+//	    session.setAttribute("selectedItems", filteredItems);
+//
+//	    // 결제 페이지로 리디렉션
+//	    response.sendRedirect(request.getContextPath() + "/Member/openPayMent.me");
+//	}
+//
+//
+//
+//
+//
+//	private void openPayMent(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+//	    HttpSession session = request.getSession();
+//	    ArrayList<HashMap<String, Object>> selectedItems = (ArrayList<HashMap<String, Object>>) session.getAttribute("selectedItems");
+//
+//	    // 선택된 아이템을 request에 설정
+//	    if (selectedItems != null && !selectedItems.isEmpty()) {
+//	        request.setAttribute("selectedItems", selectedItems);
+//	    } else {
+//	        request.setAttribute("selectedItems", new ArrayList<>()); // 기본 빈 리스트 전달
+//	    }
+//
+//	    // 페이지 설정
+//	    request.setAttribute("center", "members/payment.jsp");
+//
+//	    // main.jsp로 포워딩
+//	    RequestDispatcher dispatcher = request.getRequestDispatcher("/main.jsp");
+//	    dispatcher.forward(request, response);
+//	}
 
 
 	private void updateOrderList(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -806,7 +810,6 @@ public class MemberController extends HttpServlet {
 		request.setAttribute("center", "members/sendmealkit.jsp"); 
 		nextPage = "/main.jsp"; }
 
-	// 건용 추가----
 	private void openMyReviewsView(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
@@ -820,4 +823,19 @@ public class MemberController extends HttpServlet {
 		nextPage = "/main.jsp";
 	}
 
+	
+	private void openPaymentView(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		ArrayList<HashMap<String, Object>> orders = mealkitService.getPurchaseMealkits(request);
+		MemberVO myInfo = memberService.getMember(request); 
+		
+		request.setAttribute("orders", orders);
+		request.setAttribute("myInfo", myInfo);
+		request.setAttribute("isCart", request.getParameter("isCart"));
+		request.setAttribute("pageTitle", "밀키트 구매하기");
+		request.setAttribute("center", "members/payment.jsp");
+
+		nextPage = "/main.jsp";
+	}
 }

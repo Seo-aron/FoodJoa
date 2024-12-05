@@ -63,10 +63,10 @@
 					<input type="text" id="phone" name="phone" class="form-control" placeholder="휴대폰번호 입력해주세요" required />
 					
 					<p id="addressInput"></p> 
-					<input type="text" id="sample4_postcode" name="address1" class="form-control" placeholder="우편번호">
+					<input type="text" id="sample4_postcode" name="zipcode" class="form-control" placeholder="우편번호">
 					<input type="button" onclick="sample4_execDaumPostcode()" value="우편번호 찾기" class="form-control"><br>					
-					<input type="text" id="sample4_roadAddress" name="address2" placeholder="도로명주소" class="form-control">
-					<input type="text" id="sample4_detailAddress" placeholder="상세주소" name="address3" class="form-control">
+					<input type="text" id="sample4_roadAddress" name="address1" placeholder="도로명주소" class="form-control">
+					<input type="text" id="sample4_detailAddress" placeholder="상세주소" name="address2" class="form-control">
 			
 					
 				</div>

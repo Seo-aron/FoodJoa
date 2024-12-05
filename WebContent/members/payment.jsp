@@ -1,20 +1,33 @@
+<%@page import="Common.StringParser"%>
+<%@page import="VOs.MealkitVO"%>
+<%@page import="VOs.MemberVO"%>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%
     request.setCharacterEncoding("UTF-8");
     response.setContentType("text/html; charset=utf-8");
+    
+    String contextPath = request.getContextPath();
 
     // selectedItems를 세션에서 가져오기
-    ArrayList<HashMap<String, Object>> selectedItems = (ArrayList<HashMap<String, Object>>) session.getAttribute("selectedItems");
+    //ArrayList<HashMap<String, Object>> selectedItems = (ArrayList<HashMap<String, Object>>) session.getAttribute("selectedItems");
 
     // selectedItems가 null이거나 비어있는 경우 처리
-    if (selectedItems == null || selectedItems.isEmpty()) {
+    /*if (selectedItems == null || selectedItems.isEmpty()) {
         out.print("<p>선택된 상품이 없습니다. 장바구니로 돌아가세요.</p>");
         return;
-    }
+    }*/
+    
+    ArrayList<HashMap<String, Object>> orders = (ArrayList<HashMap<String, Object>>) request.getAttribute("orders");
+    MemberVO myInfo = (MemberVO) request.getAttribute("myInfo");
+    
+    int purchasePrice = 0;
+    
+    String isCart = (String) request.getAttribute("isCart");
 %>
 
 <!DOCTYPE html>
@@ -22,6 +35,12 @@
 <head>
     <meta charset="UTF-8">
     <title>결제 페이지</title>
+    
+	<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="<%=contextPath%>/css/member/payment.css">
+    
     <style>
         * {
             margin: 0;
@@ -124,8 +143,128 @@
         }
     </style>
 </head>
-<body>
 
+<body>
+	<div class="payment-container">
+		<div class="left-area">
+			<table width="100%">
+				<%
+				if (orders == null || orders.size() <= 0) {
+					%>
+					<tr>
+						<td>
+							선택한 물품이 없습니다.
+						</td>
+					</tr>
+					<%
+				}
+				else {
+					for (int i = 0; i < orders.size(); i++) {
+						MealkitVO mealkitVO = (MealkitVO) orders.get(i).get("mealkitVO");
+						MemberVO memberVO = (MemberVO) orders.get(i).get("memberVO");
+						String quantity = (String) orders.get(i).get("quantity");
+						String thumbnail = StringParser.splitString(mealkitVO.getPictures()).get(0);
+						
+						int totalPrice = Integer.parseInt(quantity) * Integer.parseInt(mealkitVO.getPrice());
+						purchasePrice += totalPrice;
+						
+						int category = mealkitVO.getCategory();
+						String categoryStr = (category == 1) ? "[한식]" : 
+								(category == 2) ? "[일식]" : 
+								(category == 3) ? "[중식]" : "[양식]";
+						%>
+						<tr>
+							<td><div class="purchase-cell">
+								<table width="100%">
+									<tr>
+										<td rowspan="4" width="200px">
+											<div class="thumbnail-area">
+												<img src="<%= contextPath %>/images/mealkit/thumbnails/<%= mealkitVO.getNo() %>/<%= thumbnail %>">
+											</div>
+										</td>
+										<td>
+											<div class="title-area">
+												<%= categoryStr %>&nbsp;<%= mealkitVO.getTitle() %>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<div class="nickname-area">
+												<%= memberVO.getNickname() %>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<div class="quantity-area">
+												수량 : <%= quantity %>
+											</div>
+											<div class="price-area">
+												<fmt:formatNumber value="<%= mealkitVO.getPrice() %>" 
+													type="currency" 
+													currencySymbol="₩" 
+													groupingUsed="true" 
+													maxFractionDigits="0" />원
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<div class="total-price">
+												총
+												<span>
+												    <fmt:formatNumber value="<%= totalPrice %>" 
+														type="currency" 
+														currencySymbol="₩" 
+														groupingUsed="true" 
+														maxFractionDigits="0" />
+												</span> 원
+											</div>
+										</td>
+									</tr>
+								</table>
+							</div></td>
+						</tr>
+						<%	
+					}
+				}
+				%>
+			</table>
+		</div>
+		<div class="right-area">
+			<h3>배송지 입력</h3>
+			<input type="text" id="sample4_postcode" name="zipcode" value="<%= myInfo.getZipcode() %>"
+				placeholder="우편번호" class="form-control" required>
+			<br>
+			
+			<input type="text" id="sample4_roadAddress" name="address1" value="<%= myInfo.getAddress1() %>"
+				placeholder="도로명 주소" class="form-control" required>
+			<br>
+				
+			<button type="button" onclick="sample4_execDaumPostcode()" class="form-control">우편번호 찾기</button><br>
+			
+			<input type="text" id="sample4_detailAddress" name="address2" value="<%= myInfo.getAddress2() %>"
+				placeholder="상세 주소" class="form-control" required>
+			<br>
+			
+			<div class="purchase-area">
+				<p class="purchase-price">
+					총
+					<span>
+					    <fmt:formatNumber value="<%= purchasePrice %>" 
+							type="currency" 
+							currencySymbol="₩" 
+							groupingUsed="true" 
+							maxFractionDigits="0" />
+					</span> 원
+				</p>
+				<input type="button" value="구매" onclick="onPurchase(event)">
+				<input type="button" value="취소">
+			</div>
+		</div>
+	</div>	
+<%-- 
 <div class="container">
     <h2>결제 페이지</h2>
 
@@ -210,26 +349,86 @@
         <!-- 결제하기 버튼 -->
         <input type="submit" value="결제하기" class="btn">
     </form>
-</div>
-</div>
+</div> 
+</div>--%>
 
-<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script>
-    // 우편번호 찾기 API 호출 후 hidden 필드에 값 설정
-    function sample4_execDaumPostcode() {
-        new daum.Postcode({
-            oncomplete: function(data) {
-                var roadAddr = data.roadAddress; // 도로명 주소
+	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	<script>
+		function onPurchase(e) {
+			e.preventDefault();
+			
+			if (confirm("구매 하시겠습니까?")) {
+				// 고유한 결제 번호 생성
+				var today = new Date();
+				var hours = today.getHours();
+				var minutes = today.getMinutes();
+				var seconds = today.getSeconds();
+				var milliseconds = today.getMilliseconds();
+				var makeMerchantUid = '' + hours + '' + minutes + '' + seconds + '' + milliseconds;  // 결제 고유 번호
+				
+				IMP.init("imp78768038");
+				
+				IMP.request_pay({
+					pg: 'kakaopay.TC0ONETIME',  // PG사 코드
+		            pay_method: 'card',          // 결제 방식
+		            merchant_uid: "IMP" + makeMerchantUid, // 결제 고유 번호
+		            name: "총 주문", // 결제 명칭
+	                amount: <%= purchasePrice %>,
+				}, async function(rsp) {
+					if (rsp.success) {
+						console.log(rsp); // 결제 성공 시 응답 로그   
+		                
+                        let initNos = [<c:forEach items="${orders}" var="item" varStatus="status">'${item.mealkitVO.no}'${!status.last ? ',' : ''}</c:forEach>];
+                    	let initQuantities = [<c:forEach items="${orders}" var="item" varStatus="status">'${item.quantity}'${!status.last ? ',' : ''}</c:forEach>];
+                    	let address = $("#sample4_postcode").val() + $("#sample4_roadAddress").val() + $("#sample4_detailAddress").val();
+		                
+                    	$.ajax({
+			        		url: '<%=contextPath%>/Mealkit/buyMealkit.pro',
+			                type: "POST",
+			                async: true,
+			                data: {
+			                	'mealkitNos[]': initNos,
+			                    'quantities[]': initQuantities,
+			                    address: address,
+			                    isCart: '<%= isCart %>'
+			                },
+			                dataType: "text",
+			        		success: function(response) {
+			        	        // 서버 응답 처리
+			        	        if (response > 0) {
+									console.log('결제가 성공적으로 완료되었습니다.');
+									alert('결제가 성공적으로 완료되었습니다.');
+									location.href = '<%= contextPath %>/Main/home';
+			        	        }
+			        	        else {
+			        	            alert('결제는 성공했지만 DB 저장 중 오류가 발생했습니다.');
+			        	        }
+			        	    },
+			        	    error: function(xhr, status, error) {
+			        	        console.error("AJAX 요청 실패: " + status + ", " + error);
+			        	        alert('결제 처리 중 오류가 발생했습니다.');
+			        	    }
+			        	});
+					}
+				});
+			}
+		}
+	
+	    // 우편번호 찾기 API 호출 후 hidden 필드에 값 설정
+	    function sample4_execDaumPostcode() {
+	    	new daum.Postcode({
+	            oncomplete: function(data) {
+	                // 도로명 주소 변수
+	                var roadAddr = data.roadAddress; // 도로명 주소
+	                var extraRoadAddr = ''; // 참고 항목 (예: 건물명, 아파트 동 등)
 
-                // 우편번호와 주소 정보를 hidden 필드에 넣기
-                document.getElementById('hiddenPostcode').value = data.zonecode;  // 우편번호
-                document.getElementById("hiddenRoadAddress").value = roadAddr;    // 도로명 주소
-                document.getElementById("hiddenDetailAddress").value = 
-                    document.getElementById("sample4_detailAddress").value; // 상세 주소
-            }
-        }).open();
-    }
-</script>
-
+	                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+	                document.getElementById('sample4_postcode').value = data.zonecode;  // 우편번호
+	                document.getElementById("sample4_roadAddress").value = roadAddr;    // 도로명 주소
+	            }
+	        }).open();
+	    }
+	</script>
 </body>
+
 </html>

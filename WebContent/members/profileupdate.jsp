@@ -121,8 +121,12 @@ String id = (String) session.getAttribute("id");
 					name="phone" value="${vo.phone}" placeholder="-없이 입력해주세요" required>
 			</div>
 			<div class="form-group">
-				<label for="address">주소</label> <input type="text" id="address"
-					name="address" value="${vo.address}" required>
+				<%-- <label for="address">주소</label> <input type="text" id="address"
+					name="address" value="${vo.address}" required> --%>
+				<input type="text" id="sample4_postcode" name="zipcode" class="form-control" placeholder="우편번호" value="${vo.zipcode }>
+				<input type="button" onclick="sample4_execDaumPostcode()" value="우편번호 찾기" class="form-control"><br>					
+				<input type="text" id="sample4_roadAddress" name="address1" placeholder="도로명주소" class="form-control" value="${vo.address1 }>
+				<input type="text" id="sample4_detailAddress" placeholder="상세주소" name="address2" class="form-control" value="${vo.address2 }>
 			</div>
 			<div class="btn-container">
 				<button type="submit" class="btn-submit" id="updateForm()">제출</button>

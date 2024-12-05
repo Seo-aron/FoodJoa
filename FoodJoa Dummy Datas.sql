@@ -156,8 +156,8 @@ values("푸드조아 프로젝트 시작합니다!", "푸드조아 프로젝트 
 
 insert into mealkit_cart(id, mealkit_no, quantity, choice_date)
 values
-('tQi32Qj0iONPLRZ16-5sX4-Gq_p8Jg_T33r-HdtLEFE', '1', '3', current_time()),
-('tQi32Qj0iONPLRZ16-5sX4-Gq_p8Jg_T33r-HdtLEFE', '2', '2', current_time()),
-('tQi32Qj0iONPLRZ16-5sX4-Gq_p8Jg_T33r-HdtLEFE', '1', '3', current_time()),
-('tQi32Qj0iONPLRZ16-5sX4-Gq_p8Jg_T33r-HdtLEFE', '2', '3', current_time()),
-('tQi32Qj0iONPLRZ16-5sX4-Gq_p8Jg_T33r-HdtLEFE', '3', '1', current_time());
+('3796760927', '1', '3', current_time()),
+('3796760927', '2', '2', current_time()),
+('3796760927', '3', '3', current_time()),
+('3796760927', '4', '3', current_time()),
+('3796760927', '5', '1', current_time());

@@ -8,45 +8,35 @@ public class MemberVO {
 	private String name;
 	private String nickname;
 	private String phone;
-	private String address;
+	private String zipcode;
+	private String address1;
+	private String address2;
 	private String profile;
 	private Timestamp join_date;
-
+	
 	public MemberVO() {
 	}
 
-	// join_date 없는 생성자
-	public MemberVO(String id, String name, String nickname, String phone, String address, String profile) {
-		this.id = id;
-		this.name = name;
-		this.nickname = nickname;
-		this.phone = phone;
-		this.address = address;
-		this.profile = profile;
-	}
+	public MemberVO(String id, String name, String nickname, String phone, String zipcode, String address1,
+			String address2, String profile, Timestamp join_date) {
 
-	// join_date 포함된 생성자
-	public MemberVO(String id, String name, String nickname, String phone, String address, String profile,
-			Timestamp join_date) {
-		this.id = id;
-		this.name = name;
-		this.nickname = nickname;
-		this.phone = phone;
-		this.address = address;
-		this.profile = profile;
+		this(id, name, nickname, phone, zipcode, address1, address2, profile);
 		this.join_date = join_date;
 	}
 
-	// join_date, id 없는 대신 profile 포함된 정보수정 양식 생성자
-	public MemberVO(String profile, String name, String nickname, String phone, String address) {
-		this.profile = profile;
+	public MemberVO(String id, String name, String nickname, String phone, String zipcode, String address1,
+			String address2, String profile) {
+
+		this.id = id;
 		this.name = name;
 		this.nickname = nickname;
 		this.phone = phone;
-		this.address = address;
+		this.zipcode = zipcode;
+		this.address1 = address1;
+		this.address2 = address2;
+		this.profile = profile;
 	}
-	
-	// Getters and Setters
+
 	public String getId() {
 		return id;
 	}
@@ -79,12 +69,28 @@ public class MemberVO {
 		this.phone = phone;
 	}
 
-	public String getAddress() {
-		return address;
+	public String getZipcode() {
+		return zipcode;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setZipcode(String zipcode) {
+		this.zipcode = zipcode;
+	}
+
+	public String getAddress1() {
+		return address1;
+	}
+
+	public void setAddress1(String address1) {
+		this.address1 = address1;
+	}
+
+	public String getAddress2() {
+		return address2;
+	}
+
+	public void setAddress2(String address2) {
+		this.address2 = address2;
 	}
 
 	public String getProfile() {

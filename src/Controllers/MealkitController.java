@@ -117,7 +117,14 @@ public class MealkitController extends HttpServlet {
 	}
 
 	private void processBuyMealkit(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		mealkitService.buyMealkit(request, response);
+		
+		int result = mealkitService.buyMealkit(request, response);
+		
+		PrintWriter out = response.getWriter();
+		
+		out.print(result);
+		
+		out.close();
 	}
 
 	private void processSearchList(HttpServletRequest request, HttpServletResponse response) {
