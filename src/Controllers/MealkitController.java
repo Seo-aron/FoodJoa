@@ -148,7 +148,14 @@ public class MealkitController extends HttpServlet {
 
 	private void processDelete(HttpServletRequest request, HttpServletResponse response) 
 			throws IOException {
-		mealkitService.delMealkit(request, response);
+
+		int result = mealkitService.delMealkit(request);		
+
+	    PrintWriter printWriter = response.getWriter();
+	    
+	    printWriter.print(result);
+	    
+		printWriter.close();
 	}
 
 	private void openAddReview(HttpServletRequest request, HttpServletResponse response) {
@@ -198,6 +205,8 @@ public class MealkitController extends HttpServlet {
 		
 		HashMap<String, Object> mealkit = mealkitService.getMealkit(request);
 		ArrayList<HashMap<String, Object>> reviews = mealkitService.getReviewInfo(request);
+		
+		System.out.println("mealkit : " + mealkit);
 		
 		String title = ((MealkitVO) mealkit.get("mealkitVO")).getTitle();
 		

@@ -296,7 +296,7 @@ public class MemberService {
 
 		String originProfile = multipartRequest.getParameter("origin-profile");
 		String fileName = multipartRequest.getOriginalFileName("profile");
-
+		
 		if (fileName == null) {
 			fileName = originProfile;
 		}
@@ -307,7 +307,12 @@ public class MemberService {
 
 		int result = memberDAO.updateMember(member);
 
-		// 병합 후 FileIOController 클래스 생성 되면 작성 해야 함
+		String srcPath = path + File.separator + "temp";
+		String destinationPath = path + File.separator + "member" + File.separator +
+				"userProfiles" + File.separator + id;
+		
+		FileIOController.deleteFile(destinationPath, originProfile);
+		FileIOController.moveFile(srcPath, destinationPath, fileName);
 
 		return result;
 	}
@@ -373,18 +378,8 @@ public class MemberService {
 	    HttpSession session = request.getSession();
 	    String id = (String) session.getAttribute("userId");
 
-	    // delivered 값을 요청 파라미터에서 가져오기
-	    int delivered = 0; // 기본값
-	    if (request.getParameter("delivered") != null) {
-	        try {
-	            delivered = Integer.parseInt(request.getParameter("delivered"));
-	        } catch (NumberFormatException e) {
-	            System.out.println("Invalid delivered value: " + request.getParameter("delivered"));
-	        }
-	    }
-
 	    // DAO 호출
-	    ArrayList<HashMap<String, Object>> sendedMealkitList = memberDAO.selectSendedMealkit(id, delivered);
+	    ArrayList<HashMap<String, Object>> sendedMealkitList = memberDAO.selectSendedMealkit(id);
 
 	    return sendedMealkitList;
 	}

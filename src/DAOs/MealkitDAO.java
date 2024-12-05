@@ -71,7 +71,7 @@ public class MealkitDAO {
 		String sql = "SELECT "
 				+ "k.*, coalesce(avg_table.avg_rating, 0) AS average_rating, m.nickname "
 				+ "FROM mealkit k "
-				+ "JOIN ( "
+				+ "LEFT JOIN ( "
 				+ "SELECT "
 				+ "mr.mealkit_no, AVG(rating) as avg_rating "
 				+ "FROM mealkit_review mr "

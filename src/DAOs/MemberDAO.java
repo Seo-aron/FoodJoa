@@ -464,7 +464,7 @@ public class MemberDAO {
 		return orderedMealkitList;
 	}
 	
-	public ArrayList<HashMap<String, Object>> selectSendedMealkit(String id, int delivered) {
+	public ArrayList<HashMap<String, Object>> selectSendedMealkit(String id) {
 	    ArrayList<HashMap<String, Object>> orderedMealkitList = new ArrayList<>();
 	    String sql = "SELECT "
 	               + "k.no, k.id, k.title, k.contents, k.category, k.price, k.stock, k.pictures, "
@@ -473,10 +473,10 @@ public class MemberDAO {
 	               + "FROM mealkit k "
 	               + "INNER JOIN mealkit_order o ON k.no = o.mealkit_no "
 	               + "INNER JOIN member m ON o.id = m.id "
-	               + "WHERE k.id = ? AND o.delivered = ? "
+	               + "WHERE k.id = ? "
 	               + "ORDER BY o.post_date DESC";
 
-	    ResultSet resultSet = dbConnector.executeQuery(sql, id, delivered);
+	    ResultSet resultSet = dbConnector.executeQuery(sql, id);
 
 	    try {
 	        while (resultSet.next()) {

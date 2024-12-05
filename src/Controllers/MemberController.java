@@ -86,7 +86,7 @@ public class MemberController extends HttpServlet {
 		case "/openPayMent.me": openPayMent(request, response); return;
 		case "/updateOrderList.me": updateOrderList(request, response); return;	
 		case "/mypagemain.me": if (!openMypagemainView(request, response)) return; break; 
-		case "/update.me": openMemberUpdateView(request, response); return;
+		case "/update.me": openMemberUpdateView(request, response); break;
 		case "/updatePro.me": processMemberUpdate(request, response); break;
 		case "/orderUpdate.me": processUpdateOrder(request, response); break;
 		case "/viewMyDelivery.me": openMyDeliveryView(request, response); break;
@@ -102,17 +102,6 @@ public class MemberController extends HttpServlet {
 		RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
 		dispatcher.forward(request, response);
 	}
-
-
-	
-
-
-	/*
-	 * private void processUpdateDelivery(HttpServletRequest request,
-	 * HttpServletResponse response) { MealkitDAO dao = memberService.(request);
-	 * request.setAttribute("center","members/sendmealkit.jsp"); nextPage =
-	 * "/main.jsp"; }
-	 */
 
 	private void processUpdateOrder(HttpServletRequest request, HttpServletResponse response) {
 		 int orderNo = Integer.parseInt(request.getParameter("orderNo"));
@@ -171,7 +160,7 @@ public class MemberController extends HttpServlet {
 			session.setAttribute("userId", userId); // 로그인한 사용자의 아이디를 세션에 저장
 		}
 
-		nextPage = "/main.jsp";
+		nextPage = "/Main/home";
 	}
 
 	private void openJoinMain(HttpServletRequest request, HttpServletResponse response) {
@@ -743,6 +732,9 @@ public class MemberController extends HttpServlet {
 		ArrayList<Integer> deliveredCounts = memberService.getCountOrderDelivered(request);
 		ArrayList<Integer> sendedCounts = memberService.getCountOrderSended(request);
 
+		response.setHeader("Cache-Control", "no-cache");
+		response.addHeader("Cache-Control", "no-store");
+		
 		request.setAttribute("member", member);
 		request.setAttribute("deliveredCounts", deliveredCounts);
 		request.setAttribute("sendedCounts", sendedCounts);
@@ -768,6 +760,10 @@ public class MemberController extends HttpServlet {
 	private void processMemberUpdate(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		int result = memberService.updateProfile(request);
+
+		response.setHeader("Cache-Control", "no-cache");
+		response.addHeader("Cache-Control", "no-store");
+		
 		nextPage = "/Member/mypagemain.me";
 	}
 

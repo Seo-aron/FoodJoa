@@ -5,91 +5,92 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <%
-	request.setCharacterEncoding("UTF-8");
-	response.setContentType("text/html; charset=utf-8");
+request.setCharacterEncoding("UTF-8");
+response.setContentType("text/html; charset=utf-8");
 
-	String contextPath = request.getContextPath();
+String contextPath = request.getContextPath();
 
-	MemberVO vo = (MemberVO) request.getAttribute("vo");
+MemberVO vo = (MemberVO) request.getAttribute("vo");
 
-	String id = (String) session.getAttribute("id");
+String id = (String) session.getAttribute("id");
 %>
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
-<meta charset="UTF-8">
-<title>회원 정보 수정</title>
-<script src="http://code.jquery.com/jquery-latest.min.js"> </script>
-
-<link rel="stylesheet"
-	href="<%=contextPath%>/css/member/profileupdate.css">
-<script type="text/javascript">
-document.addEventListener('DOMContentLoaded', function () {
-    const fileInput = document.getElementById('fileInput');
-    const previewContainer = document.getElementById('previewContainer');
-
-    fileInput.addEventListener('change', function (event) {
-        const file = event.target.files[0];
-        previewContainer.innerHTML = ''; // 기존 미리보기 초기화
-
-        if (file && file.type.startsWith('image/')) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.alt = '미리보기 이미지';
-                img.style.maxWidth = '200px';
-                img.style.maxHeight = '200px';
-                previewContainer.appendChild(img);
-            };
-            reader.readAsDataURL(file);
-        } else {
-            previewContainer.innerHTML = '<span style="color: red;">이미지 파일만 선택 가능합니다.</span>';
-        }
-    });
-    
-    // 제출 버튼 유효성 검사
-    $(".btn-submit").click(function(event) {
-        event.preventDefault();
-        
-        const name = document.getElementById('name').value.trim();
-        const nickname = document.getElementById('nickname').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-        const address = document.getElementById('address').value.trim();
-
-        if (name.length < 2 || name.length > 10) {
-            alert('이름은 2자 이상, 10자 이하로 입력해주세요.');
-            return;
-        }
-        if (nickname.length < 2 || nickname.length > 10) {
-            alert('닉네임은 2자 이상, 10자 이하로 입력해주세요.');
-            return;
-        }
-        const phoneRegex = /^\d{10,11}$/;
-        if (!phoneRegex.test(phone)) {
-            alert('전화번호는 10~11자리 숫자로 입력해주세요.');
-            return;
-        }
-        if (!address) {
-            alert('주소를 입력해주세요.');
-            return;
-        }
-        alert('수정 완료되었습니다!');
-        $(this).closest("form").submit();
-    });
-
-    // 취소 버튼 클릭 동작
-    $(".btn-cancel").click(function(event) {
-        event.preventDefault(); // 기본 클릭 이벤트 방지
-        const confirmCancel = confirm('수정을 취소하시겠습니까?');
-        if (confirmCancel) {
-            window.location.href = "<%=request.getContextPath()%>/Member/mypagemain.me";
-        }
-    });
-});
-
-</script>
+	<meta charset="UTF-8">
+	<title>회원 정보 수정</title>
+	
+	<script src="http://code.jquery.com/jquery-latest.min.js"> </script>
+	<link rel="stylesheet" href="<%=contextPath%>/css/member/profileupdate.css">
+	
+	<script type="text/javascript">
+		document.addEventListener('DOMContentLoaded', function () {
+		    const fileInput = document.getElementById('fileInput');
+		    const previewContainer = document.getElementById('previewContainer');
+		
+		    fileInput.addEventListener('change', function (event) {
+		        const file = event.target.files[0];
+		        previewContainer.innerHTML = ''; // 기존 미리보기 초기화
+		
+		        if (file && file.type.startsWith('image/')) {
+		            const reader = new FileReader();
+		            reader.onload = function (e) {
+		                const img = document.createElement('img');
+		                img.src = e.target.result;
+		                img.alt = '미리보기 이미지';
+		                img.style.maxWidth = '200px';
+		                img.style.maxHeight = '200px';
+		                previewContainer.appendChild(img);
+		            };
+		            reader.readAsDataURL(file);
+		        } else {
+		            previewContainer.innerHTML = '<span style="color: red;">이미지 파일만 선택 가능합니다.</span>';
+		        }
+		    });
+		    
+		    // 제출 버튼 유효성 검사
+		    $(".btn-submit").click(function(event) {
+		        event.preventDefault();
+		        
+		        const name = document.getElementById('name').value.trim();
+		        const nickname = document.getElementById('nickname').value.trim();
+		        const phone = document.getElementById('phone').value.trim();
+		        const address = document.getElementById('address').value.trim();
+		
+		        if (name.length < 2 || name.length > 10) {
+		            alert('이름은 2자 이상, 10자 이하로 입력해주세요.');
+		            return;
+		        }
+		        if (nickname.length < 2 || nickname.length > 10) {
+		            alert('닉네임은 2자 이상, 10자 이하로 입력해주세요.');
+		            return;
+		        }
+		        const phoneRegex = /^\d{10,11}$/;
+		        if (!phoneRegex.test(phone)) {
+		            alert('전화번호는 10~11자리 숫자로 입력해주세요.');
+		            return;
+		        }
+		        if (!address) {
+		            alert('주소를 입력해주세요.');
+		            return;
+		        }
+		        alert('수정 완료되었습니다!');
+		        $(this).closest("form").submit();
+		    });
+		
+		    // 취소 버튼 클릭 동작
+		    $(".btn-cancel").click(function(event) {
+		        event.preventDefault(); // 기본 클릭 이벤트 방지
+		        const confirmCancel = confirm('수정을 취소하시겠습니까?');
+		        if (confirmCancel) {
+		            window.location.href = "<%=request.getContextPath()%>/Member/mypagemain.me";
+		        }
+		    });
+		});
+	</script>
 </head>
+
 <body>
 	<div class="form-container">
 		<h2>정보 수정</h2>
@@ -98,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			enctype="multipart/form-data" id="updateForm">
 			<input type="hidden" id="origin-profile" name="origin-profile"
 				value="<%=vo.getProfile()%>"> <br> <br>
-				
+
 			<!-- 파일 선택 버튼 -->
 			<input type="file" accept=".jpg, .jpeg, .png" class="profile"
 				id="fileInput" name="profile">
@@ -130,4 +131,5 @@ document.addEventListener('DOMContentLoaded', function () {
 		</form>
 	</div>
 </body>
+
 </html>

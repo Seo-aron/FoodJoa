@@ -211,19 +211,9 @@ public class MealkitService {
 		return mealkitDAO.insertNewReview(review);
 	}
 
-	public void delMealkit(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public int delMealkit(HttpServletRequest request) throws IOException {
 		
-		int no = Integer.parseInt(request.getParameter("no"));
-		
-		int result = mealkitDAO.deleteMealkit(no);
-		
-	    PrintWriter printWriter = response.getWriter();
-	    if (result > 0) {
-	        printWriter.print("1");
-	    } else {
-	        printWriter.print("0");
-	    }
-		printWriter.close();
+		return mealkitDAO.deleteMealkit(Integer.parseInt(request.getParameter("no")));
 	}
 
 	public void updateMealkit(HttpServletRequest request, HttpServletResponse response) throws IOException {

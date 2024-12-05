@@ -9,7 +9,9 @@ CREATE TABLE member(
     name 		varchar(20) not null,
     nickname 	varchar(10) not null,
     phone 		varchar(15) not null,
-    address 	varchar(50) not null,
+    zipcode 	varchar(50) not null,
+    address1 	varchar(50) not null,
+    address2 	varchar(50) not null,
     profile 	varchar(50) not null,
     join_date 	timestamp not null
 );

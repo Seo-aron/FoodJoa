@@ -105,16 +105,6 @@
                 // 우편번호와 주소 정보를 해당 필드에 넣는다.
                 document.getElementById('sample4_postcode').value = data.zonecode;  // 우편번호
                 document.getElementById("sample4_roadAddress").value = roadAddr;    // 도로명 주소
-
-                // 참고 항목 문자열이 있을 경우 해당 필드에 넣는다.
-                if (roadAddr !== '') {
-                    document.getElementById("sample4_extraAddress").value = extraRoadAddr;
-                } else {
-                    document.getElementById("sample4_extraAddress").value = '';
-                }
-
-                // 팝업창 닫기
-                this.close(); // Daum 주소 검색 팝업을 닫는 코드
             }
         }).open();
     }
