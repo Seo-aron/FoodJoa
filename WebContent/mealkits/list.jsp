@@ -81,23 +81,25 @@
 		<!-- 검색 기능 -->
 		<h1><%=strCategory %></h1>
 		<div id="search-container">
-			<form action="<%=contextPath%>/Mealkit/searchlist.pro" method="post" name="frmSearch" 
-				onsubmit="fnSearch(); return false;">
-				 <div class="search-form-container">
-		            <select name="key">
+			<div class="search-form-container">
+				<form action="<%=contextPath%>/Mealkit/searchlist.pro" method="post" name="frmSearch" 
+					onsubmit="fnSearch(); return false;">
+		            <select id="key" name="key">
 		                <option value="title">밀키트 명</option>
 		                <option value="name">작성자</option>
 		            </select>
 		            
-		            <input type="text" name="word" id="word" />
-		            <input type="submit" value="검색" />
-		        </div>
-			</form>
+		            <input type="text" class="search-text" name="word" id="word" />
+		            <input type="submit" class="search-button" id="search-button" value="검색" />
+				</form>
+			</div>
 				<!-- 글쓰기 -->
-			<c:if test="${not empty sessionScope.userId}">
-				<input type="button" id="newContent" value="글쓰기" 
-					onclick="location.href='<%=contextPath%>/Mealkit/write'"/>
-			</c:if>
+			<div class="write-container">
+				<c:if test="${not empty sessionScope.userId}">
+					<input type="button" id="newContent" value="글쓰기" 
+						onclick="location.href='<%=contextPath%>/Mealkit/write'"/>
+				</c:if>
+			</div>
 		</div>
 		
 		<table class="list">

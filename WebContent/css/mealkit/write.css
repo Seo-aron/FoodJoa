@@ -1,0 +1,151 @@
+@charset "UTF-8";
+
+body {
+	font-family: "Noto Serif KR", serif;
+	margin: 20px;
+}
+
+#container {
+	width: 1000px;
+	margin: auto;
+}
+
+.write-form{
+	height: 800px;
+	border: solid 1px #BF917E;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px 5px;
+    text-align: left;
+    border-top: none;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+}
+
+th{
+	padding-left: 20px;
+	width: 200px;
+	height: 55px;
+	font-size: 22px;
+	font-weight: bold;
+}
+
+input[type="text"], textarea {
+    padding: 8px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 0;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.title{
+	width: 45%;
+	height: 40px;
+}
+
+input[type="file"] {
+	margin: 5px 0;
+}
+
+.notice-text {
+    display: block;
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+}
+
+#pictureFiles{
+	display: none;
+}
+
+.preview_image{
+	width: 250px;
+	height: 200px;
+	padding-right: 20px;
+}
+
+button {
+	background-color: #BF917E;
+	color: white;
+	padding: 10px 15px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+button:hover {
+	background-color: #9e6e58;
+	transition: background-color 0.3s ease;
+}
+
+.category{
+	background: #f5f5f5;
+    border: 1px solid #e1e1e1;
+    font-size: 14px;
+    padding: 8px 2px;
+    margin: 0 2px 0 0;
+    border-radius: 4px;
+}
+
+.contents{
+	width: 80%;
+	height: 300px;
+}
+
+
+.price{
+	width: 200px;
+}
+
+.stock{
+	width: 100px;
+	height: 28px;
+	border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.add-orders{
+	background-color: #BF917E;
+	color: white;
+	padding: 10px 15px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.add-orders:hover{
+	background-color: #9e6e58;
+	transition: background-color 0.3s ease;
+}
+
+.name-orders{
+	width: 80%;
+}
+
+.origin{
+	width: 80%;
+}
+
+.write{
+	background-color: #BF917E;
+	color: white;
+	padding: 10px 15px;
+	margin-top: 5px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.write:hover{
+	background-color: #9e6e58;
+	transition: background-color 0.3s ease;
+}
