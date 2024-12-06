@@ -302,8 +302,6 @@ public class CommunityDAO {
 					+ "ORDER BY c.post_date DESC";
 		}
 		
-		
-		
 		ResultSet resultSet = dbConnector.executeQuery(sql);
 		
 		try {
