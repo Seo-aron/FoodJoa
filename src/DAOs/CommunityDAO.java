@@ -275,13 +275,22 @@ public class CommunityDAO {
 						+ "WHERE c.title like '%" + word + "%' "
 						+ "ORDER BY c.post_date DESC";				
 			}
-			else {
+			else if(key.equals("nickname")){
 				sql = "SELECT c.*, m.profile, m.nickname "
 						+ "FROM community_share c "
 						+ "LEFT OUTER JOIN member m "
 						+ "ON c.id = m.id "
 						+ "WHERE m.nickname like '%" + word + "%' "
 						+ "ORDER BY c.post_date DESC";
+			}
+			else {
+				sql = "SELECT c.*, m.profile, m.nickname "
+						+ "From community_share c "
+						+ "left outer join member m "
+						+ "on c.id = m.id "
+						+ "where c.type like if('재료나눔' like '%" + word + "%', 0, IF('같이 먹어요' like '%" + word + "%', 1, -1)) "
+						+ "order by c.post_date desc";
+						
 			}
 		
 		}
@@ -292,6 +301,8 @@ public class CommunityDAO {
 					+ "ON c.id = m.id "
 					+ "ORDER BY c.post_date DESC";
 		}
+		
+		
 		
 		ResultSet resultSet = dbConnector.executeQuery(sql);
 		
