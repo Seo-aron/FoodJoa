@@ -66,6 +66,9 @@ select option[value=""] {
 	width: 900px;
 	height: 500px;
 	overflow: hidden;
+	border: 1px solid #BF817E;
+	border-radius: 5px;
+	cursor: pointer;
 }
 
 .thumbnail-area img {

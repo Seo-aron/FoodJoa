@@ -103,11 +103,13 @@
 	color: transparent;
 	width: 128px;
 	height: 128px;
-	background-image: url('../../images/recipe/file_select_button.png');
+	background-image: url('../../images/recipe/addImage_square.png');
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: cover;
 	cursor: pointer;
+	border: 1px solid #BF917E;
+	border-radius: 5px;
 }
 
 .preview_image {
