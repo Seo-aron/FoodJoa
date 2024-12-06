@@ -98,8 +98,7 @@
                             <form action="<%= request.getContextPath() %>/Member/updateCartList.me" method="post">
 							    <input type="number" name="quantity" value="${item.quantity}" min="1" max="${item.mealkitVO.stock }" onchange="processQuantityChanged(this, ${status.index}, ${item.mealkitVO.price})">
 							    <input type="hidden" name="mealkitNo" value="${item.mealkitVO.no}">
-							    <input type="hidden" name="userId" value="${sessionScope.userId}">
-							    <input type="submit" value="수정" class="btn">
+							    <input type="hidden" name="userId" value="${sessionScope.userId}">						  
 							</form>
                         </td>
                         <td>

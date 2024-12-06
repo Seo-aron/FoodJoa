@@ -216,8 +216,6 @@ public class MemberController extends HttpServlet {
 	private String processKakaoJoin(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		System.out.println("processKakaoJoin 호출됨");
-
 		// 요청 파라미터에서 카카오 인가 코드 받아오기
 		String code = request.getParameter("code");
 		if (code == null || code.trim().isEmpty()) {
@@ -411,16 +409,11 @@ public class MemberController extends HttpServlet {
 		String userId = request.getParameter("userId");
 		String recipeNo = request.getParameter("recipeNo");
 
-		// 값이 제대로 넘어오는지 확인
-		System.out.println("userId: " + userId);
-		System.out.println("recipeNo: " + recipeNo);
-
 		int result = memberService.deleteWishRecipe(userId, recipeNo);
 
 		if (!response.isCommitted()) { // 응답이 커밋되지 않았다면 리다이렉트 처리
 			if (result == 1) {
 				// 삭제 성공
-				System.out.println("삭제 성공!");
 				response.sendRedirect(request.getContextPath() + "/Member/wishList.me");
 				return; // sendRedirect 후 메소드 종료
 			} else if (result == 0) {
@@ -437,16 +430,11 @@ public class MemberController extends HttpServlet {
 		String userId = request.getParameter("userId");
 		String mealkitNo = request.getParameter("mealkitNo");
 
-		// 값이 제대로 넘어오는지 확인
-		System.out.println("userId: " + userId);
-		System.out.println("mealkitNo: " + mealkitNo);
-
 		int result = memberService.deleteWishMealkit(userId, mealkitNo);
 
 		if (!response.isCommitted()) { // 응답이 커밋되지 않았다면 리다이렉트 처리
 			if (result == 1) {
 				// 삭제 성공
-				System.out.println("삭제 성공!");
 				response.sendRedirect(request.getContextPath() + "/Member/wishList.me");
 				return; // sendRedirect 후 메소드 종료
 			} else if (result == 0) {
@@ -521,10 +509,6 @@ public class MemberController extends HttpServlet {
 		String userId = request.getParameter("userId");
 		String mealkitNo = request.getParameter("mealkitNo");
 
-		// 값이 제대로 넘어오는지 확인
-		System.out.println("userId: " + userId);
-		System.out.println("mealkitNo: " + mealkitNo);
-
 		int result = memberService.deleteCartList(userId, mealkitNo);
 
 		if (!response.isCommitted()) { // 응답이 커밋되지 않았다면 리다이렉트 처리
@@ -548,11 +532,6 @@ public class MemberController extends HttpServlet {
 	    String userId = request.getParameter("userId");
 	    String mealkitNo = request.getParameter("mealkitNo");
 	    String quantityStr = request.getParameter("quantity");
-
-	    // 값이 제대로 넘어오는지 확인
-	    System.out.println("userId: " + userId);
-	    System.out.println("mealkitNo: " + mealkitNo);
-	    System.out.println("quantity: " + quantityStr);
 
 	    // 수량 값 유효성 검사
 	    int quantity = 0;

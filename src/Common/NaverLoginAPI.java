@@ -24,7 +24,7 @@ public class NaverLoginAPI {
 	    // 인증 코드가 있으면 액세스 토큰 요청
 	    if (code != null) {
 	    	String clientId = "XhLz64aZjKhLJHJUdga6"; // 발급받은 Client ID
-	        String clientSecret = "SIITGJFkea"; // 발급받은 Client Secre
+	        String clientSecret = "SIITGJFkea"; // 발급받은 Client Secret code
 
 	        String apiURL = "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&" 
 	                + "client_id=" + clientId 
