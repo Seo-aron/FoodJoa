@@ -107,35 +107,6 @@ public class MemberController extends HttpServlet {
 		dispatcher.forward(request, response);
 	}
 
-	private void processUpdateOrder(HttpServletRequest request, HttpServletResponse response) {
-		 int orderNo = Integer.parseInt(request.getParameter("orderNo"));
-		    int deliveredStatus = Integer.parseInt(request.getParameter("deliveredStatus"));
-		    int refundStatus = Integer.parseInt(request.getParameter("refundStatus"));
-
-		    int result = memberService.updateOrder(orderNo, deliveredStatus, refundStatus);
-
-		    try {
-		        response.setContentType("application/json; charset=UTF-8");
-		        PrintWriter out = response.getWriter();
-
-		        if (result > 0) {
-		            out.print("{\"status\":\"success\"}");
-		        } else {
-		            out.print("{\"status\":\"fail\"}");
-		        }
-		        out.close();
-		    } catch (Exception e) {
-		        e.printStackTrace();
-		    } 
-		    
-			
-	}
-
-	private void openImpormation(HttpServletRequest request, HttpServletResponse response) {
-		request.setAttribute("center", "members/impormation.jsp");
-		nextPage = "/main.jsp";
-	}
-
 	private void openMemberJoinView(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
@@ -695,19 +666,6 @@ public class MemberController extends HttpServlet {
 	        response.sendRedirect(request.getContextPath() + "/Member/openPayMent.me");  // 주문 실패 시 결제 페이지로 이동
 	    }
 	}
-	
-
-		
-
-
-
-
-
-
-
-	
-	
-
 
 	// 혜원 파트
 	// ------------------------------------------------------------------------------------------
@@ -809,6 +767,36 @@ public class MemberController extends HttpServlet {
 		request.setAttribute("orderedMealkitList", orderedMealkitList); 
 		request.setAttribute("center", "members/sendmealkit.jsp"); 
 		nextPage = "/main.jsp"; }
+	
+	private void processUpdateOrder(HttpServletRequest request, HttpServletResponse response) {
+		 int orderNo = Integer.parseInt(request.getParameter("orderNo"));
+		    int deliveredStatus = Integer.parseInt(request.getParameter("deliveredStatus"));
+		    int refundStatus = Integer.parseInt(request.getParameter("refundStatus"));
+
+		    int result = memberService.updateOrder(orderNo, deliveredStatus, refundStatus);
+
+		    try {
+		        response.setContentType("application/json; charset=UTF-8");
+		        PrintWriter out = response.getWriter();
+
+		        if (result > 0) {
+		            out.print("{\"status\":\"success\"}");
+		        } else {
+		            out.print("{\"status\":\"fail\"}");
+		        }
+		        out.close();
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    } 
+		    
+			
+	}
+
+	private void openImpormation(HttpServletRequest request, HttpServletResponse response) {
+		request.setAttribute("center", "members/impormation.jsp");
+		nextPage = "/main.jsp";
+	}
+
 
 	private void openMyReviewsView(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {

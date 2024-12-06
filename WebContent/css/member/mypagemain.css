@@ -1,5 +1,5 @@
 @charset "UTF-8";
-		body {
+	body {
     font-family: 'Noto Sans KR', Arial, sans-serif; /* 심플하고 세련된 한글 폰트 */
     margin: 0;
     padding: 0;
@@ -7,16 +7,17 @@
     color: #000000; /* 텍스트 가독성을 위한 진한 회색 */
 }
 
+
 .header {
-	height:70px;
-	width:200px;
-    text-align: center;
-    padding: 20px;
-    background-color: #BF917E; /* 따뜻한 갈색 톤 */
-    color: #000000;
-    font-size: 12px;
-    font-weight: bold;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	border: 2px solid #BF917E; 
+	padding: 10px; 
+	box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
+    width: 150px;
+}
+
+.header h1 {
+	align: center;
+	margin: 0 auto;	
 }
 
 .profile-wrapper {
@@ -40,7 +41,7 @@
     width: 120px;
     height: 120px;
     border-radius: 50%;
-    border: 2px solid #d9b89c; /* 프로필 이미지에 살짝 강조 */
+ /* border: 2px solid #d9b89c; 프로필 이미지에 살짝 강조 */
 }
 
 .profile-info h2 {
@@ -101,6 +102,7 @@
     font-size: 14px;
     font-weight: bold;
     color: #000000;
+    align: center;
 }
 
 .info-section {
@@ -120,6 +122,10 @@
     margin-bottom: 10px;
 }
 
+.info1 {
+	display: flex;
+}
+
 .info-section a {
     color: #616161;
     text-decoration: none;
@@ -127,9 +133,44 @@
 
 .info-section2 {
 	color: #000000;
+	
 }
 
 .info-section a:hover {
     text-decoration: underline;
+}
+
+.info-section3 {
+	color: #000000;
+}
+button {
+	background-color: #BF917E;
+	color: white;
+	padding: 10px 15px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+button:hover {
+	background-color: #9e6e58;
+	transition: background-color 0.3s ease;
+}
+
+#updateButton {
+	color: #ffffff;
+	background: #BF917E;
+}
+
+#getout {
+	color: #ffffff;
+	background: #BF917E;
+}
+.impormation {
+	font-size: 14px;
+	margin-left: 20px;
+}
+span {
+	color: #616161;
 }
 

@@ -16,9 +16,9 @@ String id = (String) session.getAttribute("id");
 %>
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
 	<meta charset="UTF-8">
+	<link rel="stylesheet" href="<%=contextPath%>/css/member/profileupdate.css">
 	<title>회원 정보 수정</title>
 	
 	<script src="http://code.jquery.com/jquery-latest.min.js"> </script>
