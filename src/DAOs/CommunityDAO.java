@@ -199,7 +199,7 @@ public class CommunityDAO {
 						resultSet.getTimestamp("post_date"));
 				
 				MemberVO memberVO = new MemberVO();
-						memberVO.setNickname("nickname");
+				memberVO.setNickname(resultSet.getString("nickname"));
 					
 				data.put("community", communityVO);
 				data.put("member", memberVO);
