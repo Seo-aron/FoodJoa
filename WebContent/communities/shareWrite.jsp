@@ -30,6 +30,7 @@
 	        	<tr>
 	        		<td colspan="2" align="right">
 						<input type="button" class="write" value="작성" onclick="onSubmit(event)">
+						<input type="button" class="write" value="취소" onclick="onCancleButton(event)">
 					</td>
 				</tr>	
 	            <tr>
@@ -71,7 +72,7 @@
                 <tr>
 	                <td colspan="2" align="right">
 						<input type="button" class="write" value="작성" onclick="onSubmit(event)">
-						<input type="reset" class="write" value="취소">
+						<input type="button" class="write" value="취소" onclick="onCancleButton(event)">
 					</td>
 				</tr>
             </table>
@@ -89,6 +90,12 @@
 			}
 			
 			$("#frmWrite").submit();
+		}
+		
+		function onCancleButton(event) {
+			event.preventDefault();
+			
+			history.go(-1);
 		}
 	</script>
 </body>
