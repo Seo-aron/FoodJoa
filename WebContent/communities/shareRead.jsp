@@ -142,10 +142,10 @@
 		function onListButton(){
 			<%
 			if (nowPage != null && nowBlock != null) {
-				%>location.href = '<%= contextPath %>/Community/noticeList?nowPage=<%=nowPage%>&nowBlock=<%=nowBlock%>';<%
+				%>location.href = '<%= contextPath %>/Community/shareList?nowPage=<%=nowPage%>&nowBlock=<%=nowBlock%>';<%
 			}
 			else {
-				%>location.href = '<%= contextPath %>/Community/noticeList';<%
+				%>location.href = '<%= contextPath %>/Community/shareList';<%
 			}
 			%>
 		}
