@@ -42,7 +42,7 @@
 				<tr>
 					<td align="center">
 						<div class="thumbnail-area">						
-							<img src="<%= contextPath %>/images/recipe/thumbnails/<%= mealkit.getNo() %>/<%= pictures.get(0) %>">
+							<img src="<%= contextPath %>/images/mealkit/thumbnails/<%= mealkit.getNo() %>/<%= pictures.get(0) %>">
 						</div>
 					</td>
 				</tr>

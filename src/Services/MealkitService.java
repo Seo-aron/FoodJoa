@@ -213,7 +213,16 @@ public class MealkitService {
 
 	public int delMealkit(HttpServletRequest request) throws IOException {
 		
-		return mealkitDAO.deleteMealkit(Integer.parseInt(request.getParameter("no")));
+		String no = request.getParameter("no");
+		int result = mealkitDAO.deleteMealkit(Integer.parseInt(no));
+		
+		if (result > 0) {
+			String path = request.getServletContext().getRealPath(File.separator + "images") +
+					File.separator + "mealkit" + File.separator + "thumbnails" + File.separator + no;
+			FileIOController.deleteDirectory(path);
+		}
+		
+		return result;
 	}
 
 	public void updateMealkit(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -253,7 +262,7 @@ public class MealkitService {
 	    
 	    String srcPath = path + File.separator + "temp";
 		String destinationPath = path + File.separator + "mealkit" + File.separator +
-				"thumbnails" + File.separator + String.valueOf(no) + File.separator + id;
+				"thumbnails" + File.separator + String.valueOf(no);
 		
 		List<String> originFileNames = StringParser.splitString(originPictures);
 		List<String> originSelectedFileNames = StringParser.splitString(originSelectedPictures);

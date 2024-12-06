@@ -72,7 +72,7 @@
 							        for (String picture : pictures) {
 							    %>
 							        <li>
-							            <img src="<%= contextPath %>/images/mealkit/thumbnails/<%= mealkitvo.getNo() %>/<%= mealkitvo.getId() %>/<%= picture %>" 
+							            <img src="<%= contextPath %>/images/mealkit/thumbnails/<%= mealkitvo.getNo() %>/<%= picture %>" 
 							            	title="<%= picture %>" />
 							        </li>
 							    <%

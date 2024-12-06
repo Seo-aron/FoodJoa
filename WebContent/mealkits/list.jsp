@@ -145,7 +145,7 @@
 				                <!-- 이미지 영역 -->
 				                <div>
 				                    <img class="thumbnail" 
-				                         src="<%=contextPath%>/images/mealkit/thumbnails/<%=no%>/<%=id%>/<%=thumbnail%>">
+				                         src="<%=contextPath%>/images/mealkit/thumbnails/<%=no%>/<%=thumbnail%>">
 				                </div>
 				                <!-- 텍스트 정보 영역 -->
 				                <div class="info-container" style="margin-left: 16px;">

@@ -133,7 +133,7 @@
 							<div class="block-cell">
 								<a href="<%= contextPath %>/Mealkit/info?no=<%= mealkitVO.getNo() %>">
 									<div class="image-area">
-										<img src="<%= contextPath %>/images/recipe/thumbnails/<%= mealkitVO.getNo() %>/<%= pictures.get(0) %>">
+										<img src="<%= contextPath %>/images/mealkit/thumbnails/<%= mealkitVO.getNo() %>/<%= pictures.get(0) %>">
 										<div class="rank-flag">
 											<img class="rank-flag" src="${contextPath}/images/mainpage/rankflag.png">
 										</div>
