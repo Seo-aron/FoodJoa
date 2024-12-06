@@ -29,7 +29,7 @@ public class MealkitDAO {
 		if (category != 0)
 			sql += "WHERE mk.category=? ";
 
-		sql += "ORDER BY mk.post_date DESC";
+		sql += "ORDER BY mk.no DESC";
 
 		ResultSet rs = (category != 0 ? dbConnector.executeQuery(sql, category) : dbConnector.executeQuery(sql));
 
