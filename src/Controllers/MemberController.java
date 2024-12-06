@@ -110,7 +110,9 @@ public class MemberController extends HttpServlet {
 	private void openMemberJoinView(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+		request.setAttribute("pageTitle", "FoodJoa 회원가입");
 		request.setAttribute("center", "members/snsjoin.jsp");
+		
 		nextPage = "/main.jsp";
 	}
 
@@ -139,7 +141,8 @@ public class MemberController extends HttpServlet {
 	}
 
 	private void openJoinMain(HttpServletRequest request, HttpServletResponse response) {
-		// request객체에 "members/join.jsp" 중앙화면 뷰 주소 바인딩
+		
+		request.setAttribute("pageTitle", "FoodJoa 회원가입");
 		request.setAttribute("center", "members/join.jsp");
 		request.setAttribute("userId", request.getParameter("userId"));
 
@@ -221,6 +224,7 @@ public class MemberController extends HttpServlet {
 	private void openLoginView(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+		request.setAttribute("pageTitle", "FoodJoa 로그인");
 		request.setAttribute("center", "members/login.jsp");
 
 		nextPage = "/main.jsp";
