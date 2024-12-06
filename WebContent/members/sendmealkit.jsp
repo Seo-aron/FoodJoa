@@ -18,64 +18,9 @@
 %>
 <!DOCTYPE html>
 <html>
-<style>
-/* 메인 컨테이너 스타일링 */
-#deliver-container {
-    margin: 0 auto; /* 가로 중앙 정렬 */
-    width: 1200px; /* 화면 너비의 90% 사용 */
-}
-
-/* 제목 스타일링 */
-#deliver-container h1 {
-    text-align: center; /* 텍스트 가운데 정렬 */
-    color: #000000; /* 텍스트 색상 */
-    font-size: 24px; /* 텍스트 크기 */
-    margin-bottom: 20px; /* 하단 여백 */
-}
-
-/* 테이블 스타일링 */
-table {
-    width: 100%; /* 테이블 너비를 100%로 설정 */
-    border-collapse: collapse; /* 테이블 셀 경계선 결합 */
-    margin: 20px 0; /* 테이블 위아래 여백 */
-    font-family:  "Noto Serif KR", serif; /* 폰트 스타일 설정 */
-}
-
-/* 테이블 헤더 스타일링 */
-table th {
-    background-color: #BF917E; /* 헤더 배경색 */
-    color: #333; /* 텍스트 색상 */
-    padding: 12px 15px; /* 셀 내부 여백 */
-    text-align: center; /* 텍스트 가운데 정렬 */
-    border: 1px solid #ddd; /* 셀 경계선 */
-}
-
-/* 테이블 데이터 셀 스타일링 */
-table td {
-    padding: 12px 15px; /* 셀 내부 여백 */
-    text-align: center; /* 텍스트 가운데 정렬 */
-    border: 1px solid #ddd; /* 셀 경계선 */
-}
-
-/* 테이블 행 스타일링 (홀수 행 배경색) */
-table tr:nth-child(odd) {
-    background-color: #f9f9f9; /* 홀수 행 배경색 */
-}
-
-/* 테이블 행 스타일링 (짝수 행 배경색) */
-table tr:nth-child(even) {
-    background-color: #ffffff; /* 짝수 행 배경색 */
-}
-
-/* 이미지 스타일링 */
-img {
-    max-width: 100%; /* 이미지 최대 너비를 셀 너비에 맞춤 */
-    height: auto; /* 이미지 비율을 유지하여 자동 높이 설정 */
-    border-radius: 4px; /* 이미지 둥근 모서리 설정 */
-}
-</style>
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" href="<%=contextPath%>/css/member/sendmealkit.css">
 <title>발송조회 페이지</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -127,14 +72,14 @@ $(document).ready(function() {
             %>
                 <!-- 주문 내역이 없을 때 표시할 메시지 -->
                 <tr>
-                    <td colspan="13" align="center">주문 내역이 없습니다.</td>
+                    <td class="no">주문 내역이 없습니다.</td>
                 </tr>
             <%
             } else {
             %>
                 <!-- 테이블 헤더 -->
                 <thead>
-                    <tr align="center">
+                    <tr>
                         <th>상품명</th>
                         <th>간단소개글</th>
                         <th>카테고리</th>
@@ -145,8 +90,8 @@ $(document).ready(function() {
                         <th>배송 여부</th>
                         <th>환불 여부</th>
                         <th>구매자 닉네임</th>
-                        <th>구매자 사진</th>
-                        <th>저장하기</th>
+                        <th>구매자 <br> 사진</th>
+                        <th>저장</th>
                      </tr>
                 </thead>
                 <tbody>
@@ -158,40 +103,40 @@ $(document).ready(function() {
                     MemberVO memberVO = (MemberVO) orderedMealkitList.get(i).get("memberVO");
                 %>
                     <!-- 각 주문의 데이터를 테이블 행으로 출력 -->
-                    <tr align="center" data-order-no="<%= orderVO.getNo() %>">
-                    	<td><%=mealkitVO.getTitle() %></td>
-                    	<td><%=mealkitVO.getContents()%></td>
-                    	<td>
+                    <tr data-order-no="<%= orderVO.getNo() %>">
+                    	<td><p><%=mealkitVO.getTitle() %></p></td>
+                    	<td><p><%=mealkitVO.getContents()%></p></td>
+                    	<td><p>
 						<% if(mealkitVO.getCategory() == 0 ){%> 한식요리 <%}%>
 						<% if(mealkitVO.getCategory() == 1 ){%> 일식요리 <%}%>
 						<% if(mealkitVO.getCategory() == 2 ){ %>중식요리 <%}%>
 						<% if(mealkitVO.getCategory() == 3 ){ %>양식요리 <%}%>
 						<% if(mealkitVO.getCategory() == 4 ){ %>자취요리 <%}%>
-						</td>
-                    	<td><%=mealkitVO.getPrice()%></td>
+						</p></td>
+                    	<td><p><%=mealkitVO.getPrice()%></p></td>
                         <td><img src="<%= request.getContextPath() %>/images/mealkit/thumbnails/<%=mealkitVO.getNo()%>/<%=mealkitVO.getId()%>/<%=mealkitVO.getPictures().substring(4) %>" 
                              alt="${item.mealkitVO.title}"></td>
-                        <td><%=orderVO.getAddress()%></td>
-                        <td><%=orderVO.getQuantity()%></td>            
-                       <td>
+                        <td><p><%=orderVO.getAddress()%></p></td>
+                        <td><p><%=orderVO.getQuantity()%></p></td>            
+                       <td><p>
 					    <select name="deliveredStatus" class="deliveredStatus">
 					        <option value="0" <%= orderVO.getDelivered() == 0 ? "selected" : "" %>>배송 전</option>
 					        <option value="1" <%= orderVO.getDelivered() == 1 ? "selected" : "" %>>배송 중</option>
 					        <option value="2" <%= orderVO.getDelivered() == 2 ? "selected" : "" %>>배송 완료</option>
 					    </select>
-					  </td>
-					  <td>
+					  </p></td>
+					  <td><p>
 					    <select name="refundStatus" class="refundStatus">          	
 					        <option value="0" <%= orderVO.getRefund() == 0 ? "selected" : "" %>>환불 전</option>
 					        <option value="1" <%= orderVO.getRefund() == 1 ? "selected" : "" %>>환불 중</option>
 					        <option value="2" <%= orderVO.getRefund() == 2 ? "selected" : "" %>>환불 완료</option>
 					    </select>
-					  </td>
-                      <td><%=memberVO.getNickname()%></td>
+					  </p></td>
+                      <td><p><%=memberVO.getNickname()%></p></td>
                       	<td><img src="<%=request.getContextPath()%>/images/member/userProfiles/profilePhoto/<%= memberVO.getProfile() %>" alt="판매자 프로필"></td>          
-                      	<td>
+                      <td>
                       		<button type="button" class="save-button">저장</button>
-                      	</td>	
+                      </td>	
                     </tr>
                     
                 <%
