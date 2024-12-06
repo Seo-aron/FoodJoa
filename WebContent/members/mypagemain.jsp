@@ -55,7 +55,7 @@ long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
 </head>
 <body>
    <div class="header">
-      <h1 color="000000">MyPage</h1>
+      <h1>MyPage</h1>
    </div>
 
 	<div class="profile-wrapper">
@@ -85,19 +85,19 @@ long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
       <div class="manage-section">
          <div>
             <a href="<%=contextPath%>/Recipe/myRecipes">
-               <p align="center">내 레시피 관리</p>
+               <p>내 레시피 관리</p>
                <img src="../images/member/receipe.png" alt="레시피 이미지">
             </a>
          </div>
          <div>
             <a href="<%=contextPath%>/Mealkit/myMealkits">
-               <p align="center">내 상품 관리</p>
+               <p>내 상품 관리</p>
                <img src="../images/member/food.png" alt="상품 이미지">
             </a>
          </div>
          <div>
             <a href="<%=contextPath%>/Member/myReviews">
-               <p align="center">내 리뷰 관리</p>
+               <p>내 리뷰 관리</p>
                <img src="../images/member/review.png" alt="리뷰 이미지">
             </a>
 
@@ -107,7 +107,7 @@ long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
       <!-- Info Sections -->
       <div class="info-section">
          <div>주문/배송조회</div>
-         <div style="display: flex;">
+         <div class="info1">
             <span>주문건수 : <%= totalOrderDeliveredCount %></span> &nbsp;&nbsp; | &nbsp;&nbsp;   
             <span>배송준비중 : <%= deliveredCounts.get(0) %></span> &nbsp;&nbsp; | &nbsp;&nbsp;
             <span>배송중 : <%= deliveredCounts.get(1) %></span> &nbsp;&nbsp; | &nbsp;&nbsp;
@@ -118,7 +118,7 @@ long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
 
       <div class="info-section">
          <div>내 마켓 발송조회</div>
-        <div style="display: flex;">
+        <div class="info1">
             <span>주문건수 : <%= totalOrderSendedCount %></span> &nbsp;&nbsp; | &nbsp;&nbsp;   
             <span>발송준비중 : <%= sendedCounts.get(0) %></span> &nbsp;&nbsp; | &nbsp;&nbsp;
             <span>발송중 : <%= sendedCounts.get(1) %></span> &nbsp;&nbsp; | &nbsp;&nbsp;
@@ -129,17 +129,17 @@ long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate)+1;
 
       <div class="info-section2">
          <div>
-            <a href="<%=contextPath%>/members/impormation.jsp" color="#000000">
-                ※개인정보처리방침</a>
+            <a href="<%=contextPath%>/members/impormation.jsp" class="impormation">※개인정보처리방침</a>
          </div>
       </div><br>
-
-      <div>
+	  
+	  <div class="info-section3">
+    	  <div>
          <a href="<%=contextPath%>/Member/deleteMember.me">
             <button id="getout">탈퇴하기</button>
          </a>
-      </div>
-
+    	  </div>
+   	 </div>
  
    </div>
 

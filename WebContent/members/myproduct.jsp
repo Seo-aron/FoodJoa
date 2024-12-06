@@ -18,57 +18,6 @@
     <meta charset="UTF-8">
     <title>상품 관리</title>
     <link rel="stylesheet" href="<%=contextPath%>/css/member/myproduct.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            width: 80%;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-        }
-        .header {
-            font-size: 1.8em;
-            text-align: center;
-            margin-bottom: 20px;
-            color: #333;
-            font-weight: bold;
-        }
-        .item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        .item div {
-            flex: 1;
-            text-align: center;
-            padding: 8px;
-        }
-        .item div:first-child {
-            flex: 2;
-            font-weight: bold;
-        }
-        .item:last-child {
-            border-bottom: none;
-        }
-        .item button {
-            background-color: #007bff;
-            border: none;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .item button:hover {
-            background-color: #0056b3;
-        }
-    </style>
 </head>
 <body>
     <div class="container">

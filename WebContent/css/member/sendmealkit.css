@@ -19,7 +19,6 @@ table {
     border-collapse: collapse; /* 테이블 셀 경계선 결합 */
     margin: 20px 0; /* 테이블 위아래 여백 */
     font-family:  "Noto Serif KR", serif; /* 폰트 스타일 설정 */
-    align: center;
 }
 
 /* 테이블 헤더 스타일링 */
@@ -41,6 +40,7 @@ table td {
 table td p {
 	color: #000000;
 }
+
 /* 테이블 행 스타일링 (홀수 행 배경색) */
 table tr:nth-child(odd) {
     background-color: #f9f9f9; /* 홀수 행 배경색 */
@@ -75,6 +75,7 @@ button:hover {
 tr {
 	align: center;
 }
-.no-order {
+
+.no {
 	align: center;
 }
