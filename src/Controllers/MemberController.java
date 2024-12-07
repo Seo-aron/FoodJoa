@@ -471,6 +471,7 @@ public class MemberController extends HttpServlet {
 			}
 
 			request.setAttribute("cart", cartListInfos); // cart로 전달
+			request.setAttribute("pageTitle", "장바구니");
 			request.setAttribute("center", "members/cartlist.jsp");
 
 			nextPage = "/main.jsp";

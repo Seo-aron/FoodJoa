@@ -15,34 +15,34 @@
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>	
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
     <style>
-        table {
+        .cartlist-container table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
             font-family: "Noto Serif KR", serif;
         }
-        table, th, td {
+        .cartlist-container table, .cartlist-container th, .cartlist-container td {
             border: 1px solid black;
             font-family: "Noto Serif KR", serif;
         }
-        th, td {
+        .cartlist-container th, .cartlist-container td {
             padding: 12px;
             text-align: center;
             font-family: "Noto Serif KR", serif;
         }
 
-        th {
+        .cartlist-container th {
             background-color: #BF917E;
             font-family: "Noto Serif KR", serif;
         }
 
-        .container {
+        .cartlist-container  {
             width: 1200px;
             margin: 0 auto; /* 가운데 정렬 */
             font-family: "Noto Serif KR", serif;
         }
 
-        .btn {
+        .cartlist-container .btn {
             background-color: #BF917E;
             color: white;
             padding: 10px 15px;
@@ -51,24 +51,32 @@
             font-family: "Noto Serif KR", serif;
         }
 
-        .btn:hover {
+        .cartlist-container .btn:hover {
             background-color: #45a049;
         }
 
-        .form-inline input[type="number"] {
+        .cartlist-container .form-inline input[type="number"] {
             width: 60px;
             font-family: "Noto Serif KR", serif;
         }
 
-        .checkbox {
+        .cartlist-container .checkbox {
             width: 20px;
             height: 20px;
         }
+        
+        .payment-form-area {
+		    width: 100%;
+		    display: flex;
+		    justify-content: center;
+		    align-items: center;
+		    height: 100px;
+		}
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="cartlist-container">
     <h2>장바구니</h2>
     
     <c:if test="${not empty cart}">
@@ -119,17 +127,18 @@
         </table>
 
         <!-- 결제 폼 -->
-        <form id="checkoutForm" action="<%= request.getContextPath() %>/Member/payment.me" method="post">
-            <!-- 선택된 아이템의 정보를 담을 영역 -->
-            <div id="selectedItemsContainer"></div>
-
-            <!-- selectedMealkitNos 추가 -->
-            <input type="hidden" name="isCart" value="1"/>
-            <input type="hidden" name="combinedNo" id="selectedMealkitNos"/>
-            <input type="hidden" name="CombinedQuantity" id="selectedMealkitPrices"/>
-
-            <input type="submit" value="결제하기" class="btn" onclick="onSubmit(event)">
-        </form>
+        <div class="payment-form-area">
+	        <form id="checkoutForm" action="<%= request.getContextPath() %>/Member/payment.me" method="post">
+	            <!-- 선택된 아이템의 정보를 담을 영역 -->
+	            <!-- <div id="selectedItemsContainer"></div> -->
+	            <!-- selectedMealkitNos 추가 -->
+	            <input type="hidden" name="isCart" value="1"/>
+	            <input type="hidden" name="combinedNo" id="selectedMealkitNos"/>
+	            <input type="hidden" name="CombinedQuantity" id="selectedMealkitPrices"/>
+	
+	            <input type="submit" value="결제하기" class="btn" onclick="onSubmit(event)">
+	        </form>
+        </div>
     </c:if>
 
     <c:if test="${empty cart}">
