@@ -30,7 +30,7 @@ $(function() {
 			var newOrderHtml = `
 				<tr class="added-orders">
 					<td width="70%">
-						<div class="added-order">' + name + '</div>
+						<div class="added-order">` + name + `</div>
 					</td>
 					<td height="30%">
 						<button type="button" class="remove-orders">삭제</button>
