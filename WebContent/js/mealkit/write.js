@@ -7,14 +7,18 @@ $(function() {
 	});
 	
 	$(".add-orders").click(function() {
-		var newOrderHtml = 
-			'<p class="orders-row">' +
-		        '<input type="text" class="name-orders" placeholder="조리 순서를 간단히 적어주세요.">' +
-		        '<button type="button" class="addrow-orders">추가</button>' +
-		        '<button type="button" class="cancle-orders">취소</button>' +
-		    '</p>';
+		var newOrderHtml = `
+			<tr class="orders-row">
+				<td width="70%">
+					<input type="text" class="name-orders" placeholder="조리 순서를 간단히 적어주세요.">
+				</td>
+				<td width="30%">
+					<button type="button" class="addrow-orders">추가</button>
+					<button type="button" class="cancle-orders">취소</button>
+				</td>
+			</tr>`;
 
-		$(this).parent().prev().append(newOrderHtml);
+		$(".orders-container>table").append(newOrderHtml);
 	});
 
 	// 조리순서) 추가 버튼을 눌렀을 때 
@@ -23,11 +27,15 @@ $(function() {
 		var name = $row.find('.name-orders').val();
 		
 		if (name) {
-			var newOrderHtml =
-				'<p class="added-orders">' +
-				'<span class="added-order">' + name + '</span>' +
-				'<button type="button" class="remove-orders">삭제</button>' +
-				'</p>';
+			var newOrderHtml = `
+				<tr class="added-orders">
+					<td width="70%">
+						<div class="added-order">' + name + '</div>
+					</td>
+					<td height="30%">
+						<button type="button" class="remove-orders">삭제</button>
+					</td>
+				</tr>`;
 
 			$row.replaceWith(newOrderHtml);
 		}
@@ -150,6 +158,7 @@ function handleFileSelect(files) {
 				reader.readAsDataURL(file);
 
 				reader.onload = function(e) {
+					const li = document.createElement('li');
 					const img = document.createElement('img');
 					img.src = e.target.result;
 
@@ -157,14 +166,15 @@ function handleFileSelect(files) {
 					img.classList.add('preview_image');
 
 					img.addEventListener('click', function() {
-						imagePreview.removeChild(img);
+						imagePreview.removeChild(li);
 						removeSelectedFile(fileIdentifier);
 						document.getElementById('pictureFiles').value = '';
 					});
 
 					img.style.cursor = 'pointer';
 
-					imagePreview.appendChild(img);
+					li.appendChild(img);
+					imagePreview.appendChild(li);
 				}
 			}
 		}

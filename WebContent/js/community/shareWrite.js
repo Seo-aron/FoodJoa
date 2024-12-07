@@ -52,9 +52,6 @@ function setNewMarker(point){
 function setLatLngValue(point) {
 	$("#lat").val(point.y);
 	$("#lng").val(point.x);
-	
-	console.log(typeof point);
-	console.log(point);
 }
 
 var mapOptions = {
