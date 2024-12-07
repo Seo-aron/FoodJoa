@@ -909,7 +909,7 @@ public class MealkitDAO {
 		
 		String sql = "SELECT "
 				+ "k.no, k.title, k.category, k.price, k.pictures, "
-				+ "m.nickname "
+				+ "m.name, m.phone, m.nickname "
 				+ "FROM mealkit k "
 				+ "JOIN member m "
 				+ "ON k.id=m.id "
@@ -936,7 +936,9 @@ public class MealkitDAO {
 				mealkitVO.setPictures(resultSet.getString("pictures"));
 				
 				MemberVO memberVO = new MemberVO();
+				memberVO.setName(resultSet.getString("name"));
 				memberVO.setNickname(resultSet.getString("nickname"));
+				memberVO.setPhone(resultSet.getString("phone"));
 				
 				mealkit.put("mealkitVO", mealkitVO);
 				mealkit.put("memberVO", memberVO);

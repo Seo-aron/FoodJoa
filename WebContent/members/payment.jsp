@@ -41,7 +41,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<%=contextPath%>/css/member/payment.css">
     
-    <style>
+    <!-- <style>
         * {
             margin: 0;
             padding: 0;
@@ -141,12 +141,13 @@
         .btn:hover {
             background-color: #BF917E;
         }
-    </style>
+    </style> -->
 </head>
 
 <body>
 	<div class="payment-container">
 		<div class="left-area">
+			<h1>결제 내용</h1>
 			<table width="100%">
 				<%
 				if (orders == null || orders.size() <= 0) {
@@ -197,15 +198,16 @@
 									</tr>
 									<tr>
 										<td>
-											<div class="quantity-area">
-												수량 : <%= quantity %>
-											</div>
 											<div class="price-area">
+												개당&nbsp;
 												<fmt:formatNumber value="<%= mealkitVO.getPrice() %>" 
-													type="currency" 
-													currencySymbol="₩" 
+													type="number" 
 													groupingUsed="true" 
-													maxFractionDigits="0" />원
+													maxFractionDigits="0" />
+												원
+											</div>
+											<div class="quantity-area">
+												주문 수량 : <%= quantity %>
 											</div>
 										</td>
 									</tr>
@@ -233,7 +235,13 @@
 			</table>
 		</div>
 		<div class="right-area">
-			<h3>배송지 입력</h3>
+			<h1>구매자 정보</h1>
+			<h3>이름</h3>
+			<input type="text" value="<%= myInfo.getName() %>" placeholder="이름" required>
+			<h3>연락처</h3>
+			<input type="text" value="<%= myInfo.getPhone() %>" placeholder="연락처" required>
+			<br>
+			<h3>배송지</h3>
 			<input type="text" id="sample4_postcode" name="zipcode" value="<%= myInfo.getZipcode() %>"
 				placeholder="우편번호" class="form-control" required>
 			<br>
@@ -249,18 +257,20 @@
 			<br>
 			
 			<div class="purchase-area">
-				<p class="purchase-price">
-					총
+				<div class="purchase-price">
+					<h2>결제 금액</h2>
 					<span>
 					    <fmt:formatNumber value="<%= purchasePrice %>" 
 							type="currency" 
 							currencySymbol="₩" 
 							groupingUsed="true" 
 							maxFractionDigits="0" />
-					</span> 원
-				</p>
-				<input type="button" value="구매" onclick="onPurchase(event)">
-				<input type="button" value="취소">
+					</span>
+				</div>
+				<div class="purchase-button-area">
+					<input type="button" value="구매" onclick="onPurchase(event)">
+					<input type="button" value="취소" onclick="onCancle(event)">
+				</div>
 			</div>
 		</div>
 	</div>	
@@ -354,6 +364,14 @@
 
 	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	<script>
+		function onCancle(e) {
+			e.preventDefault();
+			
+			if (confirm('결제를 취소하시겠습니까?')) {			
+				history.go(-1);				
+			}
+		}
+	
 		function onPurchase(e) {
 			e.preventDefault();
 			
