@@ -130,7 +130,7 @@
 				
 				$li = $('<li>');
 				$img = $('<img>', {
-					class: 'review-origin-preview-image',
+					class: 'preview_image',
 					src: '<%= contextPath %>/images/mealkit/reviews/<%= review.getMealkitNo() %>/<%= id %>/<%= fileName %>',
 					css: {
 						cursor: 'pointer'
