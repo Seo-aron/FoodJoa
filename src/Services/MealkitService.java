@@ -47,7 +47,9 @@ public class MealkitService {
 	
 	public HashMap<String, Object> getMealkit(HttpServletRequest request) {
 		
-		return mealkitDAO.selectMealkit(request.getParameter("no"));
+		return mealkitDAO.selectMealkit(
+				request.getParameter("no"),
+				(String) request.getSession().getAttribute("userId"));
 	}
 
 	public MealkitVO getMealkitInfo(HttpServletRequest request) {

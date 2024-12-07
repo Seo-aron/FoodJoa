@@ -64,7 +64,9 @@ public class MealkitDAO {
 		return mealkits;
 	}
 	
-	public HashMap<String, Object> selectMealkit(String no) {
+	public HashMap<String, Object> selectMealkit(String no, String id) {
+		
+		boolean flag = false;
 		
 		HashMap<String, Object> mealkit = new HashMap<String, Object>();
 		
@@ -108,10 +110,44 @@ public class MealkitDAO {
 				mealkit.put("mealkitVO", mealkitVO);
 				mealkit.put("averageRating", averageRating);
 				mealkit.put("memberVO", memberVO);
+				
+				flag = true;
 			}
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
+		}
+		
+		dbConnector.release();
+		
+		if (flag && id != null && !id.equals("") && id.length() != 0) {
+			
+			sql = "SELECT COUNT(*) AS result FROM recent_view WHERE id=? AND item_no=? AND type=?";
+			
+			resultSet = dbConnector.executeQuery(sql, id, no, 1);
+			
+			boolean isExistRecent = false;
+			try {
+				if (resultSet.next()) {
+					int result = resultSet.getInt("result");
+					
+					isExistRecent = result > 0;
+				}
+			}
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+			dbConnector.release();
+			
+			if (!isExistRecent) {				
+				sql = "INSERT INTO recent_view(id, item_no, type, view_date) "
+						+ "VALUES(?, ?, ?, CURRENT_TIMESTAMP)";
+				
+				int result = dbConnector.executeUpdate(sql, id, no, 1);
+				
+				dbConnector.release();
+			}
 		}
 		
 		return mealkit;
