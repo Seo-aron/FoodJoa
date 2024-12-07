@@ -6,6 +6,7 @@
     response.setContentType("text/html; charset=utf-8");
     String contextPath = request.getContextPath();
 %>
+<jsp:useBean id="stringParser" class="Common.StringParser"/>
 
 <!DOCTYPE html>
 <html>
@@ -72,6 +73,23 @@
 		    align-items: center;
 		    height: 100px;
 		}
+		
+		.thumbnail-area {
+			width: 100%;
+			display: flex;
+			justify-content: center;
+		}
+		.thumbnail-image {
+			width: 150px;
+			height: 150px;
+			overflow: hidden;
+		}
+		
+		.thumbnail-image img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
     </style>
 </head>
 <body>
@@ -96,10 +114,18 @@
                 <c:forEach var="item" items="${cart}" varStatus="status">
                     <tr>
                         <td><input type="checkbox" class="itemCheckbox" value="${item.mealkitVO.no}" onclick="onCheckboxButton(this, ${item.mealkitVO.no}, ${item.quantity})"></td>
-                        <td><a href="<%= request.getContextPath() %>/Mealkit/info?no=${item.mealkitVO.no}"> 
-                            <img src="<%= request.getContextPath() %>/images/mealkit/thumbnails/${item.mealkitVO.no}/${item.mealkitVO.id}/${item.mealkitVO.pictures.substring(4)}" 
-                                 alt="${item.mealkitVO.title}"/>
-                            </a><br>${item.mealkitVO.title}</td>
+                        <td align="center">
+                        	<div class="thumbnail-area">
+                        		<div class="thumbnail-image">
+		                        	<a href="<%= request.getContextPath() %>/Mealkit/info?no=${item.mealkitVO.no}">
+		                        		<c:set var="thumbnail" value="${ stringParser.splitString(item.mealkitVO.pictures)[0] }" />
+		                       			<img src="<%= request.getContextPath() %>/images/mealkit/thumbnails/${item.mealkitVO.no}/${thumbnail}">
+		                            </a>
+	                            </div>
+                            </div>
+                            <br>
+                            ${item.mealkitVO.title}
+						</td>
                         <td>${item.nickname}</td>
                         <td data-price="${item.mealkitVO.price}">${item.mealkitVO.price}</td>
                         <td>                        
