@@ -374,6 +374,7 @@ public class MemberController extends HttpServlet {
 		memberService.getWishListInfos(request, userId); // 서비스에서 레시피 및 밀키트 위시리스트 정보를 가져옴
 
 		// 포워딩할 페이지 설정
+		request.setAttribute("pageTitle", "찜 목록");
 		request.setAttribute("center", "members/wishlist.jsp");
 		
 		nextPage = "/main.jsp"; // 메인 페이지로 이동하도록 설정
@@ -441,6 +442,7 @@ public class MemberController extends HttpServlet {
 		request.setAttribute("recentViewInfos", recentViewInfos);
 
 		// center 부분에 해당하는 JSP 파일 설정
+		request.setAttribute("pageTitle", "최근 본 목록");
 		request.setAttribute("center", "members/recent.jsp");
 
 		// 메인 페이지로 이동
