@@ -16,6 +16,7 @@
 	MealkitReviewVO review = (MealkitReviewVO) request.getAttribute("reviewvo");
 	String nickName = (String) request.getAttribute("nickName");
 	
+	String thumbnail = StringParser.splitString(mealkit.getPictures()).get(0);
 	List<String> pictures = StringParser.splitString(review.getPictures());
 	String id = (String) session.getAttribute("userId");
 %>
@@ -47,7 +48,7 @@
 				<tr>
 					<td align="center">
 						<div class="thumbnail-area">						
-							<img src="<%= contextPath %>/images/recipe/thumbnails/<%= mealkit.getNo() %>/<%= review.getPictures() %>">
+							<img src="<%= contextPath %>/images/mealkit/thumbnails/<%= mealkit.getNo() %>/<%= thumbnail %>">
 						</div>
 					</td>
 				</tr>
