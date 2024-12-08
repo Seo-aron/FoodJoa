@@ -153,11 +153,10 @@ long daysBetween = ChronoUnit.DAYS.between(receivedDate, currentDate) + 1;
 	</div>
 
 	<script>
-      document.getElementById('updateButton').onclick = function() {
-         location.href = '<%=contextPath%>
-		/Member/update.me';
+		document.getElementById('updateButton').onclick = function() {
+			location.href = '<%=contextPath%>/Member/update.me';
 		};
-
+		
 		// 파일을 선택하면 미리보기 이미지를 표시
 		function previewImage(event) {
 			const reader = new FileReader();

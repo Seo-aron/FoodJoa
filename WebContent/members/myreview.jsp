@@ -25,6 +25,8 @@ HashMap<String, Object> reviews = (HashMap<String, Object>) request.getAttribute
 ArrayList<HashMap<String, Object>> recipeReviews = (ArrayList<HashMap<String, Object>>) reviews.get("recipe"); 
 ArrayList<HashMap<String, Object>> mealkitReviews = (ArrayList<HashMap<String, Object>>) reviews.get("mealkit");
 
+ArrayList<String> reviewContents = new ArrayList<String>();
+
 String id = (String) session.getAttribute("userId");
 %>
 
@@ -35,6 +37,7 @@ String id = (String) session.getAttribute("userId");
 	<meta charset="UTF-8">
 	<title>리뷰 관리</title>
 	
+	<script src="<%= contextPath %>/js/common/common.js"></script>
 	<script src="https://code.jquery.com/jquery-latest.min.js"></script>
 	<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="<%= contextPath %>/css/member/myreview.css">
@@ -126,7 +129,7 @@ String id = (String) session.getAttribute("userId");
 									<tr>
 										<td>
 											<div class="myreview-contents">
-												<%= reviewVO.getContents() %>
+												<% reviewContents.add(reviewVO.getContents()); %>
 											</div>
 										</td>
 									</tr>
@@ -224,7 +227,7 @@ String id = (String) session.getAttribute("userId");
 								<tr>
 									<td>
 										<div class="myreview-contents">
-											<%= reviewVO.getContents() %>
+											<% reviewContents.add(reviewVO.getContents()); %>
 										</div>
 									</td>
 								</tr>
@@ -322,7 +325,27 @@ String id = (String) session.getAttribute("userId");
 		    });
 		}
 		
-		window.onload = changeMyReview(0);
+		function setReviewContents() {
+			let reviewContents = [
+	            <%
+	            for (int i = 0; i < reviewContents.size(); i++) {
+	                String str = StringParser.escapeHtml(reviewContents.get(i));
+	            %>
+	                `<%= str.replace("\"", "\\\"") %>`<%= (i < reviewContents.size() - 1) ? "," : "" %>
+	            <%
+	            }
+	            %>
+	        ];
+	        
+	        $(".myreview-contents").each(function(index, element) {
+				$(element).text(unescapeHtml(reviewContents[index]));
+			})
+		}
+		
+		window.onload = function() {
+			setReviewContents();
+			changeMyReview(0);
+		}
 	</script>
 </body>
 </html>
