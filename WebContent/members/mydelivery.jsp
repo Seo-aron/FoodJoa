@@ -49,7 +49,7 @@ ArrayList<HashMap<String, Object>> orderedMealkitList =
 				<!-- 테이블 헤더 -->
 				<thead>
 					<tr>
-						<th>내 주소</th>
+						<th>배송지</th>
 						<th>수량</th>
 						<th>배송 여부</th>
 						<th>환불 여부</th>

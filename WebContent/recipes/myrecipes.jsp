@@ -52,36 +52,38 @@
 					<tr>
 						<td>
 							<div class="recipe-container">
-								<table width="100%">
-									<tr>
-										<td rowspan="3" width="300px">
-											<div class="recipe-thumbnail">
-												<img src="<%= contextPath %>/images/recipe/thumbnails/<%= recipeVO.getNo() %>/<%= recipeVO.getThumbnail() %>">
-											</div>
-										</td>
-										<td class="title-area" width="718px">
-											<p><%= recipeVO.getTitle() %></p>
-										</td>
-										<td class="rating-area" width="180px">
-											<img class="rating-star" src="<%= contextPath %>/images/recipe/full_star.png">
-											<%= averageRating %>
-										</td>
-									</tr>
-									<tr>
-										<td class="description-area" rowspan="2">
-											<p><%= recipeVO.getDescription() %></p>
-										</td>
-										<td class="views-area">
-											조회수 : <%= recipeVO.getViews() %>
-										</td>
-									</tr>
-									<tr>
-										<td class="button-area">
-											<input type="button" class="update-button" value="수정" onclick="onUpdateButton('<%= recipeVO.getNo() %>')">
-											<input type="button" class="delete-button" value="삭제" onclick="onDeleteButton('<%= recipeVO.getNo() %>')">
-										</td>
-									</tr>
-								</table>
+								<a href="<%= contextPath %>/Recipe/read?no=<%= recipeVO.getNo() %>">
+									<table width="100%">
+										<tr>
+											<td rowspan="3" width="300px">
+												<div class="recipe-thumbnail">
+													<img src="<%= contextPath %>/images/recipe/thumbnails/<%= recipeVO.getNo() %>/<%= recipeVO.getThumbnail() %>">
+												</div>
+											</td>
+											<td class="title-area" width="718px">
+												<p><%= recipeVO.getTitle() %></p>
+											</td>
+											<td class="rating-area" width="180px">
+												<img class="rating-star" src="<%= contextPath %>/images/recipe/full_star.png">
+												<%= averageRating %>
+											</td>
+										</tr>
+										<tr>
+											<td class="description-area" rowspan="2">
+												<p><%= recipeVO.getDescription() %></p>
+											</td>
+											<td class="views-area">
+												조회수 : <%= recipeVO.getViews() %>
+											</td>
+										</tr>
+										<tr>
+											<td class="button-area">
+												<input type="button" class="update-button" value="수정" onclick="onUpdateButton('<%= recipeVO.getNo() %>')">
+												<input type="button" class="delete-button" value="삭제" onclick="onDeleteButton('<%= recipeVO.getNo() %>')">
+											</td>
+										</tr>
+									</table>
+								</a>
 							</div>
 						</td>
 					</tr>					
