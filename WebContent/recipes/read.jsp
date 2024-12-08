@@ -361,7 +361,7 @@
 	            for (int i = 0; i < reviewContents.size(); i++) {
 	                String str = StringParser.escapeHtml(reviewContents.get(i));
 	            %>
-	                "<%= str.replace("\"", "\\\"") %>"<%= (i < reviewContents.size() - 1) ? "," : "" %>
+	                `<%= str.replace("\"", "\\\"") %>`<%= (i < reviewContents.size() - 1) ? "," : "" %>
 	            <%
 	            }
 	            %>
