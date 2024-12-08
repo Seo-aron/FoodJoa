@@ -101,8 +101,12 @@ String id = (String) session.getAttribute("userId");
 						<input type="text" name="origin" class="origin" placeholder="ex) 쌀(국내산), 소고기(미국산), ..." required>
 					</td>
 				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<input type="button" class="write" value="작성 완료" onclick="onSubmit(event, '<%=contextPath%>')">
+					</td>
+				</tr>
 			</table>
-			<input type="button" class="write" value="작성 완료" onclick="onSubmit(event, '<%=contextPath%>')">
 		</form>
 	</div>
 

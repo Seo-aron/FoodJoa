@@ -14,7 +14,7 @@
 }
 
 /* 테이블 스타일링 */
-table {
+#deliver-container table {
     width: 100%; /* 테이블 너비를 100%로 설정 */
     border-collapse: collapse; /* 테이블 셀 경계선 결합 */
     margin: 20px 0; /* 테이블 위아래 여백 */
@@ -22,7 +22,7 @@ table {
 }
 
 /* 테이블 헤더 스타일링 */
-table th {
+#deliver-container table th {
     background-color: #BF917E; /* 헤더 배경색 */
     color: #ffffff; /* 텍스트 색상 */
     padding: 12px 15px; /* 셀 내부 여백 */
@@ -31,34 +31,44 @@ table th {
 }
 
 /* 테이블 데이터 셀 스타일링 */
-table td {
+#deliver-container table td {
     padding: 12px 15px; /* 셀 내부 여백 */
     text-align: center; /* 텍스트 가운데 정렬 */
     border: 1px solid #ddd; /* 셀 경계선 */
 }
 
-table td p {
+#deliver-container table td p {
 	color: #000000;
 }
 
 /* 테이블 행 스타일링 (홀수 행 배경색) */
-table tr:nth-child(odd) {
+#deliver-container table tr:nth-child(odd) {
     background-color: #f9f9f9; /* 홀수 행 배경색 */
 }
 
 /* 테이블 행 스타일링 (짝수 행 배경색) */
-table tr:nth-child(even) {
+#deliver-container table tr:nth-child(even) {
     background-color: #ffffff; /* 짝수 행 배경색 */
 }
 
-/* 이미지 스타일링 */
-img {
-    max-width: 100%; /* 이미지 최대 너비를 셀 너비에 맞춤 */
-    height: auto; /* 이미지 비율을 유지하여 자동 높이 설정 */
-    border-radius: 4px; /* 이미지 둥근 모서리 설정 */
+.thumbnail-area, .profile-area {
+	width: 120px;
+	height: 120px;
+	overflow: hidden;
+	border-radius: 5px;
 }
 
-button {
+.thumbnail-area img, .profile-area img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.profile-area {
+	border-radius: 50%;
+}
+
+.save-button {
 	background-color: #BF917E;
 	color: white;
 	padding: 10px 15px;
@@ -67,15 +77,7 @@ button {
 	cursor: pointer;
 }
 
-button:hover {
+.save-button:hover {
 	background-color: #9e6e58;
 	transition: background-color 0.3s ease;
-}
-
-tr {
-	align: center;
-}
-
-.no {
-	align: center;
 }

@@ -1,23 +1,16 @@
 @charset "UTF-8";
-	body {
-    font-family: 'Noto Sans KR', Arial, sans-serif; /* 심플하고 세련된 한글 폰트 */
-    margin: 0;
-    padding: 0;
-    background-color: #f9f6f2; /* 따뜻한 배경색 */
-    color: #000000; /* 텍스트 가독성을 위한 진한 회색 */
+
+.mypage-container {
+	margin: 0 auto;
 }
 
-
-.header {
-	border: 2px solid #BF917E; 
-	padding: 10px; 
-	box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
-    width: 150px;
-}
-
-.header h1 {
-	align: center;
-	margin: 0 auto;	
+.mypage-header span {
+	border: 1px solid #BF917E; 
+	padding: 8px 16px;
+	font-size: 2rem;
+	box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+	color: #BF917E;
+	border-radius: 5px;
 }
 
 .profile-wrapper {

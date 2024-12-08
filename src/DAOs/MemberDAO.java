@@ -444,7 +444,7 @@ public class MemberDAO {
 		
 		String sql = "SELECT "
 				+ "o.address, o.quantity, o.delivered, o.refund, "
-				+ "k.title, k.contents, k.category, k.price, k.pictures, "
+				+ "k.no, k.id, k.title, k.contents, k.category, k.price, k.pictures, "
 				+ "m.nickname, m.profile "
 				+ "FROM mealkit_order o "
 				+ "LEFT JOIN mealkit k "
@@ -466,7 +466,9 @@ public class MemberDAO {
 				orderVO.setDelivered(resultSet.getInt("delivered"));				
 				orderVO.setRefund(resultSet.getInt("refund"));			
 								
-				MealkitVO mealkitVO = new MealkitVO();				
+				MealkitVO mealkitVO = new MealkitVO();
+				mealkitVO.setNo(resultSet.getInt("no"));
+				mealkitVO.setId(resultSet.getString("id"));
 				mealkitVO.setTitle(resultSet.getString("title"));
 				mealkitVO.setContents(resultSet.getString("contents"));
 				mealkitVO.setCategory(resultSet.getInt("category"));
@@ -494,8 +496,8 @@ public class MemberDAO {
 	public ArrayList<HashMap<String, Object>> selectSendedMealkit(String id) {
 	    ArrayList<HashMap<String, Object>> orderedMealkitList = new ArrayList<>();
 	    String sql = "SELECT "
-	               + "k.no, k.id, k.title, k.contents, k.category, k.price, k.stock, k.pictures, "
-	               + "o.no AS order_no, o.address, o.quantity, o.delivered, o.refund, "
+	               + "k.no, k.title, k.contents, k.category, k.price, k.stock, k.pictures, "
+	               + "o.id, o.no AS order_no, o.address, o.quantity, o.delivered, o.refund, "
 	               + "m.nickname, m.profile "
 	               + "FROM mealkit k "
 	               + "INNER JOIN mealkit_order o ON k.no = o.mealkit_no "
@@ -523,6 +525,7 @@ public class MemberDAO {
 	            // Order 데이터 매핑
 	            MealkitOrderVO orderVO = new MealkitOrderVO();
 	            orderVO.setNo(resultSet.getInt("order_no"));
+	            orderVO.setId(resultSet.getString("id"));
 	            orderVO.setAddress(resultSet.getString("address"));
 	            orderVO.setQuantity(resultSet.getInt("quantity"));
 	            orderVO.setDelivered(resultSet.getInt("delivered"));
@@ -546,15 +549,15 @@ public class MemberDAO {
 
 	    return orderedMealkitList;
 	}
-	
-	public static int updateOrderStatus(int deliveredStatus, int refundStatus, int no) {
 
-		   String sql = "UPDATE mealkit_order SET delivered = ?, refund = ? WHERE no = ?";
-		    int result = dbConnector.executeUpdate(sql, deliveredStatus, refundStatus, no);
-		    
-		    dbConnector.release(); // 자원 해제
-		    
-		    return result; // 업데이트 결과 반환
+	public int updateOrderStatus(int deliveredStatus, int refundStatus, int no) {
+
+		String sql = "UPDATE mealkit_order SET delivered = ?, refund = ? WHERE no = ?";
+		int result = dbConnector.executeUpdate(sql, deliveredStatus, refundStatus, no);
+
+		dbConnector.release(); // 자원 해제
+
+		return result; // 업데이트 결과 반환
 	}
-	
+
 }

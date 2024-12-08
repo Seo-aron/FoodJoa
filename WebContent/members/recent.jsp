@@ -4,6 +4,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%
 request.setCharacterEncoding("UTF-8");
@@ -13,6 +14,7 @@ String contextPath = request.getContextPath();
 
 String id = (String) session.getAttribute("userId");
 %>
+<jsp:useBean id="stringParser" class="Common.StringParser"/>
 
 <c:set var="recentRecipes" value="${ recentViewInfos.recipe }" />
 <c:set var="recentMealkits" value="${ recentViewInfos.mealkit }" />
@@ -75,19 +77,6 @@ String id = (String) session.getAttribute("userId");
 	font-size: 0.9rem;
 	color: #666;
 }
-</style>
-
-</head>
-
-<body>
-	<div id="recent-container">
-		<div class="recent-category-area">
-			<input type="button" value="레시피" onclick="changeMyReview(0)">
-			<input type="button" value="밀키트" onclick="changeMyReview(1)">
-		</div>
-
-
-		<style>
 .recent-view-grid {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr); /* 한 줄에 4개 */
@@ -155,6 +144,16 @@ String id = (String) session.getAttribute("userId");
 	color: white;
 }
 </style>
+
+</head>
+
+<body>
+	<div id="recent-container">
+		<div class="recent-category-area">
+			<input type="button" value="레시피" onclick="changeMyReview(0)">
+			<input type="button" value="밀키트" onclick="changeMyReview(1)">
+		</div>
+
 <!-- 최근 본 레시피 목록 -->
 		<div id="recentViewRecipe" class="recent-view">
 			<div class="recent-view-grid">
@@ -185,16 +184,22 @@ String id = (String) session.getAttribute("userId");
 				<c:forEach var="item" items="${recentMealkits}">
 					<c:if test="${item.mealkitVO != null}">
 						<div class="recent-view-item">
-							<a href="<%= request.getContextPath() %>/Mealkit/info?no=${item.mealkitVO.no}">
-								<img src="<%= request.getContextPath() %>/images/mealkit/thumbnails/${item.mealkitVO.no}/${item.mealkitVO.id}/${item.mealkitVO.pictures.substring(4)}"
-								alt="${item.mealkitVO.title}">
+							<a href="<%= contextPath %>/Mealkit/info?no=${item.mealkitVO.no}">								
+								<c:set var="thumbnail" value="${ stringParser.splitString(item.mealkitVO.pictures)[0] }" />
+								<img src="<%= contextPath %>/images/mealkit/thumbnails/${item.mealkitVO.no}/${thumbnail}">
 							</a>
 							<div class="info">
 								<div>
 									<b>${item.mealkitVO.title}</b>
 								</div>
 								<div class="details">작성자: ${item.memberVO.nickname}</div>
-								<div class="details">가격: ${item.mealkitVO.price}원</div>
+								<div class="details">
+									가격: 
+									<fmt:formatNumber value="${ item.mealkitVO.price }" 
+											type="number"
+											groupingUsed="true" 
+											maxFractionDigits="0" />원
+								</div>
 								<div class="details">평점: ${item.averageRating}</div>
 							</div>
 						</div>

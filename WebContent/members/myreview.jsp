@@ -264,7 +264,7 @@ String id = (String) session.getAttribute("userId");
 				    success: function(responseData, status, jqxhr) {
 						if(responseData == "1") {
 							alert('리뷰를 삭제했습니다.');
-							location.href = '<%= contextPath %>/Recipe/read?no=' + recipeNo;	
+							location.reload();
 						}
 						else {
 							alert('리뷰 삭제에 실패했습니다.');

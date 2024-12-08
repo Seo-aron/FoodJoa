@@ -503,7 +503,12 @@ public class MemberService {
         return result;  // 주문 성공 시 true, 실패 시 false 반환
 	}
 
-	public int updateOrder(int orderNo, int deliveredStatus, int refundStatus) {
+	public int updateOrder(HttpServletRequest request) {
+		
+		int orderNo = Integer.parseInt(request.getParameter("orderNo"));
+		int deliveredStatus = Integer.parseInt(request.getParameter("deliveredStatus"));
+		int refundStatus = Integer.parseInt(request.getParameter("refundStatus"));
+		
 	    return memberDAO.updateOrderStatus(deliveredStatus, refundStatus, orderNo);
 	}
 

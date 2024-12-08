@@ -85,7 +85,7 @@ public class MemberController extends HttpServlet {
 		case "/mypagemain.me": if (!openMypagemainView(request, response)) return; break; 
 		case "/update.me": openMemberUpdateView(request, response); break;
 		case "/updatePro.me": processMemberUpdate(request, response); break;
-		case "/orderUpdate.me": processUpdateOrder(request, response); break;
+		case "/orderUpdate.me": processUpdateOrder(request, response); return;
 		case "/viewMyDelivery.me": openMyDeliveryView(request, response); break;
 		case "/viewMySend.me": openMySendView(request, response); break;
 		case "/viewMyRecipe.me": openMyRecipeView(request, response); break;
@@ -374,6 +374,7 @@ public class MemberController extends HttpServlet {
 		memberService.getWishListInfos(request, userId); // 서비스에서 레시피 및 밀키트 위시리스트 정보를 가져옴
 
 		// 포워딩할 페이지 설정
+		request.setAttribute("pageTitle", "찜 목록");
 		request.setAttribute("center", "members/wishlist.jsp");
 		
 		nextPage = "/main.jsp"; // 메인 페이지로 이동하도록 설정
@@ -441,6 +442,7 @@ public class MemberController extends HttpServlet {
 		request.setAttribute("recentViewInfos", recentViewInfos);
 
 		// center 부분에 해당하는 JSP 파일 설정
+		request.setAttribute("pageTitle", "최근 본 목록");
 		request.setAttribute("center", "members/recent.jsp");
 
 		// 메인 페이지로 이동
@@ -469,6 +471,7 @@ public class MemberController extends HttpServlet {
 			}
 
 			request.setAttribute("cart", cartListInfos); // cart로 전달
+			request.setAttribute("pageTitle", "장바구니");
 			request.setAttribute("center", "members/cartlist.jsp");
 
 			nextPage = "/main.jsp";
@@ -750,29 +753,17 @@ public class MemberController extends HttpServlet {
 		request.setAttribute("orderedMealkitList", orderedMealkitList); 
 		request.setAttribute("center", "members/sendmealkit.jsp"); 
 		nextPage = "/main.jsp"; }
-	
-	private void processUpdateOrder(HttpServletRequest request, HttpServletResponse response) {
-		 int orderNo = Integer.parseInt(request.getParameter("orderNo"));
-		    int deliveredStatus = Integer.parseInt(request.getParameter("deliveredStatus"));
-		    int refundStatus = Integer.parseInt(request.getParameter("refundStatus"));
 
-		    int result = memberService.updateOrder(orderNo, deliveredStatus, refundStatus);
+	private void processUpdateOrder(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		int result = memberService.updateOrder(request);
 
-		    try {
-		        response.setContentType("application/json; charset=UTF-8");
-		        PrintWriter out = response.getWriter();
-
-		        if (result > 0) {
-		            out.print("{\"status\":\"success\"}");
-		        } else {
-		            out.print("{\"status\":\"fail\"}");
-		        }
-		        out.close();
-		    } catch (Exception e) {
-		        e.printStackTrace();
-		    } 
-		    
-			
+		PrintWriter out = response.getWriter();
+		
+		out.print(result);
+		
+		out.close();
 	}
 
 	private void openImpormation(HttpServletRequest request, HttpServletResponse response) {
