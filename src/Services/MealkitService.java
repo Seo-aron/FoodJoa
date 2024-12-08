@@ -100,8 +100,7 @@ public class MealkitService {
 		return;
 	}
 
-	public void setCartMealkit(HttpServletRequest request, HttpServletResponse response) 
-			throws IOException {
+	public int setCartMealkit(HttpServletRequest request, HttpServletResponse response) {
 		
 		int mealkitNo = Integer.parseInt(request.getParameter("no"));
 		int quantity = Integer.parseInt(request.getParameter("quantity"));
@@ -109,17 +108,7 @@ public class MealkitService {
 		
 		System.out.println(quantity);
 		
-		int result = mealkitDAO.insertMealkitCartlist(mealkitNo, quantity, id);
-		System.out.println("result: " + result);
-		String res = String.valueOf(result);
-
-		printWriter = response.getWriter();
-		printWriter.print(res);
-		printWriter.flush();
-		printWriter.close();
-		
-		return;
-		
+		return mealkitDAO.insertMealkitCartlist(mealkitNo, quantity, id);		
 	}
 
 	public void setWriteMealkit(HttpServletRequest request, HttpServletResponse response) 

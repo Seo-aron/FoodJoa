@@ -35,6 +35,8 @@ $('.stock_minus').click(function() {
 
 // 장바구니, 찜목록 버튼
 function cartMealkit(contextPath) {
+	stock = stockInput.val();
+	
 	$.ajax({
 		url: contextPath + "/Mealkit/cart.pro",
 		type: "POST",
@@ -44,7 +46,7 @@ function cartMealkit(contextPath) {
 			quantity: stock
 		},
 		success: function(response) {
-			if (response === "1") alert("장바구니에 추가되었습니다.");
+			if (response == "1") alert("장바구니에 추가되었습니다.");
 			else alert("장바구니에 추가를 못 했습니다.");
 		}
 	});

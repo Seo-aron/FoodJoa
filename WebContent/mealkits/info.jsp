@@ -224,7 +224,7 @@
 							<tr>
 								<td colspan="4">
 								<%
-				            	if (!id.equals(mealkitvo.getId())) {
+				            	if (id != null && id.length() > 0 && !id.equals(mealkitvo.getId())) {
 				            		%>
 									<input type="button" value="리뷰 작성" class="review-button"
 										onclick="location.href='<%=contextPath%>/Mealkit/reviewwrite?no=${mealkit.no }'">

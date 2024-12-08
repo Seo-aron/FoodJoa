@@ -51,7 +51,7 @@ public class MealkitController extends HttpServlet {
 		switch (action) {
 		case "/list": openMealkitView(request, response); break;
 		case "/info": openMealkitInfoView(request, response); break;
-		case "/cart.pro": processCartMealkit(request, response); break;
+		case "/cart.pro": processCartMealkit(request, response); return;
 		case "/wish.pro": processWishMealkit(request, response); return;
 		
 		case "/write": openAddMealkit(request, response); break;
@@ -191,7 +191,8 @@ public class MealkitController extends HttpServlet {
 	}
 
 	private void openAddMealkit(HttpServletRequest request, HttpServletResponse response) {
-		// 추후 membervo에서 멤버 아이디를 session으로 받아와야 할 거임 
+		
+		request.setAttribute("pageTitle", "밀키트 게시글 작성");
 		request.setAttribute("center", "mealkits/write.jsp");
 		
 		nextPage = "/main.jsp";
@@ -204,7 +205,13 @@ public class MealkitController extends HttpServlet {
 
 	private void processCartMealkit(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException{
-		mealkitService.setCartMealkit(request, response);
+		int result = mealkitService.setCartMealkit(request, response);
+		
+		PrintWriter out = response.getWriter();
+		
+		out.print(result);
+		
+		out.close();
 	}
 	
 	private void openMealkitInfoView(HttpServletRequest request, HttpServletResponse response)

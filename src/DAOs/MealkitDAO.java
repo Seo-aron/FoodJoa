@@ -252,11 +252,30 @@ public class MealkitDAO {
 
 	public int insertMealkitCartlist(int mealkitNo, int quantity, String id) {
 
-		String sql = "INSERT INTO mealkit_cart(id, mealkit_no, quantity, choice_date) "
-				+ "VALUES(?, ?, ?, CURRENT_TIMESTAMP)";
+		String sql = "SELECT * FROM mealkit_cart WHERE mealkit_no=? AND id=?";
+		
+		ResultSet resultSet = dbConnector.executeQuery(sql, mealkitNo, id);
+		
+		int result = 0;
+		try {
+			if (resultSet.next()) {
+				dbConnector.release();
+				
+				sql = "UPDATE mealkit_cart SET quantity=quantity+? WHERE mealkit_no=? AND id=?";
+				
+				result = dbConnector.executeUpdate(sql, quantity, mealkitNo, id);
+			}
+			else {
+				sql = "INSERT INTO mealkit_cart(id, mealkit_no, quantity, choice_date) "
+						+ "VALUES(?, ?, ?, CURRENT_TIMESTAMP)";
 
-		int result = dbConnector.executeUpdate(sql, id, mealkitNo, quantity);
-
+				result = dbConnector.executeUpdate(sql, id, mealkitNo, quantity);
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		dbConnector.release();
 
 		return result;

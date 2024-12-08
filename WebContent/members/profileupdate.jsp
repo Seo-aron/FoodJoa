@@ -18,7 +18,6 @@ String id = (String) session.getAttribute("id");
 <html lang="ko">
 <head>
 	<meta charset="UTF-8">
-	<link rel="stylesheet" href="<%=contextPath%>/css/member/profileupdate.css">
 	<title>회원 정보 수정</title>
 	
 	<script src="http://code.jquery.com/jquery-latest.min.js"> </script>
@@ -95,34 +94,30 @@ String id = (String) session.getAttribute("id");
 	<div class="form-container">
 		<h2>정보 수정</h2>
 		<!-- JavaScript로 미리보기 기능 구현 -->
-		<form action="<%=contextPath%>/Member/updatePro.me" method="post"
-			enctype="multipart/form-data" id="updateForm">
+		<form action="<%=contextPath%>/Member/updatePro.me" method="post" enctype="multipart/form-data" id="updateForm">
 			<input type="hidden" id="origin-profile" name="origin-profile"
 				value="<%=vo.getProfile()%>"> <br> <br>
 
 			<!-- 파일 선택 버튼 -->
-			<input type="file" accept=".jpg, .jpeg, .png" class="profile"
-				id="fileInput" name="profile">
+			<input type="file" accept=".jpg, .jpeg, .png" class="profile" id="fileInput" name="profile">
 			<!-- 미리보기 컨테이너 -->
 			<div class="preview-container" id="previewContainer"></div>
 
 			<div class="form-group">
-				<label for="name">이름</label> <input type="text" id="name"
-					name="name" value="${vo.name}" placeholder="2자 이상 10자 미만으로 입력해주세요"
-					required>
+				<label for="name">이름</label>
+				<input type="text" id="name" name="name" 
+					value="${vo.name}" placeholder="2자 이상 10자 미만으로 입력해주세요" required>
 			</div>
 			<div class="form-group">
-				<label for="nickname">닉네임</label> <input type="text" id="nickname"
-					name="nickname" value="${vo.nickname}"
-					placeholder="2자 이상 10자 미만으로 입력해주세요" required>
+				<label for="nickname">닉네임</label>
+				<input type="text" id="nickname" name="nickname" 
+					value="${vo.nickname}" placeholder="2자 이상 10자 미만으로 입력해주세요" required>
 			</div>
 			<div class="form-group">
-				<label for="phone">번호</label> <input type="text" id="phone"
-					name="phone" value="${vo.phone}" placeholder="-없이 입력해주세요" required>
+				<label for="phone">번호</label>
+				<input type="text" id="phone" name="phone" value="${vo.phone}" placeholder="-없이 입력해주세요" required>
 			</div>
 			<div class="form-group">
-				<%-- <label for="address">주소</label> <input type="text" id="address"
-					name="address" value="${vo.address}" required> --%>
 				<input type="text" id="sample4_postcode" name="zipcode" class="form-control" placeholder="우편번호" value="${vo.zipcode }">
 				<input type="button" onclick="sample4_execDaumPostcode()" value="우편번호 찾기" class="form-control"><br>					
 				<input type="text" id="sample4_roadAddress" name="address1" placeholder="도로명주소" class="form-control" value="${vo.address1 }">
