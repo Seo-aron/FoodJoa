@@ -189,6 +189,7 @@ public class RecipeController extends HttpServlet {
 			RecipeVO recipe = recipeService.getRecipe(request.getParameter("recipe_no"));
 
 			request.setAttribute("recipe", recipe);
+			request.setAttribute("pageTitle", "리뷰 작성 - " + recipe.getTitle());
 			request.setAttribute("center", "recipes/review.jsp");
 
 			nextPage = "/main.jsp";

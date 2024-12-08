@@ -223,8 +223,14 @@
 							%>
 							<tr>
 								<td colspan="4">
+								<%
+				            	if (!id.equals(mealkitvo.getId())) {
+				            		%>
 									<input type="button" value="리뷰 작성" class="review-button"
 										onclick="location.href='<%=contextPath%>/Mealkit/reviewwrite?no=${mealkit.no }'">
+									<%
+				            	}
+				            	%>
 								</td>
 							</tr>
 						</table>

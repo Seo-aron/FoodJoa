@@ -222,12 +222,31 @@ public class MealkitDAO {
 
 	public int insertMealkitWishlist(int no, String id) {
 
-		String sql = "INSERT INTO mealkit_wishlist(id, mealkit_no, choice_date) " + "VALUES(?, ?, CURRENT_TIMESTAMP)";
-
-		int result = dbConnector.executeUpdate(sql, id, no);
-
+		boolean flag = false;
+		String sql = "SELECT * FROM mealkit_wishlist WHERE id = ? AND mealkit_no = ?";
+		
+		ResultSet rs = dbConnector.executeQuery(sql, id, no);
+		
+		try {
+			if (rs.next()) {
+				flag = true;
+			}
+		} catch (SQLException e) {
+			System.out.println("MealkitDAO - insertMealkitWishlist 예외발생");
+			e.printStackTrace();
+			
+		}
+		
 		dbConnector.release();
-
+		
+		if (flag) return -1;
+		
+		sql = "INSERT INTO mealkit_wishlist(id, mealkit_no, choice_date) " + "VALUES(?, ?, CURRENT_TIMESTAMP)";
+		
+		int result = dbConnector.executeUpdate(sql, id, no);
+		
+		dbConnector.release();
+		
 		return result;
 	}
 
