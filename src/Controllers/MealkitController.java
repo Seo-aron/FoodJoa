@@ -213,8 +213,6 @@ public class MealkitController extends HttpServlet {
 		HashMap<String, Object> mealkit = mealkitService.getMealkit(request);
 		ArrayList<HashMap<String, Object>> reviews = mealkitService.getReviewInfo(request);
 		
-		System.out.println("mealkit : " + mealkit);
-		
 		String title = ((MealkitVO) mealkit.get("mealkitVO")).getTitle();
 		
 		request.setAttribute("mealkit", mealkit);

@@ -69,7 +69,7 @@
 										<td rowspan="3" width="300px">
 											<div class="mealkit-thumbnail">
 												<a href="<%=contextPath%>/Mealkit/info?no=<%=mealkitVO.getNo()%>&nickName=<%=nickName%>">
-													<img src="<%= contextPath %>/images/mealkit/thumbnails/<%= mealkitVO.getNo() %>/<%= mealkitVO.getId() %>/<%= thumbnail %>">
+													<img src="<%= contextPath %>/images/mealkit/thumbnails/<%= mealkitVO.getNo() %>/<%= thumbnail %>">
 												</a>
 											</div>
 										</td>

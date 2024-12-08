@@ -89,9 +89,10 @@
  .myreview-contents {
  	width: auto;
  	height: 100px;
-	overflow: hidden;
+	overflow-y: auto;
 	text-overflow: ellipsis;
  	margin: 10px;
+	white-space: pre-wrap;
  }
  
  .myreview-button-area input {

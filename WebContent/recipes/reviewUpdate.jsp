@@ -151,7 +151,8 @@
 			}
 			%>
 			
-			$("#contents").val('<%= reviewVO.getContents() %>');
+			let reviewContent = `<%= StringParser.escapeHtml(reviewVO.getContents()) %>`;
+			$("#contents").val(unescapeHtml(reviewContent));
 		}
 		
 		function removeOriginFileName(fileName) {

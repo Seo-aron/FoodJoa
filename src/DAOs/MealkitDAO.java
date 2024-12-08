@@ -425,11 +425,19 @@ public class MealkitDAO {
 		ArrayList<HashMap<String, Object>> mealKitInfos = new ArrayList<HashMap<String, Object>>();
 
 		String sql = "SELECT "
-				+ "mk.no, mk.id, mk.pictures, mk.title, mk.contents, mk.price, m.nickname AS author_nickname, mr.average_rating "
-				+ "FROM mealkit_wishlist mw " + "JOIN mealkit mk ON mw.mealkit_no = mk.no "
-				+ "JOIN member m ON mk.id = m.id " + "LEFT JOIN ( "
-				+ "SELECT mealkit_no, AVG(rating) AS average_rating " + "FROM mealkit_review " + "GROUP BY mealkit_no "
-				+ ") mr ON mw.mealkit_no = mr.mealkit_no " + "WHERE mw.id = ?" + "ORDER BY mw.choice_date DESC;";
+				+ "mk.no, mk.id, mk.pictures, mk.title, mk.contents, mk.price, mk.category, "
+				+ "m.nickname AS author_nickname, "
+				+ "mr.average_rating "
+				+ "FROM mealkit_wishlist mw " 
+				+ "JOIN mealkit mk ON mw.mealkit_no = mk.no "
+				+ "JOIN member m ON mk.id = m.id " 
+				+ "LEFT JOIN ( "
+				+ "SELECT mealkit_no, AVG(rating) AS average_rating "
+				+ "FROM mealkit_review " 
+				+ "GROUP BY mealkit_no "
+				+ ") mr ON mw.mealkit_no = mr.mealkit_no " 
+				+ "WHERE mw.id = ?" 
+				+ "ORDER BY mw.choice_date DESC;";
 
 		ResultSet resultSet = dbConnector.executeQuery(sql, userId);
 
@@ -444,6 +452,7 @@ public class MealkitDAO {
 				mealkitVO.setTitle(resultSet.getString("title"));
 				mealkitVO.setContents(resultSet.getString("contents"));
 				mealkitVO.setPrice(resultSet.getString("price"));
+				mealkitVO.setCategory(resultSet.getInt("category"));
 
 				String authorNickname = resultSet.getString("author_nickname");
 				float avgRating = resultSet.getFloat("average_rating");

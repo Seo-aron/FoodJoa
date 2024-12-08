@@ -1,5 +1,6 @@
 <%@ page import="java.util.HashMap"%>
 <%@ page import="VOs.RecipeVO"%>
+<%@ page import="VOs.MealkitVO"%>
 <%@ page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
@@ -107,7 +108,16 @@ request.setAttribute("mealKitWishListInfos", mealKitInfos);
 
 						<div class="info">
 							<div>
-								<b>${item.recipeVO.title}</b>
+								<b>
+									<c:choose>
+						                <c:when test="${item.recipeVO.category == 1}">[한식]</c:when>
+						                <c:when test="${item.recipeVO.category == 2}">[일식]</c:when>
+						                <c:when test="${item.recipeVO.category == 3}">[중식]</c:when>
+						                <c:when test="${item.recipeVO.category == 4}">[양식]</c:when>
+						                <c:when test="${item.recipeVO.category == 5}">[자취]</c:when>
+						            </c:choose>
+						            ${item.recipeVO.title}
+								</b>
 							</div>
 							<div>작성자: ${item.nickname}</div>
 							<div>${item.recipeVO.description}</div>
@@ -137,7 +147,15 @@ request.setAttribute("mealKitWishListInfos", mealKitInfos);
 						</a>
 						<div class="info">
 							<div>
-								<b>${item.mealkitVO.title}</b>
+								<b>
+									<c:choose>
+							                <c:when test="${item.mealkitVO.category == 1}">[한식]</c:when>
+							                <c:when test="${item.mealkitVO.category == 2}">[일식]</c:when>
+							                <c:when test="${item.mealkitVO.category == 3}">[중식]</c:when>
+							                <c:when test="${item.mealkitVO.category == 4}">[양식]</c:when>
+						            </c:choose>	
+									${item.mealkitVO.title}
+								</b>
 							</div>
 							<div>작성자: ${item.nickname}</div>
 							<div>가격: ${item.mealkitVO.price}</div>

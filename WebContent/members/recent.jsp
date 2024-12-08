@@ -149,6 +149,7 @@ String id = (String) session.getAttribute("userId");
 
 <body>
 	<div id="recent-container">
+		<h1>최근에 본 목록</h1>
 		<div class="recent-category-area">
 			<input type="button" value="레시피" onclick="changeMyReview(0)">
 			<input type="button" value="밀키트" onclick="changeMyReview(1)">
@@ -166,10 +167,18 @@ String id = (String) session.getAttribute("userId");
 							</a>
 							<div class="info">
 								<div>
-									<b>${item.recipeVO.title}</b>
+									<b>
+									<c:choose>
+						                <c:when test="${item.recipeVO.category == 1}">[한식]</c:when>
+						                <c:when test="${item.recipeVO.category == 2}">[일식]</c:when>
+						                <c:when test="${item.recipeVO.category == 3}">[중식]</c:when>
+						                <c:when test="${item.recipeVO.category == 4}">[양식]</c:when>
+						                <c:when test="${item.recipeVO.category == 5}">[자취]</c:when>
+						            </c:choose>
+						            ${item.recipeVO.title}
+						            </b>
 								</div>
 								<div class="details">작성자: ${item.memberVO.nickname}</div>
-								<div class="details">${item.recipeVO.description}</div>
 								<div class="details">평점: ${item.averageRating}</div>
 							</div>
 						</div>
@@ -190,7 +199,15 @@ String id = (String) session.getAttribute("userId");
 							</a>
 							<div class="info">
 								<div>
-									<b>${item.mealkitVO.title}</b>
+									<b>
+										<c:choose>
+							                <c:when test="${item.mealkitVO.category == 1}">[한식]</c:when>
+							                <c:when test="${item.mealkitVO.category == 2}">[일식]</c:when>
+							                <c:when test="${item.mealkitVO.category == 3}">[중식]</c:when>
+							                <c:when test="${item.mealkitVO.category == 4}">[양식]</c:when>
+							            </c:choose>	
+										${item.mealkitVO.title}
+									</b>
 								</div>
 								<div class="details">작성자: ${item.memberVO.nickname}</div>
 								<div class="details">
